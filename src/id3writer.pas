@@ -13,6 +13,11 @@ uses
   Classes, SysUtils, AudioTypes;
 
 procedure WriteMp3Tags(const FileName: string; Info: TAudioInfo);
+{ A complete ID3v2 tag (header, frames, Padding zero bytes) built from an existing tag
+  (OldTag may be nil); used for the ID3 chunk in WAV and AIFF files. }
+function BuildID3TagBytes(const OldTag: TBytes; Info: TAudioInfo; Padding: Integer): TBytes;
+{ Updates an existing ID3v1 tag at the end of the file; does nothing if there is none. }
+procedure UpdateID3v1(const FileName: string; Info: TAudioInfo);
 
 implementation
 
@@ -331,6 +336,35 @@ begin
   Dest.WriteByte(0); // flags: no unsync, no extended header, no footer
   WriteBE32(Dest, ((BodySize shr 21) and $7F) shl 24 or ((BodySize shr 14) and $7F) shl 16 or
     ((BodySize shr 7) and $7F) shl 8 or (BodySize and $7F));
+end;
+
+function BuildID3TagBytes(const OldTag: TBytes; Info: TAudioInfo; Padding: Integer): TBytes;
+var
+  Src: TBytesStream;
+  Dest: TBytesStream;
+  OldVersion, Version: Byte;
+  Old: TID3Frames;
+  OldSize: Int64;
+  Body: TBytes;
+begin
+  Src := TBytesStream.Create(OldTag);
+  Dest := TBytesStream.Create;
+  try
+    if not ParseID3v2(Src, OldVersion, Old, OldSize) then
+    begin
+      OldVersion := 0;
+      Old := nil;
+    end;
+    if OldVersion in [3, 4] then Version := OldVersion else Version := 3;
+    Body := BuildFrames(Version, OldVersion, Old, Info);
+    WriteTagHeader(Dest, Version, Length(Body) + Padding);
+    WriteBytes(Dest, Body);
+    WriteZeros(Dest, Padding);
+    Result := StreamBytes(Dest);
+  finally
+    Src.Free;
+    Dest.Free;
+  end;
 end;
 
 { ---------- ID3v1 ---------- }

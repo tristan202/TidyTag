@@ -18,12 +18,14 @@ procedure WriteAudioTags(Info: TAudioInfo; KeepTimestamp: Boolean);
 implementation
 
 uses
-  TagUtils, ID3Writer, FlacWriter, Mp4Writer;
+  TagUtils, ID3Writer, FlacWriter, Mp4Writer, OggWriter, WavWriter, ApeTag, AsfWriter;
 
 function CanWriteTags(const FileName: string): Boolean;
 begin
   case LowerCase(ExtractFileExt(FileName)) of
-    '.mp3', '.flac', '.m4a', '.m4b', '.mp4': Result := True;
+    '.mp3', '.flac', '.m4a', '.m4b', '.mp4', '.ogg', '.oga', '.opus',
+    '.wav', '.aif', '.aiff', '.aifc', '.ape', '.wv', '.mpc', '.ofr',
+    '.wma', '.asf': Result := True;
   else
     Result := False;
   end;
@@ -43,6 +45,10 @@ begin
     '.mp3': WriteMp3Tags(Info.FileName, Info);
     '.flac': WriteFlacTags(Info.FileName, Info);
     '.m4a', '.m4b', '.mp4': WriteMp4Tags(Info.FileName, Info);
+    '.ogg', '.oga', '.opus': WriteOggTags(Info.FileName, Info);
+    '.wav', '.aif', '.aiff', '.aifc': WriteWavAiffTags(Info.FileName, Info);
+    '.ape', '.wv', '.mpc', '.ofr': WriteApeTags(Info.FileName, Info);
+    '.wma', '.asf': WriteAsfTags(Info.FileName, Info);
   end;
   if KeepTimestamp then
     SetFileStamp(Info.FileName, Stamp);

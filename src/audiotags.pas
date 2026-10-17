@@ -20,11 +20,12 @@ function ReadAudioInfo(const FileName: string; WantPictures: Boolean = False): T
 implementation
 
 uses
-  Mp3Reader, VorbisReader, Mp4Reader;
+  Mp3Reader, VorbisReader, Mp4Reader, WavReader, ApeReader, AsfReader;
 
 const
-  ReadableExts: array[0..7] of string = ('.mp3', '.flac', '.ogg', '.oga', '.opus', '.m4a', '.m4b', '.mp4');
-  OtherExts: array[0..9] of string = ('.wma', '.asf', '.ape', '.wv', '.mpc', '.ofr', '.wav', '.aif', '.aiff', '.dsf');
+  ReadableExts: array[0..17] of string = ('.mp3', '.flac', '.ogg', '.oga', '.opus', '.m4a', '.m4b', '.mp4',
+    '.wav', '.aif', '.aiff', '.aifc', '.ape', '.wv', '.mpc', '.ofr', '.wma', '.asf');
+  OtherExts: array[0..0] of string = ('.dsf');
 
 function ExtIn(const FileName: string; const Exts: array of string): Boolean;
 var
@@ -62,6 +63,9 @@ begin
         '.flac': ReadFlac(S, Result);
         '.ogg', '.oga', '.opus': ReadOgg(S, Result);
         '.m4a', '.m4b', '.mp4': ReadMp4(S, Result);
+        '.wav', '.aif', '.aiff', '.aifc': ReadWavAiff(S, Result);
+        '.ape', '.wv', '.mpc', '.ofr': ReadApeFamily(S, Result);
+        '.wma', '.asf': ReadAsf(S, Result);
       else
         Result.Supported := False;
       end;

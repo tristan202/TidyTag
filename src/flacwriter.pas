@@ -88,6 +88,7 @@ var
   Entry, Raw: string;
   Dest: TBytesStream;
   Pic: TBytes;
+  K: Integer;
 
   procedure AddMulti(const Key, Value: string);
   var
@@ -179,9 +180,9 @@ begin
     AddOne('COMPOSERSORT', Info.Fields[tfSortComposer]);
     AddOne('LYRICS', Info.Fields[tfLyrics]);
     if WithPictures then
-      for I := 0 to High(Info.Pictures) do
+      for K := 0 to High(Info.Pictures) do
       begin
-        Pic := BuildFlacPicture(Info.Pictures[I]);
+        Pic := BuildFlacPicture(Info.Pictures[K]);
         SetLength(Raw, Length(Pic));
         if Length(Pic) > 0 then Move(Pic[0], Raw[1], Length(Pic));
         Entries.Add('METADATA_BLOCK_PICTURE=' + EncodeStringBase64(Raw));

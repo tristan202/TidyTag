@@ -12,7 +12,7 @@ program TagTest;
 
 uses
   {$IFDEF WINDOWS}Windows,{$ENDIF}
-  Classes, SysUtils, crc, AudioTypes, AudioTags, TagWriter, TagUtils, Mp3Reader;
+  Classes, SysUtils, crc, AudioTypes, AudioTags, TagWriter, TagUtils, Mp3Reader, OggWriter, WavReader, ApeTag;
 
 var
   Failures: Integer = 0;
@@ -74,6 +74,66 @@ begin
 end;
 
 { Fingerprint of the audio payload, independent of where the tags are. }
+{ Ogg: CRC over every packet except the comment packet (index 1); also checks that the
+  page checksums are valid and the sequence numbers run 0, 1, 2, ... }
+function OggFingerprint(S: TStream): Cardinal;
+var
+  H, Segs, Data: TBytes;
+  N, I, Len, Off, Packet: Integer;
+  Seq: Cardinal;
+  Raw: TBytes;
+begin
+  Result := 0;
+  Packet := 0;
+  Seq := 0;
+  S.Position := 0;
+  while S.Position < S.Size do
+  begin
+    H := ReadStreamBytes(S, 27);
+    if not BytesAre(H, 0, 'OggS') then begin Check(False, 'Ogg-side ved ' + IntToStr(S.Position)); Exit; end;
+    N := H[26];
+    Segs := ReadStreamBytes(S, N);
+    Len := 0;
+    for I := 0 to N - 1 do Inc(Len, Segs[I]);
+    Data := ReadStreamBytes(S, Len);
+    if LE32(H, 18) <> Seq then Check(False, Format('Ogg-sekvens %d', [Seq]));
+    SetLength(Raw, 27 + N + Len);
+    Move(H[0], Raw[0], 27);
+    if N > 0 then Move(Segs[0], Raw[27], N);
+    if Len > 0 then Move(Data[0], Raw[27 + N], Len);
+    PutBE32(Raw, 22, 0);
+    if OggCrc(Raw, 0, Length(Raw)) <> LE32(H, 22) then Check(False, Format('Ogg-CRC side %d', [Seq]));
+    Inc(Seq);
+    Off := 0;
+    for I := 0 to N - 1 do
+    begin
+      if (Packet <> 1) and (Segs[I] > 0) then
+        Result := crc32(Result, @Data[Off], Segs[I]);
+      Inc(Off, Segs[I]);
+      if Segs[I] < 255 then Inc(Packet);
+    end;
+  end;
+  Result := Result xor Cardinal(Packet);
+end;
+
+{ WAV/AIFF: CRC over id and data of every chunk except the tag chunks. }
+function ChunkFingerprint(S: TStream): Cardinal;
+var
+  CF: TChunkFile;
+  C: TChunk;
+  Id: string;
+begin
+  Result := 0;
+  CF := ReadChunkFile(S);
+  for C in CF.Chunks do
+    if not IsTagChunk(S, C) then
+    begin
+      Id := C.ID;
+      Result := crc32(Result, @Id[1], 4);
+      Result := CrcRange(S, C.DataPos, C.Size, Result);
+    end;
+end;
+
 function AudioFingerprint(const FileName: string): Cardinal;
 var
   S: TFileStream;
@@ -90,7 +150,19 @@ begin
   Ext := LowerCase(ExtractFileExt(FileName));
   S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyNone);
   try
-    if Ext = '.mp3' then
+    if (Ext = '.ogg') or (Ext = '.oga') or (Ext = '.opus') then
+      Result := OggFingerprint(S)
+    else if (Ext = '.wav') or (Ext = '.aif') or (Ext = '.aiff') or (Ext = '.aifc') then
+      Result := ChunkFingerprint(S)
+    else if (Ext = '.ape') or (Ext = '.wv') or (Ext = '.mpc') or (Ext = '.ofr') then
+      Result := CrcRange(S, 0, FindApeTag(S).AudioEnd, 0)
+    else if (Ext = '.wma') or (Ext = '.asf') then
+    begin
+      // everything after the header object (data and index objects)
+      H := ReadStreamBytes(S, 24);
+      Result := CrcRange(S, LE64(H, 16), S.Size - LE64(H, 16), 0);
+    end
+    else if Ext = '.mp3' then
     begin
       ParseID3v2(S, Ver, Frames, TagSize);
       AudioEnd := S.Size;

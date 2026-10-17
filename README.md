@@ -3,7 +3,7 @@
 Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne i Tag&Rename 3.9.15
 (se [docs/Funktionsoversigt.md](docs/Funktionsoversigt.md)). Arbejdstitel – navnet kan ændres.
 
-## Status (MVP, trin 9)
+## Status (MVP, trin 10)
 - **Hovedvindue i Tag&Rename-stil:** menulinje (Filer, Rediger, Vis, Playliste, Værktøjer,
   Indstillinger, Hjælp), værktøjspanel (F8) med fanerne *Omdøb filer (F4)*, *Multi-fil-tag-editor
   (Ctrl+F4)* og *Tags fra filnavn (Shift+F4)* direkte i vinduet (med live-resultat for den markerede
@@ -23,20 +23,23 @@ Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne
 - Mappetræ og virtuel filliste med 21 kolonner; klik på en kolonneoverskrift for at sortere.
 - "Søg i undermapper"; tags læses i en baggrundstråd, så vinduet ikke fryser.
 - Husker sidste mappe, undermappe-valg og træets bredde (`%LOCALAPPDATA%\TagKlon\tagklon.ini`).
-- Læser tags (kun læsning endnu):
+- Læser tags:
   - MP3: ID3v2.2/2.3/2.4 + ID3v1, varighed/bitrate inkl. VBR (Xing/Info/VBRI)
   - FLAC: Vorbis comments, STREAMINFO, billeder
   - Ogg Vorbis, Opus og Ogg FLAC
   - MP4/M4A/M4B: iTunes-atoms (`ilst`), AAC/ALAC
-- WMA, APE, WavPack, MPC, WAV og AIFF bliver vist i listen, men deres tags læses ikke endnu.
-- **Skriver tags** til MP3 (ID3v2.3/2.4 + opdaterer et eksisterende ID3v1), FLAC og MP4/M4A:
+  - WAV/AIFF/AIFC: ID3-chunk, RIFF LIST/INFO (og AIFF NAME/AUTH/ANNO, når der ikke er ID3)
+  - Monkey's Audio, WavPack, Musepack (SV7/SV8) og OptimFROG: APEv2 (ID3v2/ID3v1 som reserve)
+  - WMA/ASF: Content Description, WM/*-attributter, Metadata Library (store billeder)
+- **Skriver tags** til alle ovenstående undtagen Ogg FLAC: MP3 (ID3v2.3/2.4 + opdaterer et
+  eksisterende ID3v1), FLAC, MP4/M4A, Ogg Vorbis/Opus (nye header-sider, sekvensnumre og CRC),
+  WAV/AIFF (ID3-chunk + LIST/INFO), APE/WV/MPC/OFR (APEv2 + evt. ID3v1) og WMA/ASF:
   - felter vi ikke redigerer (ReplayGain, MusicBrainz-id'er, iTunes-felter, ...) bevares uændret
   - skriver på stedet, når der er plads (padding/`free`), ellers via midlertidig fil, der erstatter originalen
   - MP4: chunk-offsets (`stco`/`co64`) rettes, når lyddata flyttes
 - **Tag-editor** for én fil (dobbeltklik, Enter eller "Rediger tag..."): titel, kunstner, album,
   albumkunstner, komponist, år, spor, disc, genre, BPM, kommentar og cover-billeder
   (tilføj/fjern/gem som fil), "Gem og forrige/næste" og "Bevar filens dato".
-- Ogg/Opus kan læses, men ikke gemmes endnu.
 - **Omdøb filer** ud fra tags med maske (`%1 - %2`, `%1\%3\%6 - %2` laver mapper), versaler,
   mellemrum→`_`, 2-cifret spornummer, live forhåndsvisning (uændret / mangler felt / findes allerede /
   dublet) og **Fortryd omdøbning** (fjerner også mapper, der blev tomme).
@@ -108,6 +111,10 @@ Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret
 | `src/id3writer.pas` | ID3v2 (+ID3v1) til MP3 |
 | `src/flacwriter.pas` | FLAC-metadatablokke og Vorbis comments |
 | `src/mp4writer.pas` | MP4-atomtræ, `ilst`, chunk-offsets |
+| `src/oggwriter.pas` | Ogg Vorbis/Opus: kommentarpakke, ny sideopdeling, CRC |
+| `src/wavreader.pas`, `src/wavwriter.pas` | WAV/AIFF-chunks: lydinfo, ID3-chunk, LIST/INFO |
+| `src/apetag.pas`, `src/apereader.pas` | APEv2-tags; lydinfo for APE/WavPack/Musepack/OptimFROG |
+| `src/asfreader.pas`, `src/asfwriter.pas` | WMA/ASF-header-objekter |
 | `src/tageditform.pas/.lfm` | Tag-editor for én fil |
 | `src/renamecore.pas` | Maske → fil-/mappenavn, rensning, plan/udfør/fortryd |
 | `src/filenametags.pas` | Filnavn → tags (maske-matchning) |
@@ -129,6 +136,6 @@ Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret
 | `reference/forms/` | Formularer fra originalen (kun som reference – må ikke kopieres) |
 
 ## Næste skridt
-1. Ogg/Opus-skrivning og understøttelse af WMA, APE/WavPack og WAV/AIFF
-2. Rating (POPM) og flere billedtyper i editoren
-4. Indstilling for kontakt-info i MusicBrainz' User-Agent (anbefales af MusicBrainz)
+1. Rating (POPM) og flere billedtyper i editoren
+2. Ogg FLAC-skrivning og DSF (ID3 i DSD-filer)
+3. Indstilling for kontakt-info i MusicBrainz' User-Agent (anbefales af MusicBrainz)

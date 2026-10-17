@@ -195,6 +195,41 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ExportImportForm"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="OggWriter"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WavReader"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WavWriter"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ApeTag"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ApeReader"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="AsfReader"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="AsfWriter"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
