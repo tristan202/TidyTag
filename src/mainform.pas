@@ -160,6 +160,7 @@ type
     FActManageActions: TAction;
     FActAutoFitAfterScan: TAction;
     FActDeleteFiles: TAction;
+    FActAutoResize: TAction;
     FTestTargetDir: string; // self-test: target of copy/move instead of a folder dialog
     FAutoYes: Boolean;
     FSyncDir: TSyncDirection;
@@ -246,6 +247,13 @@ type
     procedure RenameActionClick(Sender: TObject);
     procedure DoCopyField(Src, Dst: TTagField; OnlyIfEmpty: Boolean);
     procedure BuildFilterExtras;
+    procedure ActDeleteFolderCoversExecute(Sender: TObject);
+    procedure ActResizeFileCoversExecute(Sender: TObject);
+    procedure ActResizeFolderCoversExecute(Sender: TObject);
+    procedure ActAutoResizeExecute(Sender: TObject);
+    procedure ActCoverAsFolderExecute(Sender: TObject);
+    procedure ResizeFileCovers;
+    procedure ResizeFolderCovers;
     procedure ActDeleteFilesExecute(Sender: TObject);
     procedure ActCopyToExecute(Sender: TObject);
     procedure ActMoveToExecute(Sender: TObject);
@@ -349,9 +357,23 @@ implementation
 uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
-  Math, Language, Process, TagRemove, ToolDialogs, FileOps;
+  Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage;
 
 resourcestring
+  rsSletMappeCover = 'Slet mappe-cover i de valgte mapper...';
+  rsSletMappeCoverHint = 'Læg folder.jpg/cover.jpg/front.jpg (og .png) i papirkurven';
+  rsSkalerCoverIFilerne = 'Skalér cover i filerne...';
+  rsSkalerCoverIFilerneHint = 'Gør store billeder i filernes tag mindre (og evt. til JPEG)';
+  rsSkalerMappeCover = 'Skalér mappe-cover...';
+  rsSkalerMappeCoverHint = 'Gør store folder.jpg/cover.jpg-billeder mindre (og evt. til JPEG)';
+  rsBrugFilensCoverSomMappeCover = 'Brug filens cover som mappe-cover';
+  rsSkalerStoreCoverVedGem = 'Skalér store cover ved gem...';
+  rsSkalerStoreCoverVedGemHint = 'Billeder større end den valgte størrelse gøres mindre, når tags gemmes';
+  rsSkalerCover = 'Skalér cover';
+  rsSkalerCoverIDFiler = 'Skalér billeder i %d filer til højst %d pixel?';
+  rsSkalerCoverIDMapper = 'Skalér mappe-cover i %d mapper til højst %d pixel?';
+  rsLaegDMappeCoverIPapirkurven = 'Læg %d cover-billeder fra %d mapper i papirkurven?';
+  rsDenMarkeredeFilHarIntetCover = 'Den markerede fil har intet cover.';
   rsKopierTilMappe = 'Kopiér til mappe...';
   rsKopierTilMappeHint = 'Kopiér de afkrydsede/markerede filer til en anden mappe';
   rsFlytTilMappe = 'Flyt til mappe...';
@@ -825,6 +847,18 @@ begin
   end;
 end;
 
+procedure WriteFileBytes(const FileName: string; const Data: TBytes);
+var
+  S: TFileStream;
+begin
+  S := TFileStream.Create(FileName, fmCreate);
+  try
+    if Length(Data) > 0 then S.WriteBuffer(Data[0], Length(Data));
+  finally
+    S.Free;
+  end;
+end;
+
 function IsImageFile(const FileName: string): Boolean;
 begin
   case LowerCase(ExtractFileExt(FileName)) of
@@ -938,7 +972,10 @@ var
     aPlChecked, aPlAll, aTabRename, aTabMulti, aTabF2T, aRenameDlg, aF2TDlg, aTracks, aWeb,
     aToken, aKeys, aAbout, aUp, aFav, aNewFolder, aTreeRefresh, aCloseFolders,
     aMoveUp, aMoveDown, aExport, aSwapAT, aSwapAA, aSwapLT, aSwap, aCopyField, aClean,
-    aRemoveTags, aCoverIn, aCoverOut, aWords, aSync, aAutoFit, aRandom, aCopyTo, aMoveTo: TAction;
+    aRemoveTags, aCoverIn, aCoverOut, aWords, aSync, aAutoFit, aRandom, aCopyTo, aMoveTo,
+    aDelFolderCover, aResizeFiles, aResizeFolders, aCoverAsFolder: TAction;
+  CoverPopup: TPopupMenu;
+  PM: TMenuItem;
   NameTools: array[TNameTool] of TAction;
   NT: TNameTool;
   TopMenu, SubMenu: TMenuItem;
@@ -1076,6 +1113,12 @@ begin
   NameTools[ntSurnameFirstToName] := NewAction(rsEfternavnFornavnTil, '', 0, -1, @ActNameToolExecute);
   for NT := Low(TNameTool) to High(TNameTool) do NameTools[NT].Tag := Ord(NT);
   aSync := NewAction(rsMpTagSynkroniseringMenu, rsMpTagSynkroniseringHint, 0, -1, @ActID3SyncExecute);
+  aDelFolderCover := NewAction(rsSletMappeCover, rsSletMappeCoverHint, 0, -1, @ActDeleteFolderCoversExecute);
+  aResizeFiles := NewAction(rsSkalerCoverIFilerne, rsSkalerCoverIFilerneHint, 0, -1, @ActResizeFileCoversExecute);
+  aResizeFolders := NewAction(rsSkalerMappeCover, rsSkalerMappeCoverHint, 0, -1, @ActResizeFolderCoversExecute);
+  aCoverAsFolder := NewAction(rsBrugFilensCoverSomMappeCover, '', 0, icoSave, @ActCoverAsFolderExecute);
+  FActAutoResize := NewAction(rsSkalerStoreCoverVedGem, rsSkalerStoreCoverVedGemHint, 0, -1, @ActAutoResizeExecute);
+  FActAutoResize.AutoCheck := True;
   aCopyTo := NewAction(rsKopierTilMappe, rsKopierTilMappeHint, 0, icoCopy, @ActCopyToExecute);
   aMoveTo := NewAction(rsFlytTilMappe, rsFlytTilMappeHint, 0, -1, @ActMoveToExecute);
   FActDeleteFiles := NewAction(rsSletFilerMenu, rsSletFilerHint, 0, icoClose, @ActDeleteFilesExecute);
@@ -1122,12 +1165,19 @@ begin
   SubMenu := SubMenu.Parent;
   Add(SubMenu, aSync); Add(SubMenu, nil); Add(SubMenu, aRemoveTags);
   SubMenu := Sub(TopMenu, rsCoverVaerktoejer);
-  Add(SubMenu, aCoverIn); Add(SubMenu, aCoverOut);
+  Add(SubMenu, aCoverIn); Add(SubMenu, aCoverOut); Add(SubMenu, aCoverAsFolder); Add(SubMenu, nil);
+  Add(SubMenu, aResizeFiles); Add(SubMenu, aResizeFolders); Add(SubMenu, nil); Add(SubMenu, aDelFolderCover);
+  // right click on the file cover
+  CoverPopup := TPopupMenu.Create(Self);
+  PM := TMenuItem.Create(CoverPopup);
+  PM.Action := aCoverAsFolder;
+  CoverPopup.Items.Add(PM);
+  ImageFileCover.PopupMenu := CoverPopup;
   FActionsMenu := Sub(TopMenu, rsOmdoebningshandlingerMenu);
   RebuildActionsMenu;
   Add(TopMenu, nil); Add(TopMenu, FActUndo);
   TopMenu := Menu(rsIndstillinger);
-  Add(TopMenu, FActKeepDate); AddAlbumArtistMenu(TopMenu); Add(TopMenu, aWords); Add(TopMenu, aToken);
+  Add(TopMenu, FActKeepDate); Add(TopMenu, FActAutoResize); AddAlbumArtistMenu(TopMenu); Add(TopMenu, aWords); Add(TopMenu, aToken);
   Add(TopMenu, nil);
   AddLanguageMenu(TopMenu);
   TopMenu := Menu(rsHjaelp);
@@ -3025,6 +3075,232 @@ begin
   SelectionChanged;
 end;
 
+var
+  GCoverOpt: TCoverResize = (MaxSide: 600; Quality: 90; ToJpeg: False);
+
+{ TagWriter.PictureFilter: shrink pictures bigger than the chosen size before saving. }
+procedure ShrinkPictures(Info: TAudioInfo);
+var
+  I: Integer;
+  Data: TBytes;
+  Mime: string;
+begin
+  for I := 0 to High(Info.Pictures) do
+    if ResizeCover(Info.Pictures[I].Data, GCoverOpt, Data, Mime) then
+    begin
+      Info.Pictures[I].Data := Data;
+      Info.Pictures[I].MimeType := Mime;
+    end;
+end;
+
+procedure TFormMain.ActAutoResizeExecute(Sender: TObject);
+begin
+  if (Sender <> nil) and FActAutoResize.Checked and not FAutoYes then
+    if not AskCoverResize(rsSkalerStoreCoverVedGem, GCoverOpt) then
+    begin
+      FActAutoResize.Checked := False;
+      Exit;
+    end;
+  if FActAutoResize.Checked then PictureFilter := @ShrinkPictures else PictureFilter := nil;
+end;
+
+procedure TFormMain.ActResizeFileCoversExecute(Sender: TObject);
+begin
+  if FAutoYes or AskCoverResize(rsSkalerCoverIFilerne, GCoverOpt) then ResizeFileCovers;
+end;
+
+procedure TFormMain.ResizeFileCovers;
+var
+  Items: TAudioInfoArray;
+  Full: TAudioInfo;
+  I, P, NDone, Failed: Integer;
+  Any: Boolean;
+  Data: TBytes;
+  Mime: string;
+  Errors: TStringList;
+begin
+  if not RequireTargets(Items) then Exit;
+  if not AskYes(rsSkalerCover, Format(rsSkalerCoverIDFiler, [Length(Items), GCoverOpt.MaxSide])) then Exit;
+  NDone := 0;
+  Failed := 0;
+  Errors := TStringList.Create;
+  Screen.Cursor := crHourGlass;
+  try
+    for I := 0 to High(Items) do
+    begin
+      if not Items[I].HasCover or not CanWriteTags(Items[I].FileName) then Continue;
+      SetMessage(Format(rsSDAfD, [rsSkalerCover, I + 1, Length(Items)]));
+      Application.ProcessMessages;
+      Full := ReadAudioInfo(Items[I].FileName, True);
+      try
+        Any := False;
+        for P := 0 to High(Full.Pictures) do
+          if ResizeCover(Full.Pictures[P].Data, GCoverOpt, Data, Mime) then
+          begin
+            Full.Pictures[P].Data := Data;
+            Full.Pictures[P].MimeType := Mime;
+            Any := True;
+          end;
+        if Any then
+          try
+            WriteAudioTags(Full, FKeepTimestamp);
+            Inc(NDone);
+          except
+            on E: Exception do
+            begin
+              Inc(Failed);
+              Errors.Add(ExtractFileName(Items[I].FileName) + ': ' + E.Message);
+            end;
+          end;
+      finally
+        Full.Free;
+      end;
+    end;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+  SetMessage(Format(rsSGemtIDFiler, [rsSkalerCover, NDone, Failed, '']));
+  if Errors.Count > 0 then Inform(rsNogleFilerBlevIkkeGemt, Errors.Text, mtWarning);
+  Errors.Free;
+  FCoverFile := '';
+  SelectionChanged;
+end;
+
+procedure TFormMain.ActResizeFolderCoversExecute(Sender: TObject);
+begin
+  if FAutoYes or AskCoverResize(rsSkalerMappeCover, GCoverOpt) then ResizeFolderCovers;
+end;
+
+procedure TFormMain.ResizeFolderCovers;
+var
+  Items: TAudioInfoArray;
+  Dirs: TStringList;
+  I, NDone: Integer;
+  Path, Target, Mime: string;
+  Data: TBytes;
+  Errors: TStringList;
+begin
+  if not RequireTargets(Items) then Exit;
+  Dirs := TStringList.Create;
+  Errors := TStringList.Create;
+  try
+    Dirs.Sorted := True;
+    Dirs.Duplicates := dupIgnore;
+    for I := 0 to High(Items) do
+      if FindFolderCover(ExtractFileDir(Items[I].FileName)) <> '' then
+        Dirs.Add(ExtractFileDir(Items[I].FileName));
+    if Dirs.Count = 0 then
+    begin
+      Inform(rsSkalerMappeCover, rsIngenAfMapperneHarEtCover);
+      Exit;
+    end;
+    if not AskYes(rsSkalerMappeCover, Format(rsSkalerCoverIDMapper, [Dirs.Count, GCoverOpt.MaxSide])) then Exit;
+    NDone := 0;
+    for I := 0 to Dirs.Count - 1 do
+    begin
+      Path := FindFolderCover(Dirs[I]);
+      try
+        if not ResizeCover(ReadFileBytes(Path), GCoverOpt, Data, Mime) then Continue;
+        Target := Path;
+        if (Mime = 'image/jpeg') and SameText(ExtractFileExt(Path), '.png') then
+          Target := ChangeFileExt(Path, '.jpg');
+        WriteFileBytes(Target, Data);
+        if Target <> Path then RecycleFiles([Path], Errors); // the PNG became a JPEG
+        Inc(NDone);
+      except
+        on E: Exception do Errors.Add(Path + ': ' + E.Message);
+      end;
+    end;
+    SetMessage(Format(rsCoverGemtIDMapper, [NDone]));
+    if Errors.Count > 0 then Inform(rsSkalerMappeCover, Errors.Text, mtWarning);
+  finally
+    Dirs.Free;
+    Errors.Free;
+  end;
+  FFolderCoverDir := '';
+  SelectionChanged;
+end;
+
+procedure TFormMain.ActDeleteFolderCoversExecute(Sender: TObject);
+const
+  Names: array[0..5] of string = ('folder.jpg', 'folder.png', 'cover.jpg', 'cover.png', 'front.jpg', 'front.png');
+var
+  Items: TAudioInfoArray;
+  Dirs: TStringList;
+  Files: array of string;
+  I: Integer;
+  N: string;
+  Errors: TStringList;
+begin
+  if not RequireTargets(Items) then Exit;
+  Dirs := TStringList.Create;
+  Errors := TStringList.Create;
+  try
+    Dirs.Sorted := True;
+    Dirs.Duplicates := dupIgnore;
+    for I := 0 to High(Items) do Dirs.Add(ExtractFileDir(Items[I].FileName));
+    Files := nil;
+    for I := 0 to Dirs.Count - 1 do
+      for N in Names do
+        if FileExists(IncludeTrailingPathDelimiter(Dirs[I]) + N) then
+        begin
+          SetLength(Files, Length(Files) + 1);
+          Files[High(Files)] := IncludeTrailingPathDelimiter(Dirs[I]) + N;
+        end;
+    if Length(Files) = 0 then
+    begin
+      Inform(rsSletMappeCover, rsIngenAfMapperneHarEtCover);
+      Exit;
+    end;
+    if not AskYes(rsSletMappeCover, Format(rsLaegDMappeCoverIPapirkurven, [Length(Files), Dirs.Count]),
+      mtWarning) then Exit;
+    SetMessage(Format(rsDFilerLagtIPapirkurven, [RecycleFiles(Files, Errors)]));
+    if Errors.Count > 0 then Inform(rsSletMappeCover, Errors.Text, mtWarning);
+  finally
+    Dirs.Free;
+    Errors.Free;
+  end;
+  FFolderCoverDir := '';
+  SelectionChanged;
+end;
+
+procedure TFormMain.ActCoverAsFolderExecute(Sender: TObject);
+var
+  Info, Full: TAudioInfo;
+  Pic, I: Integer;
+  Target: string;
+begin
+  Info := FocusedInfo;
+  if (Info = nil) and (FView.Count > 0) then Info := Item(0);
+  if (Info = nil) or not Info.HasCover then
+  begin
+    Inform(rsBrugFilensCoverSomMappeCover, rsDenMarkeredeFilHarIntetCover);
+    Exit;
+  end;
+  Full := ReadAudioInfo(Info.FileName, True);
+  try
+    Pic := -1;
+    for I := 0 to High(Full.Pictures) do
+      if Full.Pictures[I].PicType = PicTypeFrontCover then begin Pic := I; Break; end;
+    if (Pic < 0) and (Length(Full.Pictures) > 0) then Pic := 0;
+    if Pic < 0 then Exit;
+    if Full.Pictures[Pic].MimeType = 'image/png' then Target := 'folder.png' else Target := 'folder.jpg';
+    Target := IncludeTrailingPathDelimiter(ExtractFileDir(Info.FileName)) + Target;
+    if FileExists(Target) and not AskYes(rsMappensCover, Format(rsSFindesAlleredeErstatDet,
+      [ExtractFileName(Target)])) then Exit;
+    try
+      WriteFileBytes(Target, Full.Pictures[Pic].Data);
+      SetMessage(rsMappensCoverGemtSom + Target);
+    except
+      on E: Exception do Inform(rsMappensCover, rsBilledetKunneIkkeGemmes + LineEnding + E.Message, mtWarning);
+    end;
+  finally
+    Full.Free;
+  end;
+  FFolderCoverDir := '';
+  SelectionChanged;
+end;
+
 procedure TFormMain.BuildFilterExtras;
 var
   L: TLabel;
@@ -3337,7 +3613,7 @@ end;
 
 procedure TFormMain.RunSelfTest(const ReportFile: string);
 var
-  I: Integer;
+  I, W, H: Integer;
   Act: TRenameAction;
 
   procedure Dump(const Step: string);
@@ -3369,6 +3645,7 @@ begin
       Sleep(20);
     end;
     FAutoYes := True;
+    UseRecycleBin := False;
     for I := 0 to FItems.Count - 1 do TAudioInfo(FItems[I]).Checked := True;
     Dump('start');
     // filter: text in all fields, whole words, tag type
@@ -3412,6 +3689,43 @@ begin
     DeleteFile(FindFolderCover(FFolder));
     ActCoverFromTagsExecute(nil);
     FAutoLog.Add('  mappe-cover efter udtraek: ' + ExtractFileName(FindFolderCover(FFolder)));
+    GCoverOpt.MaxSide := 32;
+    GCoverOpt.Quality := 80;
+    GCoverOpt.ToJpeg := True;
+    ResizeFileCovers;
+    for I := 0 to FItems.Count - 1 do
+      with ReadAudioInfo(TAudioInfo(FItems[I]).FileName, True) do
+      try
+        if Length(Pictures) > 0 then
+        begin
+          ImageDimensions(Pictures[0].Data, W, H);
+          FAutoLog.Add(Format('  %s: billede %dx%d %s', [ExtractFileName(FileName), W, H, Pictures[0].MimeType]));
+        end;
+      finally
+        Free;
+      end;
+    ResizeFolderCovers;
+    FAutoLog.Add('  mappe-cover efter skalering: ' + ExtractFileName(FindFolderCover(FFolder)) + ' ' +
+      IntToStr(Length(ReadFileBytes(FindFolderCover(FFolder)))) + ' byte');
+    Dump('cover skaleret til 32 px');
+    ActDeleteFolderCoversExecute(nil);
+    FAutoLog.Add('  mappe-cover efter sletning: "' + ExtractFileName(FindFolderCover(FFolder)) + '"');
+    ActCoverAsFolderExecute(nil);
+    FAutoLog.Add('  mappe-cover fra filens cover: ' + ExtractFileName(FindFolderCover(FFolder)));
+    // automatic shrinking when saving: the 32 px folder cover goes into the files as 16 px
+    GCoverOpt.MaxSide := 16;
+    FActAutoResize.Checked := True;
+    ActAutoResizeExecute(nil);
+    ActCoverToTagsExecute(nil);
+    FActAutoResize.Checked := False;
+    ActAutoResizeExecute(nil);
+    with ReadAudioInfo(TAudioInfo(FItems[0]).FileName, True) do
+    try
+      if Length(Pictures) > 0 then ImageDimensions(Pictures[0].Data, W, H) else W := 0;
+      FAutoLog.Add(Format('  automatisk skalering ved gem: %dx%d', [W, H]));
+    finally
+      Free;
+    end;
     Act.Name := 'Selvtest';
     Act.FileMask := '%1 - %2';
     Act.FolderMask := 'Selvtest-mappe';
@@ -3439,17 +3753,6 @@ begin
   end;
 end;
 
-procedure WriteFileBytes(const FileName: string; const Data: TBytes);
-var
-  S: TFileStream;
-begin
-  S := TFileStream.Create(FileName, fmCreate);
-  try
-    if Length(Data) > 0 then S.WriteBuffer(Data[0], Length(Data));
-  finally
-    S.Free;
-  end;
-end;
 
 { ---------- tag tools ---------- }
 
@@ -4040,6 +4343,11 @@ begin
     Start := Ini.ReadString('Main', 'LastFolder', '');
     FActSubfolders.Checked := Ini.ReadBool('Main', 'Subfolders', False);
     FActAutoFitAfterScan.Checked := Ini.ReadBool('View', 'AutoFitColumns', False);
+    GCoverOpt.MaxSide := Ini.ReadInteger('Cover', 'MaxSide', 600);
+    GCoverOpt.Quality := Ini.ReadInteger('Cover', 'Quality', 90);
+    GCoverOpt.ToJpeg := Ini.ReadBool('Cover', 'ToJpeg', False);
+    FActAutoResize.Checked := Ini.ReadBool('Cover', 'AutoResize', False);
+    ActAutoResizeExecute(nil);
     CheckFilterWhole.Checked := Ini.ReadBool('View', 'FilterWholeWord', False);
     CheckFilterCase.Checked := Ini.ReadBool('View', 'FilterMatchCase', False);
     FKeepTimestamp := Ini.ReadBool('Editor', 'KeepTimestamp', False);
@@ -4096,6 +4404,10 @@ begin
     Ini.WriteString('Main', 'LastFolder', FFolder);
     Ini.WriteBool('Main', 'Subfolders', FActSubfolders.Checked);
     Ini.WriteBool('View', 'AutoFitColumns', FActAutoFitAfterScan.Checked);
+    Ini.WriteBool('Cover', 'AutoResize', FActAutoResize.Checked);
+    Ini.WriteInteger('Cover', 'MaxSide', GCoverOpt.MaxSide);
+    Ini.WriteInteger('Cover', 'Quality', GCoverOpt.Quality);
+    Ini.WriteBool('Cover', 'ToJpeg', GCoverOpt.ToJpeg);
     Ini.WriteBool('View', 'FilterWholeWord', CheckFilterWhole.Checked);
     Ini.WriteBool('View', 'FilterMatchCase', CheckFilterCase.Checked);
     Ini.WriteBool('Editor', 'KeepTimestamp', FKeepTimestamp);

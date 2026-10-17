@@ -5198,5 +5198,149 @@
   "it": "impossibile spostarlo nel cestino",
   "sv": "kunde inte läggas i papperskorgen",
   "es": "no se pudo enviar a la papelera"
+ },
+ "Skalér cover i filerne...": {
+  "en": "Resize covers in the files...",
+  "de": "Cover in den Dateien skalieren...",
+  "fr": "Redimensionner les pochettes des fichiers...",
+  "it": "Ridimensiona le copertine nei file...",
+  "sv": "Skala om omslag i filerna...",
+  "es": "Redimensionar portadas de los archivos..."
+ },
+ "Slet mappe-cover i de valgte mapper...": {
+  "en": "Delete folder covers in the selected folders...",
+  "de": "Ordner-Cover in den gewählten Ordnern löschen...",
+  "fr": "Supprimer les pochettes des dossiers sélectionnés...",
+  "it": "Elimina le copertine delle cartelle selezionate...",
+  "sv": "Ta bort mappomslag i de valda mapparna...",
+  "es": "Eliminar portadas de las carpetas seleccionadas..."
+ },
+ "Læg folder.jpg/cover.jpg/front.jpg (og .png) i papirkurven": {
+  "en": "Move folder.jpg/cover.jpg/front.jpg (and .png) to the Recycle Bin",
+  "de": "folder.jpg/cover.jpg/front.jpg (und .png) in den Papierkorb verschieben",
+  "fr": "Mettre folder.jpg/cover.jpg/front.jpg (et .png) à la corbeille",
+  "it": "Sposta folder.jpg/cover.jpg/front.jpg (e .png) nel cestino",
+  "sv": "Lägg folder.jpg/cover.jpg/front.jpg (och .png) i papperskorgen",
+  "es": "Enviar folder.jpg/cover.jpg/front.jpg (y .png) a la papelera"
+ },
+ "Gør store billeder i filernes tag mindre (og evt. til JPEG)": {
+  "en": "Make big pictures in the files' tags smaller (and optionally JPEG)",
+  "de": "Große Bilder im Tag der Dateien verkleinern (und ggf. in JPEG umwandeln)",
+  "fr": "Réduire les grandes images des tags des fichiers (et éventuellement en JPEG)",
+  "it": "Riduci le immagini grandi nei tag dei file (ed eventualmente in JPEG)",
+  "sv": "Gör stora bilder i filernas taggar mindre (och ev. till JPEG)",
+  "es": "Reducir las imágenes grandes de las etiquetas (y, si se quiere, a JPEG)"
+ },
+ "Skalér mappe-cover...": {
+  "en": "Resize folder covers...",
+  "de": "Ordner-Cover skalieren...",
+  "fr": "Redimensionner les pochettes de dossier...",
+  "it": "Ridimensiona le copertine delle cartelle...",
+  "sv": "Skala om mappomslag...",
+  "es": "Redimensionar portadas de carpeta..."
+ },
+ "Gør store folder.jpg/cover.jpg-billeder mindre (og evt. til JPEG)": {
+  "en": "Make big folder.jpg/cover.jpg pictures smaller (and optionally JPEG)",
+  "de": "Große folder.jpg/cover.jpg-Bilder verkleinern (und ggf. in JPEG umwandeln)",
+  "fr": "Réduire les grandes images folder.jpg/cover.jpg (et éventuellement en JPEG)",
+  "it": "Riduci le immagini folder.jpg/cover.jpg grandi (ed eventualmente in JPEG)",
+  "sv": "Gör stora folder.jpg/cover.jpg-bilder mindre (och ev. till JPEG)",
+  "es": "Reducir las imágenes folder.jpg/cover.jpg grandes (y, si se quiere, a JPEG)"
+ },
+ "Brug filens cover som mappe-cover": {
+  "en": "Use the file's cover as folder cover",
+  "de": "Cover der Datei als Ordner-Cover verwenden",
+  "fr": "Utiliser la pochette du fichier pour le dossier",
+  "it": "Usa la copertina del file come copertina della cartella",
+  "sv": "Använd filens omslag som mappomslag",
+  "es": "Usar la portada del archivo como portada de la carpeta"
+ },
+ "Skalér store cover ved gem...": {
+  "en": "Resize big covers when saving...",
+  "de": "Große Cover beim Speichern skalieren...",
+  "fr": "Redimensionner les grandes pochettes à l'enregistrement...",
+  "it": "Ridimensiona le copertine grandi al salvataggio...",
+  "sv": "Skala om stora omslag vid sparande...",
+  "es": "Redimensionar portadas grandes al guardar..."
+ },
+ "Billeder større end den valgte størrelse gøres mindre, når tags gemmes": {
+  "en": "Pictures larger than the chosen size are made smaller when tags are saved",
+  "de": "Bilder, die größer als die gewählte Größe sind, werden beim Speichern verkleinert",
+  "fr": "Les images plus grandes que la taille choisie sont réduites à l'enregistrement des tags",
+  "it": "Le immagini più grandi della dimensione scelta vengono ridotte al salvataggio dei tag",
+  "sv": "Bilder som är större än den valda storleken görs mindre när taggar sparas",
+  "es": "Las imágenes mayores que el tamaño elegido se reducen al guardar las etiquetas"
+ },
+ "Skalér cover": {
+  "en": "Resize covers",
+  "de": "Cover skalieren",
+  "fr": "Redimensionner les pochettes",
+  "it": "Ridimensiona copertine",
+  "sv": "Skala om omslag",
+  "es": "Redimensionar portadas"
+ },
+ "Skalér billeder i %d filer til højst %d pixel?": {
+  "en": "Resize pictures in %d files to at most %d pixels?",
+  "de": "Bilder in %d Dateien auf höchstens %d Pixel skalieren?",
+  "fr": "Redimensionner les images de %d fichiers à %d pixels maximum ?",
+  "it": "Ridimensionare le immagini in %d file a massimo %d pixel?",
+  "sv": "Skala om bilder i %d filer till högst %d pixlar?",
+  "es": "¿Redimensionar las imágenes de %d archivos a un máximo de %d píxeles?"
+ },
+ "Skalér mappe-cover i %d mapper til højst %d pixel?": {
+  "en": "Resize folder covers in %d folders to at most %d pixels?",
+  "de": "Ordner-Cover in %d Ordnern auf höchstens %d Pixel skalieren?",
+  "fr": "Redimensionner les pochettes de %d dossiers à %d pixels maximum ?",
+  "it": "Ridimensionare le copertine di %d cartelle a massimo %d pixel?",
+  "sv": "Skala om mappomslag i %d mappar till högst %d pixlar?",
+  "es": "¿Redimensionar las portadas de %d carpetas a un máximo de %d píxeles?"
+ },
+ "Læg %d cover-billeder fra %d mapper i papirkurven?": {
+  "en": "Move %d cover pictures from %d folders to the Recycle Bin?",
+  "de": "%d Cover-Bilder aus %d Ordnern in den Papierkorb verschieben?",
+  "fr": "Mettre %d images de pochette de %d dossiers à la corbeille ?",
+  "it": "Spostare %d immagini di copertina da %d cartelle nel cestino?",
+  "sv": "Lägga %d omslagsbilder från %d mappar i papperskorgen?",
+  "es": "¿Enviar %d imágenes de portada de %d carpetas a la papelera?"
+ },
+ "Den markerede fil har intet cover.": {
+  "en": "The selected file has no cover.",
+  "de": "Die markierte Datei hat kein Cover.",
+  "fr": "Le fichier sélectionné n'a pas de pochette.",
+  "it": "Il file selezionato non ha copertina.",
+  "sv": "Den markerade filen har inget omslag.",
+  "es": "El archivo seleccionado no tiene portada."
+ },
+ "Største side (pixel):": {
+  "en": "Largest side (pixels):",
+  "de": "Längste Seite (Pixel):",
+  "fr": "Plus grand côté (pixels) :",
+  "it": "Lato maggiore (pixel):",
+  "sv": "Största sida (pixlar):",
+  "es": "Lado mayor (píxeles):"
+ },
+ "JPEG-kvalitet (1-100):": {
+  "en": "JPEG quality (1-100):",
+  "de": "JPEG-Qualität (1-100):",
+  "fr": "Qualité JPEG (1-100) :",
+  "it": "Qualità JPEG (1-100):",
+  "sv": "JPEG-kvalitet (1-100):",
+  "es": "Calidad JPEG (1-100):"
+ },
+ "Konvertér PNG til JPEG": {
+  "en": "Convert PNG to JPEG",
+  "de": "PNG in JPEG umwandeln",
+  "fr": "Convertir PNG en JPEG",
+  "it": "Converti PNG in JPEG",
+  "sv": "Konvertera PNG till JPEG",
+  "es": "Convertir PNG a JPEG"
+ },
+ "Billeder, der allerede er mindre, ændres ikke (undtagen ved konvertering til JPEG).": {
+  "en": "Pictures that are already smaller are not changed (except when converting to JPEG).",
+  "de": "Bilder, die bereits kleiner sind, bleiben unverändert (außer bei der Umwandlung in JPEG).",
+  "fr": "Les images déjà plus petites ne sont pas modifiées (sauf conversion en JPEG).",
+  "it": "Le immagini già più piccole non vengono modificate (tranne nella conversione in JPEG).",
+  "sv": "Bilder som redan är mindre ändras inte (utom vid konvertering till JPEG).",
+  "es": "Las imágenes que ya son más pequeñas no cambian (salvo al convertir a JPEG)."
  }
 }

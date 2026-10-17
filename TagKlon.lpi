@@ -305,6 +305,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="FileOps"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\coverimage.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CoverImage"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

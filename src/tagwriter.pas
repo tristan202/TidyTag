@@ -25,6 +25,14 @@ var
 { Info's album artist as the rule wants it (unchanged for aaNone). }
 procedure ApplyAlbumArtistRule(Info: TAudioInfo);
 
+type
+  { Called with every Info before it is written, e.g. to shrink big cover pictures
+    (set by the program; graphics code does not belong in this unit). }
+  TPictureFilter = procedure(Info: TAudioInfo);
+
+var
+  PictureFilter: TPictureFilter = nil;
+
 implementation
 
 uses
@@ -64,6 +72,7 @@ begin
   if not CanWriteTags(Info.FileName) then
     raise Exception.Create(rsSkrivningAfDenneFiltypeUnderstoettes);
   ApplyAlbumArtistRule(Info);
+  if Assigned(PictureFilter) then PictureFilter(Info);
   if KeepTimestamp then
     Stamp := GetFileStamp(Info.FileName);
   case LowerCase(ExtractFileExt(Info.FileName)) of

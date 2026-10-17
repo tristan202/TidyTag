@@ -10,6 +10,11 @@ interface
 uses
   Classes, SysUtils;
 
+var
+  { False: delete for good instead (used by the self-test, so that it does not fill the
+    recycle bin; the recycle bin itself is tested by tooltest). }
+  UseRecycleBin: Boolean = True;
+
 { Moves the files to the recycle bin. Returns the number of files that are gone;
   problems go to Errors. }
 function RecycleFiles(const Files: array of string; Errors: TStrings): Integer;
@@ -35,6 +40,13 @@ var
   From: UnicodeString;
 begin
   Result := 0;
+  if not UseRecycleBin then
+  begin
+    for I := 0 to High(Files) do
+      if SysUtils.DeleteFile(Files[I]) then Inc(Result)
+      else Errors.Add(ExtractFileName(Files[I]) + ': ' + SysErrorMessage(GetLastOSError));
+    Exit;
+  end;
   for I := 0 to High(Files) do
   begin
     // one file per call: a failure stays with its own file

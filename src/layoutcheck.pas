@@ -16,7 +16,7 @@ implementation
 uses
   Classes, SysUtils, Types, Forms, Controls, StdCtrls, ExtCtrls, ComCtrls, Buttons,
   Graphics, MainForm, TagEditForm, RenameForm, FileToTagForm, MultiEditForm,
-  TrackToolsForm, WebLookupForm, ExportImportForm, AudioTypes, AppSettings, ToolDialogs, ID3Sync, BatchWrite;
+  TrackToolsForm, WebLookupForm, ExportImportForm, AudioTypes, AppSettings, ToolDialogs, ID3Sync, BatchWrite, CoverImage;
 
 resourcestring
   // same texts as in the main window, so they get the same translations
@@ -25,6 +25,7 @@ resourcestring
   rsTilFelt = 'Til felt:';
   rsKunHvisFeltetErTomt = 'Kun hvis målfeltet er tomt';
   rsIndsaetTag = 'Indsæt tag';
+  rsSkalerCoverIFilerne = 'Skalér cover i filerne...';
   rsVaelgFelterDerIndsaettes = 'Vælg de felter, der indsættes i %d filer:';
 
 type
@@ -168,6 +169,7 @@ var
   Vals: TFieldValues;
   Fs: TTagFieldSet;
   T: TTagField;
+  CO: TCoverResize;
 
   procedure Arm;
   begin
@@ -202,6 +204,11 @@ begin
     Fs := [tfArtist, tfAlbum];
     Arm;
     AskFieldSet(rsIndsaetTag, rsVaelgFelterDerIndsaettes, Vals, Fs);
+    CO.MaxSide := 600;
+    CO.Quality := 90;
+    CO.ToJpeg := False;
+    Arm;
+    AskCoverResize(rsSkalerCoverIFilerne, CO);
   finally
     Insp.Free;
   end;

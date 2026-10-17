@@ -8,7 +8,7 @@ unit ToolDialogs;
 interface
 
 uses
-  Classes, SysUtils, AudioTypes, AppSettings, BatchWrite, ID3Sync;
+  Classes, SysUtils, AudioTypes, AppSettings, BatchWrite, ID3Sync, CoverImage;
 
 { Returns False when cancelled. ShowCheck adds a check box (Check = its state). }
 function AskFieldPair(const Title, FromCaption, ToCaption, CheckCaption: string;
@@ -19,11 +19,12 @@ function AskID3Sync(var Direction: TSyncDirection; var Existing: TSyncExisting):
 { Ticks the fields to paste; only fields with a value in Values are listed. }
 function AskFieldSet(const Title, Prompt: string; const Values: TFieldValues;
   var Fields: TTagFieldSet): Boolean;
+function AskCoverResize(const Title: string; var Opt: TCoverResize): Boolean;
 
 implementation
 
 uses
-  Forms, Controls, Graphics, StdCtrls, ExtCtrls, Grids, Dialogs, ButtonPanel, CheckLst;
+  Forms, Controls, Graphics, StdCtrls, ExtCtrls, Grids, Dialogs, ButtonPanel, CheckLst, Spin;
 
 resourcestring
   rsFra = 'Fra:';
@@ -57,6 +58,10 @@ resourcestring
   rsSyncHjaelp = 'Felter: titel, kunstner, album, år, kommentar, spor og genre. ID3v1 kan kun rumme ' +
     '30 tegn pr. felt og kun vesteuropæiske bogstaver.';
   rsAlle = 'Alle';
+  rsStoersteSide = 'Største side (pixel):';
+  rsJpegKvalitet = 'JPEG-kvalitet (1-100):';
+  rsKonverterPngTilJpeg = 'Konvertér PNG til JPEG';
+  rsSkaleringHjaelp = 'Billeder, der allerede er mindre, ændres ikke (undtagen ved konvertering til JPEG).';
   rsIngen = 'Ingen';
 
 function NewDialog(const Title: string; W, H: Integer): TForm;
@@ -507,6 +512,55 @@ begin
     end;
   finally
     H.Free;
+    F.Free;
+  end;
+end;
+
+function AskCoverResize(const Title: string; var Opt: TCoverResize): Boolean;
+var
+  F: TForm;
+  ES, EQ: TSpinEdit;
+  CJ: TCheckBox;
+begin
+  F := NewDialog(Title, 380, 200);
+  try
+    AddLabel(F, rsStoersteSide, 12, 18);
+    ES := TSpinEdit.Create(F);
+    ES.Parent := F;
+    ES.SetBounds(F.Scale96ToForm(230), F.Scale96ToForm(14), F.Scale96ToForm(90), F.Scale96ToForm(23));
+    ES.MinValue := 50;
+    ES.MaxValue := 5000;
+    ES.Value := Opt.MaxSide;
+    AddLabel(F, rsJpegKvalitet, 12, 50);
+    EQ := TSpinEdit.Create(F);
+    EQ.Parent := F;
+    EQ.SetBounds(F.Scale96ToForm(230), F.Scale96ToForm(46), F.Scale96ToForm(90), F.Scale96ToForm(23));
+    EQ.MinValue := 1;
+    EQ.MaxValue := 100;
+    EQ.Value := Opt.Quality;
+    CJ := TCheckBox.Create(F);
+    CJ.Parent := F;
+    CJ.Caption := rsKonverterPngTilJpeg;
+    CJ.Checked := Opt.ToJpeg;
+    CJ.Left := F.Scale96ToForm(12);
+    CJ.Top := F.Scale96ToForm(80);
+    with AddLabel(F, rsSkaleringHjaelp, 12, 108) do
+    begin
+      WordWrap := True;
+      AutoSize := False;
+      Width := F.Scale96ToForm(356);
+      Height := F.Scale96ToForm(36);
+      Font.Color := clGrayText;
+    end;
+    AddButtons(F);
+    Result := F.ShowModal = mrOK;
+    if Result then
+    begin
+      Opt.MaxSide := ES.Value;
+      Opt.Quality := EQ.Value;
+      Opt.ToJpeg := CJ.Checked;
+    end;
+  finally
     F.Free;
   end;
 end;

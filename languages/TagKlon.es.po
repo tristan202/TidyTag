@@ -527,10 +527,72 @@ msgctxt "layoutcheck.rsindsaettag"
 msgid "Indsæt tag"
 msgstr "Pegar etiqueta"
 
+#: layoutcheck.rsskalercoverifilerne
+msgctxt "layoutcheck.rsskalercoverifilerne"
+msgid "Skalér cover i filerne..."
+msgstr "Redimensionar portadas de los archivos..."
+
 #: layoutcheck.rsvaelgfelterderindsaettes
 msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr "Elige los campos que se pegan en %d archivos:"
+
+#: mainform.rssletmappecover
+msgid "Slet mappe-cover i de valgte mapper..."
+msgstr "Eliminar portadas de las carpetas seleccionadas..."
+
+#: mainform.rssletmappecoverhint
+msgid "Læg folder.jpg/cover.jpg/front.jpg (og .png) i papirkurven"
+msgstr "Enviar folder.jpg/cover.jpg/front.jpg (y .png) a la papelera"
+
+#: mainform.rsskalercoverifilerne
+msgctxt "mainform.rsskalercoverifilerne"
+msgid "Skalér cover i filerne..."
+msgstr "Redimensionar portadas de los archivos..."
+
+#: mainform.rsskalercoverifilernehint
+msgid "Gør store billeder i filernes tag mindre (og evt. til JPEG)"
+msgstr "Reducir las imágenes grandes de las etiquetas (y, si se quiere, a JPEG)"
+
+#: mainform.rsskalermappecover
+msgid "Skalér mappe-cover..."
+msgstr "Redimensionar portadas de carpeta..."
+
+#: mainform.rsskalermappecoverhint
+msgid "Gør store folder.jpg/cover.jpg-billeder mindre (og evt. til JPEG)"
+msgstr "Reducir las imágenes folder.jpg/cover.jpg grandes (y, si se quiere, a JPEG)"
+
+#: mainform.rsbrugfilenscoversommappecover
+msgid "Brug filens cover som mappe-cover"
+msgstr "Usar la portada del archivo como portada de la carpeta"
+
+#: mainform.rsskalerstorecovervedgem
+msgid "Skalér store cover ved gem..."
+msgstr "Redimensionar portadas grandes al guardar..."
+
+#: mainform.rsskalerstorecovervedgemhint
+msgid "Billeder større end den valgte størrelse gøres mindre, når tags gemmes"
+msgstr "Las imágenes mayores que el tamaño elegido se reducen al guardar las etiquetas"
+
+#: mainform.rsskalercover
+msgid "Skalér cover"
+msgstr "Redimensionar portadas"
+
+#: mainform.rsskalercoveridfiler
+msgid "Skalér billeder i %d filer til højst %d pixel?"
+msgstr "¿Redimensionar las imágenes de %d archivos a un máximo de %d píxeles?"
+
+#: mainform.rsskalercoveridmapper
+msgid "Skalér mappe-cover i %d mapper til højst %d pixel?"
+msgstr "¿Redimensionar las portadas de %d carpetas a un máximo de %d píxeles?"
+
+#: mainform.rslaegdmappecoveripapirkurven
+msgid "Læg %d cover-billeder fra %d mapper i papirkurven?"
+msgstr "¿Enviar %d imágenes de portada de %d carpetas a la papelera?"
+
+#: mainform.rsdenmarkeredefilharintetcover
+msgid "Den markerede fil har intet cover."
+msgstr "El archivo seleccionado no tiene portada."
 
 #: mainform.rskopiertilmappe
 msgid "Kopiér til mappe..."
@@ -2320,6 +2382,22 @@ msgstr "Campos: título, artista, álbum, año, comentario, pista y género. ID3
 msgctxt "tooldialogs.rsalle"
 msgid "Alle"
 msgstr "Todos"
+
+#: tooldialogs.rsstoersteside
+msgid "Største side (pixel):"
+msgstr "Lado mayor (píxeles):"
+
+#: tooldialogs.rsjpegkvalitet
+msgid "JPEG-kvalitet (1-100):"
+msgstr "Calidad JPEG (1-100):"
+
+#: tooldialogs.rskonverterpngtiljpeg
+msgid "Konvertér PNG til JPEG"
+msgstr "Convertir PNG a JPEG"
+
+#: tooldialogs.rsskaleringhjaelp
+msgid "Billeder, der allerede er mindre, ændres ikke (undtagen ved konvertering til JPEG)."
+msgstr "Las imágenes que ya son más pequeñas no cambian (salvo al convertir a JPEG)."
 
 #: tooldialogs.rsingen
 msgctxt "tooldialogs.rsingen"

@@ -21,9 +21,9 @@ dagligt brug, **B** = nyttigt, **C** = sjældent/nichepræget, **–** = droppes
 |---|---|---|
 | Læg mappens cover (folder.jpg) ind i alle filers tag | **Færdig** | |
 | Udtræk cover fra filernes tag til folder.jpg | **Færdig** | |
-| Slet mappe-cover i alle valgte mapper | B | |
-| Skalér cover i filer/mapper (maks. dimension, JPEG-kvalitet, konvertér til JPEG) | B | Også som indstilling: skalér store billeder automatisk ved tilføjelse |
-| Brug tag-billede som mappe-cover | B | Delvist: man kan trække billeder til panelerne |
+| Slet mappe-cover i alle valgte mapper | **Færdig** | |
+| Skalér cover i filer/mapper (maks. dimension, JPEG-kvalitet, konvertér til JPEG) | **Færdig** | Også som indstilling: skalér store billeder automatisk ved tilføjelse |
+| Brug tag-billede som mappe-cover | **Færdig** | Delvist: man kan trække billeder til panelerne |
 
 ## Omdøbning
 | Funktion | Prioritet | Bemærkning |
