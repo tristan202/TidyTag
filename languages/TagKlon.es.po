@@ -404,6 +404,14 @@ msgstr "Escribiendo %s..."
 msgid "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc\n%9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab\n%d Spring over\nFiltypen fjernes automatisk. Brug \\ for mappenavne, fx  %1\\%3\\%6 - %2"
 msgstr "%1 Artista   %2 Título   %3 Álbum   %4 Año   %5 Género   %6 Pista   %# Disco\n%9 Comentario   %b BPM   %aa Artista del álbum   %cp Compositor   %co Director   %lb Sello\n%d Omitir\nLa extensión se quita automáticamente. Usa \\ para nombres de carpeta, p. ej.  %1\\%3\\%6 - %2"
 
+#: fileops.rsfindesalleredeimaalmappen
+msgid "findes allerede i målmappen"
+msgstr "ya existe en la carpeta de destino"
+
+#: fileops.rskunneikkelaeggesipapirkurven
+msgid "kunne ikke lægges i papirkurven"
+msgstr "no se pudo enviar a la papelera"
+
 #: filetotagform.rsklar
 msgid "Klar"
 msgstr "Listo"
@@ -523,6 +531,58 @@ msgstr "Pegar etiqueta"
 msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr "Elige los campos que se pegan en %d archivos:"
+
+#: mainform.rskopiertilmappe
+msgid "Kopiér til mappe..."
+msgstr "Copiar a carpeta..."
+
+#: mainform.rskopiertilmappehint
+msgid "Kopiér de afkrydsede/markerede filer til en anden mappe"
+msgstr "Copiar los archivos marcados/seleccionados a otra carpeta"
+
+#: mainform.rsflyttilmappe
+msgid "Flyt til mappe..."
+msgstr "Mover a carpeta..."
+
+#: mainform.rsflyttilmappehint
+msgid "Flyt de afkrydsede/markerede filer til en anden mappe"
+msgstr "Mover los archivos marcados/seleccionados a otra carpeta"
+
+#: mainform.rssletfilermenu
+msgid "Slet filer..."
+msgstr "Eliminar archivos..."
+
+#: mainform.rssletfilerhint
+msgid "Læg de afkrydsede/markerede filer i papirkurven (Delete i fillisten)"
+msgstr "Enviar los archivos marcados/seleccionados a la papelera (Supr en la lista)"
+
+#: mainform.rssletfiler
+msgid "Slet filer"
+msgstr "Eliminar archivos"
+
+#: mainform.rslaegdfileripapirkurven
+msgid "Læg %d filer i papirkurven?"
+msgstr "¿Enviar %d archivos a la papelera?"
+
+#: mainform.rsdfilerlagtipapirkurven
+msgid "%d filer lagt i papirkurven"
+msgstr "%d archivos enviados a la papelera"
+
+#: mainform.rskopierdfilertils
+msgid "Kopiér %d filer til %s?"
+msgstr "¿Copiar %d archivos a %s?"
+
+#: mainform.rsflytdfilertils
+msgid "Flyt %d filer til %s?"
+msgstr "¿Mover %d archivos a %s?"
+
+#: mainform.rsdfilerkopierettils
+msgid "%d filer kopieret til %s"
+msgstr "%d archivos copiados a %s"
+
+#: mainform.rsdfilerflyttettils
+msgid "%d filer flyttet til %s"
+msgstr "%d archivos movidos a %s"
 
 #: mainform.rsheleord
 msgid "Hele ord"

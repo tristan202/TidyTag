@@ -300,6 +300,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ID3Sync"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\fileops.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="FileOps"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

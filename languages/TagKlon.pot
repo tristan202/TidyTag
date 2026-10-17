@@ -403,6 +403,14 @@ msgstr ""
 msgid "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc\n%9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab\n%d Spring over\nFiltypen fjernes automatisk. Brug \\ for mappenavne, fx  %1\\%3\\%6 - %2"
 msgstr ""
 
+#: fileops.rsfindesalleredeimaalmappen
+msgid "findes allerede i målmappen"
+msgstr ""
+
+#: fileops.rskunneikkelaeggesipapirkurven
+msgid "kunne ikke lægges i papirkurven"
+msgstr ""
+
 #: filetotagform.rsklar
 msgid "Klar"
 msgstr ""
@@ -521,6 +529,58 @@ msgstr ""
 #: layoutcheck.rsvaelgfelterderindsaettes
 msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
+msgstr ""
+
+#: mainform.rskopiertilmappe
+msgid "Kopiér til mappe..."
+msgstr ""
+
+#: mainform.rskopiertilmappehint
+msgid "Kopiér de afkrydsede/markerede filer til en anden mappe"
+msgstr ""
+
+#: mainform.rsflyttilmappe
+msgid "Flyt til mappe..."
+msgstr ""
+
+#: mainform.rsflyttilmappehint
+msgid "Flyt de afkrydsede/markerede filer til en anden mappe"
+msgstr ""
+
+#: mainform.rssletfilermenu
+msgid "Slet filer..."
+msgstr ""
+
+#: mainform.rssletfilerhint
+msgid "Læg de afkrydsede/markerede filer i papirkurven (Delete i fillisten)"
+msgstr ""
+
+#: mainform.rssletfiler
+msgid "Slet filer"
+msgstr ""
+
+#: mainform.rslaegdfileripapirkurven
+msgid "Læg %d filer i papirkurven?"
+msgstr ""
+
+#: mainform.rsdfilerlagtipapirkurven
+msgid "%d filer lagt i papirkurven"
+msgstr ""
+
+#: mainform.rskopierdfilertils
+msgid "Kopiér %d filer til %s?"
+msgstr ""
+
+#: mainform.rsflytdfilertils
+msgid "Flyt %d filer til %s?"
+msgstr ""
+
+#: mainform.rsdfilerkopierettils
+msgid "%d filer kopieret til %s"
+msgstr ""
+
+#: mainform.rsdfilerflyttettils
+msgid "%d filer flyttet til %s"
 msgstr ""
 
 #: mainform.rsheleord

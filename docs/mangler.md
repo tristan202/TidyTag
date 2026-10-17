@@ -49,8 +49,8 @@ dagligt brug, **B** = nyttigt, **C** = sjældent/nichepræget, **–** = droppes
 ## Filhandlinger
 | Funktion | Prioritet | Bemærkning |
 |---|---|---|
-| Slet filer (papirkurv) | B | |
-| Kopiér/flyt til mappe | B | |
+| Slet filer (papirkurv) | **Færdig** | |
+| Kopiér/flyt til mappe | **Færdig** | |
 | Egenskaber (Windows-dialog) | C | |
 
 ## Tag-editor

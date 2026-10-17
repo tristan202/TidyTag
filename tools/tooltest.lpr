@@ -9,7 +9,7 @@ program ToolTest;
 uses
   {$IFDEF WINDOWS}Windows,{$ENDIF}
   Classes, SysUtils, AudioTypes, AudioTags, TagWriter, FieldTools, ID3Sync, ID3Writer,
-  TagRemove, Mp3Reader;
+  TagRemove, Mp3Reader, FileOps;
 
 var
   Failures: Integer = 0;
@@ -152,6 +152,26 @@ begin
   end;
 end;
 
+procedure TestRecycle(const Dir: string);
+var
+  F: string;
+  S: TFileStream;
+  Errors: TStringList;
+begin
+  WriteLn('-- papirkurv');
+  F := Dir + 'TagKlon-papirkurvstest.tmp'; // one tiny file ends up in the recycle bin
+  S := TFileStream.Create(F, fmCreate);
+  S.WriteByte(0);
+  S.Free;
+  Errors := TStringList.Create;
+  try
+    Check(RecycleFiles([F], Errors) = 1, 'fil lagt i papirkurven ' + Errors.Text);
+    Check(not FileExists(F), 'filen er væk');
+  finally
+    Errors.Free;
+  end;
+end;
+
 begin
   SetMultiByteConversionCodePage(CP_UTF8);
   SetMultiByteFileSystemCodePage(CP_UTF8);
@@ -164,6 +184,7 @@ begin
     ForceDirectories(ParamStr(1));
     TestSync(IncludeTrailingPathDelimiter(UTF8Encode(UnicodeString(ParamStr(1)))),
       UTF8Encode(UnicodeString(ParamStr(2))));
+    TestRecycle(IncludeTrailingPathDelimiter(UTF8Encode(UnicodeString(ParamStr(1)))));
   end;
   WriteLn;
   if Failures = 0 then WriteLn('ALLE TESTS OK') else WriteLn(Failures, ' FEJL');

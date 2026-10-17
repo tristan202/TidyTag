@@ -5078,5 +5078,125 @@
   "it": "Mescola i file dell'elenco (es. prima della numerazione o di una playlist)",
   "sv": "Blanda filerna i listan (t.ex. före numrering eller en spellista)",
   "es": "Mezclar los archivos de la lista (p. ej. antes de numerar o de una lista de reproducción)"
+ },
+ "Kopiér til mappe...": {
+  "en": "Copy to folder...",
+  "de": "In Ordner kopieren...",
+  "fr": "Copier vers un dossier...",
+  "it": "Copia nella cartella...",
+  "sv": "Kopiera till mapp...",
+  "es": "Copiar a carpeta..."
+ },
+ "Kopiér de afkrydsede/markerede filer til en anden mappe": {
+  "en": "Copy the checked/selected files to another folder",
+  "de": "Abgehakte/markierte Dateien in einen anderen Ordner kopieren",
+  "fr": "Copier les fichiers cochés/sélectionnés vers un autre dossier",
+  "it": "Copia i file spuntati/selezionati in un'altra cartella",
+  "sv": "Kopiera de förbockade/markerade filerna till en annan mapp",
+  "es": "Copiar los archivos marcados/seleccionados a otra carpeta"
+ },
+ "Flyt til mappe...": {
+  "en": "Move to folder...",
+  "de": "In Ordner verschieben...",
+  "fr": "Déplacer vers un dossier...",
+  "it": "Sposta nella cartella...",
+  "sv": "Flytta till mapp...",
+  "es": "Mover a carpeta..."
+ },
+ "Flyt de afkrydsede/markerede filer til en anden mappe": {
+  "en": "Move the checked/selected files to another folder",
+  "de": "Abgehakte/markierte Dateien in einen anderen Ordner verschieben",
+  "fr": "Déplacer les fichiers cochés/sélectionnés vers un autre dossier",
+  "it": "Sposta i file spuntati/selezionati in un'altra cartella",
+  "sv": "Flytta de förbockade/markerade filerna till en annan mapp",
+  "es": "Mover los archivos marcados/seleccionados a otra carpeta"
+ },
+ "Slet filer...": {
+  "en": "Delete files...",
+  "de": "Dateien löschen...",
+  "fr": "Supprimer les fichiers...",
+  "it": "Elimina file...",
+  "sv": "Ta bort filer...",
+  "es": "Eliminar archivos..."
+ },
+ "Læg de afkrydsede/markerede filer i papirkurven (Delete i fillisten)": {
+  "en": "Move the checked/selected files to the Recycle Bin (Delete in the file list)",
+  "de": "Abgehakte/markierte Dateien in den Papierkorb verschieben (Entf in der Dateiliste)",
+  "fr": "Mettre les fichiers cochés/sélectionnés à la corbeille (Suppr dans la liste)",
+  "it": "Sposta i file spuntati/selezionati nel cestino (Canc nell'elenco)",
+  "sv": "Lägg de förbockade/markerade filerna i papperskorgen (Delete i fillistan)",
+  "es": "Enviar los archivos marcados/seleccionados a la papelera (Supr en la lista)"
+ },
+ "Slet filer": {
+  "en": "Delete files",
+  "de": "Dateien löschen",
+  "fr": "Supprimer les fichiers",
+  "it": "Elimina file",
+  "sv": "Ta bort filer",
+  "es": "Eliminar archivos"
+ },
+ "Læg %d filer i papirkurven?": {
+  "en": "Move %d files to the Recycle Bin?",
+  "de": "%d Dateien in den Papierkorb verschieben?",
+  "fr": "Mettre %d fichiers à la corbeille ?",
+  "it": "Spostare %d file nel cestino?",
+  "sv": "Lägga %d filer i papperskorgen?",
+  "es": "¿Enviar %d archivos a la papelera?"
+ },
+ "%d filer lagt i papirkurven": {
+  "en": "%d files moved to the Recycle Bin",
+  "de": "%d Dateien in den Papierkorb verschoben",
+  "fr": "%d fichiers mis à la corbeille",
+  "it": "%d file spostati nel cestino",
+  "sv": "%d filer lagda i papperskorgen",
+  "es": "%d archivos enviados a la papelera"
+ },
+ "Kopiér %d filer til %s?": {
+  "en": "Copy %d files to %s?",
+  "de": "%d Dateien nach %s kopieren?",
+  "fr": "Copier %d fichiers vers %s ?",
+  "it": "Copiare %d file in %s?",
+  "sv": "Kopiera %d filer till %s?",
+  "es": "¿Copiar %d archivos a %s?"
+ },
+ "Flyt %d filer til %s?": {
+  "en": "Move %d files to %s?",
+  "de": "%d Dateien nach %s verschieben?",
+  "fr": "Déplacer %d fichiers vers %s ?",
+  "it": "Spostare %d file in %s?",
+  "sv": "Flytta %d filer till %s?",
+  "es": "¿Mover %d archivos a %s?"
+ },
+ "%d filer kopieret til %s": {
+  "en": "%d files copied to %s",
+  "de": "%d Dateien nach %s kopiert",
+  "fr": "%d fichiers copiés vers %s",
+  "it": "%d file copiati in %s",
+  "sv": "%d filer kopierade till %s",
+  "es": "%d archivos copiados a %s"
+ },
+ "%d filer flyttet til %s": {
+  "en": "%d files moved to %s",
+  "de": "%d Dateien nach %s verschoben",
+  "fr": "%d fichiers déplacés vers %s",
+  "it": "%d file spostati in %s",
+  "sv": "%d filer flyttade till %s",
+  "es": "%d archivos movidos a %s"
+ },
+ "findes allerede i målmappen": {
+  "en": "already exists in the target folder",
+  "de": "existiert bereits im Zielordner",
+  "fr": "existe déjà dans le dossier cible",
+  "it": "esiste già nella cartella di destinazione",
+  "sv": "finns redan i målmappen",
+  "es": "ya existe en la carpeta de destino"
+ },
+ "kunne ikke lægges i papirkurven": {
+  "en": "could not be moved to the Recycle Bin",
+  "de": "konnte nicht in den Papierkorb verschoben werden",
+  "fr": "n'a pas pu être mis à la corbeille",
+  "it": "impossibile spostarlo nel cestino",
+  "sv": "kunde inte läggas i papperskorgen",
+  "es": "no se pudo enviar a la papelera"
  }
 }

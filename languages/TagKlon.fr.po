@@ -404,6 +404,14 @@ msgstr "Écriture de %s..."
 msgid "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc\n%9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab\n%d Spring over\nFiltypen fjernes automatisk. Brug \\ for mappenavne, fx  %1\\%3\\%6 - %2"
 msgstr "%1 Artiste   %2 Titre   %3 Album   %4 Année   %5 Genre   %6 Piste   %# Disque\n%9 Commentaire   %b BPM   %aa Artiste de l'album   %cp Compositeur   %co Chef d'orchestre   %lb Label\n%d Ignorer\nL'extension est supprimée automatiquement. Utilisez \\ pour les noms de dossier, p. ex.  %1\\%3\\%6 - %2"
 
+#: fileops.rsfindesalleredeimaalmappen
+msgid "findes allerede i målmappen"
+msgstr "existe déjà dans le dossier cible"
+
+#: fileops.rskunneikkelaeggesipapirkurven
+msgid "kunne ikke lægges i papirkurven"
+msgstr "n'a pas pu être mis à la corbeille"
+
 #: filetotagform.rsklar
 msgid "Klar"
 msgstr "Prêt"
@@ -523,6 +531,58 @@ msgstr "Coller le tag"
 msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr "Choisissez les champs à coller dans %d fichiers :"
+
+#: mainform.rskopiertilmappe
+msgid "Kopiér til mappe..."
+msgstr "Copier vers un dossier..."
+
+#: mainform.rskopiertilmappehint
+msgid "Kopiér de afkrydsede/markerede filer til en anden mappe"
+msgstr "Copier les fichiers cochés/sélectionnés vers un autre dossier"
+
+#: mainform.rsflyttilmappe
+msgid "Flyt til mappe..."
+msgstr "Déplacer vers un dossier..."
+
+#: mainform.rsflyttilmappehint
+msgid "Flyt de afkrydsede/markerede filer til en anden mappe"
+msgstr "Déplacer les fichiers cochés/sélectionnés vers un autre dossier"
+
+#: mainform.rssletfilermenu
+msgid "Slet filer..."
+msgstr "Supprimer les fichiers..."
+
+#: mainform.rssletfilerhint
+msgid "Læg de afkrydsede/markerede filer i papirkurven (Delete i fillisten)"
+msgstr "Mettre les fichiers cochés/sélectionnés à la corbeille (Suppr dans la liste)"
+
+#: mainform.rssletfiler
+msgid "Slet filer"
+msgstr "Supprimer les fichiers"
+
+#: mainform.rslaegdfileripapirkurven
+msgid "Læg %d filer i papirkurven?"
+msgstr "Mettre %d fichiers à la corbeille ?"
+
+#: mainform.rsdfilerlagtipapirkurven
+msgid "%d filer lagt i papirkurven"
+msgstr "%d fichiers mis à la corbeille"
+
+#: mainform.rskopierdfilertils
+msgid "Kopiér %d filer til %s?"
+msgstr "Copier %d fichiers vers %s ?"
+
+#: mainform.rsflytdfilertils
+msgid "Flyt %d filer til %s?"
+msgstr "Déplacer %d fichiers vers %s ?"
+
+#: mainform.rsdfilerkopierettils
+msgid "%d filer kopieret til %s"
+msgstr "%d fichiers copiés vers %s"
+
+#: mainform.rsdfilerflyttettils
+msgid "%d filer flyttet til %s"
+msgstr "%d fichiers déplacés vers %s"
 
 #: mainform.rsheleord
 msgid "Hele ord"

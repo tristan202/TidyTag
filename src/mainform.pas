@@ -159,6 +159,8 @@ type
     FActionsMenu: TMenuItem;
     FActManageActions: TAction;
     FActAutoFitAfterScan: TAction;
+    FActDeleteFiles: TAction;
+    FTestTargetDir: string; // self-test: target of copy/move instead of a folder dialog
     FAutoYes: Boolean;
     FSyncDir: TSyncDirection;
     FSyncExisting: TSyncExisting;
@@ -244,6 +246,11 @@ type
     procedure RenameActionClick(Sender: TObject);
     procedure DoCopyField(Src, Dst: TTagField; OnlyIfEmpty: Boolean);
     procedure BuildFilterExtras;
+    procedure ActDeleteFilesExecute(Sender: TObject);
+    procedure ActCopyToExecute(Sender: TObject);
+    procedure ActMoveToExecute(Sender: TObject);
+    procedure CopyOrMoveTo(Move: Boolean; const Dir: string);
+    function InScanScope(const Path: string): Boolean;
     procedure FilterOptionChange(Sender: TObject);
     procedure ActAutoFitExecute(Sender: TObject);
     procedure ActAutoFitAfterScanExecute(Sender: TObject);
@@ -342,9 +349,22 @@ implementation
 uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
-  Math, Language, Process, TagRemove, ToolDialogs;
+  Math, Language, Process, TagRemove, ToolDialogs, FileOps;
 
 resourcestring
+  rsKopierTilMappe = 'Kopiér til mappe...';
+  rsKopierTilMappeHint = 'Kopiér de afkrydsede/markerede filer til en anden mappe';
+  rsFlytTilMappe = 'Flyt til mappe...';
+  rsFlytTilMappeHint = 'Flyt de afkrydsede/markerede filer til en anden mappe';
+  rsSletFilerMenu = 'Slet filer...';
+  rsSletFilerHint = 'Læg de afkrydsede/markerede filer i papirkurven (Delete i fillisten)';
+  rsSletFiler = 'Slet filer';
+  rsLaegDFilerIPapirkurven = 'Læg %d filer i papirkurven?';
+  rsDFilerLagtIPapirkurven = '%d filer lagt i papirkurven';
+  rsKopierDFilerTilS = 'Kopiér %d filer til %s?';
+  rsFlytDFilerTilS = 'Flyt %d filer til %s?';
+  rsDFilerKopieretTilS = '%d filer kopieret til %s';
+  rsDFilerFlyttetTilS = '%d filer flyttet til %s';
   rsHeleOrd = 'Hele ord';
   rsStoreSmaaBogstaver = 'Store/små bogstaver';
   rsTagtype = 'Tagtype:';
@@ -918,7 +938,7 @@ var
     aPlChecked, aPlAll, aTabRename, aTabMulti, aTabF2T, aRenameDlg, aF2TDlg, aTracks, aWeb,
     aToken, aKeys, aAbout, aUp, aFav, aNewFolder, aTreeRefresh, aCloseFolders,
     aMoveUp, aMoveDown, aExport, aSwapAT, aSwapAA, aSwapLT, aSwap, aCopyField, aClean,
-    aRemoveTags, aCoverIn, aCoverOut, aWords, aSync, aAutoFit, aRandom: TAction;
+    aRemoveTags, aCoverIn, aCoverOut, aWords, aSync, aAutoFit, aRandom, aCopyTo, aMoveTo: TAction;
   NameTools: array[TNameTool] of TAction;
   NT: TNameTool;
   TopMenu, SubMenu: TMenuItem;
@@ -1056,6 +1076,9 @@ begin
   NameTools[ntSurnameFirstToName] := NewAction(rsEfternavnFornavnTil, '', 0, -1, @ActNameToolExecute);
   for NT := Low(TNameTool) to High(TNameTool) do NameTools[NT].Tag := Ord(NT);
   aSync := NewAction(rsMpTagSynkroniseringMenu, rsMpTagSynkroniseringHint, 0, -1, @ActID3SyncExecute);
+  aCopyTo := NewAction(rsKopierTilMappe, rsKopierTilMappeHint, 0, icoCopy, @ActCopyToExecute);
+  aMoveTo := NewAction(rsFlytTilMappe, rsFlytTilMappeHint, 0, -1, @ActMoveToExecute);
+  FActDeleteFiles := NewAction(rsSletFilerMenu, rsSletFilerHint, 0, icoClose, @ActDeleteFilesExecute);
   aAutoFit := NewAction(rsTilpasKolonnebredder, rsTilpasKolonnebredderHint, 0, -1, @ActAutoFitExecute);
   FActAutoFitAfterScan := NewAction(rsTilpasKolonnerEfterMappeskift, '', 0, -1, @ActAutoFitAfterScanExecute);
   FActAutoFitAfterScan.AutoCheck := True;
@@ -1071,7 +1094,9 @@ begin
   TopMenu := Menu(rsFiler);
   Add(TopMenu, aOpen); Add(TopMenu, aRefresh); Add(TopMenu, nil);
   Add(TopMenu, aEdit); Add(TopMenu, aMulti); Add(TopMenu, aRenameFolder); Add(TopMenu, nil);
-  Add(TopMenu, aPlay); Add(TopMenu, aExplorer); Add(TopMenu, nil); Add(TopMenu, aExit);
+  Add(TopMenu, aPlay); Add(TopMenu, aExplorer); Add(TopMenu, nil);
+  Add(TopMenu, aCopyTo); Add(TopMenu, aMoveTo); Add(TopMenu, FActDeleteFiles); Add(TopMenu, nil);
+  Add(TopMenu, aExit);
   TopMenu := Menu(rsRediger);
   Add(TopMenu, aSelAll); Add(TopMenu, aSelNone); Add(TopMenu, nil);
   Add(TopMenu, aChkSel); Add(TopMenu, aUnchkSel); Add(TopMenu, aChkAll); Add(TopMenu, aUnchkAll); Add(TopMenu, aInvert);
@@ -1113,6 +1138,7 @@ begin
   AddPopup(aChkSel); AddPopup(aUnchkSel); AddPopup(aChkAll); AddPopup(aUnchkAll); AddPopup(aInvert);
   AddPopup(nil); AddPopup(aCopy); AddPopup(FActPaste); AddPopup(nil); AddPopup(aMoveUp); AddPopup(aMoveDown);
   AddPopup(nil); AddPopup(aPlay); AddPopup(aExplorer);
+  AddPopup(nil); AddPopup(aCopyTo); AddPopup(aMoveTo); AddPopup(FActDeleteFiles);
 
   // ---- toolbars
   X := 0;
@@ -1400,6 +1426,12 @@ begin
   begin
     Key := 0;
     EditSelected;
+  end
+  else if (Key = VK_DELETE) and (Shift = []) then
+  begin
+    // only here, not as a shortcut: Delete in a text box must not delete files
+    Key := 0;
+    FActDeleteFiles.Execute;
   end
   else if Key = VK_SPACE then
   begin
@@ -2879,6 +2911,120 @@ begin
     rsEnterDobbeltklikRedigerTagFor, mtInformation, [mbOK], 0);
 end;
 
+function TFormMain.InScanScope(const Path: string): Boolean;
+var
+  Dir: string;
+begin
+  Dir := ExcludeTrailingPathDelimiter(ExtractFileDir(Path));
+  if SameFileName(Dir, ExcludeTrailingPathDelimiter(FFolder)) then Exit(True);
+  Result := FActSubfolders.Checked and
+    SameFileName(Copy(Dir, 1, Length(IncludeTrailingPathDelimiter(FFolder))), IncludeTrailingPathDelimiter(FFolder));
+end;
+
+procedure TFormMain.ActDeleteFilesExecute(Sender: TObject);
+var
+  Items: TAudioInfoArray;
+  Names: array of string;
+  I, Gone: Integer;
+  Errors: TStringList;
+begin
+  if not RequireTargets(Items) then Exit;
+  if not AskYes(rsSletFiler, Format(rsLaegDFilerIPapirkurven, [Length(Items)]), mtWarning) then Exit;
+  SetLength(Names, Length(Items));
+  for I := 0 to High(Items) do Names[I] := Items[I].FileName;
+  Errors := TStringList.Create;
+  try
+    Gone := RecycleFiles(Names, Errors);
+    for I := 0 to High(Items) do
+      if not FileExists(Items[I].FileName) then
+      begin
+        FItems.Remove(Items[I]);
+        Items[I].Free;
+      end;
+    FileList.ClearSelection;
+    RebuildView;
+    SetMessage(Format(rsDFilerLagtIPapirkurven, [Gone]));
+    if Errors.Count > 0 then Inform(rsSletFiler, Errors.Text, mtWarning);
+  finally
+    Errors.Free;
+  end;
+  SelectionChanged;
+end;
+
+procedure TFormMain.ActCopyToExecute(Sender: TObject);
+var
+  D: TSelectDirectoryDialog;
+begin
+  D := TSelectDirectoryDialog.Create(nil);
+  try
+    D.Title := rsKopierTilMappe;
+    D.InitialDir := FFolder;
+    if D.Execute then CopyOrMoveTo(False, D.FileName);
+  finally
+    D.Free;
+  end;
+end;
+
+procedure TFormMain.ActMoveToExecute(Sender: TObject);
+var
+  D: TSelectDirectoryDialog;
+begin
+  D := TSelectDirectoryDialog.Create(nil);
+  try
+    D.Title := rsFlytTilMappe;
+    D.InitialDir := FFolder;
+    if D.Execute then CopyOrMoveTo(True, D.FileName);
+  finally
+    D.Free;
+  end;
+end;
+
+procedure TFormMain.CopyOrMoveTo(Move: Boolean; const Dir: string);
+var
+  Items: TAudioInfoArray;
+  Names, NewNames: array of string;
+  Done: array of Boolean;
+  I, Count: Integer;
+  Errors: TStringList;
+  Title: string;
+begin
+  if not RequireTargets(Items) then Exit;
+  if Move then Title := rsFlytTilMappe else Title := rsKopierTilMappe;
+  if not AskYes(Title, Format(IfThen(Move, rsFlytDFilerTilS, rsKopierDFilerTilS), [Length(Items), Dir])) then
+    Exit;
+  SetLength(Names, Length(Items));
+  SetLength(NewNames, Length(Items));
+  SetLength(Done, Length(Items));
+  for I := 0 to High(Items) do Names[I] := Items[I].FileName;
+  Errors := TStringList.Create;
+  Screen.Cursor := crHourGlass;
+  try
+    Count := CopyOrMoveFiles(Names, Dir, Move, Done, NewNames, Errors);
+    if Move then
+    begin
+      for I := 0 to High(Items) do
+        if Done[I] then
+          if InScanScope(NewNames[I]) then
+            Items[I].FileName := NewNames[I]
+          else
+          begin
+            FItems.Remove(Items[I]);
+            Items[I].Free;
+          end;
+      FileList.ClearSelection;
+      RebuildView;
+    end
+    else if (Count > 0) and InScanScope(IncludeTrailingPathDelimiter(Dir) + 'x') then
+      StartScan; // the copies belong in the list
+    SetMessage(Format(IfThen(Move, rsDFilerFlyttetTilS, rsDFilerKopieretTilS), [Count, Dir]));
+    if Errors.Count > 0 then Inform(Title, Errors.Text, mtWarning);
+  finally
+    Screen.Cursor := crDefault;
+    Errors.Free;
+  end;
+  SelectionChanged;
+end;
+
 procedure TFormMain.BuildFilterExtras;
 var
   L: TLabel;
@@ -3175,6 +3321,20 @@ begin
     MessageDlg(Title, Msg, DlgType, [mbOK], 0);
 end;
 
+function FileCountIn(const Dir: string): Integer;
+var
+  R: TSearchRec;
+begin
+  Result := 0;
+  if FindFirst(IncludeTrailingPathDelimiter(Dir) + '*.*', faAnyFile, R) = 0 then
+  begin
+    repeat
+      if (R.Attr and faDirectory) = 0 then Inc(Result);
+    until FindNext(R) <> 0;
+    FindClose(R);
+  end;
+end;
+
 procedure TFormMain.RunSelfTest(const ReportFile: string);
 var
   I: Integer;
@@ -3263,6 +3423,15 @@ begin
     Dump('fortryd');
     ActRemoveTagsExecute(nil);
     Dump('fjern tags');
+    FTestTargetDir := ExtractFileDir(ExcludeTrailingPathDelimiter(FFolder)) + PathDelim + 'kopi';
+    ForceDirectories(FTestTargetDir);
+    CopyOrMoveTo(False, FTestTargetDir);
+    FAutoLog.Add(Format('  kopieret: %d filer i %s, %d i listen', [FileCountIn(FTestTargetDir), 'kopi', FItems.Count]));
+    CopyOrMoveTo(False, FTestTargetDir);
+    FAutoLog.Add('  kopieret igen (skal springe over, filerne findes)');
+    ForceDirectories(ExtractFileDir(FTestTargetDir) + PathDelim + 'flyttet');
+    CopyOrMoveTo(True, ExtractFileDir(FTestTargetDir) + PathDelim + 'flyttet');
+    FAutoLog.Add(Format('  efter flyt: %d i listen', [FItems.Count]));
     FAutoLog.SaveToFile(ReportFile);
   finally
     FAutoYes := False;
