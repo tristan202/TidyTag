@@ -177,6 +177,7 @@ var
   Fs: TTagFieldSet;
   T: TTagField;
   CO: TCoverResize;
+  RGAlbum, RGSkip: Boolean;
   MaskText: string;
 
   procedure Arm;
@@ -217,6 +218,10 @@ begin
     CO.ToJpeg := False;
     Arm;
     AskCoverResize(rsSkalerCoverIFilerne, CO);
+    RGAlbum := True;
+    RGSkip := False;
+    Arm;
+    AskReplayGain(RGAlbum, RGSkip);
     MaskText := '%1 - %2';
     Arm;
     EditMask(rsMaskeEditor, MaskText, ['%1|' + TagFieldCaptions[tfArtist], '%2|' + TagFieldCaptions[tfTitle],

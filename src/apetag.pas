@@ -43,7 +43,8 @@ const
     'Lyricist', 'Original Artist', 'MixArtist', 'Label', 'CatalogNumber', 'ISRC',
     'Copyright', 'EncodedBy', 'Weblink', 'Grouping', 'Subtitle', 'Mood', 'Key',
     'TitleSort', 'ArtistSort', 'AlbumArtistSort', 'AlbumSort', 'ComposerSort',
-    'Compilation', 'Podcast');
+    'Compilation', 'Podcast', 'REPLAYGAIN_TRACK_GAIN', 'REPLAYGAIN_TRACK_PEAK',
+    'REPLAYGAIN_ALBUM_GAIN', 'REPLAYGAIN_ALBUM_PEAK');
 
   PicNames: array[0..20] of string = ('Other', 'Png Icon', 'Icon', 'Front', 'Back',
     'Leaflet', 'Media', 'Lead Artist', 'Artist', 'Conductor', 'Band', 'Composer',

@@ -52,7 +52,8 @@ begin
     'REMIXER', 'LABEL', 'ORGANIZATION', 'PUBLISHER', 'CATALOGNUMBER', 'ISRC', 'COPYRIGHT',
     'ENCODEDBY', 'ENCODED-BY', 'WEBSITE', 'URL', 'GROUPING', 'SUBTITLE', 'MOOD', 'KEY',
     'INITIALKEY', 'TITLESORT', 'ARTISTSORT', 'ALBUMARTISTSORT', 'ALBUMSORT', 'COMPOSERSORT',
-    'COMPILATION', 'PODCAST':
+    'COMPILATION', 'PODCAST', 'REPLAYGAIN_TRACK_GAIN', 'REPLAYGAIN_TRACK_PEAK',
+    'REPLAYGAIN_ALBUM_GAIN', 'REPLAYGAIN_ALBUM_PEAK', 'R128_TRACK_GAIN', 'R128_ALBUM_GAIN':
       Result := True;
   else
     Result := False;
@@ -189,6 +190,19 @@ begin
     AddOne('COMPOSERSORT', Info.Fields[tfSortComposer]);
     AddOne('COMPILATION', FlagValue(Info.Fields[tfCompilation]));
     AddOne('PODCAST', FlagValue(Info.Fields[tfPodcast]));
+    if Info.Codec = 'Opus' then
+    begin
+      // RFC 7845: Opus players use R128 gains (no peaks) and ignore REPLAYGAIN_*
+      AddOne('R128_TRACK_GAIN', RGToR128(Info.Fields[tfRGTrackGain]));
+      AddOne('R128_ALBUM_GAIN', RGToR128(Info.Fields[tfRGAlbumGain]));
+    end
+    else
+    begin
+      AddOne('REPLAYGAIN_TRACK_GAIN', Info.Fields[tfRGTrackGain]);
+      AddOne('REPLAYGAIN_TRACK_PEAK', Info.Fields[tfRGTrackPeak]);
+      AddOne('REPLAYGAIN_ALBUM_GAIN', Info.Fields[tfRGAlbumGain]);
+      AddOne('REPLAYGAIN_ALBUM_PEAK', Info.Fields[tfRGAlbumPeak]);
+    end;
     AddOne('LYRICS', Info.Fields[tfLyrics]);
     if WithPictures then
       for K := 0 to High(Info.Pictures) do

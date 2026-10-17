@@ -229,7 +229,11 @@ begin
     Txt := DecodeID3Text(F, P, Length(F) - P, Enc);
     if Desc = 'CATALOGNUMBER' then Info.SetField(tfCatalogNo, Txt)
     else if Desc = 'MOOD' then Info.SetField(tfMood, Txt, False)
-    else if Desc = 'LABEL' then Info.SetField(tfPublisher, Txt, False);
+    else if Desc = 'LABEL' then Info.SetField(tfPublisher, Txt, False)
+    else if Desc = 'REPLAYGAIN_TRACK_GAIN' then Info.SetField(tfRGTrackGain, Txt)
+    else if Desc = 'REPLAYGAIN_TRACK_PEAK' then Info.SetField(tfRGTrackPeak, Txt)
+    else if Desc = 'REPLAYGAIN_ALBUM_GAIN' then Info.SetField(tfRGAlbumGain, Txt)
+    else if Desc = 'REPLAYGAIN_ALBUM_PEAK' then Info.SetField(tfRGAlbumPeak, Txt);
   end
   else if ID = 'USLT' then
   begin

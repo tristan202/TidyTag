@@ -5494,5 +5494,253 @@
   "it": "Ridimensiona automaticamente le copertine grandi al salvataggio dei tag",
   "sv": "Skala om stora omslag automatiskt när taggar sparas",
   "es": "Redimensionar automáticamente las portadas grandes al guardar etiquetas"
+ },
+ "afbrudt": {
+  "en": "cancelled",
+  "de": "abgebrochen",
+  "fr": "annulé",
+  "it": "annullato",
+  "sv": "avbrutet",
+  "es": "cancelado"
+ },
+ "ukendt lydformat": {
+  "en": "unknown audio format",
+  "de": "unbekanntes Audioformat",
+  "fr": "format audio inconnu",
+  "it": "formato audio sconosciuto",
+  "sv": "okänt ljudformat",
+  "es": "formato de audio desconocido"
+ },
+ "ingen lyddata": {
+  "en": "no audio data",
+  "de": "keine Audiodaten",
+  "fr": "aucune donnée audio",
+  "it": "nessun dato audio",
+  "sv": "inga ljuddata",
+  "es": "sin datos de audio"
+ },
+ "ReplayGain spor": {
+  "en": "ReplayGain track",
+  "de": "ReplayGain Titel",
+  "fr": "ReplayGain piste",
+  "it": "ReplayGain traccia",
+  "sv": "ReplayGain spår",
+  "es": "ReplayGain pista"
+ },
+ "ReplayGain spor-peak": {
+  "en": "ReplayGain track peak",
+  "de": "ReplayGain Titel-Peak",
+  "fr": "ReplayGain crête piste",
+  "it": "ReplayGain picco traccia",
+  "sv": "ReplayGain spårtopp",
+  "es": "ReplayGain pico de pista"
+ },
+ "ReplayGain album": {
+  "en": "ReplayGain album",
+  "de": "ReplayGain Album",
+  "fr": "ReplayGain album",
+  "it": "ReplayGain album",
+  "sv": "ReplayGain album",
+  "es": "ReplayGain álbum"
+ },
+ "ReplayGain album-peak": {
+  "en": "ReplayGain album peak",
+  "de": "ReplayGain Album-Peak",
+  "fr": "ReplayGain crête album",
+  "it": "ReplayGain picco album",
+  "sv": "ReplayGain albumtopp",
+  "es": "ReplayGain pico de álbum"
+ },
+ "Beregn ReplayGain...": {
+  "en": "Calculate ReplayGain...",
+  "de": "ReplayGain berechnen...",
+  "fr": "Calculer ReplayGain...",
+  "it": "Calcola ReplayGain...",
+  "sv": "Beräkna ReplayGain...",
+  "es": "Calcular ReplayGain..."
+ },
+ "Mål lydstyrken (EBU R128) og skriv ReplayGain-værdier i de afkrydsede filer": {
+  "en": "Measure the loudness (EBU R128) and write ReplayGain values to the checked files",
+  "de": "Lautheit messen (EBU R128) und ReplayGain-Werte in die markierten Dateien schreiben",
+  "fr": "Mesurer le volume (EBU R128) et écrire les valeurs ReplayGain dans les fichiers cochés",
+  "it": "Misura il volume (EBU R128) e scrive i valori ReplayGain nei file spuntati",
+  "sv": "Mät ljudstyrkan (EBU R128) och skriv ReplayGain-värden i de markerade filerna",
+  "es": "Medir la sonoridad (EBU R128) y escribir valores ReplayGain en los archivos marcados"
+ },
+ "Fjern ReplayGain...": {
+  "en": "Remove ReplayGain...",
+  "de": "ReplayGain entfernen...",
+  "fr": "Supprimer ReplayGain...",
+  "it": "Rimuovi ReplayGain...",
+  "sv": "Ta bort ReplayGain...",
+  "es": "Quitar ReplayGain..."
+ },
+ "Slet ReplayGain-værdierne fra de afkrydsede filer": {
+  "en": "Delete the ReplayGain values from the checked files",
+  "de": "ReplayGain-Werte aus den markierten Dateien löschen",
+  "fr": "Effacer les valeurs ReplayGain des fichiers cochés",
+  "it": "Elimina i valori ReplayGain dai file spuntati",
+  "sv": "Radera ReplayGain-värdena från de markerade filerna",
+  "es": "Borrar los valores ReplayGain de los archivos marcados"
+ },
+ "ReplayGain": {
+  "en": "ReplayGain",
+  "de": "ReplayGain",
+  "fr": "ReplayGain",
+  "it": "ReplayGain",
+  "sv": "ReplayGain",
+  "es": "ReplayGain"
+ },
+ "Alle filerne har allerede ReplayGain.": {
+  "en": "All the files already have ReplayGain.",
+  "de": "Alle Dateien haben bereits ReplayGain.",
+  "fr": "Tous les fichiers ont déjà ReplayGain.",
+  "it": "Tutti i file hanno già ReplayGain.",
+  "sv": "Alla filerna har redan ReplayGain.",
+  "es": "Todos los archivos ya tienen ReplayGain."
+ },
+ "ReplayGain blev afbrudt - intet er gemt.": {
+  "en": "ReplayGain was cancelled - nothing was saved.",
+  "de": "ReplayGain wurde abgebrochen - nichts wurde gespeichert.",
+  "fr": "ReplayGain a été annulé - rien n'a été enregistré.",
+  "it": "ReplayGain è stato annullato - non è stato salvato nulla.",
+  "sv": "ReplayGain avbröts - inget har sparats.",
+  "es": "ReplayGain se canceló - no se guardó nada."
+ },
+ "stille - ingen gain": {
+  "en": "silent - no gain",
+  "de": "still - kein Gain",
+  "fr": "silencieux - pas de gain",
+  "it": "silenzioso - nessun guadagno",
+  "sv": "tyst - ingen gain",
+  "es": "silencio - sin ganancia"
+ },
+ "Album \"%s\": albumgain er ikke skrevet, fordi %d fil(er) ikke kunne måles.": {
+  "en": "Album \"%s\": album gain was not written because %d file(s) could not be measured.",
+  "de": "Album \"%s\": Album-Gain wurde nicht geschrieben, da %d Datei(en) nicht gemessen werden konnten.",
+  "fr": "Album « %s » : le gain d'album n'a pas été écrit, car %d fichier(s) n'ont pas pu être mesurés.",
+  "it": "Album \"%s\": il guadagno album non è stato scritto perché %d file non sono stati misurati.",
+  "sv": "Album \"%s\": albumgain skrevs inte, eftersom %d fil(er) inte kunde mätas.",
+  "es": "Álbum \"%s\": la ganancia de álbum no se escribió porque no se pudieron medir %d archivo(s)."
+ },
+ "Nogle filer fik ikke ReplayGain": {
+  "en": "Some files did not get ReplayGain",
+  "de": "Einige Dateien haben kein ReplayGain erhalten",
+  "fr": "Certains fichiers n'ont pas reçu ReplayGain",
+  "it": "Alcuni file non hanno ricevuto ReplayGain",
+  "sv": "Några filer fick inte ReplayGain",
+  "es": "Algunos archivos no recibieron ReplayGain"
+ },
+ "Ingen af filerne har ReplayGain.": {
+  "en": "None of the files have ReplayGain.",
+  "de": "Keine der Dateien hat ReplayGain.",
+  "fr": "Aucun des fichiers n'a ReplayGain.",
+  "it": "Nessuno dei file ha ReplayGain.",
+  "sv": "Ingen av filerna har ReplayGain.",
+  "es": "Ninguno de los archivos tiene ReplayGain."
+ },
+ "Fjern ReplayGain fra %d filer?": {
+  "en": "Remove ReplayGain from %d files?",
+  "de": "ReplayGain aus %d Dateien entfernen?",
+  "fr": "Supprimer ReplayGain de %d fichiers ?",
+  "it": "Rimuovere ReplayGain da %d file?",
+  "sv": "Ta bort ReplayGain från %d filer?",
+  "es": "¿Quitar ReplayGain de %d archivos?"
+ },
+ "Windows Media Foundation findes ikke på denne computer": {
+  "en": "Windows Media Foundation is not available on this computer",
+  "de": "Windows Media Foundation ist auf diesem Computer nicht vorhanden",
+  "fr": "Windows Media Foundation n'est pas disponible sur cet ordinateur",
+  "it": "Windows Media Foundation non è disponibile su questo computer",
+  "sv": "Windows Media Foundation finns inte på den här datorn",
+  "es": "Windows Media Foundation no está disponible en este equipo"
+ },
+ "filen kan ikke afkodes af Windows (codec mangler?) – fejl %s": {
+  "en": "Windows cannot decode the file (missing codec?) – error %s",
+  "de": "Windows kann die Datei nicht dekodieren (Codec fehlt?) – Fehler %s",
+  "fr": "Windows ne peut pas décoder le fichier (codec manquant ?) – erreur %s",
+  "it": "Windows non riesce a decodificare il file (codec mancante?) – errore %s",
+  "sv": "Windows kan inte avkoda filen (codec saknas?) – fel %s",
+  "es": "Windows no puede decodificar el archivo (¿falta un códec?) – error %s"
+ },
+ "afkodningsfejl %s": {
+  "en": "decoding error %s",
+  "de": "Dekodierfehler %s",
+  "fr": "erreur de décodage %s",
+  "it": "errore di decodifica %s",
+  "sv": "avkodningsfel %s",
+  "es": "error de decodificación %s"
+ },
+ "ingen lyd": {
+  "en": "no audio",
+  "de": "kein Ton",
+  "fr": "pas d'audio",
+  "it": "nessun audio",
+  "sv": "inget ljud",
+  "es": "sin audio"
+ },
+ "ikke målt": {
+  "en": "not measured",
+  "de": "nicht gemessen",
+  "fr": "non mesuré",
+  "it": "non misurato",
+  "sv": "inte mätt",
+  "es": "no medido"
+ },
+ "Beregnes med Værktøjer > ReplayGain. Gain skrives som \"-6.52 dB\", peak som \"0.988553\".": {
+  "en": "Calculated with Tools > ReplayGain. Gain is written as \"-6.52 dB\", peak as \"0.988553\".",
+  "de": "Wird mit Werkzeuge > ReplayGain berechnet. Gain als \"-6.52 dB\", Peak als \"0.988553\".",
+  "fr": "Calculé avec Outils > ReplayGain. Gain écrit « -6.52 dB », crête « 0.988553 ».",
+  "it": "Calcolato con Strumenti > ReplayGain. Guadagno scritto come \"-6.52 dB\", picco come \"0.988553\".",
+  "sv": "Beräknas med Verktyg > ReplayGain. Gain skrivs som \"-6.52 dB\", topp som \"0.988553\".",
+  "es": "Se calcula con Herramientas > ReplayGain. Ganancia como \"-6.52 dB\", pico como \"0.988553\"."
+ },
+ "Beregn sporgain og albumgain": {
+  "en": "Calculate track gain and album gain",
+  "de": "Titel-Gain und Album-Gain berechnen",
+  "fr": "Calculer le gain de piste et d'album",
+  "it": "Calcola guadagno traccia e album",
+  "sv": "Beräkna spårgain och albumgain",
+  "es": "Calcular ganancia de pista y de álbum"
+ },
+ "Beregn kun sporgain": {
+  "en": "Calculate track gain only",
+  "de": "Nur Titel-Gain berechnen",
+  "fr": "Calculer seulement le gain de piste",
+  "it": "Calcola solo il guadagno traccia",
+  "sv": "Beräkna endast spårgain",
+  "es": "Calcular solo la ganancia de pista"
+ },
+ "Spring filer over, der allerede har ReplayGain (for album: hele albummet)": {
+  "en": "Skip files that already have ReplayGain (for albums: the whole album)",
+  "de": "Dateien mit vorhandenem ReplayGain überspringen (bei Alben: ganzes Album)",
+  "fr": "Ignorer les fichiers ayant déjà ReplayGain (albums : tout l'album)",
+  "it": "Salta i file che hanno già ReplayGain (per gli album: tutto l'album)",
+  "sv": "Hoppa över filer som redan har ReplayGain (för album: hela albumet)",
+  "es": "Omitir archivos que ya tienen ReplayGain (álbumes: el álbum completo)"
+ },
+ "ReplayGain 2.0 (EBU R128, -18 LUFS). Albumgain beregnes for filerne i samme mappe med samme albumnavn, så de beholder deres indbyrdes styrke. Lyden ændres ikke; afspilleren bruger værdierne. MP3, M4A, WMA og FLAC afkodes af Windows; Ogg, Opus, APE, WavPack, Musepack og OptimFROG kræver, at Windows har en codec til dem.": {
+  "en": "ReplayGain 2.0 (EBU R128, -18 LUFS). Album gain is calculated for the files in the same folder with the same album name, so they keep their relative loudness. The audio is not changed; the player uses the values. MP3, M4A, WMA and FLAC are decoded by Windows; Ogg, Opus, APE, WavPack, Musepack and OptimFROG need a Windows codec.",
+  "de": "ReplayGain 2.0 (EBU R128, -18 LUFS). Der Album-Gain wird für die Dateien im selben Ordner mit gleichem Albumnamen berechnet, damit ihre relative Lautstärke erhalten bleibt. Der Ton wird nicht verändert; der Player nutzt die Werte. MP3, M4A, WMA und FLAC dekodiert Windows; Ogg, Opus, APE, WavPack, Musepack und OptimFROG brauchen einen Windows-Codec.",
+  "fr": "ReplayGain 2.0 (EBU R128, -18 LUFS). Le gain d'album est calculé pour les fichiers du même dossier portant le même nom d'album, qui gardent ainsi leur volume relatif. L'audio n'est pas modifié ; le lecteur utilise les valeurs. MP3, M4A, WMA et FLAC sont décodés par Windows ; Ogg, Opus, APE, WavPack, Musepack et OptimFROG nécessitent un codec Windows.",
+  "it": "ReplayGain 2.0 (EBU R128, -18 LUFS). Il guadagno album è calcolato per i file nella stessa cartella con lo stesso nome di album, così mantengono il loro volume relativo. L'audio non viene modificato; il lettore usa i valori. MP3, M4A, WMA e FLAC sono decodificati da Windows; Ogg, Opus, APE, WavPack, Musepack e OptimFROG richiedono un codec di Windows.",
+  "sv": "ReplayGain 2.0 (EBU R128, -18 LUFS). Albumgain beräknas för filerna i samma mapp med samma albumnamn, så att de behåller sin inbördes ljudstyrka. Ljudet ändras inte; spelaren använder värdena. MP3, M4A, WMA och FLAC avkodas av Windows; Ogg, Opus, APE, WavPack, Musepack och OptimFROG kräver en codec i Windows.",
+  "es": "ReplayGain 2.0 (EBU R128, -18 LUFS). La ganancia de álbum se calcula para los archivos de la misma carpeta con el mismo nombre de álbum, para que conserven su volumen relativo. El audio no se modifica; el reproductor usa los valores. Windows decodifica MP3, M4A, WMA y FLAC; Ogg, Opus, APE, WavPack, Musepack y OptimFROG necesitan un códec de Windows."
+ },
+ "Måler lydstyrke: %d af %d filer": {
+  "en": "Measuring loudness: %d of %d files",
+  "de": "Lautheit wird gemessen: %d von %d Dateien",
+  "fr": "Mesure du volume : %d sur %d fichiers",
+  "it": "Misurazione del volume: %d di %d file",
+  "sv": "Mäter ljudstyrka: %d av %d filer",
+  "es": "Midiendo sonoridad: %d de %d archivos"
+ },
+ "Afbryd": {
+  "en": "Cancel",
+  "de": "Abbrechen",
+  "fr": "Annuler",
+  "it": "Annulla",
+  "sv": "Avbryt",
+  "es": "Cancelar"
  }
 }

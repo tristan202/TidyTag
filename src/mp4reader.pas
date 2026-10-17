@@ -126,7 +126,11 @@ begin
   else if Name = 'URL' then Info.SetField(tfUrl, Value)
   else if Name = 'SUBTITLE' then Info.SetField(tfSubtitle, Value)
   else if Name = 'MOOD' then Info.SetField(tfMood, Value)
-  else if (Name = 'INITIALKEY') or (Name = 'KEY') then Info.SetField(tfInitialKey, Value);
+  else if (Name = 'INITIALKEY') or (Name = 'KEY') then Info.SetField(tfInitialKey, Value)
+  else if Name = 'REPLAYGAIN_TRACK_GAIN' then Info.SetField(tfRGTrackGain, Value)
+  else if Name = 'REPLAYGAIN_TRACK_PEAK' then Info.SetField(tfRGTrackPeak, Value)
+  else if Name = 'REPLAYGAIN_ALBUM_GAIN' then Info.SetField(tfRGAlbumGain, Value)
+  else if Name = 'REPLAYGAIN_ALBUM_PEAK' then Info.SetField(tfRGAlbumPeak, Value);
 end;
 
 procedure ParseIlstItem(const B: TBytes; P, Limit: SizeInt; ItemP: SizeInt; Info: TAudioInfo);

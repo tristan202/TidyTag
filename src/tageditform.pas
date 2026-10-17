@@ -97,6 +97,7 @@ type
     FOnSaved: TFileSavedEvent;
     FExtraEdits: array[TTagField] of TEdit; // fields on "Flere felter" and "Sortering"
     FFlagChecks: array[tfCompilation..tfPodcast] of TCheckBox; // flags on "Flere felter"
+    TabRG: TTabSheet;
     procedure BuildExtraFields;
     function FieldEdit(F: TTagField): TCustomEdit;
     procedure LoadFile(Index: Integer);
@@ -120,6 +121,7 @@ uses
 resourcestring
   rsIngenTags = 'ingen';
   rsSorteringsfelterBestemmerHvordanAfspillereSorterer = 'Sorteringsfelter bestemmer, hvordan afspillere sorterer, fx "Beatles, The" eller "Nielsen, Carl", uden at ændre det viste navn.';
+  rsRGEditorHjaelp = 'Beregnes med Værktøjer > ReplayGain. Gain skrives som "-6.52 dB", peak som "0.988553".';
   rsRedigerTagDAfD = 'Rediger tag (%d af %d) - %s';
   rsFejlVedLaesning = 'Fejl ved læsning: ';
   rsSSDKbitS = '%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d kanaler  ·  Tags: %s';
@@ -212,7 +214,7 @@ const
 var
   I: Integer;
   F: TTagField;
-  SortHint: TLabel;
+  SortHint, RGHint: TLabel;
 begin
   for I := 0 to High(MoreLeft) do Row(TabMore, MoreLeft[I], 0, I, 120, 250);
   for I := 0 to High(MoreRight) do Row(TabMore, MoreRight[I], 1, I, 90, 280);
@@ -226,6 +228,17 @@ begin
     FFlagChecks[F].OnClick := @FieldChange;
   end;
   for I := 0 to High(SortFields) do Row(TabSort, SortFields[I], 0, I, 140, 400);
+  TabRG := TTabSheet.Create(Self);
+  TabRG.PageControl := TabSort.PageControl;
+  TabRG.PageIndex := TabSort.PageIndex + 1;
+  TabRG.Caption := 'ReplayGain';
+  for F in RGFields do Row(TabRG, F, 0, Ord(F) - Ord(tfRGTrackGain), 170, 160);
+  RGHint := TLabel.Create(Self);
+  RGHint.Parent := TabRG;
+  RGHint.Left := Scale96ToForm(8);
+  RGHint.Top := Scale96ToForm(10 + 4 * 32 + 8);
+  RGHint.Font.Color := clGrayText;
+  RGHint.Caption := rsRGEditorHjaelp;
   SortHint := TLabel.Create(Self);
   SortHint.Parent := TabSort;
   SortHint.Left := Scale96ToForm(8);

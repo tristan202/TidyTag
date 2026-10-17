@@ -41,6 +41,35 @@ msgstr "Oggetto ASF non valido"
 msgid "ASF-filen mangler File Properties"
 msgstr "Il file ASF non ha File Properties"
 
+#: audiodecode.rsafbrudt
+msgctxt "audiodecode.rsafbrudt"
+msgid "afbrudt"
+msgstr "annullato"
+
+#: audiodecode.rsukendtlydformat
+msgid "ukendt lydformat"
+msgstr "formato audio sconosciuto"
+
+#: audiodecode.rsingenlyddata
+msgid "ingen lyddata"
+msgstr "nessun dato audio"
+
+#: audiotypes.rsrgsporgain
+msgid "ReplayGain spor"
+msgstr "ReplayGain traccia"
+
+#: audiotypes.rsrgsporpeak
+msgid "ReplayGain spor-peak"
+msgstr "ReplayGain picco traccia"
+
+#: audiotypes.rsrgalbumgain
+msgid "ReplayGain album"
+msgstr "ReplayGain album"
+
+#: audiotypes.rsrgalbumpeak
+msgid "ReplayGain album-peak"
+msgstr "ReplayGain picco album"
+
 #: audiotypes.rsalbumfelt
 msgctxt "audiotypes.rsalbumfelt"
 msgid "Album"
@@ -569,6 +598,55 @@ msgstr "Editor maschera"
 msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr "Scegli i campi da incollare in %d file:"
+
+#: mainform.rsberegnreplaygain
+msgid "Beregn ReplayGain..."
+msgstr "Calcola ReplayGain..."
+
+#: mainform.rsberegnreplaygainhint
+msgid "Mål lydstyrken (EBU R128) og skriv ReplayGain-værdier i de afkrydsede filer"
+msgstr "Misura il volume (EBU R128) e scrive i valori ReplayGain nei file spuntati"
+
+#: mainform.rsfjernreplaygain
+msgid "Fjern ReplayGain..."
+msgstr "Rimuovi ReplayGain..."
+
+#: mainform.rsfjernreplaygainhint
+msgid "Slet ReplayGain-værdierne fra de afkrydsede filer"
+msgstr "Elimina i valori ReplayGain dai file spuntati"
+
+#: mainform.rsreplaygaintitel
+msgctxt "mainform.rsreplaygaintitel"
+msgid "ReplayGain"
+msgstr "ReplayGain"
+
+#: mainform.rsrgintetatgoere
+msgid "Alle filerne har allerede ReplayGain."
+msgstr "Tutti i file hanno già ReplayGain."
+
+#: mainform.rsrgafbrudt
+msgid "ReplayGain blev afbrudt - intet er gemt."
+msgstr "ReplayGain è stato annullato - non è stato salvato nulla."
+
+#: mainform.rsrgstille
+msgid "stille - ingen gain"
+msgstr "silenzioso - nessun guadagno"
+
+#: mainform.rsrgalbumikkeskrevet
+msgid "Album \"%s\": albumgain er ikke skrevet, fordi %d fil(er) ikke kunne måles."
+msgstr "Album \"%s\": il guadagno album non è stato scritto perché %d file non sono stati misurati."
+
+#: mainform.rsrgnoglefiler
+msgid "Nogle filer fik ikke ReplayGain"
+msgstr "Alcuni file non hanno ricevuto ReplayGain"
+
+#: mainform.rsrgingenharrg
+msgid "Ingen af filerne har ReplayGain."
+msgstr "Nessuno dei file ha ReplayGain."
+
+#: mainform.rsrgfjernspm
+msgid "Fjern ReplayGain fra %d filer?"
+msgstr "Rimuovere ReplayGain da %d file?"
 
 #: mainform.rsindstillingermenu
 msgid "Indstillinger..."
@@ -1931,6 +2009,23 @@ msgstr "Impossibile creare la cartella:"
 msgid "Mappe oprettet: "
 msgstr "Cartella creata: "
 
+#: mfdecode.rsmediafoundationmangler
+msgid "Windows Media Foundation findes ikke på denne computer"
+msgstr "Windows Media Foundation non è disponibile su questo computer"
+
+#: mfdecode.rskanikkeaabnes
+msgid "filen kan ikke afkodes af Windows (codec mangler?) – fejl %s"
+msgstr "Windows non riesce a decodificare il file (codec mancante?) – errore %s"
+
+#: mfdecode.rsafkodningsfejl
+msgid "afkodningsfejl %s"
+msgstr "errore di decodifica %s"
+
+#: mfdecode.rsafbrudt2
+msgctxt "mfdecode.rsafbrudt2"
+msgid "afbrudt"
+msgstr "annullato"
+
 #: mp4reader.rsmoovatomerforstor
 msgid "moov-atom er for stor"
 msgstr "L'atomo moov è troppo grande"
@@ -2276,6 +2371,14 @@ msgstr "Rinomina file"
 msgid "Omdøb %d filer?"
 msgstr "Rinominare %d file?"
 
+#: replaygain.rsingenlyd
+msgid "ingen lyd"
+msgstr "nessun audio"
+
+#: replaygain.rsikkemaalt
+msgid "ikke målt"
+msgstr "non misurato"
+
 #: tageditform.rsingentags
 msgid "ingen"
 msgstr "nessuno"
@@ -2283,6 +2386,10 @@ msgstr "nessuno"
 #: tageditform.rssorteringsfelterbestemmerhvordanafspilleresorterer
 msgid "Sorteringsfelter bestemmer, hvordan afspillere sorterer, fx \"Beatles, The\" eller \"Nielsen, Carl\", uden at ændre det viste navn."
 msgstr "I campi di ordinamento stabiliscono come i lettori ordinano, es. \"Beatles, The\" o \"Nielsen, Carl\", senza cambiare il nome mostrato."
+
+#: tageditform.rsrgeditorhjaelp
+msgid "Beregnes med Værktøjer > ReplayGain. Gain skrives som \"-6.52 dB\", peak som \"0.988553\"."
+msgstr "Calcolato con Strumenti > ReplayGain. Guadagno scritto come \"-6.52 dB\", picco come \"0.988553\"."
 
 #: tageditform.rsredigertagdafd
 msgid "Rediger tag (%d af %d) - %s"
@@ -2372,6 +2479,35 @@ msgstr "Errore interno: il file è stato letto senza immagini"
 msgctxt "tagwriter.rsskrivningafdennefiltypeunderstoettes"
 msgid "Skrivning af denne filtype understøttes ikke endnu"
 msgstr "La scrittura di questo tipo di file non è ancora supportata"
+
+#: tooldialogs.rsreplaygain
+msgctxt "tooldialogs.rsreplaygain"
+msgid "ReplayGain"
+msgstr "ReplayGain"
+
+#: tooldialogs.rsrgsporogalbum
+msgid "Beregn sporgain og albumgain"
+msgstr "Calcola guadagno traccia e album"
+
+#: tooldialogs.rsrgkunspor
+msgid "Beregn kun sporgain"
+msgstr "Calcola solo il guadagno traccia"
+
+#: tooldialogs.rsrgspringover
+msgid "Spring filer over, der allerede har ReplayGain (for album: hele albummet)"
+msgstr "Salta i file che hanno già ReplayGain (per gli album: tutto l'album)"
+
+#: tooldialogs.rsrghjaelp
+msgid "ReplayGain 2.0 (EBU R128, -18 LUFS). Albumgain beregnes for filerne i samme mappe med samme albumnavn, så de beholder deres indbyrdes styrke. Lyden ændres ikke; afspilleren bruger værdierne. MP3, M4A, WMA og FLAC afkodes af Windows; Ogg, Opus, APE, WavPack, Musepack og OptimFROG kræver, at Windows har en codec til dem."
+msgstr "ReplayGain 2.0 (EBU R128, -18 LUFS). Il guadagno album è calcolato per i file nella stessa cartella con lo stesso nome di album, così mantengono il loro volume relativo. L'audio non viene modificato; il lettore usa i valori. MP3, M4A, WMA e FLAC sono decodificati da Windows; Ogg, Opus, APE, WavPack, Musepack e OptimFROG richiedono un codec di Windows."
+
+#: tooldialogs.rsrgmaaler
+msgid "Måler lydstyrke: %d af %d filer"
+msgstr "Misurazione del volume: %d di %d file"
+
+#: tooldialogs.rsrgafbryd
+msgid "Afbryd"
+msgstr "Annulla"
 
 #: tooldialogs.rsfra
 msgid "Fra:"

@@ -41,6 +41,35 @@ msgstr "Ogiltigt ASF-objekt"
 msgid "ASF-filen mangler File Properties"
 msgstr "ASF-filen saknar File Properties"
 
+#: audiodecode.rsafbrudt
+msgctxt "audiodecode.rsafbrudt"
+msgid "afbrudt"
+msgstr "avbrutet"
+
+#: audiodecode.rsukendtlydformat
+msgid "ukendt lydformat"
+msgstr "okänt ljudformat"
+
+#: audiodecode.rsingenlyddata
+msgid "ingen lyddata"
+msgstr "inga ljuddata"
+
+#: audiotypes.rsrgsporgain
+msgid "ReplayGain spor"
+msgstr "ReplayGain spår"
+
+#: audiotypes.rsrgsporpeak
+msgid "ReplayGain spor-peak"
+msgstr "ReplayGain spårtopp"
+
+#: audiotypes.rsrgalbumgain
+msgid "ReplayGain album"
+msgstr "ReplayGain album"
+
+#: audiotypes.rsrgalbumpeak
+msgid "ReplayGain album-peak"
+msgstr "ReplayGain albumtopp"
+
 #: audiotypes.rsalbumfelt
 msgctxt "audiotypes.rsalbumfelt"
 msgid "Album"
@@ -569,6 +598,55 @@ msgstr "Maskredigerare"
 msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr "Välj de fält som klistras in i %d filer:"
+
+#: mainform.rsberegnreplaygain
+msgid "Beregn ReplayGain..."
+msgstr "Beräkna ReplayGain..."
+
+#: mainform.rsberegnreplaygainhint
+msgid "Mål lydstyrken (EBU R128) og skriv ReplayGain-værdier i de afkrydsede filer"
+msgstr "Mät ljudstyrkan (EBU R128) och skriv ReplayGain-värden i de markerade filerna"
+
+#: mainform.rsfjernreplaygain
+msgid "Fjern ReplayGain..."
+msgstr "Ta bort ReplayGain..."
+
+#: mainform.rsfjernreplaygainhint
+msgid "Slet ReplayGain-værdierne fra de afkrydsede filer"
+msgstr "Radera ReplayGain-värdena från de markerade filerna"
+
+#: mainform.rsreplaygaintitel
+msgctxt "mainform.rsreplaygaintitel"
+msgid "ReplayGain"
+msgstr "ReplayGain"
+
+#: mainform.rsrgintetatgoere
+msgid "Alle filerne har allerede ReplayGain."
+msgstr "Alla filerna har redan ReplayGain."
+
+#: mainform.rsrgafbrudt
+msgid "ReplayGain blev afbrudt - intet er gemt."
+msgstr "ReplayGain avbröts - inget har sparats."
+
+#: mainform.rsrgstille
+msgid "stille - ingen gain"
+msgstr "tyst - ingen gain"
+
+#: mainform.rsrgalbumikkeskrevet
+msgid "Album \"%s\": albumgain er ikke skrevet, fordi %d fil(er) ikke kunne måles."
+msgstr "Album \"%s\": albumgain skrevs inte, eftersom %d fil(er) inte kunde mätas."
+
+#: mainform.rsrgnoglefiler
+msgid "Nogle filer fik ikke ReplayGain"
+msgstr "Några filer fick inte ReplayGain"
+
+#: mainform.rsrgingenharrg
+msgid "Ingen af filerne har ReplayGain."
+msgstr "Ingen av filerna har ReplayGain."
+
+#: mainform.rsrgfjernspm
+msgid "Fjern ReplayGain fra %d filer?"
+msgstr "Ta bort ReplayGain från %d filer?"
 
 #: mainform.rsindstillingermenu
 msgid "Indstillinger..."
@@ -1931,6 +2009,23 @@ msgstr "Mappen kunde inte skapas:"
 msgid "Mappe oprettet: "
 msgstr "Mapp skapad: "
 
+#: mfdecode.rsmediafoundationmangler
+msgid "Windows Media Foundation findes ikke på denne computer"
+msgstr "Windows Media Foundation finns inte på den här datorn"
+
+#: mfdecode.rskanikkeaabnes
+msgid "filen kan ikke afkodes af Windows (codec mangler?) – fejl %s"
+msgstr "Windows kan inte avkoda filen (codec saknas?) – fel %s"
+
+#: mfdecode.rsafkodningsfejl
+msgid "afkodningsfejl %s"
+msgstr "avkodningsfel %s"
+
+#: mfdecode.rsafbrudt2
+msgctxt "mfdecode.rsafbrudt2"
+msgid "afbrudt"
+msgstr "avbrutet"
+
 #: mp4reader.rsmoovatomerforstor
 msgid "moov-atom er for stor"
 msgstr "moov-atomen är för stor"
@@ -2276,6 +2371,14 @@ msgstr "Byt namn på filer"
 msgid "Omdøb %d filer?"
 msgstr "Byta namn på %d filer?"
 
+#: replaygain.rsingenlyd
+msgid "ingen lyd"
+msgstr "inget ljud"
+
+#: replaygain.rsikkemaalt
+msgid "ikke målt"
+msgstr "inte mätt"
+
 #: tageditform.rsingentags
 msgid "ingen"
 msgstr "inga"
@@ -2283,6 +2386,10 @@ msgstr "inga"
 #: tageditform.rssorteringsfelterbestemmerhvordanafspilleresorterer
 msgid "Sorteringsfelter bestemmer, hvordan afspillere sorterer, fx \"Beatles, The\" eller \"Nielsen, Carl\", uden at ændre det viste navn."
 msgstr "Sorteringsfält bestämmer hur spelare sorterar, t.ex. \"Beatles, The\" eller \"Nielsen, Carl\", utan att ändra det visade namnet."
+
+#: tageditform.rsrgeditorhjaelp
+msgid "Beregnes med Værktøjer > ReplayGain. Gain skrives som \"-6.52 dB\", peak som \"0.988553\"."
+msgstr "Beräknas med Verktyg > ReplayGain. Gain skrivs som \"-6.52 dB\", topp som \"0.988553\"."
 
 #: tageditform.rsredigertagdafd
 msgid "Rediger tag (%d af %d) - %s"
@@ -2372,6 +2479,35 @@ msgstr "Internt fel: filen lästes utan bilder"
 msgctxt "tagwriter.rsskrivningafdennefiltypeunderstoettes"
 msgid "Skrivning af denne filtype understøttes ikke endnu"
 msgstr "Skrivning av den här filtypen stöds inte ännu"
+
+#: tooldialogs.rsreplaygain
+msgctxt "tooldialogs.rsreplaygain"
+msgid "ReplayGain"
+msgstr "ReplayGain"
+
+#: tooldialogs.rsrgsporogalbum
+msgid "Beregn sporgain og albumgain"
+msgstr "Beräkna spårgain och albumgain"
+
+#: tooldialogs.rsrgkunspor
+msgid "Beregn kun sporgain"
+msgstr "Beräkna endast spårgain"
+
+#: tooldialogs.rsrgspringover
+msgid "Spring filer over, der allerede har ReplayGain (for album: hele albummet)"
+msgstr "Hoppa över filer som redan har ReplayGain (för album: hela albumet)"
+
+#: tooldialogs.rsrghjaelp
+msgid "ReplayGain 2.0 (EBU R128, -18 LUFS). Albumgain beregnes for filerne i samme mappe med samme albumnavn, så de beholder deres indbyrdes styrke. Lyden ændres ikke; afspilleren bruger værdierne. MP3, M4A, WMA og FLAC afkodes af Windows; Ogg, Opus, APE, WavPack, Musepack og OptimFROG kræver, at Windows har en codec til dem."
+msgstr "ReplayGain 2.0 (EBU R128, -18 LUFS). Albumgain beräknas för filerna i samma mapp med samma albumnamn, så att de behåller sin inbördes ljudstyrka. Ljudet ändras inte; spelaren använder värdena. MP3, M4A, WMA och FLAC avkodas av Windows; Ogg, Opus, APE, WavPack, Musepack och OptimFROG kräver en codec i Windows."
+
+#: tooldialogs.rsrgmaaler
+msgid "Måler lydstyrke: %d af %d filer"
+msgstr "Mäter ljudstyrka: %d av %d filer"
+
+#: tooldialogs.rsrgafbryd
+msgid "Afbryd"
+msgstr "Avbryt"
 
 #: tooldialogs.rsfra
 msgid "Fra:"

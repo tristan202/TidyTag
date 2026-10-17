@@ -293,6 +293,10 @@ begin
            Info.Fields[tfSortComposer] := 'Nielsen, Carl';
            Info.Fields[tfCompilation] := '1';
            Info.Fields[tfPodcast] := '1';
+           Info.Fields[tfRGTrackGain] := '-6.52 dB';
+           Info.Fields[tfRGTrackPeak] := '0.988553';
+           Info.Fields[tfRGAlbumGain] := '-7.10 dB';
+           Info.Fields[tfRGAlbumPeak] := '1.000000';
            SetPicture(Info, 0);
          end;
       1: SetPicture(Info, 400 * 1024);
@@ -309,6 +313,12 @@ begin
     for F := Low(TTagField) to High(TTagField) do Expected[F] := Info.Fields[F];
     // WMA has no podcast flag
     if SameText(ExtractFileExt(FileName), '.wma') then Expected[tfPodcast] := '';
+    // Opus stores R128 gains (Q7.8) and no peaks
+    if SameText(ExtractFileExt(FileName), '.opus') then
+    begin
+      Expected[tfRGTrackPeak] := '';
+      Expected[tfRGAlbumPeak] := '';
+    end;
     Pics := Copy(Info.Pictures);
     try
       WriteAudioTags(Info, True);
@@ -401,8 +411,9 @@ begin
   try
     Check(Info.Error = '', 'genlæsning ' + Info.Error);
     Empty := True;
+    // ReplayGain describes the audio and survives where the tag itself survives
     for F := Low(TTagField) to High(TTagField) do
-      if Info.Fields[F] <> '' then
+      if (Info.Fields[F] <> '') and not ((F in RGFields) and not RemovesWholeTag(FileName)) then
       begin
         Empty := False;
         WriteLn('     tilbage: ', TagFieldCaptions[F], ' = ', Info.Fields[F]);

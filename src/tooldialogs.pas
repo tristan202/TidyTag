@@ -8,7 +8,7 @@ unit ToolDialogs;
 interface
 
 uses
-  Classes, SysUtils, AudioTypes, AppSettings, BatchWrite, ID3Sync, CoverImage;
+  Classes, SysUtils, AudioTypes, AppSettings, BatchWrite, ID3Sync, CoverImage, ReplayGain;
 
 { Returns False when cancelled. ShowCheck adds a check box (Check = its state). }
 function AskFieldPair(const Title, FromCaption, ToCaption, CheckCaption: string;
@@ -20,6 +20,10 @@ function AskID3Sync(var Direction: TSyncDirection; var Existing: TSyncExisting):
 function AskFieldSet(const Title, Prompt: string; const Values: TFieldValues;
   var Fields: TTagFieldSet): Boolean;
 function AskCoverResize(const Title: string; var Opt: TCoverResize): Boolean;
+{ ReplayGain options: album gain too, and skip files (albums) that already have values. }
+function AskReplayGain(var Album, SkipExisting: Boolean): Boolean;
+{ Runs the measurement with a progress window; False when cancelled. }
+function RunReplayGainBatch(const Title: string; Batch: TRGBatch): Boolean;
 
 type
   { Example result of a mask, shown live in the mask editor. }
@@ -34,9 +38,19 @@ implementation
 
 uses
   Forms, Controls, Graphics, StdCtrls, ExtCtrls, Grids, Dialogs, ButtonPanel, CheckLst, Spin,
-  IniFiles;
+  IniFiles, ComCtrls;
 
 resourcestring
+  rsReplayGain = 'ReplayGain';
+  rsRGSporOgAlbum = 'Beregn sporgain og albumgain';
+  rsRGKunSpor = 'Beregn kun sporgain';
+  rsRGSpringOver = 'Spring filer over, der allerede har ReplayGain (for album: hele albummet)';
+  rsRGHjaelp = 'ReplayGain 2.0 (EBU R128, -18 LUFS). Albumgain beregnes for filerne i samme mappe ' +
+    'med samme albumnavn, så de beholder deres indbyrdes styrke. Lyden ændres ikke; afspilleren ' +
+    'bruger værdierne. MP3, M4A, WMA og FLAC afkodes af Windows; Ogg, Opus, APE, WavPack, ' +
+    'Musepack og OptimFROG kræver, at Windows har en codec til dem.';
+  rsRGMaaler = 'Måler lydstyrke: %d af %d filer';
+  rsRGAfbryd = 'Afbryd';
   rsFra = 'Fra:';
   rsTil = 'Til:';
   rsOrdudskiftninger = 'Ordudskiftninger ved omdøbning';
@@ -459,6 +473,117 @@ begin
     end;
   finally
     F.Free;
+  end;
+end;
+
+function AskReplayGain(var Album, SkipExisting: Boolean): Boolean;
+var
+  F: TForm;
+  R: TRadioGroup;
+  C: TCheckBox;
+begin
+  F := NewDialog(rsReplayGain, 460, 290);
+  try
+    R := TRadioGroup.Create(F);
+    R.Parent := F;
+    R.Caption := rsReplayGain;
+    R.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(10), F.Scale96ToForm(436), F.Scale96ToForm(70));
+    R.Items.Add(rsRGSporOgAlbum);
+    R.Items.Add(rsRGKunSpor);
+    if Album then R.ItemIndex := 0 else R.ItemIndex := 1;
+    C := TCheckBox.Create(F);
+    C.Parent := F;
+    C.Caption := rsRGSpringOver;
+    C.Left := F.Scale96ToForm(12);
+    C.Top := F.Scale96ToForm(90);
+    C.Checked := SkipExisting;
+    with AddLabel(F, rsRGHjaelp, 12, 118) do
+    begin
+      WordWrap := True;
+      AutoSize := False;
+      Width := F.Scale96ToForm(436);
+      Height := F.Scale96ToForm(110);
+      Font.Color := clGrayText;
+    end;
+    AddButtons(F);
+    Result := F.ShowModal = mrOK;
+    if Result then
+    begin
+      Album := R.ItemIndex = 0;
+      SkipExisting := C.Checked;
+    end;
+  finally
+    F.Free;
+  end;
+end;
+
+type
+  TRGProgress = class
+    Form: TForm;
+    Bar: TProgressBar;
+    Info: TLabel;
+    Batch: TRGBatch;
+    procedure Tick(Sender: TObject);
+    procedure CancelClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+  end;
+
+procedure TRGProgress.Tick(Sender: TObject);
+begin
+  Bar.Position := Batch.Done;
+  Info.Caption := Format(rsRGMaaler, [Batch.Done, Batch.Count]);
+  if Batch.Finished then Form.ModalResult := mrOK;
+end;
+
+procedure TRGProgress.CancelClick(Sender: TObject);
+begin
+  Batch.Cancel;
+end;
+
+procedure TRGProgress.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  // closing the window cancels; it closes once the threads have stopped
+  if not Batch.Finished then
+  begin
+    Batch.Cancel;
+    CanClose := False;
+  end;
+end;
+
+function RunReplayGainBatch(const Title: string; Batch: TRGBatch): Boolean;
+var
+  P: TRGProgress;
+  T: TTimer;
+  B: TButton;
+begin
+  P := TRGProgress.Create;
+  P.Batch := Batch;
+  P.Form := NewDialog(Title, 420, 110);
+  try
+    P.Form.OnCloseQuery := @P.FormCloseQuery;
+    P.Info := AddLabel(P.Form, Format(rsRGMaaler, [0, Batch.Count]), 12, 12);
+    P.Bar := TProgressBar.Create(P.Form);
+    P.Bar.Parent := P.Form;
+    P.Bar.SetBounds(P.Form.Scale96ToForm(12), P.Form.Scale96ToForm(36), P.Form.Scale96ToForm(396),
+      P.Form.Scale96ToForm(20));
+    P.Bar.Max := Batch.Count;
+    B := TButton.Create(P.Form);
+    B.Parent := P.Form;
+    B.Caption := rsRGAfbryd;
+    B.AutoSize := True;
+    B.Top := P.Form.Scale96ToForm(70);
+    B.Left := P.Form.ClientWidth - P.Form.Scale96ToForm(12) - B.Width;
+    B.Anchors := [akTop, akRight];
+    B.OnClick := @P.CancelClick;
+    T := TTimer.Create(P.Form);
+    T.Interval := 100;
+    T.OnTimer := @P.Tick;
+    Batch.Start;
+    P.Form.ShowModal;
+    Result := not Batch.Cancelled;
+  finally
+    P.Form.Free;
+    P.Free;
   end;
 end;
 

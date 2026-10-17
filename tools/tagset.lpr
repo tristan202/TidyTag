@@ -17,7 +17,8 @@ const
     'genre', 'comment', 'albumartist', 'composer', 'bpm', 'lyrics', 'conductor', 'lyricist',
     'origartist', 'remixer', 'label', 'catalog', 'isrc', 'copyright', 'encodedby', 'url',
     'grouping', 'subtitle', 'mood', 'key', 'sorttitle', 'sortartist', 'sortalbumartist',
-    'sortalbum', 'sortcomposer', 'compilation', 'podcast');
+    'sortalbum', 'sortcomposer', 'compilation', 'podcast', 'replaygain_track_gain',
+    'replaygain_track_peak', 'replaygain_album_gain', 'replaygain_album_peak');
 
 var
   Info: TAudioInfo;

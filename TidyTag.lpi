@@ -281,6 +281,26 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="CoverImage"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\src/loudness.pas.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Loudness"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\src/audiodecode.pas.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="AudioDecode"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\src/mfdecode.pas.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MFDecode"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\src/replaygain.pas.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ReplayGain"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

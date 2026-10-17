@@ -39,7 +39,8 @@ const
     'WM/ModifiedBy', 'WM/Publisher', 'WM/CatalogNo', 'WM/ISRC', '', 'WM/EncodedBy',
     'WM/AuthorURL', 'WM/ContentGroupDescription', 'WM/SubTitle', 'WM/Mood',
     'WM/InitialKey', 'WM/TitleSortOrder', 'WM/ArtistSortOrder', 'WM/AlbumArtistSortOrder',
-    'WM/AlbumSortOrder', 'WM/ComposerSortOrder', 'WM/IsCompilation', '');
+    'WM/AlbumSortOrder', 'WM/ComposerSortOrder', 'WM/IsCompilation', '',
+    'REPLAYGAIN_TRACK_GAIN', 'REPLAYGAIN_TRACK_PEAK', 'REPLAYGAIN_ALBUM_GAIN', 'REPLAYGAIN_ALBUM_PEAK');
 
 function GuidBytes(const G: string): TBytes;
 function IsGuid(const B: TBytes; P: SizeInt; const G: string): Boolean;

@@ -2,7 +2,13 @@
 
 Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne i Tag&Rename 3.9.15
 (se [docs/Funktionsoversigt.md](docs/Funktionsoversigt.md)).
-## Status (MVP, trin 13)
+## Status (MVP, trin 14)
+- **ReplayGain 2.0** (Værktøjer > ReplayGain): måler lydstyrken efter EBU R128 / ITU BS.1770-4
+  (-18 LUFS, sample peak) og skriver spor- og albumgain (album = samme mappe og albumnavn). Flere
+  filer måles samtidig i tråde. WAV/AIFF læses direkte, alt andet afkodes af Windows Media
+  Foundation (MP3, AAC/ALAC, WMA, FLAC m.m.) - ingen eksterne programmer. Ogg/Opus/APE/WavPack/
+  Musepack/OptimFROG kræver en Windows-codec. Opus får `R128_TRACK_GAIN`/`R128_ALBUM_GAIN`.
+  Værdierne vises i tag-editorens ReplayGain-fane og kan vælges som kolonner; "Fjern tags" bevarer dem.
 - **B-listen** (se `docs/mangler.md`):
   - *Tag-værktøjer:* kunstnerværktøjer ("The Beatles" ↔ "Beatles, The", "Carl Nielsen" ↔
     "Nielsen, Carl"), Mp3-tag-synkronisering ID3v1 ↔ ID3v2, valg af felter ved "Indsæt tag",
@@ -119,7 +125,8 @@ C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe -Mobjfpc -Sh -Fusrc -FUlib\tools -
 bin\renametest.exe C:\Temp\renametest
 ```
 
-Øvrige værktøjer i `tools\`: `tooltest.lpr` (felt-værktøjer, ID3-synkronisering, papirkurv: `bin\tooltest.exe C:\Temp\tt fil.mp3` - lægger én lille testfil i papirkurven), `addtranslations.py` (flet oversættelser ind), `webtest.lpr` (offline-test af MusicBrainz-svar og parring),
+Øvrige værktøjer i `tools\`: `rgtest.lpr` (ReplayGain: EBU-testsignaler skrevet som WAV/AIFF og målt
+direkte og via Media Foundation, plus måling af givne filer: `bingtest.exe C:\Tempg fil.flac`), `tooltest.lpr` (felt-værktøjer, ID3-synkronisering, papirkurv: `bin\tooltest.exe C:\Temp\tt fil.mp3` - lægger én lille testfil i papirkurven), `addtranslations.py` (flet oversættelser ind), `webtest.lpr` (offline-test af MusicBrainz-svar og parring),
 `dgtest.lpr` (live Discogs: `bin\dgtest.exe 249504`), `mbtest.lpr` (live-søgning: `bin\mbtest.exe "Gasolin'" "Gas 5"`), `exporttest.lpr` (eksport/import), `tagset.lpr` (sæt felter:
 `bin\tagset.exe fil.mp3 artist=X album=Y track=1`).
 
@@ -196,6 +203,9 @@ Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret
 | `src/mainform.pas/.lfm` | Hovedvindue (menu/værktøjslinje bygges i koden fra én handlingstabel) |
 | `src/exportimport.pas` | Eksport (CSV/TXT/HTML/XML), CSV-/XLSX-læsning, import-plan |
 | `src/exportimportform.pas/.lfm` | Dialog: Eksportér/importér tags |
+| `src/loudness.pas` | Lydstyrkemåler (BS.1770-4 K-vægtning, gating) til ReplayGain 2.0 |
+| `src/audiodecode.pas`, `src/mfdecode.pas` | Afkodning til PCM: WAV/AIFF direkte, resten via Windows Media Foundation |
+| `src/replaygain.pas` | Måling af mange filer i tråde, spor- og albumværdier |
 | `src/batchwrite.pas` | Gem udvalgte felter/cover i én fil (bruges af faner, indsæt tag, træk-og-slip) |
 | `res/icons/`, `res/icons.rc` | Ikoner (Lazarus general_purpose af Roland Hahn, CC0) |
 | `TidyTag.ico`, `res/logo/tidytag.png` | Programikonet (lavet med `tools/icon_cut.py`) |

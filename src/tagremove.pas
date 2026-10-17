@@ -133,7 +133,8 @@ begin
   Info := ReadAudioInfo(FileName, True);
   try
     if Info.Error <> '' then raise Exception.Create(Info.Error);
-    for F := Low(TTagField) to High(TTagField) do Info.Fields[F] := '';
+    for F := Low(TTagField) to High(TTagField) do
+      if not (F in RGFields) then Info.Fields[F] := '';
     Info.Pictures := nil;
     WriteAudioTags(Info, KeepTimestamp);
   finally

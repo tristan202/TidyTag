@@ -53,7 +53,9 @@ begin
     P := SkipTerminated(Fr.Data, 1, Fr.Data[0]);
     Desc := UpperCase(DecodeID3Text(Fr.Data, 1, P - 1, Fr.Data[0]));
     if ID = 'WXXX' then Exit(Desc = ''); // the plain URL we edit; other links stay
-    Exit((Desc = 'CATALOGNUMBER') or (Desc = 'MOOD') or (Desc = 'LABEL'));
+    Exit((Desc = 'CATALOGNUMBER') or (Desc = 'MOOD') or (Desc = 'LABEL') or
+      (Desc = 'REPLAYGAIN_TRACK_GAIN') or (Desc = 'REPLAYGAIN_TRACK_PEAK') or
+      (Desc = 'REPLAYGAIN_ALBUM_GAIN') or (Desc = 'REPLAYGAIN_ALBUM_PEAK'));
   end;
   if ID = 'COMM' then
   begin
@@ -329,6 +331,10 @@ begin
     // iTunes flags: TCMP "1" = part of a compilation, PCST (4-byte number) = podcast
     if IsTrueFlag(Info.Fields[tfCompilation]) then AddTextFrame(Dest, Version, 'TCMP', '1');
     if IsTrueFlag(Info.Fields[tfPodcast]) then WriteFrame(Dest, Version, 'PCST', 0, TBytes.Create(0, 0, 0, 1));
+    AddTxxxFrame(Dest, Version, 'REPLAYGAIN_TRACK_GAIN', Info.Fields[tfRGTrackGain]);
+    AddTxxxFrame(Dest, Version, 'REPLAYGAIN_TRACK_PEAK', Info.Fields[tfRGTrackPeak]);
+    AddTxxxFrame(Dest, Version, 'REPLAYGAIN_ALBUM_GAIN', Info.Fields[tfRGAlbumGain]);
+    AddTxxxFrame(Dest, Version, 'REPLAYGAIN_ALBUM_PEAK', Info.Fields[tfRGAlbumPeak]);
     AddLyricsFrame(Dest, Version, Info.Fields[tfLyrics]);
     for I := 0 to High(Info.Pictures) do
       AddPictureFrame(Dest, Version, Info.Pictures[I]);

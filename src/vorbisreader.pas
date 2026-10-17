@@ -131,6 +131,12 @@ begin
       'COMPOSERSORT': Info.SetField(tfSortComposer, Value);
       'COMPILATION': Info.SetField(tfCompilation, FlagValue(Value));
       'PODCAST': Info.SetField(tfPodcast, FlagValue(Value));
+      'REPLAYGAIN_TRACK_GAIN': Info.SetField(tfRGTrackGain, Value, False);
+      'REPLAYGAIN_TRACK_PEAK': Info.SetField(tfRGTrackPeak, Value);
+      'REPLAYGAIN_ALBUM_GAIN': Info.SetField(tfRGAlbumGain, Value, False);
+      'REPLAYGAIN_ALBUM_PEAK': Info.SetField(tfRGAlbumPeak, Value);
+      'R128_TRACK_GAIN': Info.SetField(tfRGTrackGain, R128ToRG(Value));
+      'R128_ALBUM_GAIN': Info.SetField(tfRGAlbumGain, R128ToRG(Value));
       'METADATA_BLOCK_PICTURE': ParseBase64Picture(Value, Info);
       'COVERART': Info.HasCover := True; // old, non-standard; not loaded
     end;

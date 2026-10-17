@@ -41,6 +41,35 @@ msgstr ""
 msgid "ASF-filen mangler File Properties"
 msgstr ""
 
+#: audiodecode.rsafbrudt
+msgctxt "audiodecode.rsafbrudt"
+msgid "afbrudt"
+msgstr ""
+
+#: audiodecode.rsukendtlydformat
+msgid "ukendt lydformat"
+msgstr ""
+
+#: audiodecode.rsingenlyddata
+msgid "ingen lyddata"
+msgstr ""
+
+#: audiotypes.rsrgsporgain
+msgid "ReplayGain spor"
+msgstr ""
+
+#: audiotypes.rsrgsporpeak
+msgid "ReplayGain spor-peak"
+msgstr ""
+
+#: audiotypes.rsrgalbumgain
+msgid "ReplayGain album"
+msgstr ""
+
+#: audiotypes.rsrgalbumpeak
+msgid "ReplayGain album-peak"
+msgstr ""
+
 #: audiotypes.rsalbumfelt
 msgctxt "audiotypes.rsalbumfelt"
 msgid "Album"
@@ -568,6 +597,55 @@ msgstr ""
 #: layoutcheck.rsvaelgfelterderindsaettes
 msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
+msgstr ""
+
+#: mainform.rsberegnreplaygain
+msgid "Beregn ReplayGain..."
+msgstr ""
+
+#: mainform.rsberegnreplaygainhint
+msgid "Mål lydstyrken (EBU R128) og skriv ReplayGain-værdier i de afkrydsede filer"
+msgstr ""
+
+#: mainform.rsfjernreplaygain
+msgid "Fjern ReplayGain..."
+msgstr ""
+
+#: mainform.rsfjernreplaygainhint
+msgid "Slet ReplayGain-værdierne fra de afkrydsede filer"
+msgstr ""
+
+#: mainform.rsreplaygaintitel
+msgctxt "mainform.rsreplaygaintitel"
+msgid "ReplayGain"
+msgstr ""
+
+#: mainform.rsrgintetatgoere
+msgid "Alle filerne har allerede ReplayGain."
+msgstr ""
+
+#: mainform.rsrgafbrudt
+msgid "ReplayGain blev afbrudt - intet er gemt."
+msgstr ""
+
+#: mainform.rsrgstille
+msgid "stille - ingen gain"
+msgstr ""
+
+#: mainform.rsrgalbumikkeskrevet
+msgid "Album \"%s\": albumgain er ikke skrevet, fordi %d fil(er) ikke kunne måles."
+msgstr ""
+
+#: mainform.rsrgnoglefiler
+msgid "Nogle filer fik ikke ReplayGain"
+msgstr ""
+
+#: mainform.rsrgingenharrg
+msgid "Ingen af filerne har ReplayGain."
+msgstr ""
+
+#: mainform.rsrgfjernspm
+msgid "Fjern ReplayGain fra %d filer?"
 msgstr ""
 
 #: mainform.rsindstillingermenu
@@ -1931,6 +2009,23 @@ msgstr ""
 msgid "Mappe oprettet: "
 msgstr ""
 
+#: mfdecode.rsmediafoundationmangler
+msgid "Windows Media Foundation findes ikke på denne computer"
+msgstr ""
+
+#: mfdecode.rskanikkeaabnes
+msgid "filen kan ikke afkodes af Windows (codec mangler?) – fejl %s"
+msgstr ""
+
+#: mfdecode.rsafkodningsfejl
+msgid "afkodningsfejl %s"
+msgstr ""
+
+#: mfdecode.rsafbrudt2
+msgctxt "mfdecode.rsafbrudt2"
+msgid "afbrudt"
+msgstr ""
+
 #: mp4reader.rsmoovatomerforstor
 msgid "moov-atom er for stor"
 msgstr ""
@@ -2276,12 +2371,24 @@ msgstr ""
 msgid "Omdøb %d filer?"
 msgstr ""
 
+#: replaygain.rsingenlyd
+msgid "ingen lyd"
+msgstr ""
+
+#: replaygain.rsikkemaalt
+msgid "ikke målt"
+msgstr ""
+
 #: tageditform.rsingentags
 msgid "ingen"
 msgstr ""
 
 #: tageditform.rssorteringsfelterbestemmerhvordanafspilleresorterer
 msgid "Sorteringsfelter bestemmer, hvordan afspillere sorterer, fx \"Beatles, The\" eller \"Nielsen, Carl\", uden at ændre det viste navn."
+msgstr ""
+
+#: tageditform.rsrgeditorhjaelp
+msgid "Beregnes med Værktøjer > ReplayGain. Gain skrives som \"-6.52 dB\", peak som \"0.988553\"."
 msgstr ""
 
 #: tageditform.rsredigertagdafd
@@ -2371,6 +2478,35 @@ msgstr ""
 #: tagwriter.rsskrivningafdennefiltypeunderstoettes
 msgctxt "tagwriter.rsskrivningafdennefiltypeunderstoettes"
 msgid "Skrivning af denne filtype understøttes ikke endnu"
+msgstr ""
+
+#: tooldialogs.rsreplaygain
+msgctxt "tooldialogs.rsreplaygain"
+msgid "ReplayGain"
+msgstr ""
+
+#: tooldialogs.rsrgsporogalbum
+msgid "Beregn sporgain og albumgain"
+msgstr ""
+
+#: tooldialogs.rsrgkunspor
+msgid "Beregn kun sporgain"
+msgstr ""
+
+#: tooldialogs.rsrgspringover
+msgid "Spring filer over, der allerede har ReplayGain (for album: hele albummet)"
+msgstr ""
+
+#: tooldialogs.rsrghjaelp
+msgid "ReplayGain 2.0 (EBU R128, -18 LUFS). Albumgain beregnes for filerne i samme mappe med samme albumnavn, så de beholder deres indbyrdes styrke. Lyden ændres ikke; afspilleren bruger værdierne. MP3, M4A, WMA og FLAC afkodes af Windows; Ogg, Opus, APE, WavPack, Musepack og OptimFROG kræver, at Windows har en codec til dem."
+msgstr ""
+
+#: tooldialogs.rsrgmaaler
+msgid "Måler lydstyrke: %d af %d filer"
+msgstr ""
+
+#: tooldialogs.rsrgafbryd
+msgid "Afbryd"
 msgstr ""
 
 #: tooldialogs.rsfra

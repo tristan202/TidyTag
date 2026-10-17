@@ -260,9 +260,10 @@ end;
 
 const
   // Freeform names (----:com.apple.iTunes:NAME) we edit; others are kept.
-  ManagedFreeform: array[0..13] of string = ('CONDUCTOR', 'LYRICIST', 'ORIGINALARTIST',
+  ManagedFreeform: array[0..17] of string = ('CONDUCTOR', 'LYRICIST', 'ORIGINALARTIST',
     'ORIGINAL ARTIST', 'REMIXER', 'LABEL', 'PUBLISHER', 'CATALOGNUMBER', 'ISRC', 'ENCODEDBY',
-    'URL', 'SUBTITLE', 'MOOD', 'INITIALKEY');
+    'URL', 'SUBTITLE', 'MOOD', 'INITIALKEY', 'REPLAYGAIN_TRACK_GAIN', 'REPLAYGAIN_TRACK_PEAK',
+    'REPLAYGAIN_ALBUM_GAIN', 'REPLAYGAIN_ALBUM_PEAK');
 
 { The 'name' of a freeform item, upper case; '' if it has none. }
 function FreeformName(Item: TAtom): string;
@@ -402,6 +403,10 @@ begin
       S.Free;
     end;
   end;
+  AddFreeform(Ilst, 'replaygain_track_gain', Info.Fields[tfRGTrackGain]);
+  AddFreeform(Ilst, 'replaygain_track_peak', Info.Fields[tfRGTrackPeak]);
+  AddFreeform(Ilst, 'replaygain_album_gain', Info.Fields[tfRGAlbumGain]);
+  AddFreeform(Ilst, 'replaygain_album_peak', Info.Fields[tfRGAlbumPeak]);
   // flags: one byte, data type 21 (integer)
   if IsTrueFlag(Info.Fields[tfCompilation]) then Ilst.Add(ItemAtom('cpil', [DataAtom(21, TBytes.Create(1))]));
   if IsTrueFlag(Info.Fields[tfPodcast]) then Ilst.Add(ItemAtom('pcst', [DataAtom(21, TBytes.Create(1))]));

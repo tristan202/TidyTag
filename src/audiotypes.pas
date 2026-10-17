@@ -10,6 +10,10 @@ uses
   SysUtils;
 
 resourcestring
+  rsRGSporGain = 'ReplayGain spor';
+  rsRGSporPeak = 'ReplayGain spor-peak';
+  rsRGAlbumGain = 'ReplayGain album';
+  rsRGAlbumPeak = 'ReplayGain album-peak';
   rsAlbumFelt = 'Album';
   rsDiscFelt = 'Disc';
   rsGenreFelt = 'Genre';
@@ -63,7 +67,9 @@ type
     tfIsrc, tfCopyright, tfEncodedBy, tfUrl, tfGrouping, tfSubtitle, tfMood, tfInitialKey,
     tfSortTitle, tfSortArtist, tfSortAlbumArtist, tfSortAlbum, tfSortComposer,
     // flags: '1' = set, '' = not set
-    tfCompilation, tfPodcast);
+    tfCompilation, tfPodcast,
+    // ReplayGain 2.0: '-6.52 dB' and '0.988553' (written by the ReplayGain tool)
+    tfRGTrackGain, tfRGTrackPeak, tfRGAlbumGain, tfRGAlbumPeak);
 
   TTagPicture = record
     PicType: Byte;       // ID3/FLAC picture type, 3 = front cover
@@ -111,7 +117,8 @@ const
     rsPladeselskab, rsKatalognrFelt, 'ISRC', rsCopyright, rsKodetAf, 'URL', rsGruppering,
     rsUndertitel, rsStemning, rsToneart, rsSorterTitel, rsSorterKunstner,
     rsSorterAlbumkunstner, rsSorterAlbum, rsSorterKomponist,
-    rsDelAfOpsamling, rsPodcast);
+    rsDelAfOpsamling, rsPodcast, rsRGSporGain, rsRGSporPeak, rsRGAlbumGain, rsRGAlbumPeak);
+  RGFields = [tfRGTrackGain, tfRGTrackPeak, tfRGAlbumGain, tfRGAlbumPeak];
   PicTypeFrontCover = 3;
 
 { 'image/png' / 'image/jpeg' from the data signature; Fallback if unknown. }
@@ -120,12 +127,72 @@ function IsTrueFlag(const S: string): Boolean;
 { '1' or '' for a flag field. }
 function FlagValue(const S: string): string;
 
+{ ReplayGain values as written in tags: '-6.52 dB' and '0.988553' (always with a point). }
+function RGGainText(DB: Double): string;
+function RGPeakText(Peak: Double): string;
+{ Reads '-6.52 dB', '+1.2 dB' or '-6,52'; False if S holds no number. }
+function ParseRGGain(const S: string; out DB: Double): Boolean;
+{ Opus R128_*_GAIN (Q7.8 integer relative to -23 LUFS) <-> ReplayGain text (-18 LUFS). }
+function R128ToRG(const S: string): string;
+function RGToR128(const S: string): string;
+
 function DetectImageMime(const Data: TBytes; const Fallback: string = 'image/jpeg'): string;
 { Pixel size from PNG/JPEG headers; False if it cannot be determined. }
 function ImageDimensions(const Data: TBytes; out W, H: Integer): Boolean;
 function PictureTypeName(T: Byte): string;
 
 implementation
+
+function RGGainText(DB: Double): string;
+var
+  FS: TFormatSettings;
+begin
+  FS := DefaultFormatSettings;
+  FS.DecimalSeparator := '.';
+  Result := FormatFloat('0.00', DB, FS) + ' dB';
+end;
+
+function RGPeakText(Peak: Double): string;
+var
+  FS: TFormatSettings;
+begin
+  FS := DefaultFormatSettings;
+  FS.DecimalSeparator := '.';
+  Result := FormatFloat('0.000000', Peak, FS);
+end;
+
+function ParseRGGain(const S: string; out DB: Double): Boolean;
+var
+  T: string;
+  I: Integer;
+  FS: TFormatSettings;
+begin
+  T := '';
+  for I := 1 to Length(S) do
+    if S[I] in ['0'..'9', '-', '+', '.', ','] then T := T + S[I]
+    else if (T <> '') and (S[I] <> ' ') then Break;
+  T := StringReplace(T, ',', '.', []);
+  if (T <> '') and (T[1] = '+') then Delete(T, 1, 1);
+  FS := DefaultFormatSettings;
+  FS.DecimalSeparator := '.';
+  Result := TryStrToFloat(T, DB, FS);
+end;
+
+function R128ToRG(const S: string): string;
+var
+  Q: Integer;
+begin
+  if not TryStrToInt(Trim(S), Q) then Exit('');
+  Result := RGGainText(Q / 256 + 5);
+end;
+
+function RGToR128(const S: string): string;
+var
+  DB: Double;
+begin
+  if not ParseRGGain(S, DB) then Exit('');
+  Result := IntToStr(Round((DB - 5) * 256));
+end;
 
 function IsTrueFlag(const S: string): Boolean;
 var

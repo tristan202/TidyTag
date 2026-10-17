@@ -166,6 +166,7 @@ type
     FAutoYes: Boolean;
     FSyncDir: TSyncDirection;
     FSyncExisting: TSyncExisting;
+    FRGAlbum, FRGSkip: Boolean;
     FAutoLog: TStringList;
     FSortColumn: Integer;
     FSortDescending: Boolean;
@@ -273,6 +274,9 @@ type
     procedure RunNameTool(Tool: TNameTool);
     procedure ActID3SyncExecute(Sender: TObject);
     procedure RunID3Sync(Direction: TSyncDirection; Existing: TSyncExisting);
+    procedure ActReplayGainExecute(Sender: TObject);
+    procedure ActRemoveReplayGainExecute(Sender: TObject);
+    procedure RunReplayGain(Album, SkipExisting: Boolean);
     procedure AddAlbumArtistMenu(ParentItem: TMenuItem);
     procedure AlbumArtistClick(Sender: TObject);
     function LoadPasteFields: TTagFieldSet;
@@ -363,9 +367,22 @@ implementation
 uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
-  Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage, Spin, ButtonPanel;
+  Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage, Spin, ButtonPanel,
+  ReplayGain;
 
 resourcestring
+  rsBeregnReplayGain = 'Beregn ReplayGain...';
+  rsBeregnReplayGainHint = 'Mål lydstyrken (EBU R128) og skriv ReplayGain-værdier i de afkrydsede filer';
+  rsFjernReplayGain = 'Fjern ReplayGain...';
+  rsFjernReplayGainHint = 'Slet ReplayGain-værdierne fra de afkrydsede filer';
+  rsReplayGainTitel = 'ReplayGain';
+  rsRGIntetAtGoere = 'Alle filerne har allerede ReplayGain.';
+  rsRGAfbrudt = 'ReplayGain blev afbrudt - intet er gemt.';
+  rsRGStille = 'stille - ingen gain';
+  rsRGAlbumIkkeSkrevet = 'Album "%s": albumgain er ikke skrevet, fordi %d fil(er) ikke kunne måles.';
+  rsRGNogleFiler = 'Nogle filer fik ikke ReplayGain';
+  rsRGIngenHarRG = 'Ingen af filerne har ReplayGain.';
+  rsRGFjernSpm = 'Fjern ReplayGain fra %d filer?';
   rsIndstillingerMenu = 'Indstillinger...';
   rsIndstillingerMenuHint = 'Alle indstillinger samlet ét sted';
   rsIndstillingerTitel = 'Indstillinger';
@@ -786,6 +803,8 @@ begin
   AddColumn(TagFieldCaptions[tfCatalogNo], 90, ckField, tfCatalogNo);
   AddColumn(TagFieldCaptions[tfGrouping], 110, ckField, tfGrouping);
   AddColumn(TagFieldCaptions[tfConductor], 120, ckField, tfConductor);
+  AddColumn(TagFieldCaptions[tfRGTrackGain], 100, ckField, tfRGTrackGain);
+  AddColumn(TagFieldCaptions[tfRGAlbumGain], 100, ckField, tfRGAlbumGain);
   AddColumn(rsMappe, 300, ckFolder);
 end;
 
@@ -997,7 +1016,8 @@ var
     aToken, aKeys, aAbout, aUp, aFav, aNewFolder, aTreeRefresh, aCloseFolders,
     aMoveUp, aMoveDown, aExport, aSwapAT, aSwapAA, aSwapLT, aSwap, aCopyField, aClean,
     aRemoveTags, aCoverIn, aCoverOut, aWords, aSync, aAutoFit, aRandom, aCopyTo, aMoveTo,
-    aDelFolderCover, aResizeFiles, aResizeFolders, aCoverAsFolder, aSettings: TAction;
+    aDelFolderCover, aResizeFiles, aResizeFolders, aCoverAsFolder, aSettings,
+    aReplayGain, aRemoveRG: TAction;
   CoverPopup: TPopupMenu;
   PM: TMenuItem;
   NameTools: array[TNameTool] of TAction;
@@ -1057,6 +1077,7 @@ begin
   FSort2Column := -1;
   FSyncDir := sdV1ToV2;
   FSyncExisting := seBlankOnly;
+  FRGAlbum := True;
   FSwapA := tfArtist;
   FSwapB := tfAlbumArtist;
   FCopySrc := tfArtist;
@@ -1137,6 +1158,8 @@ begin
   NameTools[ntSurnameFirstToName] := NewAction(rsEfternavnFornavnTil, '', 0, -1, @ActNameToolExecute);
   for NT := Low(TNameTool) to High(TNameTool) do NameTools[NT].Tag := Ord(NT);
   aSync := NewAction(rsMpTagSynkroniseringMenu, rsMpTagSynkroniseringHint, 0, -1, @ActID3SyncExecute);
+  aReplayGain := NewAction(rsBeregnReplayGain, rsBeregnReplayGainHint, 0, -1, @ActReplayGainExecute);
+  aRemoveRG := NewAction(rsFjernReplayGain, rsFjernReplayGainHint, 0, -1, @ActRemoveReplayGainExecute);
   aDelFolderCover := NewAction(rsSletMappeCover, rsSletMappeCoverHint, 0, -1, @ActDeleteFolderCoversExecute);
   aResizeFiles := NewAction(rsSkalerCoverIFilerne, rsSkalerCoverIFilerneHint, 0, -1, @ActResizeFileCoversExecute);
   aResizeFolders := NewAction(rsSkalerMappeCover, rsSkalerMappeCoverHint, 0, -1, @ActResizeFolderCoversExecute);
@@ -1193,6 +1216,8 @@ begin
   SubMenu := Sub(TopMenu, rsCoverVaerktoejer);
   Add(SubMenu, aCoverIn); Add(SubMenu, aCoverOut); Add(SubMenu, aCoverAsFolder); Add(SubMenu, nil);
   Add(SubMenu, aResizeFiles); Add(SubMenu, aResizeFolders); Add(SubMenu, nil); Add(SubMenu, aDelFolderCover);
+  SubMenu := Sub(TopMenu, rsReplayGainTitel);
+  Add(SubMenu, aReplayGain); Add(SubMenu, nil); Add(SubMenu, aRemoveRG);
   // right click on the file cover
   CoverPopup := TPopupMenu.Create(Self);
   PM := TMenuItem.Create(CoverPopup);
@@ -3740,6 +3765,177 @@ begin
   SelectionChanged;
 end;
 
+procedure TFormMain.ActReplayGainExecute(Sender: TObject);
+begin
+  if AskReplayGain(FRGAlbum, FRGSkip) then RunReplayGain(FRGAlbum, FRGSkip);
+end;
+
+{ Album gain covers the files of one folder with the same album name. }
+function RGAlbumKey(Info: TAudioInfo): string;
+begin
+  Result := LowerCase(ExtractFileDir(Info.FileName)) + '|' + LowerCase(Trim(Info.Fields[tfAlbum]));
+end;
+
+procedure TFormMain.RunReplayGain(Album, SkipExisting: Boolean);
+var
+  Items, Todo: TAudioInfoArray;
+  Keys, Groups, Errors: TStringList;
+  Files: TStringArray;
+  Batch: TRGBatch;
+  PerItem: array of TFieldValues;
+  PerFields: array of TTagFieldSet;
+  Members: array of TRGMeasure;
+  F: TTagField;
+  I, J, Bad: Integer;
+  Gain, Peak, AlbumName: string;
+  Done: Boolean;
+
+  function HasValues(Info: TAudioInfo): Boolean;
+  begin
+    Result := (Info.Fields[tfRGTrackGain] <> '') and (not Album or (Info.Fields[tfRGAlbumGain] <> ''));
+  end;
+
+begin
+  if not RequireTargets(Items) then Exit;
+  // groups that are complete already are skipped as a whole, so album values stay consistent
+  Groups := TStringList.Create;
+  Keys := TStringList.Create;
+  Errors := TStringList.Create;
+  try
+    Groups.Sorted := True;
+    Groups.Duplicates := dupIgnore;
+    if SkipExisting then
+      for I := 0 to High(Items) do
+        if not HasValues(Items[I]) then
+        begin
+          if Album then Groups.Add(RGAlbumKey(Items[I])) else Groups.Add(Items[I].FileName);
+        end;
+    Todo := nil;
+    for I := 0 to High(Items) do
+    begin
+      if Album then Done := Groups.IndexOf(RGAlbumKey(Items[I])) < 0
+      else Done := Groups.IndexOf(Items[I].FileName) < 0;
+      if SkipExisting and Done then Continue;
+      SetLength(Todo, Length(Todo) + 1);
+      Todo[High(Todo)] := Items[I];
+      Keys.Add(RGAlbumKey(Items[I]));
+    end;
+    if Length(Todo) = 0 then
+    begin
+      Inform(rsReplayGainTitel, rsRGIntetAtGoere);
+      Exit;
+    end;
+    SetLength(Files, Length(Todo));
+    for I := 0 to High(Todo) do Files[I] := Todo[I].FileName;
+    SetLength(PerItem, Length(Todo));
+    SetLength(PerFields, Length(Todo));
+    Batch := TRGBatch.Create(Files);
+    try
+      if not RunReplayGainBatch(rsReplayGainTitel, Batch) then
+      begin
+        SetMessage(rsRGAfbrudt);
+        Exit;
+      end;
+      for I := 0 to High(Todo) do
+      begin
+        for F := Low(TTagField) to High(TTagField) do PerItem[I][F] := '';
+        PerFields[I] := [];
+        Gain := TrackGainText(Batch.Results[I]);
+        if Batch.Results[I].Error <> '' then
+          Errors.Add(ExtractFileName(Files[I]) + ': ' + Batch.Results[I].Error)
+        else if Gain = '' then
+          Errors.Add(ExtractFileName(Files[I]) + ': ' + rsRGStille)
+        else
+        begin
+          PerItem[I][tfRGTrackGain] := Gain;
+          PerItem[I][tfRGTrackPeak] := RGPeakText(Batch.Results[I].Peak);
+          PerFields[I] := [tfRGTrackGain, tfRGTrackPeak];
+        end;
+      end;
+      if Album then
+      begin
+        Groups.Clear;
+        for I := 0 to Keys.Count - 1 do Groups.Add(Keys[I]);
+        for J := 0 to Groups.Count - 1 do
+        begin
+          Members := nil;
+          Bad := 0;
+          AlbumName := '';
+          for I := 0 to High(Todo) do
+            if Keys[I] = Groups[J] then
+            begin
+              AlbumName := Todo[I].Fields[tfAlbum];
+              if PerFields[I] = [] then Inc(Bad)
+              else
+              begin
+                SetLength(Members, Length(Members) + 1);
+                Members[High(Members)] := Batch.Results[I];
+              end;
+            end;
+          if (Bad > 0) or (Length(Members) = 0) then
+          begin
+            if Length(Members) > 0 then Errors.Add(Format(rsRGAlbumIkkeSkrevet, [AlbumName, Bad]));
+            Continue;
+          end;
+          AlbumValues(Members, Gain, Peak);
+          if Gain = '' then Continue;
+          for I := 0 to High(Todo) do
+            if Keys[I] = Groups[J] then
+            begin
+              PerItem[I][tfRGAlbumGain] := Gain;
+              PerItem[I][tfRGAlbumPeak] := Peak;
+              PerFields[I] := PerFields[I] + [tfRGAlbumGain, tfRGAlbumPeak];
+            end;
+        end;
+      end;
+    finally
+      Batch.Free;
+    end;
+    WriteFieldsBatch(Todo, PerItem, PerFields, nil, rsReplayGainTitel);
+    if Errors.Count > 0 then Inform(rsRGNogleFiler, Errors.Text, mtWarning);
+  finally
+    Groups.Free;
+    Keys.Free;
+    Errors.Free;
+  end;
+end;
+
+procedure TFormMain.ActRemoveReplayGainExecute(Sender: TObject);
+var
+  Items, Todo: TAudioInfoArray;
+  PerItem: array of TFieldValues;
+  PerFields: array of TTagFieldSet;
+  F: TTagField;
+  I: Integer;
+  Any: Boolean;
+begin
+  if not RequireTargets(Items) then Exit;
+  Todo := nil;
+  for I := 0 to High(Items) do
+  begin
+    Any := False;
+    for F in RGFields do
+      if Items[I].Fields[F] <> '' then Any := True;
+    if not Any then Continue;
+    SetLength(Todo, Length(Todo) + 1);
+    Todo[High(Todo)] := Items[I];
+  end;
+  if Length(Todo) = 0 then
+  begin
+    Inform(rsReplayGainTitel, rsRGIngenHarRG);
+    Exit;
+  end;
+  if not AskYes(rsReplayGainTitel, Format(rsRGFjernSpm, [Length(Todo)])) then Exit;
+  SetLength(PerItem, Length(Todo));
+  SetLength(PerFields, Length(Todo));
+  for I := 0 to High(Todo) do
+  begin
+    for F := Low(TTagField) to High(TTagField) do PerItem[I][F] := '';
+    PerFields[I] := RGFields;
+  end;
+  WriteFieldsBatch(Todo, PerItem, PerFields, nil, rsReplayGainTitel);
+end;
+
 procedure TFormMain.AddAlbumArtistMenu(ParentItem: TMenuItem);
 const
   Captions: array[TAlbumArtistRule] of string = (rsAlbumkunstnerIngen, rsAlbumkunstnerHvisTom,
@@ -3802,7 +3998,7 @@ begin
   finally
     Ini.Free;
   end;
-  if S = '' then Exit([Low(TTagField)..High(TTagField)] - [tfTitle, tfTrack]);
+  if S = '' then Exit([Low(TTagField)..High(TTagField)] - [tfTitle, tfTrack] - RGFields);
   Result := [];
   for Part in S.Split([',']) do
   begin
@@ -3879,9 +4075,10 @@ var
     begin
       D := ReadAudioInfo(TAudioInfo(FItems[J]).FileName, False);
       try
-        FAutoLog.Add(Format('  %s | kunstner=%s | albumkunstner=%s | titel=%s | album=%s | cover=%s | tags=%s',
+        FAutoLog.Add(Format('  %s | kunstner=%s | albumkunstner=%s | titel=%s | album=%s | cover=%s | tags=%s | rg=%s %s / %s %s',
           [ExtractFileName(D.FileName), D.Fields[tfArtist], D.Fields[tfAlbumArtist], D.Fields[tfTitle],
-          D.Fields[tfAlbum], BoolToStr(D.HasCover, 'ja', 'nej'), D.TagTypes]));
+          D.Fields[tfAlbum], BoolToStr(D.HasCover, 'ja', 'nej'), D.TagTypes, D.Fields[tfRGTrackGain],
+          D.Fields[tfRGTrackPeak], D.Fields[tfRGAlbumGain], D.Fields[tfRGAlbumPeak]]));
       finally
         D.Free;
       end;
@@ -3988,6 +4185,14 @@ begin
     ActUndoExecute(nil);
     FAutoLog.Add('  mappe efter fortryd: ' + FFolder);
     Dump('fortryd');
+    // ReplayGain: track + album, then skipping (nothing to do), removing, track only
+    RunReplayGain(True, False);
+    Dump('replaygain');
+    RunReplayGain(True, True);
+    ActRemoveReplayGainExecute(nil);
+    Dump('fjern replaygain');
+    RunReplayGain(False, False);
+    Dump('kun sporgain');
     ActRemoveTagsExecute(nil);
     Dump('fjern tags');
     FTestTargetDir := ExtractFileDir(ExcludeTrailingPathDelimiter(FFolder)) + PathDelim + 'kopi';
