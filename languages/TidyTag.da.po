@@ -1371,16 +1371,20 @@ msgctxt "mainform.rsmappe"
 msgid "Mappe"
 msgstr ""
 
-#: mainform.rskunstnertitelalbumaargenre
-msgid "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor\n%# Disc   %7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate\n%b BPM   %t Spilletid   %aa Albumkunstner   %cp Komponist\n%co Dirigent   %lb Pladeselskab   %grp Gruppering   ... (se \"Variabler\")\n\\ laver mapper, fx  %1\\%3\\%6 - %2\nGælder de afkrydsede filer (ellers de markerede)."
+#: mainform.rsrenamenoter
+msgid "Flere variabler under \"Variabler\". \\ laver mapper, fx  %1\\%3\\%6 - %2\nGælder de afkrydsede filer (ellers de markerede)."
 msgstr ""
 
 #: mainform.rskunfeltermedfluebenbliver
 msgid "1. Kun felter med flueben bliver ændret (et felt får flueben, når du skriver i det).\n2. Tags gemmes i de afkrydsede filer (ellers de markerede).\n3. Et tomt felt med flueben bliver ryddet.\n4. \"Alle felter...\" redigerer flere felter og cover på én gang."
 msgstr ""
 
-#: mainform.rskunstnertitelalbumaargenre2
-msgid "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor\n%# Disc   %9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist\n%d Spring en del over.   Filtypen fjernes automatisk.\n\\ bruger mappenavne, fx  %1\\%3\\%6 - %2\nGælder de afkrydsede filer (ellers de markerede)."
+#: mainform.rsf2tfiltypehint
+msgid "Filtypen (fx .mp3) fjernes automatisk, før filnavnet sammenlignes med masken."
+msgstr ""
+
+#: mainform.rsf2tnoter
+msgid "\\ bruger mappenavne, fx  %1\\%3\\%6 - %2\nGælder de afkrydsede filer (ellers de markerede)."
 msgstr ""
 
 #: mainform.rsaabnmappe

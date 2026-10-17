@@ -249,6 +249,8 @@ type
     procedure RenameActionClick(Sender: TObject);
     procedure DoCopyField(Src, Dst: TTagField; OnlyIfEmpty: Boolean);
     procedure BuildFilterExtras;
+    procedure BuildVarHelp(Host: TLabel; const Codes: array of string; Rows: Integer;
+      const Notes: string);
     procedure ChangeLanguage(const Code: string);
     procedure SyncSettingsMenus;
     procedure MaskEditorClick(Sender: TObject);
@@ -560,9 +562,10 @@ resourcestring
   rsCodec = 'Codec';
   rsStoerrelse = 'Størrelse';
   rsMappe = 'Mappe';
-  rsKunstnerTitelAlbumAarGenre = '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor'#13#10'%# Disc   %7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate'#13#10'%b BPM   %t Spilletid   %aa Albumkunstner   %cp Komponist'#13#10'%co Dirigent   %lb Pladeselskab   %grp Gruppering   ... (se "Variabler")'#13#10'\ laver mapper, fx  %1\%3\%6 - %2'#13#10'Gælder de afkrydsede filer (ellers de markerede).';
+  rsRenameNoter = 'Flere variabler under "Variabler". \ laver mapper, fx  %1\%3\%6 - %2'#13#10'Gælder de afkrydsede filer (ellers de markerede).';
   rsKunFelterMedFluebenBliver = '1. Kun felter med flueben bliver ændret (et felt får flueben, når du skriver i det).'#13#10'2. Tags gemmes i de afkrydsede filer (ellers de markerede).'#13#10'3. Et tomt felt med flueben bliver ryddet.'#13#10'4. "Alle felter..." redigerer flere felter og cover på én gang.';
-  rsKunstnerTitelAlbumAarGenre2 = '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor'#13#10'%# Disc   %9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist'#13#10'%d Spring en del over.   Filtypen fjernes automatisk.'#13#10'\ bruger mappenavne, fx  %1\%3\%6 - %2'#13#10'Gælder de afkrydsede filer (ellers de markerede).';
+  rsF2TFiltypeHint = 'Filtypen (fx .mp3) fjernes automatisk, før filnavnet sammenlignes med masken.';
+  rsF2TNoter = '\ bruger mappenavne, fx  %1\%3\%6 - %2'#13#10'Gælder de afkrydsede filer (ellers de markerede).';
   rsAabnMappe = 'Åbn mappe...';
   rsAabnEnMappe = 'Åbn en mappe';
   rsOpdaterFillisten = 'Opdater fillisten';
@@ -943,12 +946,14 @@ begin
       ComboMultiGenre.Items.EndUpdate;
     end;
     FFilterField := 0;
-    LabelRenameHelp.Caption :=
-      rsKunstnerTitelAlbumAarGenre;
+    BuildVarHelp(LabelRenameHelp, ['%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8', '%9', '%0',
+      '%t', '%b', '%#', '%aa', '%co'], 5, rsRenameNoter);
     LabelMultiHelp.Caption :=
       rsKunFelterMedFluebenBliver;
-    LabelF2THelp.Caption :=
-      rsKunstnerTitelAlbumAarGenre2;
+    BuildVarHelp(LabelF2THelp, ['%1', '%2', '%3', '%4', '%5', '%6', '%#', '%9', '%b', '%aa',
+      '%cp', '%co', '%lb', '%d'], 5, rsF2TNoter);
+    LabelF2THelp.Hint := rsF2TFiltypeHint;
+    LabelF2THelp.ShowHint := True;
     LoadInlineOptions;
   finally
     FLoading := False;
@@ -3576,6 +3581,79 @@ begin
     Btns.Free;
     F.Free;
   end;
+end;
+
+{ Caption of a mask variable ('Kunstner' for '%1') from the 'code|caption' lists. }
+function MaskVarCaption(const Code: string): string;
+var
+  S: string;
+begin
+  for S in RenameVars do
+    if Copy(S, 1, Length(Code) + 1) = Code + '|' then Exit(Copy(S, Length(Code) + 2, MaxInt));
+  for S in F2TVars do
+    if Copy(S, 1, Length(Code) + 1) = Code + '|' then Exit(Copy(S, Length(Code) + 2, MaxInt));
+  Result := '';
+end;
+
+{ Lays the variables out as a table in Host's place (column by column, Rows per column,
+  captions aligned after the codes) and leaves Host underneath for the notes. The table
+  uses LCL child sizing and anchors, so it follows DPI scaling and translated widths. }
+procedure TFormMain.BuildVarHelp(Host: TLabel; const Codes: array of string; Rows: Integer;
+  const Notes: string);
+var
+  Table: TPanel;
+  Cols, C, R, I: Integer;
+
+  procedure Cell(const Text: string; RightSpace: Integer);
+  var
+    L: TLabel;
+  begin
+    L := TLabel.Create(Self);
+    L.Caption := Text;
+    L.ShowAccelChar := False;
+    L.BorderSpacing.Right := RightSpace;
+    L.Parent := Table;
+  end;
+
+begin
+  Cols := (Length(Codes) + Rows - 1) div Rows;
+  Table := TPanel.Create(Self);
+  Table.BevelOuter := bvNone;
+  Table.AutoSize := True;
+  Table.Left := Host.Left;
+  Table.Top := Host.Top;
+  // children fill a column top to bottom, then the next column: codes, captions, codes, ...
+  Table.ChildSizing.Layout := cclTopToBottomThenLeftToRight;
+  Table.ChildSizing.ControlsPerLine := Rows;
+  Table.ChildSizing.HorizontalSpacing := Scale96ToForm(6);
+  Table.ChildSizing.VerticalSpacing := Scale96ToForm(1);
+  Table.Parent := Host.Parent;
+  for C := 0 to Cols - 1 do
+  begin
+    for R := 0 to Rows - 1 do
+    begin
+      I := C * Rows + R;
+      if I <= High(Codes) then Cell(Codes[I], 0) else Cell('', 0);
+    end;
+    for R := 0 to Rows - 1 do
+    begin
+      I := C * Rows + R;
+      if I <= High(Codes) then Cell(MaskVarCaption(Codes[I]), Scale96ToForm(18))
+      else Cell('', Scale96ToForm(18));
+    end;
+  end;
+  // the notes go below the table, as high as their wrapped text
+  Host.AnchorSide[akTop].Control := Table;
+  Host.AnchorSide[akTop].Side := asrBottom;
+  Host.BorderSpacing.Top := Scale96ToForm(4);
+  // wrapped at the tab's right edge; the height follows the text
+  Host.AnchorSide[akRight].Control := Host.Parent;
+  Host.AnchorSide[akRight].Side := asrRight;
+  Host.BorderSpacing.Right := Scale96ToForm(8);
+  Host.Anchors := [akLeft, akTop, akRight];
+  Host.WordWrap := True;
+  Host.AutoSize := True;
+  Host.Caption := Notes;
 end;
 
 procedure TFormMain.BuildFilterExtras;
