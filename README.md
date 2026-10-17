@@ -1,217 +1,214 @@
 # TidyTag
 
-Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne i Tag&Rename 3.9.15
-(se [docs/Funktionsoversigt.md](docs/Funktionsoversigt.md)).
-## Status (MVP, trin 14)
-- **ReplayGain 2.0** (Værktøjer > ReplayGain): måler lydstyrken efter EBU R128 / ITU BS.1770-4
-  (-18 LUFS, sample peak) og skriver spor- og albumgain (album = samme mappe og albumnavn). Flere
-  filer måles samtidig i tråde. WAV/AIFF læses direkte, alt andet afkodes af Windows Media
-  Foundation (MP3, AAC/ALAC, WMA, FLAC m.m.) - ingen eksterne programmer. Ogg/Opus/APE/WavPack/
-  Musepack/OptimFROG kræver en Windows-codec. Opus får `R128_TRACK_GAIN`/`R128_ALBUM_GAIN`.
-  Værdierne vises i tag-editorens ReplayGain-fane og kan vælges som kolonner; "Fjern tags" bevarer dem.
-- **B-listen** (se `docs/mangler.md`):
-  - *Tag-værktøjer:* kunstnerværktøjer ("The Beatles" ↔ "Beatles, The", "Carl Nielsen" ↔
-    "Nielsen, Carl"), Mp3-tag-synkronisering ID3v1 ↔ ID3v2, valg af felter ved "Indsæt tag",
-    albumkunstner automatisk ved gem.
-  - *Fillisten:* tagtype-filter i adresselinjen, søgning i et valgt felt eller alle felter med
-    "Hele ord" og "Store/små bogstaver", tilpas kolonnebredder (også efter mappeskift),
-    sekundær sortering, tilfældig rækkefølge.
-  - *Filer:* slet til papirkurven (Delete i fillisten), kopiér/flyt til mappe.
-  - *Cover:* slet mappe-cover, skalér cover i filer og mapper (største side, JPEG-kvalitet,
-    PNG→JPEG), automatisk skalering ved gem, brug filens cover som mappe-cover.
-  - *Omdøbning:* maske-editor med gemte masker; nye variabler %rt (udgivelsesdato), %dbit
-    (bitdybde), %enc (kodet af) og %rnd (tilfældigt tal). %4 giver nu kun årstallet.
-  - *Felter:* "Del af opsamling" og "Podcast" (TCMP/PCST, COMPILATION, cpil/pcst, APE,
-    WM/IsCompilation) som afkrydsningsfelter i tag-editoren.
-  - *Indstillinger...* (Ctrl+Alt+O): sprog, albumkunstner, bevar dato, cover-skalering,
-    fillisten, ordudskiftninger, handlinger og Discogs-token samlet ét sted.
-- **Tag-værktøjer** (Værktøjer > Tag-værktøjer): byt Kunstner/Titel/Album eller to vilkårlige felter,
-  kopiér felt til felt (evt. kun hvis tomt), ryd mellemrum, **fjern tags** (Ctrl+Del; MP3, WAV/AIFF og
-  APE-familien mister hele tagget, FLAC/Ogg/MP4/WMA får felter og billeder ryddet).
-- **Cover-værktøjer:** læg mappens folder.jpg/cover.jpg ind i filerne, gem filernes cover som
-  folder.jpg i mapper uden et.
-- **Omdøbningshandlinger:** navngivne forudindstillinger med filmaske og/eller mappemaske, kørt fra
-  Værktøjer-menuen; ét fortryd dækker både filer og mapper.
-- **Ordudskiftninger** (Indstillinger): tekst der erstattes og ord med fast stavemåde (AC/DC, ABBA)
-  i alle omdøbninger.
-- **Sprog:** dansk, engelsk, tysk, fransk, italiensk, svensk og spansk. Vælges under
-  *Indstillinger > Sprog (Language)*; "Automatisk" bruger Windows-sproget (ellers engelsk).
-  Skift af sprog genstarter programmet i samme mappe. Også LCL's dialogknapper er oversat.
-  Vinduer tilpasses længere tekster automatisk (bredere knapper, felter der rykker).
-- **Hovedvindue i Tag&Rename-stil:** menulinje (Filer, Rediger, Vis, Playliste, Værktøjer,
-  Indstillinger, Hjælp), værktøjspanel (F8) med fanerne *Omdøb filer (F4)*, *Multi-fil-tag-editor
-  (Ctrl+F4)* og *Tags fra filnavn (Shift+F4)* direkte i vinduet (med live-resultat for den markerede
-  fil), panelerne *Mappens cover* og *Filens cover* (træk et billede hertil), ikonværktøjslinje,
-  adresselinje med historik, filterlinje (Filtrer! / Skjul valgte filer / Vis alle), mappepanel med
-  Op/Favoritter/Ny mappe, og statuslinje med antal og spilletid for alle/markerede/afkrydsede filer.
-- Kopiér/indsæt tag (Ctrl+Shift+C/V), playlister (.m3u8/.m3u), afspil fil, vis i Stifinder.
-- **Flere felter** (31 i alt): sangtekst, dirigent, tekstforfatter, oprindelig kunstner, remixet af,
-  pladeselskab, katalognr., ISRC, copyright, kodet af, URL, gruppering, undertitel, stemning,
-  toneart og fem sorteringsfelter – i ID3v2 (TPE3, TEXT, TOPE, TPE4, TPUB, TSRC, TCOP, TENC, WXXX,
-  TIT1, TIT3, TMOO/TXXX:MOOD, TKEY, TSO*, USLT, TXXX:CATALOGNUMBER), Vorbis comments og MP4
-  (©lyr, cprt, ©grp, so*, ----:com.apple.iTunes:*). Tag-editoren har fanerne Generelt, Flere felter,
-  Sortering og Sangtekst; nye maskevariabler %co %lb %cat %grp %rb %md %key.
-- **Flyt fil op/ned** (Ctrl+Op/Ned) – manuel rækkefølge, fx før "Nummerér i listens rækkefølge".
-- **Eksportér** til CSV (Excel, semikolon + BOM), CSV (komma), tekst, HTML og XML med valgfrie
-  kolonner; **importér** fra CSV/XLSX med forhåndsvisning (matcher på "Sti" eller "Filnavn").
-- Mappetræ og virtuel filliste med 21 kolonner; klik på en kolonneoverskrift for at sortere.
-- "Søg i undermapper"; tags læses i en baggrundstråd, så vinduet ikke fryser.
-- Husker sidste mappe, undermappe-valg og træets bredde (`%LOCALAPPDATA%\TidyTag\tidytag.ini`; indstillinger fra det tidligere navn TagKlon flyttes med automatisk første gang).
-- Læser tags:
-  - MP3: ID3v2.2/2.3/2.4 + ID3v1, varighed/bitrate inkl. VBR (Xing/Info/VBRI)
-  - FLAC: Vorbis comments, STREAMINFO, billeder
-  - Ogg Vorbis, Opus og Ogg FLAC
-  - MP4/M4A/M4B: iTunes-atoms (`ilst`), AAC/ALAC
-  - WAV/AIFF/AIFC: ID3-chunk, RIFF LIST/INFO (og AIFF NAME/AUTH/ANNO, når der ikke er ID3)
-  - Monkey's Audio, WavPack, Musepack (SV7/SV8) og OptimFROG: APEv2 (ID3v2/ID3v1 som reserve)
-  - WMA/ASF: Content Description, WM/*-attributter, Metadata Library (store billeder)
-- **Skriver tags** til alle ovenstående undtagen Ogg FLAC: MP3 (ID3v2.3/2.4 + opdaterer et
-  eksisterende ID3v1), FLAC, MP4/M4A, Ogg Vorbis/Opus (nye header-sider, sekvensnumre og CRC),
-  WAV/AIFF (ID3-chunk + LIST/INFO), APE/WV/MPC/OFR (APEv2 + evt. ID3v1) og WMA/ASF:
-  - felter vi ikke redigerer (ReplayGain, MusicBrainz-id'er, iTunes-felter, ...) bevares uændret
-  - skriver på stedet, når der er plads (padding/`free`), ellers via midlertidig fil, der erstatter originalen
-  - MP4: chunk-offsets (`stco`/`co64`) rettes, når lyddata flyttes
-- **Tag-editor** for én fil (dobbeltklik, Enter eller "Rediger tag..."): titel, kunstner, album,
-  albumkunstner, komponist, år, spor, disc, genre, BPM, kommentar og cover-billeder
-  (tilføj/fjern/gem som fil), "Gem og forrige/næste" og "Bevar filens dato".
-- **Omdøb filer** ud fra tags med maske (`%1 - %2`, `%1\%3\%6 - %2` laver mapper), versaler,
-  mellemrum→`_`, 2-cifret spornummer, live forhåndsvisning (uændret / mangler felt / findes allerede /
-  dublet) og **Fortryd omdøbning** (fjerner også mapper, der blev tomme).
-- **Tags fra filnavn** med maske (`%6 - %1 - %2`, `%d` springer over, `\` bruger mappenavne),
-  `_`→mellemrum, versaler, forhåndsvisning og skrivning.
-- Brugte masker huskes (seneste 15).
-- **Afkrydsning** (☑-kolonnen): klik i kolonnen eller tryk mellemrum; højreklik for
-  afkryds markerede/alle, fjern og inverter. Statuslinjen viser antal afkrydsede.
-  Rediger flere, Omdøb og Tags fra filnavn bruger de afkrydsede filer (ellers de markerede).
-- **Rediger flere filer**: fælles værdier vises, forskellige vises som hint; kun felter med
-  flueben gemmes (tomt felt med flueben = ryd). Erstat eller fjern cover i alle filer,
-  statuslinje og annuller.
-- **Spornumre**: formatér eksisterende numre (`7`, `07`, `007`, `7/12`, `07/12` – totalen tages fra
-  filen eller tælles pr. mappe) eller nummerér i listens rækkefølge (startnummer, forfra pr. mappe).
-- **Omdøb mapper** ud fra tags (`%1 - %4 - %3`, `%f` = nuværende navn, `\` laver undermapper).
-  Bruger værdier, der er ens for alle filer i mappen (forskellige kunstnere → albumkunstner).
-  Listen og mappetræet følger med, og det kan fortrydes.
-- **MusicBrainz-opslag** (erstatter freedb/Amazon): søg på kunstner + album, vælg udgivelse
-  (dato, land, format, pladeselskab, katalognr.), filerne parres efter disk/spornummer eller
-  rækkefølge (Op/Ned), og valgte felter + forside fra Cover Art Archive skrives (også som
-  folder.jpg). Netværk via Windows' WinInet – ingen OpenSSL-DLL'er. Overholder MusicBrainz'
-  grænse på 1 forespørgsel/sek. og prøver igen ved 503.
-- **Discogs** som ekstra kilde i samme dialog (vælg kilde øverst til venstre). Søgning kræver et
-  personligt token (discogs.com > Settings > Developers), som indsættes via "Discogs-token..." og
-  gemmes i indstillingsfilen. Sporpositioner som A1/B2/2-05 omsættes til disk + nummer, og
-  navnetilføjelser som "(2)" fjernes. Cover = udgivelsens primære billede.
+A tag editor and music organizer for Windows, written in Lazarus / Free Pascal. It is inspired by
+the feature set of Tag&Rename 3.9.15, which is no longer maintained. TidyTag is an independent
+clean-room implementation that contains no code or artwork from Tag&Rename, and it is not affiliated
+with Softpointer.
 
-## Byg
+The user interface is available in English, Danish, German, French, Italian, Swedish and Spanish.
+The source code comments are in English; the source language of the UI texts is Danish (see
+[Translations](#translations)).
+
+## Features
+
+### File list and browsing
+- Folder tree and a fast virtual file list with 23 columns; click a column header to sort, with
+  secondary sort, random order and "fit column widths".
+- Tags are read in a background thread (optionally including subfolders), so the window never freezes.
+- Address bar with history, favourites, new folder, tag-type filter, and a search filter on one field
+  or all fields ("whole words", "match case"). The status bar shows count and playing time for all,
+  selected and checked files.
+- Check boxes (☑ column): most tools work on the checked files, otherwise on the selected ones.
+- Copy/paste tags (Ctrl+Shift+C/V, choose which fields to paste), playlists (.m3u8/.m3u), play file,
+  show in Explorer, move files up/down for a manual order, delete to the Recycle Bin, copy/move to a folder.
+
+### Editing tags
+- **Tag editor** for one file: all common fields plus lyrics, conductor, lyricist, original
+  artist, remixer, label, catalog number, ISRC, copyright, encoded by, URL, grouping, subtitle, mood,
+  key, five sort fields, "part of a compilation", "podcast" and ReplayGain; cover pictures
+  (add/remove/save), "Save and previous/next", "Keep file date".
+- **Multi-file tag editor**: common values are shown, differing values appear as hints; only ticked
+  fields are saved. Replace or remove the cover in all files.
+- **Tag tools**: swap artist/title/album or any two fields, copy one field to another, clean up spaces,
+  artist name tools ("The Beatles" ↔ "Beatles, The", "Carl Nielsen" ↔ "Nielsen, Carl"),
+  ID3v1 ↔ ID3v2 sync for MP3, automatic album artist on save, and **remove tags**.
+- **Track numbers**: format existing numbers (`7`, `07`, `007`, `7/12`, `07/12`) or number files in
+  list order (start number, restart per folder).
+- **Cover tools**: embed the folder's folder.jpg/cover.jpg, save embedded covers as folder.jpg,
+  delete folder covers, resize covers in files and folders (largest side, JPEG quality, PNG → JPEG),
+  optional automatic resizing on save.
+
+### Renaming
+- **Rename files** from tags with a mask (`%1 - %2`; `%1\%3\%6 - %2` creates folders), case
+  conversion, spaces → `_`, two-digit track numbers, live preview (unchanged / missing field / already
+  exists / duplicate), and **undo** (also removes folders that became empty).
+- **Tags from file name** with a mask (`%6 - %1 - %2`, `%d` skips a part, `\` uses folder names).
+- **Rename folders** from tags (`%1 - %4 - %3`, `%f` = current name), with undo.
+- Mask editor with saved masks; around 30 variables, including release date, bit depth, encoder,
+  sample rate and a random number.
+- **Rename actions**: named presets with a file mask and/or a folder mask, run from the Tools menu.
+- **Word replacements**: text to replace and words with a fixed spelling (AC/DC, ABBA) for every rename.
+
+### Online lookup
+- **MusicBrainz**: search by artist and album, pick a release (date, country, format, label, catalog
+  number). Files are matched by disc/track number or by order, and the chosen fields plus the front
+  cover from the Cover Art Archive are written. The 1-request-per-second limit is respected.
+- **Discogs** as a second source in the same dialog. Searching needs a personal token
+  (discogs.com > Settings > Developers), which is stored only in the local settings file.
+- Networking uses Windows' WinInet, so no OpenSSL DLLs are needed.
+
+### ReplayGain 2.0
+- Tools > ReplayGain measures loudness according to EBU R128 / ITU-R BS.1770-4 (-18 LUFS reference,
+  sample peak) and writes track and album gain. An album is the files in one folder with the same
+  album name. Several files are measured at once on worker threads.
+- No external programs: WAV/AIFF are read directly, everything else is decoded by Windows Media
+  Foundation (MP3, AAC/ALAC, WMA, FLAC). Ogg, Opus, APE, WavPack, Musepack and OptimFROG need a
+  codec installed in Windows.
+- Opus files get `R128_TRACK_GAIN`/`R128_ALBUM_GAIN` (RFC 7845). "Remove tags" keeps ReplayGain values.
+
+### Export and import
+- Export to CSV (Excel: semicolon + BOM), CSV (comma), text, HTML and XML with selectable columns.
+- Import from CSV/XLSX with a preview, matched on path or file name.
+
+### Supported formats
+| Format | Read | Write | Tags |
+|---|---|---|---|
+| MP3 | ✓ | ✓ | ID3v2.2/2.3/2.4, ID3v1, APEv2; duration/bitrate incl. VBR (Xing/Info/VBRI) |
+| FLAC | ✓ | ✓ | Vorbis comments, pictures |
+| Ogg Vorbis, Opus | ✓ | ✓ | Vorbis comments (new pages, sequence numbers and CRCs on write) |
+| Ogg FLAC | ✓ | – | Vorbis comments |
+| MP4 / M4A / M4B (AAC, ALAC) | ✓ | ✓ | iTunes atoms, incl. freeform `----` items; chunk offsets are fixed when audio moves |
+| WAV, AIFF/AIFC | ✓ | ✓ | ID3 chunk, RIFF LIST/INFO, AIFF text chunks |
+| Monkey's Audio, WavPack, Musepack (SV7/SV8), OptimFROG | ✓ | ✓ | APEv2 (+ ID3v1) |
+| WMA / ASF | ✓ | ✓ | Content Description, WM/* attributes, Metadata Library (large pictures) |
+
+When writing, fields TidyTag does not edit (MusicBrainz IDs, iTunes data, and so on) are kept
+unchanged. Tags are rewritten in place when there is room (padding / `free` atoms); otherwise a
+temporary file replaces the original.
+
+### Other
+- Settings dialog (Ctrl+Alt+O) for language, album artist rule, keeping file dates, cover resizing,
+  the file list, word replacements, rename actions and the Discogs token.
+- Settings are stored in `%LOCALAPPDATA%\TidyTag\tidytag.ini`. Settings from the program's former
+  working name, TagKlon, are copied over automatically on first start.
+- Windows adapt to longer translated texts (wider buttons, fields that move).
+
+## Requirements
+- Windows 10 or 11, 64-bit. Windows "N" editions need the Media Feature Pack for ReplayGain
+  measurement of compressed formats.
+- To build: [Lazarus](https://www.lazarus-ide.org/) 4.x with Free Pascal 3.2.2 (64-bit).
+
+## Building
 ```
 C:\lazarus\lazbuild.exe TidyTag.lpi
 ```
-Resultat: `bin\TidyTag.exe`. Projektet kan også åbnes i Lazarus-IDE'en (`TidyTag.lpi`).
+The result is `bin\TidyTag.exe`. The project can also be opened in the Lazarus IDE (`TidyTag.lpi`).
+The program finds its `languages\` folder next to the exe or in `..\languages`.
 
-Testværktøj, der skriver tags ud i konsollen:
-```
-C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe -Mobjfpc -Sh -Fusrc -FUlib\tools -FEbin tools\tagdump.lpr
-bin\tagdump.exe "D:\Musik\Album" -r
-```
+Note: `lazbuild` does not rebuild a form when only its `.lfm` file has changed. Save the matching
+`.pas` file as well.
 
-Skrivetest (arbejder på **kopier** i den angivne testmappe og tjekker felter, billeder og at lyddata er uændrede):
+## Development and test tools
+The console tools in `tools\` are built with the Free Pascal compiler directly:
 ```
 C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe -Mobjfpc -Sh -Fusrc -FUlib\tools -FEbin tools\tagtest.lpr
-bin\tagtest.exe C:\Temp\tagtest "D:\Musik\sang.mp3" "D:\Musik\sang.flac"
 ```
 
-Test af omdøbning (filer og mapper), tags fra filnavn og spornumre (opretter tomme testfiler i den angivne mappe):
-```
-C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe -Mobjfpc -Sh -Fusrc -FUlib\tools -FEbin tools\renametest.lpr
-bin\renametest.exe C:\Temp\renametest
-```
+| Tool | Purpose |
+|---|---|
+| `tagdump` | Prints the tags of files or folders: `bin\tagdump.exe "D:\Music\Album" -r` |
+| `tagtest` | Write test. It works on **copies** in a test folder and checks fields, pictures, tag removal and that the audio data is unchanged: `bin\tagtest.exe C:\Temp\tagtest song.mp3 song.flac` |
+| `renametest` | Renaming of files and folders, tags from file names, track numbers (creates empty test files): `bin\renametest.exe C:\Temp\renametest` |
+| `tooltest` | Field tools, ID3 sync, Recycle Bin (puts one tiny test file in the Recycle Bin): `bin\tooltest.exe C:\Temp\tt song.mp3` |
+| `rgtest` | ReplayGain: EBU Tech 3341 test signals written as WAV/AIFF and measured directly and through Media Foundation, plus measurement of given files: `bin\rgtest.exe C:\Temp\rg song.flac` |
+| `exporttest` | Export and import |
+| `webtest` | Offline test of MusicBrainz responses and track matching |
+| `mbtest`, `dgtest` | Live MusicBrainz search (`bin\mbtest.exe "Gasolin'" "Gas 5"`) and Discogs release (`bin\dgtest.exe 249504`) |
+| `tagset` | Set fields from the command line: `bin\tagset.exe song.mp3 artist=X album=Y track=1` |
+| `icon_cut.py` | Rebuilds `TidyTag.ico` from the logo artwork (needs Pillow and numpy) |
 
-Øvrige værktøjer i `tools\`: `rgtest.lpr` (ReplayGain: EBU-testsignaler skrevet som WAV/AIFF og målt
-direkte og via Media Foundation, plus måling af givne filer: `bingtest.exe C:\Tempg fil.flac`), `tooltest.lpr` (felt-værktøjer, ID3-synkronisering, papirkurv: `bin\tooltest.exe C:\Temp\tt fil.mp3` - lægger én lille testfil i papirkurven), `addtranslations.py` (flet oversættelser ind), `webtest.lpr` (offline-test af MusicBrainz-svar og parring),
-`dgtest.lpr` (live Discogs: `bin\dgtest.exe 249504`), `mbtest.lpr` (live-søgning: `bin\mbtest.exe "Gasolin'" "Gas 5"`), `exporttest.lpr` (eksport/import), `tagset.lpr` (sæt felter:
-`bin\tagset.exe fil.mp3 artist=X album=Y track=1`).
+The program itself has two developer switches:
+```
+bin\TidyTag.exe --layoutcheck C:\Temp\layout.txt
+bin\TidyTag.exe --selftest C:\Temp\copies\album C:\Temp\selftest.txt
+```
+- `--layoutcheck` creates every window and dialog in the current language and reports texts that do
+  not fit, overlap or stick out. To check a language, set `Language=xx` under `[Main]` in the
+  settings file first.
+- `--selftest` runs the main window's tools (field tools, covers, a rename action with undo,
+  ReplayGain, remove tags, copy/move) without dialogs and writes the fields after each step to the
+  report. Use a folder with **copies** of music files.
 
-### Oversættelser
-Kildesproget er dansk. Tekster i koden er `resourcestring`s, formularernes tekster kommer fra `.lfm`.
-`languages\src	ranslations.json` er kilden til oversættelserne (`{dansk tekst: {sprog: tekst}}`).
-Efter ændringer i tekster eller oversættelser:
+## Translations
+The UI texts in the source are Danish. Texts in code are `resourcestring`s; form texts come from the
+`.lfm` files. `languages\src\translations.json` is the source of the translations
+(`{Danish text: {language: text}}`). After changing texts or translations:
 ```
 C:\lazarus\lazbuild.exe TidyTag.lpi
 python tools\mkpot.py
 ```
-`mkpot.py` laver `languages\TidyTag.pot` ud fra compilerens `.rsj`-filer og formularerne og skriver
-`languages\TidyTag.<sprog>.po` (formatkoder som `%d`/`%s` kontrolleres). Programmet finder `languages\`
-ved siden af exe-filen eller i `..\languages`. Nyt sprog: tilføj koden i `src\language.pas` og
-oversættelser i JSON-filen (samt `lclstrconsts.<sprog>.po` fra `C:\lazarus\lcl\languages`).
+`mkpot.py` builds `languages\TidyTag.pot` from the compiler's `.rsj` files and the forms, and writes
+`languages\TidyTag.<lang>.po` (format codes such as `%d`/`%s` are checked).
+`python tools\addtranslations.py new.json` merges new translations and lists missing ones.
 
-Layout-kontrol for et sprog (sæt `Language=xx` under `[Main]` i indstillingsfilen først):
-```
-bin\TidyTag.exe --layoutcheck C:\Temp\layout.txt
-```
-opretter alle vinduer og dialoger og skriver tekster, der ikke kan være der, overlapper eller stikker ud.
+To add a language, add its code in `src\language.pas`, add translations to the JSON file, and copy
+`lclstrconsts.<lang>.po` from `C:\lazarus\lcl\languages` (the LCL's dialog buttons).
 
-Selvtest af værktøjerne i hovedvinduet (brug en mappe med **kopier**):
-```
-bin\TidyTag.exe --selftest C:\Temp\kopierlbum C:\Temp\selftest.txt
-```
-kører kopiér/byt/ryd felter, cover ind/ud, en omdøbningshandling med fortryd og fjern tags uden
-dialoger og skriver felterne efter hvert trin i rapporten.
-
-Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret – gem også den tilhørende `.pas`.
-
-## Struktur
-| Fil | Indhold |
+## Project structure
+| File | Contents |
 |---|---|
-| `src/audiotypes.pas` | `TAudioInfo` – formatuafhængigt resultat |
-| `src/audiotags.pas` | Vælger læser ud fra filtypenavn |
-| `src/mp3reader.pas` | ID3v2/ID3v1 + MPEG-lydinfo |
-| `src/vorbisreader.pas` | FLAC + Ogg (Vorbis/Opus/FLAC) |
-| `src/mp4reader.pas` | MP4/M4A-atoms |
-| `src/tagutils.pas` | Byte-hjælpere, tekstdekodning, ID3-genreliste |
-| `src/scanthread.pas` | Baggrundstråd: find filer og læs tags |
-| `src/tagwriter.pas` | Vælger skriver ud fra filtypenavn, bevarer evt. tidsstempel |
-| `src/id3writer.pas` | ID3v2 (+ID3v1) til MP3 |
-| `src/flacwriter.pas` | FLAC-metadatablokke og Vorbis comments |
-| `src/mp4writer.pas` | MP4-atomtræ, `ilst`, chunk-offsets |
-| `src/oggwriter.pas` | Ogg Vorbis/Opus: kommentarpakke, ny sideopdeling, CRC |
-| `src/wavreader.pas`, `src/wavwriter.pas` | WAV/AIFF-chunks: lydinfo, ID3-chunk, LIST/INFO |
-| `src/apetag.pas`, `src/apereader.pas` | APEv2-tags; lydinfo for APE/WavPack/Musepack/OptimFROG |
-| `src/asfreader.pas`, `src/asfwriter.pas` | WMA/ASF-header-objekter |
-| `src/id3sync.pas` | ID3v1 ↔ ID3v2-synkronisering |
-| `src/fileops.pas` | Papirkurv, kopiér/flyt filer |
-| `src/coverimage.pas` | Skalering af cover-billeder |
-| `src/fieldtools.pas` | Byt/kopiér felter, ryd mellemrum (planlægning pr. fil) |
-| `src/tagremove.pas` | Fjern tags |
-| `src/tooldialogs.pas` | Dialoger: vælg felter, ordudskiftninger, omdøbningshandlinger |
-| `src/language.pas` | Sprogvalg og indlæsning af `.po`-filer (LCLTranslator) |
-| `src/layoutfit.pas` | Giver plads til længere oversatte tekster, når et vindue vises |
-| `src/layoutcheck.pas` | Udviklerkontrol `--layoutcheck` af alle vinduer |
-| `languages/` | `TidyTag.pot`, `TidyTag.<sprog>.po`, `lclstrconsts.<sprog>.po`, `src/translations.json` |
-| `tools/mkpot.py` | Laver `.pot` og `.po`-filer |
-| `src/tageditform.pas/.lfm` | Tag-editor for én fil |
-| `src/renamecore.pas` | Maske → fil-/mappenavn, rensning, plan/udfør/fortryd |
-| `src/filenametags.pas` | Filnavn → tags (maske-matchning) |
-| `src/renameform.pas/.lfm` | Dialog: Omdøb filer / Omdøb mapper |
-| `src/filetotagform.pas/.lfm` | Dialog: Tags fra filnavn |
-| `src/appsettings.pas` | Indstillingsfil og maske-historik |
-| `src/multieditform.pas/.lfm` | Dialog: Rediger flere filer |
-| `src/trackcore.pas` | Spornumre: formatér og nummerér |
-| `src/tracktoolsform.pas/.lfm` | Dialog: Spornumre |
-| `src/discogs.pas` | Discogs-søgning/-udgivelse/-billede (samme datastrukturer som MusicBrainz) |
-| `src/musicbrainz.pas` | HTTP (WinInet), MusicBrainz-søgning/-udgivelse, Cover Art Archive |
-| `src/trackmatch.pas` | Parring af filer og spor, udfyldning af felter |
-| `src/weblookupform.pas/.lfm` | Dialog: Web-opslag (MusicBrainz/Discogs) |
-| `src/mainform.pas/.lfm` | Hovedvindue (menu/værktøjslinje bygges i koden fra én handlingstabel) |
-| `src/exportimport.pas` | Eksport (CSV/TXT/HTML/XML), CSV-/XLSX-læsning, import-plan |
-| `src/exportimportform.pas/.lfm` | Dialog: Eksportér/importér tags |
-| `src/loudness.pas` | Lydstyrkemåler (BS.1770-4 K-vægtning, gating) til ReplayGain 2.0 |
-| `src/audiodecode.pas`, `src/mfdecode.pas` | Afkodning til PCM: WAV/AIFF direkte, resten via Windows Media Foundation |
-| `src/replaygain.pas` | Måling af mange filer i tråde, spor- og albumværdier |
-| `src/batchwrite.pas` | Gem udvalgte felter/cover i én fil (bruges af faner, indsæt tag, træk-og-slip) |
-| `res/icons/`, `res/icons.rc` | Ikoner (Lazarus general_purpose af Roland Hahn, CC0) |
-| `TidyTag.ico`, `res/logo/tidytag.png` | Programikonet (lavet med `tools/icon_cut.py`) |
-| `reference/forms/` | Formularer fra originalen (kun som reference – må ikke kopieres) |
+| `src/audiotypes.pas` | `TAudioInfo`, the format-independent result; field list and helpers |
+| `src/audiotags.pas` | Picks the reader by file extension |
+| `src/mp3reader.pas` | ID3v2/ID3v1 and MPEG audio info |
+| `src/vorbisreader.pas` | FLAC and Ogg (Vorbis/Opus/FLAC) |
+| `src/mp4reader.pas` | MP4/M4A atoms |
+| `src/wavreader.pas`, `src/wavwriter.pas` | WAV/AIFF chunks: audio info, ID3 chunk, LIST/INFO |
+| `src/apetag.pas`, `src/apereader.pas` | APEv2 tags; audio info for APE/WavPack/Musepack/OptimFROG |
+| `src/asfreader.pas`, `src/asfwriter.pas` | WMA/ASF header objects |
+| `src/tagutils.pas` | Byte helpers, text decoding, ID3 genre list |
+| `src/scanthread.pas` | Background thread: find files and read tags |
+| `src/tagwriter.pas` | Picks the writer by file extension, optionally keeps the timestamp |
+| `src/id3writer.pas` | ID3v2 (+ ID3v1) for MP3 |
+| `src/flacwriter.pas` | FLAC metadata blocks and Vorbis comments |
+| `src/mp4writer.pas` | MP4 atom tree, `ilst`, chunk offsets |
+| `src/oggwriter.pas` | Ogg Vorbis/Opus: comment packet, new paging, CRC |
+| `src/batchwrite.pas` | Saves selected fields/cover in one file (tabs, paste tag, drag and drop) |
+| `src/tagremove.pas` | Remove tags |
+| `src/id3sync.pas` | ID3v1 ↔ ID3v2 sync |
+| `src/fieldtools.pas` | Swap/copy fields, clean spaces, name tools (planned per file) |
+| `src/fileops.pas` | Recycle Bin, copy/move files |
+| `src/coverimage.pas` | Cover resizing |
+| `src/loudness.pas` | Loudness meter for ReplayGain 2.0 (BS.1770-4 K-weighting, gating) |
+| `src/audiodecode.pas`, `src/mfdecode.pas` | Decoding to PCM: WAV/AIFF directly, everything else through Windows Media Foundation |
+| `src/replaygain.pas` | Measures many files on threads; track and album values |
+| `src/renamecore.pas` | Mask → file/folder name, sanitizing, plan/execute/undo |
+| `src/filenametags.pas` | File name → tags (mask matching) |
+| `src/trackcore.pas` | Track numbers: format and number |
+| `src/trackmatch.pas` | Matching files to release tracks, filling fields |
+| `src/musicbrainz.pas` | HTTP (WinInet), MusicBrainz search/release, Cover Art Archive |
+| `src/discogs.pas` | Discogs search/release/picture (same data structures as MusicBrainz) |
+| `src/exportimport.pas` | Export (CSV/TXT/HTML/XML), CSV/XLSX reading, import plan |
+| `src/appsettings.pas` | Settings file, mask history, word replacements, rename actions |
+| `src/language.pas` | Language choice and loading of `.po` files (LCLTranslator) |
+| `src/layoutfit.pas` | Makes room for longer translated texts when a window is shown |
+| `src/layoutcheck.pas` | The `--layoutcheck` developer check |
+| `src/mainform.pas/.lfm` | Main window (menu and toolbar are built in code from one action table) |
+| `src/tageditform.pas/.lfm` | Tag editor for one file |
+| `src/multieditform.pas/.lfm` | Multi-file editor dialog |
+| `src/renameform.pas/.lfm` | Rename files / rename folders dialog |
+| `src/filetotagform.pas/.lfm` | Tags from file name dialog |
+| `src/tracktoolsform.pas/.lfm` | Track numbers dialog |
+| `src/weblookupform.pas/.lfm` | Web lookup dialog (MusicBrainz/Discogs) |
+| `src/exportimportform.pas/.lfm` | Export/import dialog |
+| `src/tooldialogs.pas` | Dialogs built in code: field choice, word replacements, rename actions, mask editor, ReplayGain |
+| `languages/` | `TidyTag.pot`, `TidyTag.<lang>.po`, `lclstrconsts.<lang>.po`, `src/translations.json` |
+| `tools/` | Test and helper tools (see above) |
+| `res/icons/`, `res/icons.rc` | Toolbar icons (Lazarus general_purpose set by Roland Hahn, CC0) |
+| `TidyTag.ico`, `res/logo/tidytag.png` | Program icon |
+| `docs/` | Feature overview and gap list compared with Tag&Rename (in Danish) |
 
-## Næste skridt
-1. Rating (POPM) og flere billedtyper i editoren
-2. Ogg FLAC-skrivning og DSF (ID3 i DSD-filer)
-3. Indstilling for kontakt-info i MusicBrainz' User-Agent (anbefales af MusicBrainz)
+## Roadmap
+1. Rating (POPM) and more picture types in the editor
+2. ReplayGain for Ogg Vorbis and Opus without a Windows codec
+3. Ogg FLAC writing and DSF (ID3 in DSD files)
+4. A setting for contact info in the MusicBrainz User-Agent (recommended by MusicBrainz)
