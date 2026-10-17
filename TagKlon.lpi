@@ -230,6 +230,56 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="AsfWriter"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\oggwriter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="OggWriter"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\wavreader.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WavReader"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\wavwriter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WavWriter"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\apetag.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ApeTag"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\apereader.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ApeReader"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\asfreader.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="AsfReader"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\asfwriter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="AsfWriter"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\language.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Language"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\layoutfit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="LayoutFit"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\layoutcheck.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="LayoutCheck"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

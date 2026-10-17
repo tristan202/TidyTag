@@ -67,11 +67,32 @@ implementation
 uses
   AudioTags, TagWriter, TagUtils;
 
+resourcestring
+  rsForskelligeVaerdier = '(forskellige værdier)';
+  rsRedigerFlereFiler = 'Rediger flere filer - ';
+  rsAendringerneGemmesIDFiler = 'Ændringerne gemmes i %d filer. Kun felter med flueben ændres; et tomt felt med flueben bliver ryddet.';
+  rsGemIDFiler = 'Gem i %d filer';
+  rsSaetFluebenForAtGemme = 'Sæt flueben for at gemme dette felt';
+  rsKunJpegOgPngBilleder = 'Kun JPEG- og PNG-billeder kan bruges som cover.';
+  rsDKb = '  (%d KB)';
+  rsSaetFluebenVedDeFelter = 'Sæt flueben ved de felter, der skal gemmes.';
+  rsRydFelter = 'Ryd felter';
+  rsFelterneSErTommeOg = 'Felterne %s er tomme og bliver ryddet i %d filer. Fortsæt?';
+  rsGem = 'Gem';
+  rsGemAendringerneIDFiler = 'Gem ændringerne i %d filer?';
+  rsAnnuller = 'Annuller';
+  rsGemmerDAfDS = 'Gemmer %d af %d: %s';
+  rsGemtIDFilerD = 'Gemt i %d filer   ·   %d sprunget over (filtypen kan ikke gemmes endnu)   ·   %d fejl';
+  rsAfbrudt = 'Afbrudt.  ';
+  rsNogleFilerBlevIkkeGemt = 'Nogle filer blev ikke gemt';
+  rsLuk = 'Luk';
+
+
 const
   EditFields: array[0..14] of TTagField = (tfArtist, tfAlbum, tfAlbumArtist, tfComposer,
     tfYear, tfDisc, tfGenre, tfBpm, tfComment, tfPublisher, tfCatalogNo, tfGrouping,
     tfConductor, tfCopyright, tfMood);
-  DifferentHint = '(forskellige værdier)';
+
 
 class function TFormMultiEdit.Execute(const Items: TAudioInfoArray; const ScopeCaption: string;
   var KeepTimestamp: Boolean): Boolean;
@@ -81,10 +102,9 @@ begin
   F := TFormMultiEdit.Create(Application);
   try
     F.FItems := Items;
-    F.Caption := 'Rediger flere filer - ' + ScopeCaption;
-    F.LabelInfo.Caption := Format('Ændringerne gemmes i %d filer. Kun felter med flueben ændres; ' +
-      'et tomt felt med flueben bliver ryddet.', [Length(Items)]);
-    F.ButtonApply.Caption := Format('Gem i %d filer', [Length(Items)]);
+    F.Caption := rsRedigerFlereFiler + ScopeCaption;
+    F.LabelInfo.Caption := Format(rsAendringerneGemmesIDFiler, [Length(Items)]);
+    F.ButtonApply.Caption := Format(rsGemIDFiler, [Length(Items)]);
     F.CheckKeepTimestamp.Checked := KeepTimestamp;
     F.BuildRows;
     F.FillCommonValues;
@@ -114,7 +134,7 @@ begin
       Left := Scale96ToForm(8);
       Top := RowTop + Scale96ToForm(2);
       Caption := TagFieldCaptions[EditFields[I]];
-      Hint := 'Sæt flueben for at gemme dette felt';
+      Hint := rsSaetFluebenForAtGemme;
       ShowHint := True;
       TabOrder := I * 2;
     end;
@@ -177,12 +197,12 @@ begin
       if FRows[I].TextEdit <> nil then
       begin
         FRows[I].TextEdit.Text := Common;
-        if not Same then FRows[I].TextEdit.TextHint := DifferentHint;
+        if not Same then FRows[I].TextEdit.TextHint := rsForskelligeVaerdier;
       end
       else
       begin
         FRows[I].Edit.Text := Common;
-        if not Same then FRows[I].Edit.TextHint := DifferentHint;
+        if not Same then FRows[I].Edit.TextHint := rsForskelligeVaerdier;
       end;
     end;
   finally
@@ -222,12 +242,12 @@ begin
   Mime := DetectImageMime(Data, '');
   if (Mime <> 'image/jpeg') and (Mime <> 'image/png') then
   begin
-    MessageDlg('Kun JPEG- og PNG-billeder kan bruges som cover.', mtWarning, [mbOK], 0);
+    MessageDlg(rsKunJpegOgPngBilleder, mtWarning, [mbOK], 0);
     Exit;
   end;
   FCoverData := Data;
   LabelCoverFile.Caption := ExtractFileName(OpenPictureDialog.FileName) +
-    Format('  (%d KB)', [(Length(Data) + 1023) div 1024]);
+    Format(rsDKb, [(Length(Data) + 1023) div 1024]);
   B := TBytesStream.Create(Data);
   try
     try
@@ -281,15 +301,15 @@ begin
     end;
   if not Any then
   begin
-    MessageDlg('Sæt flueben ved de felter, der skal gemmes.', mtInformation, [mbOK], 0);
+    MessageDlg(rsSaetFluebenVedDeFelter, mtInformation, [mbOK], 0);
     Exit;
   end;
   if Cleared <> '' then
   begin
-    if MessageDlg('Ryd felter', Format('Felterne %s er tomme og bliver ryddet i %d filer. Fortsæt?',
+    if MessageDlg(rsRydFelter, Format(rsFelterneSErTommeOg,
       [Cleared, Length(FItems)]), mtWarning, [mbYes, mbNo], 0) <> mrYes then Exit;
   end
-  else if MessageDlg('Gem', Format('Gem ændringerne i %d filer?', [Length(FItems)]),
+  else if MessageDlg(rsGem, Format(rsGemAendringerneIDFiler, [Length(FItems)]),
     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
 
   Saved := 0;
@@ -300,7 +320,7 @@ begin
   ButtonApply.Enabled := False;
   PanelFields.Enabled := False;
   GroupCover.Enabled := False;
-  ButtonClose.Caption := 'Annuller';
+  ButtonClose.Caption := rsAnnuller;
   ProgressBar.Max := Length(FItems);
   ProgressBar.Position := 0;
   Errors := TStringList.Create;
@@ -308,7 +328,7 @@ begin
     for I := 0 to High(FItems) do
     begin
       if FCancel then Break;
-      LabelStatus.Caption := Format('Gemmer %d af %d: %s', [I + 1, Length(FItems),
+      LabelStatus.Caption := Format(rsGemmerDAfDS, [I + 1, Length(FItems),
         ExtractFileName(FItems[I].FileName)]);
       ProgressBar.Position := I;
       Application.ProcessMessages;
@@ -359,18 +379,18 @@ begin
       end;
     end;
     ProgressBar.Position := ProgressBar.Max;
-    LabelStatus.Caption := Format('Gemt i %d filer   ·   %d sprunget over (filtypen kan ikke gemmes endnu)   ·   %d fejl',
+    LabelStatus.Caption := Format(rsGemtIDFilerD,
       [Saved, Skipped, Failed]);
-    if FCancel then LabelStatus.Caption := 'Afbrudt.  ' + LabelStatus.Caption;
+    if FCancel then LabelStatus.Caption := rsAfbrudt + LabelStatus.Caption;
     if Errors.Count > 0 then
     begin
       while Errors.Count > 20 do Errors.Delete(Errors.Count - 1);
-      MessageDlg('Nogle filer blev ikke gemt', Errors.Text, mtWarning, [mbOK], 0);
+      MessageDlg(rsNogleFilerBlevIkkeGemt, Errors.Text, mtWarning, [mbOK], 0);
     end;
   finally
     Errors.Free;
     FRunning := False;
-    ButtonClose.Caption := 'Luk';
+    ButtonClose.Caption := rsLuk;
     PanelFields.Enabled := True;
     GroupCover.Enabled := True;
     ButtonApply.Enabled := True;

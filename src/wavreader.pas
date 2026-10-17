@@ -40,6 +40,11 @@ implementation
 uses
   Math, TagUtils, Mp3Reader;
 
+resourcestring
+  rsRfFilerWavOverGb = 'RF64-filer (WAV over 4 GB) understøttes ikke';
+  rsIkkeEnWavEllerAiff = 'Ikke en WAV- eller AIFF-fil';
+
+
 function ReadChunkFile(S: TStream): TChunkFile;
 var
   H: TBytes;
@@ -55,9 +60,9 @@ begin
     (BytesAre(H, 8, 'AIFF') or BytesAre(H, 8, 'AIFC')) then
     Result.IsAiff := True
   else if (Length(H) = 12) and BytesAre(H, 0, 'RF64') then
-    raise Exception.Create('RF64-filer (WAV over 4 GB) understøttes ikke')
+    raise Exception.Create(rsRfFilerWavOverGb)
   else
-    raise Exception.Create('Ikke en WAV- eller AIFF-fil');
+    raise Exception.Create(rsIkkeEnWavEllerAiff);
   Result.FormType := BytesToAscii(H, 8, 4);
   P := 12;
   Limit := S.Size;

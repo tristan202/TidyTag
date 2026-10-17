@@ -22,6 +22,13 @@ implementation
 uses
   TagUtils, AsfReader;
 
+resourcestring
+  rsIkkeEnWmaAsfFil = 'Ikke en WMA/ASF-fil';
+  rsUgyldigAsfHeader = 'Ugyldig ASF-header';
+  rsUgyldigtAsfObjekt = 'Ugyldigt ASF-objekt';
+  rsAsfFilenManglerFileProperties = 'ASF-filen mangler File Properties';
+
+
 const
   RewritePadding = 4096;
   MaxInPlacePadding = 64 * 1024;
@@ -289,9 +296,9 @@ begin
   try
     B := ReadStreamBytes(S, 30);
     if (Length(B) < 30) or not IsGuid(B, 0, GuidHeader) then
-      raise Exception.Create('Ikke en WMA/ASF-fil');
+      raise Exception.Create(rsIkkeEnWmaAsfFil);
     HeaderSize := LE64(B, 16);
-    if (HeaderSize < 30) or (HeaderSize > S.Size) then raise Exception.Create('Ugyldig ASF-header');
+    if (HeaderSize < 30) or (HeaderSize > S.Size) then raise Exception.Create(rsUgyldigAsfHeader);
     S.Position := 0;
     B := ReadStreamBytes(S, HeaderSize);
 
@@ -300,7 +307,7 @@ begin
     while P + 24 <= HeaderSize do
     begin
       Size := LE64(B, P + 16);
-      if (Size < 24) or (P + Size > HeaderSize) then raise Exception.Create('Ugyldigt ASF-objekt');
+      if (Size < 24) or (P + Size > HeaderSize) then raise Exception.Create(rsUgyldigtAsfObjekt);
       if IsGuid(B, P, GuidExtContentDesc) then KeepExtAttrs(B, P + 24, P + Size, Kept);
       Inc(P, Size);
     end;
@@ -368,7 +375,7 @@ begin
         end;
         Inc(P, Size);
       end;
-      if FilePropsPos < 0 then raise Exception.Create('ASF-filen mangler File Properties');
+      if FilePropsPos < 0 then raise Exception.Create(rsAsfFilenManglerFileProperties);
       if not HaveExt and (Big <> nil) then
       begin
         ExtInner := TBytesStream.Create;

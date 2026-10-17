@@ -116,6 +116,28 @@ implementation
 uses
   StrUtils, LCLType, AudioTags, TagWriter, TagUtils;
 
+resourcestring
+  rsIngenTags = 'ingen';
+  rsSorteringsfelterBestemmerHvordanAfspillereSorterer = 'Sorteringsfelter bestemmer, hvordan afspillere sorterer, fx "Beatles, The" eller "Nielsen, Carl", uden at ændre det viste navn.';
+  rsRedigerTagDAfD = 'Rediger tag (%d af %d) - %s';
+  rsFejlVedLaesning = 'Fejl ved læsning: ';
+  rsSSDKbitS = '%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d kanaler  ·  Tags: %s';
+  rsKanIkkeGemmeDenneFiltype = '   (kan ikke gemme denne filtype endnu)';
+  rsIntetBillede = 'Intet billede';
+  rsBilledeDAfDS = 'Billede %d af %d  ·  %s  ·  %s';
+  rsDxD = '  ·  %dx%d';
+  rsDKb = '  ·  %d KB';
+  rsGem = 'Gem *';
+  rsGem2 = 'Gem';
+  rsKunneIkkeGemme = 'Kunne ikke gemme';
+  rsTagsBlevIkkeGemtI = 'Tags blev ikke gemt i';
+  rsGemAendringer = 'Gem ændringer?';
+  rsDerErAendringerSomIkke = 'Der er ændringer, som ikke er gemt. Vil du gemme dem?';
+  rsKunJpegOgPngBilleder = 'Kun JPEG- og PNG-billeder kan bruges som cover.';
+  rsPngBilledePng = 'PNG-billede|*.png';
+  rsJpegBilledeJpg = 'JPEG-billede|*.jpg';
+
+
 { TFormTagEdit }
 
 class procedure TFormTagEdit.Execute(Index, Count: Integer; FileAt: TFileAtFunc;
@@ -198,8 +220,7 @@ begin
   SortHint.Left := Scale96ToForm(8);
   SortHint.Top := Scale96ToForm(10 + 5 * 32 + 8);
   SortHint.Font.Color := clGrayText;
-  SortHint.Caption := 'Sorteringsfelter bestemmer, hvordan afspillere sorterer, fx "Beatles, The" ' +
-    'eller "Nielsen, Carl", uden at ændre det viste navn.';
+  SortHint.Caption := rsSorteringsfelterBestemmerHvordanAfspillereSorterer;
 end;
 
 procedure TFormTagEdit.FormDestroy(Sender: TObject);
@@ -274,15 +295,15 @@ begin
         FieldEdit(F).Text := FInfo.Fields[F];
     LabelFile.Caption := ExtractFileName(FilePath);
     LabelFile.Hint := FilePath;
-    Caption := Format('Rediger tag (%d af %d) - %s', [Index + 1, FCount, ExtractFileName(FilePath)]);
+    Caption := Format(rsRedigerTagDAfD, [Index + 1, FCount, ExtractFileName(FilePath)]);
     if FInfo.Error <> '' then
-      LabelFileInfo.Caption := 'Fejl ved læsning: ' + FInfo.Error
+      LabelFileInfo.Caption := rsFejlVedLaesning + FInfo.Error
     else
-      LabelFileInfo.Caption := Format('%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d kanaler  ·  Tags: %s',
+      LabelFileInfo.Caption := Format(rsSSDKbitS,
         [FInfo.Codec, FormatDuration(FInfo.Duration), FInfo.Bitrate, FInfo.SampleRate,
-         FInfo.Channels, IfThen(FInfo.TagTypes = '', 'ingen', FInfo.TagTypes)]);
+         FInfo.Channels, IfThen(FInfo.TagTypes = '', rsIngenTags, FInfo.TagTypes)]);
     if not CanWriteTags(FilePath) then
-      LabelFileInfo.Caption := LabelFileInfo.Caption + '   (kan ikke gemme denne filtype endnu)';
+      LabelFileInfo.Caption := LabelFileInfo.Caption + rsKanIkkeGemmeDenneFiltype;
     FPicIndex := 0;
     ShowPicture;
   finally
@@ -300,7 +321,7 @@ begin
   ImageCover.Picture.Clear;
   if Length(FInfo.Pictures) = 0 then
   begin
-    LabelCoverInfo.Caption := 'Intet billede';
+    LabelCoverInfo.Caption := rsIntetBillede;
     UpdateButtons;
     Exit;
   end;
@@ -327,11 +348,11 @@ begin
       W := 0;
       H := 0;
     end;
-    LabelCoverInfo.Caption := Format('Billede %d af %d  ·  %s  ·  %s',
+    LabelCoverInfo.Caption := Format(rsBilledeDAfDS,
       [FPicIndex + 1, Length(FInfo.Pictures), PictureTypeName(PicType), UpperCase(Ext)]);
     if W > 0 then
-      LabelCoverInfo.Caption := LabelCoverInfo.Caption + Format('  ·  %dx%d', [W, H]);
-    LabelCoverInfo.Caption := LabelCoverInfo.Caption + Format('  ·  %d KB', [(Length(Data) + 1023) div 1024]);
+      LabelCoverInfo.Caption := LabelCoverInfo.Caption + Format(rsDxD, [W, H]);
+    LabelCoverInfo.Caption := LabelCoverInfo.Caption + Format(rsDKb, [(Length(Data) + 1023) div 1024]);
   end;
   UpdateButtons;
 end;
@@ -356,9 +377,9 @@ procedure TFormTagEdit.SetModified(Value: Boolean);
 begin
   FModified := Value;
   if Value then
-    ButtonSave.Caption := 'Gem *'
+    ButtonSave.Caption := rsGem
   else
-    ButtonSave.Caption := 'Gem';
+    ButtonSave.Caption := rsGem2;
 end;
 
 procedure TFormTagEdit.FieldChange(Sender: TObject);
@@ -385,7 +406,7 @@ begin
       on E: Exception do
       begin
         Screen.Cursor := crDefault;
-        MessageDlg('Kunne ikke gemme', 'Tags blev ikke gemt i' + LineEnding + FInfo.FileName +
+        MessageDlg(rsKunneIkkeGemme, rsTagsBlevIkkeGemtI + LineEnding + FInfo.FileName +
           LineEnding + LineEnding + E.Message, mtError, [mbOK], 0);
         Exit;
       end;
@@ -425,7 +446,7 @@ end;
 procedure TFormTagEdit.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   if not FModified then Exit;
-  case MessageDlg('Gem ændringer?', 'Der er ændringer, som ikke er gemt. Vil du gemme dem?',
+  case MessageDlg(rsGemAendringer, rsDerErAendringerSomIkke,
     mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
     mrYes: CanClose := SaveCurrent;
     mrNo: CanClose := True;
@@ -449,7 +470,7 @@ begin
   end;
   if (DetectImageMime(Data, '') <> 'image/jpeg') and (DetectImageMime(Data, '') <> 'image/png') then
   begin
-    MessageDlg('Kun JPEG- og PNG-billeder kan bruges som cover.', mtWarning, [mbOK], 0);
+    MessageDlg(rsKunJpegOgPngBilleder, mtWarning, [mbOK], 0);
     Exit;
   end;
   N := Length(FInfo.Pictures);
@@ -485,12 +506,12 @@ begin
     if MimeType = 'image/png' then
     begin
       SavePictureDialog.DefaultExt := 'png';
-      SavePictureDialog.Filter := 'PNG-billede|*.png';
+      SavePictureDialog.Filter := rsPngBilledePng;
     end
     else
     begin
       SavePictureDialog.DefaultExt := 'jpg';
-      SavePictureDialog.Filter := 'JPEG-billede|*.jpg';
+      SavePictureDialog.Filter := rsJpegBilledeJpg;
     end;
     SavePictureDialog.InitialDir := ExtractFileDir(FInfo.FileName);
     SavePictureDialog.FileName := 'folder.' + SavePictureDialog.DefaultExt;

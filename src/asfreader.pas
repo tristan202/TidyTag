@@ -54,6 +54,11 @@ implementation
 uses
   TagUtils;
 
+resourcestring
+  rsIkkeEnWmaAsfFil = 'Ikke en WMA/ASF-fil';
+  rsUgyldigAsfHeader = 'Ugyldig ASF-header';
+
+
 function GuidBytes(const G: string): TBytes;
 var
   Hex: string;
@@ -263,10 +268,10 @@ begin
   S.Position := 0;
   B := ReadStreamBytes(S, 30);
   if (Length(B) < 30) or not IsGuid(B, 0, GuidHeader) then
-    raise Exception.Create('Ikke en WMA/ASF-fil');
+    raise Exception.Create(rsIkkeEnWmaAsfFil);
   HeaderSize := LE64(B, 16);
   if (HeaderSize < 30) or (HeaderSize > S.Size) or (HeaderSize > 256 * 1024 * 1024) then
-    raise Exception.Create('Ugyldig ASF-header');
+    raise Exception.Create(rsUgyldigAsfHeader);
   S.Position := 0;
   B := ReadStreamBytes(S, HeaderSize);
   Info.Codec := 'WMA';

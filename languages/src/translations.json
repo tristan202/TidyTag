@@ -1,0 +1,4274 @@
+{
+ "Filen er for kort": {
+  "en": "File is too short",
+  "de": "Datei ist zu kurz",
+  "fr": "Fichier trop court",
+  "it": "File troppo corto",
+  "sv": "Filen är för kort",
+  "es": "El archivo es demasiado corto"
+ },
+ "Ukendt lydformat": {
+  "en": "Unknown audio format",
+  "de": "Unbekanntes Audioformat",
+  "fr": "Format audio inconnu",
+  "it": "Formato audio sconosciuto",
+  "sv": "Okänt ljudformat",
+  "es": "Formato de audio desconocido"
+ },
+ "Ikke en WMA/ASF-fil": {
+  "en": "Not a WMA/ASF file",
+  "de": "Keine WMA/ASF-Datei",
+  "fr": "Ce n'est pas un fichier WMA/ASF",
+  "it": "Non è un file WMA/ASF",
+  "sv": "Inte en WMA/ASF-fil",
+  "es": "No es un archivo WMA/ASF"
+ },
+ "Ugyldig ASF-header": {
+  "en": "Invalid ASF header",
+  "de": "Ungültiger ASF-Header",
+  "fr": "En-tête ASF non valide",
+  "it": "Intestazione ASF non valida",
+  "sv": "Ogiltigt ASF-huvud",
+  "es": "Encabezado ASF no válido"
+ },
+ "Ugyldigt ASF-objekt": {
+  "en": "Invalid ASF object",
+  "de": "Ungültiges ASF-Objekt",
+  "fr": "Objet ASF non valide",
+  "it": "Oggetto ASF non valido",
+  "sv": "Ogiltigt ASF-objekt",
+  "es": "Objeto ASF no válido"
+ },
+ "ASF-filen mangler File Properties": {
+  "en": "ASF file has no File Properties",
+  "de": "ASF-Datei ohne File Properties",
+  "fr": "Le fichier ASF n'a pas de File Properties",
+  "it": "Il file ASF non ha File Properties",
+  "sv": "ASF-filen saknar File Properties",
+  "es": "El archivo ASF no tiene File Properties"
+ },
+ "Titel": {
+  "en": "Title",
+  "de": "Titel",
+  "fr": "Titre",
+  "it": "Titolo",
+  "sv": "Titel",
+  "es": "Título"
+ },
+ "Kunstner": {
+  "en": "Artist",
+  "de": "Interpret",
+  "fr": "Artiste",
+  "it": "Artista",
+  "sv": "Artist",
+  "es": "Artista"
+ },
+ "År": {
+  "en": "Year",
+  "de": "Jahr",
+  "fr": "Année",
+  "it": "Anno",
+  "sv": "År",
+  "es": "Año"
+ },
+ "Spor": {
+  "en": "Track",
+  "de": "Track",
+  "fr": "Piste",
+  "it": "Traccia",
+  "sv": "Spår",
+  "es": "Pista"
+ },
+ "Kommentar": {
+  "en": "Comment",
+  "de": "Kommentar",
+  "fr": "Commentaire",
+  "it": "Commento",
+  "sv": "Kommentar",
+  "es": "Comentario"
+ },
+ "Albumkunstner": {
+  "en": "Album artist",
+  "de": "Album-Interpret",
+  "fr": "Artiste de l'album",
+  "it": "Artista album",
+  "sv": "Albumartist",
+  "es": "Artista del álbum"
+ },
+ "Komponist": {
+  "en": "Composer",
+  "de": "Komponist",
+  "fr": "Compositeur",
+  "it": "Compositore",
+  "sv": "Kompositör",
+  "es": "Compositor"
+ },
+ "Sangtekst": {
+  "en": "Lyrics",
+  "de": "Liedtext",
+  "fr": "Paroles",
+  "it": "Testo",
+  "sv": "Låttext",
+  "es": "Letra"
+ },
+ "Dirigent": {
+  "en": "Conductor",
+  "de": "Dirigent",
+  "fr": "Chef d'orchestre",
+  "it": "Direttore",
+  "sv": "Dirigent",
+  "es": "Director"
+ },
+ "Tekstforfatter": {
+  "en": "Lyricist",
+  "de": "Texter",
+  "fr": "Parolier",
+  "it": "Paroliere",
+  "sv": "Textförfattare",
+  "es": "Letrista"
+ },
+ "Oprindelig kunstner": {
+  "en": "Original artist",
+  "de": "Original-Interpret",
+  "fr": "Artiste original",
+  "it": "Artista originale",
+  "sv": "Originalartist",
+  "es": "Artista original"
+ },
+ "Remixet af": {
+  "en": "Remixed by",
+  "de": "Remix von",
+  "fr": "Remixé par",
+  "it": "Remix di",
+  "sv": "Remixad av",
+  "es": "Remezclado por"
+ },
+ "Pladeselskab": {
+  "en": "Label",
+  "de": "Label",
+  "fr": "Label",
+  "it": "Etichetta",
+  "sv": "Skivbolag",
+  "es": "Sello"
+ },
+ "Copyright": {
+  "en": "Copyright",
+  "de": "Copyright",
+  "fr": "Copyright",
+  "it": "Copyright",
+  "sv": "Copyright",
+  "es": "Copyright"
+ },
+ "Kodet af": {
+  "en": "Encoded by",
+  "de": "Kodiert von",
+  "fr": "Encodé par",
+  "it": "Codificato da",
+  "sv": "Kodad av",
+  "es": "Codificado por"
+ },
+ "Gruppering": {
+  "en": "Grouping",
+  "de": "Gruppierung",
+  "fr": "Regroupement",
+  "it": "Raggruppamento",
+  "sv": "Gruppering",
+  "es": "Agrupación"
+ },
+ "Undertitel": {
+  "en": "Subtitle",
+  "de": "Untertitel",
+  "fr": "Sous-titre",
+  "it": "Sottotitolo",
+  "sv": "Undertitel",
+  "es": "Subtítulo"
+ },
+ "Stemning": {
+  "en": "Mood",
+  "de": "Stimmung",
+  "fr": "Ambiance",
+  "it": "Atmosfera",
+  "sv": "Stämning",
+  "es": "Estado de ánimo"
+ },
+ "Toneart": {
+  "en": "Key",
+  "de": "Tonart",
+  "fr": "Tonalité",
+  "it": "Tonalità",
+  "sv": "Tonart",
+  "es": "Tonalidad"
+ },
+ "Sortér titel": {
+  "en": "Sort title",
+  "de": "Titel (Sortierung)",
+  "fr": "Titre (tri)",
+  "it": "Titolo (ordinamento)",
+  "sv": "Sortera titel",
+  "es": "Título (orden)"
+ },
+ "Sortér kunstner": {
+  "en": "Sort artist",
+  "de": "Interpret (Sortierung)",
+  "fr": "Artiste (tri)",
+  "it": "Artista (ordinamento)",
+  "sv": "Sortera artist",
+  "es": "Artista (orden)"
+ },
+ "Sortér albumkunstner": {
+  "en": "Sort album artist",
+  "de": "Album-Interpret (Sortierung)",
+  "fr": "Artiste de l'album (tri)",
+  "it": "Artista album (ordinamento)",
+  "sv": "Sortera albumartist",
+  "es": "Artista del álbum (orden)"
+ },
+ "Sortér album": {
+  "en": "Sort album",
+  "de": "Album (Sortierung)",
+  "fr": "Album (tri)",
+  "it": "Album (ordinamento)",
+  "sv": "Sortera album",
+  "es": "Álbum (orden)"
+ },
+ "Sortér komponist": {
+  "en": "Sort composer",
+  "de": "Komponist (Sortierung)",
+  "fr": "Compositeur (tri)",
+  "it": "Compositore (ordinamento)",
+  "sv": "Sortera kompositör",
+  "es": "Compositor (orden)"
+ },
+ "Andet": {
+  "en": "Other",
+  "de": "Sonstiges",
+  "fr": "Autre",
+  "it": "Altro",
+  "sv": "Annat",
+  "es": "Otro"
+ },
+ "Forside": {
+  "en": "Front cover",
+  "de": "Vorderseite",
+  "fr": "Recto",
+  "it": "Fronte",
+  "sv": "Framsida",
+  "es": "Portada"
+ },
+ "Bagside": {
+  "en": "Back cover",
+  "de": "Rückseite",
+  "fr": "Verso",
+  "it": "Retro",
+  "sv": "Baksida",
+  "es": "Contraportada"
+ },
+ "Indlægsseddel": {
+  "en": "Leaflet",
+  "de": "Booklet",
+  "fr": "Livret",
+  "it": "Libretto",
+  "sv": "Häfte",
+  "es": "Folleto"
+ },
+ "Medie (CD)": {
+  "en": "Media (CD)",
+  "de": "Medium (CD)",
+  "fr": "Support (CD)",
+  "it": "Supporto (CD)",
+  "sv": "Media (CD)",
+  "es": "Soporte (CD)"
+ },
+ "Solist": {
+  "en": "Lead artist",
+  "de": "Solist",
+  "fr": "Soliste",
+  "it": "Solista",
+  "sv": "Solist",
+  "es": "Solista"
+ },
+ "Orkester": {
+  "en": "Band/orchestra",
+  "de": "Band/Orchester",
+  "fr": "Groupe/orchestre",
+  "it": "Gruppo/orchestra",
+  "sv": "Band/orkester",
+  "es": "Grupo/orquesta"
+ },
+ "Optagested": {
+  "en": "Recording location",
+  "de": "Aufnahmeort",
+  "fr": "Lieu d'enregistrement",
+  "it": "Luogo di registrazione",
+  "sv": "Inspelningsplats",
+  "es": "Lugar de grabación"
+ },
+ "Under optagelse": {
+  "en": "During recording",
+  "de": "Während der Aufnahme",
+  "fr": "Pendant l'enregistrement",
+  "it": "Durante la registrazione",
+  "sv": "Under inspelning",
+  "es": "Durante la grabación"
+ },
+ "Illustration": {
+  "en": "Illustration",
+  "de": "Illustration",
+  "fr": "Illustration",
+  "it": "Illustrazione",
+  "sv": "Illustration",
+  "es": "Ilustración"
+ },
+ "Kunstnerlogo": {
+  "en": "Artist logo",
+  "de": "Interpreten-Logo",
+  "fr": "Logo de l'artiste",
+  "it": "Logo dell'artista",
+  "sv": "Artistlogotyp",
+  "es": "Logotipo del artista"
+ },
+ "Udgiverlogo": {
+  "en": "Publisher logo",
+  "de": "Verlagslogo",
+  "fr": "Logo de l'éditeur",
+  "it": "Logo dell'editore",
+  "sv": "Utgivarlogotyp",
+  "es": "Logotipo del editor"
+ },
+ "Billede": {
+  "en": "Picture",
+  "de": "Bild",
+  "fr": "Image",
+  "it": "Immagine",
+  "sv": "Bild",
+  "es": "Imagen"
+ },
+ "filtypen kan ikke gemmes endnu": {
+  "en": "this file type cannot be saved yet",
+  "de": "dieser Dateityp kann noch nicht gespeichert werden",
+  "fr": "ce type de fichier ne peut pas encore être enregistré",
+  "it": "questo tipo di file non può ancora essere salvato",
+  "sv": "den här filtypen kan inte sparas ännu",
+  "es": "este tipo de archivo aún no se puede guardar"
+ },
+ "Discogs: for mange forespørgsler - vent et minut og prøv igen.": {
+  "en": "Discogs: too many requests - wait a minute and try again.",
+  "de": "Discogs: zu viele Anfragen - eine Minute warten und erneut versuchen.",
+  "fr": "Discogs : trop de requêtes - attendez une minute et réessayez.",
+  "it": "Discogs: troppe richieste - attendi un minuto e riprova.",
+  "sv": "Discogs: för många förfrågningar - vänta en minut och försök igen.",
+  "es": "Discogs: demasiadas solicitudes - espera un minuto y vuelve a intentarlo."
+ },
+ "Discogs afviste dit token. Tjek det under \"Discogs-token...\".": {
+  "en": "Discogs rejected your token. Check it under \"Discogs token...\".",
+  "de": "Discogs hat dein Token abgelehnt. Prüfe es unter \"Discogs-Token...\".",
+  "fr": "Discogs a refusé votre jeton. Vérifiez-le sous « Jeton Discogs... ».",
+  "it": "Discogs ha rifiutato il tuo token. Controllalo in \"Token Discogs...\".",
+  "sv": "Discogs avvisade din token. Kontrollera den under \"Discogs-token...\".",
+  "es": "Discogs rechazó tu token. Revísalo en \"Token de Discogs...\"."
+ },
+ "Discogs kender ikke denne udgivelse": {
+  "en": "Discogs does not know this release",
+  "de": "Discogs kennt diese Veröffentlichung nicht",
+  "fr": "Discogs ne connaît pas cette parution",
+  "it": "Discogs non conosce questa pubblicazione",
+  "sv": "Discogs känner inte till den här utgåvan",
+  "es": "Discogs no conoce esta publicación"
+ },
+ "Discogs svarede med fejl %d": {
+  "en": "Discogs replied with error %d",
+  "de": "Discogs antwortete mit Fehler %d",
+  "fr": "Discogs a répondu avec l'erreur %d",
+  "it": "Discogs ha risposto con l'errore %d",
+  "sv": "Discogs svarade med fel %d",
+  "es": "Discogs respondió con el error %d"
+ },
+ "Uventet svar fra Discogs": {
+  "en": "Unexpected response from Discogs",
+  "de": "Unerwartete Antwort von Discogs",
+  "fr": "Réponse inattendue de Discogs",
+  "it": "Risposta inattesa da Discogs",
+  "sv": "Oväntat svar från Discogs",
+  "es": "Respuesta inesperada de Discogs"
+ },
+ "Søgning på Discogs kræver et personligt token. Tryk \"Discogs-token...\" og indsæt det token, du kan lave på discogs.com under Settings > Developers.": {
+  "en": "Searching Discogs requires a personal token. Press \"Discogs token...\" and paste the token you can create on discogs.com under Settings > Developers.",
+  "de": "Die Suche bei Discogs erfordert ein persönliches Token. Klicke auf \"Discogs-Token...\" und füge das Token ein, das du auf discogs.com unter Settings > Developers erstellen kannst.",
+  "fr": "La recherche sur Discogs nécessite un jeton personnel. Cliquez sur « Jeton Discogs... » et collez le jeton que vous pouvez créer sur discogs.com sous Settings > Developers.",
+  "it": "La ricerca su Discogs richiede un token personale. Premi \"Token Discogs...\" e incolla il token che puoi creare su discogs.com in Settings > Developers.",
+  "sv": "Sökning på Discogs kräver en personlig token. Klicka på \"Discogs-token...\" och klistra in den token du kan skapa på discogs.com under Settings > Developers.",
+  "es": "Buscar en Discogs requiere un token personal. Pulsa \"Token de Discogs...\" y pega el token que puedes crear en discogs.com en Settings > Developers."
+ },
+ "CSV til Excel (semikolon)": {
+  "en": "CSV for Excel (semicolon)",
+  "de": "CSV für Excel (Semikolon)",
+  "fr": "CSV pour Excel (point-virgule)",
+  "it": "CSV per Excel (punto e virgola)",
+  "sv": "CSV för Excel (semikolon)",
+  "es": "CSV para Excel (punto y coma)"
+ },
+ "CSV (komma)": {
+  "en": "CSV (comma)",
+  "de": "CSV (Komma)",
+  "fr": "CSV (virgule)",
+  "it": "CSV (virgola)",
+  "sv": "CSV (komma)",
+  "es": "CSV (coma)"
+ },
+ "Tekst (tabulator)": {
+  "en": "Text (tab)",
+  "de": "Text (Tabulator)",
+  "fr": "Texte (tabulation)",
+  "it": "Testo (tabulazione)",
+  "sv": "Text (tabb)",
+  "es": "Texto (tabulador)"
+ },
+ "Ændres": {
+  "en": "Changes",
+  "de": "Wird geändert",
+  "fr": "Modifié",
+  "it": "Da modificare",
+  "sv": "Ändras",
+  "es": "Se modifica"
+ },
+ "Uændret": {
+  "en": "Unchanged",
+  "de": "Unverändert",
+  "fr": "Inchangé",
+  "it": "Invariato",
+  "sv": "Oförändrad",
+  "es": "Sin cambios"
+ },
+ "Ingen fil passer": {
+  "en": "No matching file",
+  "de": "Keine passende Datei",
+  "fr": "Aucun fichier correspondant",
+  "it": "Nessun file corrispondente",
+  "sv": "Ingen matchande fil",
+  "es": "Ningún archivo coincide"
+ },
+ "Flere filer passer": {
+  "en": "Several files match",
+  "de": "Mehrere Dateien passen",
+  "fr": "Plusieurs fichiers correspondent",
+  "it": "Più file corrispondono",
+  "sv": "Flera filer matchar",
+  "es": "Coinciden varios archivos"
+ },
+ "Filtypen kan ikke gemmes": {
+  "en": "File type cannot be saved",
+  "de": "Dateityp kann nicht gespeichert werden",
+  "fr": "Ce type de fichier ne peut pas être enregistré",
+  "it": "Il tipo di file non può essere salvato",
+  "sv": "Filtypen kan inte sparas",
+  "es": "El tipo de archivo no se puede guardar"
+ },
+ "Gemt": {
+  "en": "Saved",
+  "de": "Gespeichert",
+  "fr": "Enregistré",
+  "it": "Salvato",
+  "sv": "Sparad",
+  "es": "Guardado"
+ },
+ "Fejl": {
+  "en": "Error",
+  "de": "Fehler",
+  "fr": "Erreur",
+  "it": "Errore",
+  "sv": "Fel",
+  "es": "Error"
+ },
+ "Filnavn": {
+  "en": "File name",
+  "de": "Dateiname",
+  "fr": "Nom de fichier",
+  "it": "Nome file",
+  "sv": "Filnamn",
+  "es": "Nombre de archivo"
+ },
+ "Sti": {
+  "en": "Path",
+  "de": "Pfad",
+  "fr": "Chemin",
+  "it": "Percorso",
+  "sv": "Sökväg",
+  "es": "Ruta"
+ },
+ "Mappe": {
+  "en": "Folder",
+  "de": "Ordner",
+  "fr": "Dossier",
+  "it": "Cartella",
+  "sv": "Mapp",
+  "es": "Carpeta"
+ },
+ "Varighed": {
+  "en": "Duration",
+  "de": "Dauer",
+  "fr": "Durée",
+  "it": "Durata",
+  "sv": "Längd",
+  "es": "Duración"
+ },
+ "Bitrate": {
+  "en": "Bitrate",
+  "de": "Bitrate",
+  "fr": "Débit",
+  "it": "Bitrate",
+  "sv": "Bithastighet",
+  "es": "Tasa de bits"
+ },
+ "Samplerate": {
+  "en": "Sample rate",
+  "de": "Abtastrate",
+  "fr": "Fréquence d'échantillonnage",
+  "it": "Frequenza di campionamento",
+  "sv": "Samplingsfrekvens",
+  "es": "Frecuencia de muestreo"
+ },
+ "Codec": {
+  "en": "Codec",
+  "de": "Codec",
+  "fr": "Codec",
+  "it": "Codec",
+  "sv": "Kodek",
+  "es": "Códec"
+ },
+ "Størrelse (byte)": {
+  "en": "Size (bytes)",
+  "de": "Größe (Byte)",
+  "fr": "Taille (octets)",
+  "it": "Dimensione (byte)",
+  "sv": "Storlek (byte)",
+  "es": "Tamaño (bytes)"
+ },
+ "Cover": {
+  "en": "Cover",
+  "de": "Cover",
+  "fr": "Pochette",
+  "it": "Copertina",
+  "sv": "Omslag",
+  "es": "Portada"
+ },
+ "Ja": {
+  "en": "Yes",
+  "de": "Ja",
+  "fr": "Oui",
+  "it": "Sì",
+  "sv": "Ja",
+  "es": "Sí"
+ },
+ "Nej": {
+  "en": "No",
+  "de": "Nein",
+  "fr": "Non",
+  "it": "No",
+  "sv": "Nej",
+  "es": "No"
+ },
+ "Regnearket har intet første ark (xl/worksheets/sheet1.xml)": {
+  "en": "The spreadsheet has no first sheet (xl/worksheets/sheet1.xml)",
+  "de": "Die Arbeitsmappe hat kein erstes Blatt (xl/worksheets/sheet1.xml)",
+  "fr": "Le classeur n'a pas de première feuille (xl/worksheets/sheet1.xml)",
+  "it": "La cartella di lavoro non ha un primo foglio (xl/worksheets/sheet1.xml)",
+  "sv": "Kalkylbladet saknar ett första blad (xl/worksheets/sheet1.xml)",
+  "es": "La hoja de cálculo no tiene primera hoja (xl/worksheets/sheet1.xml)"
+ },
+ "Det gamle .xls-format understøttes ikke. Gem regnearket som .xlsx eller .csv.": {
+  "en": "The old .xls format is not supported. Save the spreadsheet as .xlsx or .csv.",
+  "de": "Das alte .xls-Format wird nicht unterstützt. Speichere die Tabelle als .xlsx oder .csv.",
+  "fr": "L'ancien format .xls n'est pas pris en charge. Enregistrez le classeur au format .xlsx ou .csv.",
+  "it": "Il vecchio formato .xls non è supportato. Salva il foglio come .xlsx o .csv.",
+  "sv": "Det gamla .xls-formatet stöds inte. Spara kalkylbladet som .xlsx eller .csv.",
+  "es": "El antiguo formato .xls no es compatible. Guarda la hoja como .xlsx o .csv."
+ },
+ "Filen har ingen datarækker.": {
+  "en": "The file has no data rows.",
+  "de": "Die Datei enthält keine Datenzeilen.",
+  "fr": "Le fichier ne contient aucune ligne de données.",
+  "it": "Il file non contiene righe di dati.",
+  "sv": "Filen har inga datarader.",
+  "es": "El archivo no tiene filas de datos."
+ },
+ "Der mangler en kolonne \"Sti\" eller \"Filnavn\" til at finde filerne.": {
+  "en": "A column \"Path\" or \"File name\" is needed to find the files.",
+  "de": "Es fehlt eine Spalte \"Pfad\" oder \"Dateiname\", um die Dateien zu finden.",
+  "fr": "Il manque une colonne « Chemin » ou « Nom de fichier » pour trouver les fichiers.",
+  "it": "Manca una colonna \"Percorso\" o \"Nome file\" per trovare i file.",
+  "sv": "Det saknas en kolumn \"Sökväg\" eller \"Filnamn\" för att hitta filerna.",
+  "es": "Falta una columna \"Ruta\" o \"Nombre de archivo\" para encontrar los archivos."
+ },
+ "Ingen kolonneoverskrifter svarer til tag-felter (fx \"Titel\", \"Kunstner\", \"Album\").": {
+  "en": "No column headings match tag fields (e.g. \"Title\", \"Artist\", \"Album\").",
+  "de": "Keine Spaltenüberschrift entspricht einem Tag-Feld (z. B. \"Titel\", \"Interpret\", \"Album\").",
+  "fr": "Aucun en-tête de colonne ne correspond à un champ de tag (p. ex. « Titre », « Artiste », « Album »).",
+  "it": "Nessuna intestazione di colonna corrisponde a un campo tag (es. \"Titolo\", \"Artista\", \"Album\").",
+  "sv": "Inga kolumnrubriker motsvarar taggfält (t.ex. \"Titel\", \"Artist\", \"Album\").",
+  "es": "Ningún encabezado de columna coincide con un campo de etiqueta (p. ej. \"Título\", \"Artista\", \"Álbum\")."
+ },
+ "Felter: ": {
+  "en": "Fields: ",
+  "de": "Felder: ",
+  "fr": "Champs : ",
+  "it": "Campi: ",
+  "sv": "Fält: ",
+  "es": "Campos: "
+ },
+ ".  Filer findes via \"Sti\".": {
+  "en": ".  Files are found via \"Path\".",
+  "de": ".  Dateien werden über \"Pfad\" gefunden.",
+  "fr": ".  Les fichiers sont trouvés via « Chemin ».",
+  "it": ".  I file vengono trovati tramite \"Percorso\".",
+  "sv": ".  Filer hittas via \"Sökväg\".",
+  "es": ".  Los archivos se buscan por \"Ruta\"."
+ },
+ ".  Filer findes via \"Filnavn\".": {
+  "en": ".  Files are found via \"File name\".",
+  "de": ".  Dateien werden über \"Dateiname\" gefunden.",
+  "fr": ".  Les fichiers sont trouvés via « Nom de fichier ».",
+  "it": ".  I file vengono trovati tramite \"Nome file\".",
+  "sv": ".  Filer hittas via \"Filnamn\".",
+  "es": ".  Los archivos se buscan por \"Nombre de archivo\"."
+ },
+ "Alle filer i listen (%d)": {
+  "en": "All files in the list (%d)",
+  "de": "Alle Dateien in der Liste (%d)",
+  "fr": "Tous les fichiers de la liste (%d)",
+  "it": "Tutti i file nell'elenco (%d)",
+  "sv": "Alla filer i listan (%d)",
+  "es": "Todos los archivos de la lista (%d)"
+ },
+ "Vælg mindst én kolonne.": {
+  "en": "Select at least one column.",
+  "de": "Wähle mindestens eine Spalte.",
+  "fr": "Sélectionnez au moins une colonne.",
+  "it": "Seleziona almeno una colonna.",
+  "sv": "Välj minst en kolumn.",
+  "es": "Selecciona al menos una columna."
+ },
+ "Eksporten mislykkedes:": {
+  "en": "The export failed:",
+  "de": "Der Export ist fehlgeschlagen:",
+  "fr": "L'exportation a échoué :",
+  "it": "L'esportazione non è riuscita:",
+  "sv": "Exporten misslyckades:",
+  "es": "La exportación falló:"
+ },
+ "%d filer eksporteret til\n%s": {
+  "en": "%d files exported to\n%s",
+  "de": "%d Dateien exportiert nach\n%s",
+  "fr": "%d fichiers exportés vers\n%s",
+  "it": "%d file esportati in\n%s",
+  "sv": "%d filer exporterade till\n%s",
+  "es": "%d archivos exportados a\n%s"
+ },
+ "Filen kunne ikke læses: ": {
+  "en": "The file could not be read: ",
+  "de": "Die Datei konnte nicht gelesen werden: ",
+  "fr": "Le fichier n'a pas pu être lu : ",
+  "it": "Impossibile leggere il file: ",
+  "sv": "Filen kunde inte läsas: ",
+  "es": "No se pudo leer el archivo: "
+ },
+ "(tom)": {
+  "en": "(empty)",
+  "de": "(leer)",
+  "fr": "(vide)",
+  "it": "(vuoto)",
+  "sv": "(tom)",
+  "es": "(vacío)"
+ },
+ "%d filer gemt   ·   %d fejl": {
+  "en": "%d files saved   ·   %d errors",
+  "de": "%d Dateien gespeichert   ·   %d Fehler",
+  "fr": "%d fichiers enregistrés   ·   %d erreurs",
+  "it": "%d file salvati   ·   %d errori",
+  "sv": "%d filer sparade   ·   %d fel",
+  "es": "%d archivos guardados   ·   %d errores"
+ },
+ "%d ændres   ·   %d uændret   ·   %d uden fil   ·   %d tvetydige   ·   %d kan ikke gemmes": {
+  "en": "%d to change   ·   %d unchanged   ·   %d without file   ·   %d ambiguous   ·   %d cannot be saved",
+  "de": "%d werden geändert   ·   %d unverändert   ·   %d ohne Datei   ·   %d mehrdeutig   ·   %d nicht speicherbar",
+  "fr": "%d à modifier   ·   %d inchangés   ·   %d sans fichier   ·   %d ambigus   ·   %d non enregistrables",
+  "it": "%d da modificare   ·   %d invariati   ·   %d senza file   ·   %d ambigui   ·   %d non salvabili",
+  "sv": "%d ändras   ·   %d oförändrade   ·   %d utan fil   ·   %d tvetydiga   ·   %d kan inte sparas",
+  "es": "%d se modifican   ·   %d sin cambios   ·   %d sin archivo   ·   %d ambiguos   ·   %d no se pueden guardar"
+ },
+ "Importér tags": {
+  "en": "Import tags",
+  "de": "Tags importieren",
+  "fr": "Importer les tags",
+  "it": "Importa tag",
+  "sv": "Importera taggar",
+  "es": "Importar etiquetas"
+ },
+ "Skriv de importerede værdier i %d filer?": {
+  "en": "Write the imported values to %d files?",
+  "de": "Die importierten Werte in %d Dateien schreiben?",
+  "fr": "Écrire les valeurs importées dans %d fichiers ?",
+  "it": "Scrivere i valori importati in %d file?",
+  "sv": "Skriva de importerade värdena till %d filer?",
+  "es": "¿Escribir los valores importados en %d archivos?"
+ },
+ "Skriver %s...": {
+  "en": "Writing %s...",
+  "de": "Schreibe %s...",
+  "fr": "Écriture de %s...",
+  "it": "Scrittura di %s...",
+  "sv": "Skriver %s...",
+  "es": "Escribiendo %s..."
+ },
+ "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc\n%9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab\n%d Spring over\nFiltypen fjernes automatisk. Brug \\ for mappenavne, fx  %1\\%3\\%6 - %2": {
+  "en": "%1 Artist   %2 Title   %3 Album   %4 Year   %5 Genre   %6 Track   %# Disc\n%9 Comment   %b BPM   %aa Album artist   %cp Composer   %co Conductor   %lb Label\n%d Skip\nThe file extension is removed automatically. Use \\ for folder names, e.g.  %1\\%3\\%6 - %2",
+  "de": "%1 Interpret   %2 Titel   %3 Album   %4 Jahr   %5 Genre   %6 Track   %# Disc\n%9 Kommentar   %b BPM   %aa Album-Interpret   %cp Komponist   %co Dirigent   %lb Label\n%d Überspringen\nDie Dateiendung wird automatisch entfernt. \\ für Ordnernamen, z. B.  %1\\%3\\%6 - %2",
+  "fr": "%1 Artiste   %2 Titre   %3 Album   %4 Année   %5 Genre   %6 Piste   %# Disque\n%9 Commentaire   %b BPM   %aa Artiste de l'album   %cp Compositeur   %co Chef d'orchestre   %lb Label\n%d Ignorer\nL'extension est supprimée automatiquement. Utilisez \\ pour les noms de dossier, p. ex.  %1\\%3\\%6 - %2",
+  "it": "%1 Artista   %2 Titolo   %3 Album   %4 Anno   %5 Genere   %6 Traccia   %# Disco\n%9 Commento   %b BPM   %aa Artista album   %cp Compositore   %co Direttore   %lb Etichetta\n%d Salta\nL'estensione viene rimossa automaticamente. Usa \\ per i nomi delle cartelle, es.  %1\\%3\\%6 - %2",
+  "sv": "%1 Artist   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spår   %# Skiva\n%9 Kommentar   %b BPM   %aa Albumartist   %cp Kompositör   %co Dirigent   %lb Skivbolag\n%d Hoppa över\nFiländelsen tas bort automatiskt. Använd \\ för mappnamn, t.ex.  %1\\%3\\%6 - %2",
+  "es": "%1 Artista   %2 Título   %3 Álbum   %4 Año   %5 Género   %6 Pista   %# Disco\n%9 Comentario   %b BPM   %aa Artista del álbum   %cp Compositor   %co Director   %lb Sello\n%d Omitir\nLa extensión se quita automáticamente. Usa \\ para nombres de carpeta, p. ej.  %1\\%3\\%6 - %2"
+ },
+ "Klar": {
+  "en": "Ready",
+  "de": "Bereit",
+  "fr": "Prêt",
+  "it": "Pronto",
+  "sv": "Klar",
+  "es": "Listo"
+ },
+ "Passer ikke til masken": {
+  "en": "Does not match the mask",
+  "de": "Passt nicht zur Maske",
+  "fr": "Ne correspond pas au masque",
+  "it": "Non corrisponde alla maschera",
+  "sv": "Matchar inte masken",
+  "es": "No coincide con la máscara"
+ },
+ "Filtypen kan ikke gemmes endnu": {
+  "en": "This file type cannot be saved yet",
+  "de": "Dieser Dateityp kann noch nicht gespeichert werden",
+  "fr": "Ce type de fichier ne peut pas encore être enregistré",
+  "it": "Questo tipo di file non può ancora essere salvato",
+  "sv": "Den här filtypen kan inte sparas ännu",
+  "es": "Este tipo de archivo aún no se puede guardar"
+ },
+ "Fil": {
+  "en": "File",
+  "de": "Datei",
+  "fr": "Fichier",
+  "it": "File",
+  "sv": "Fil",
+  "es": "Archivo"
+ },
+ "Status": {
+  "en": "Status",
+  "de": "Status",
+  "fr": "État",
+  "it": "Stato",
+  "sv": "Status",
+  "es": "Estado"
+ },
+ "%d klar   ·   %d uændret   ·   %d passer ikke   ·   %d kan ikke gemmes": {
+  "en": "%d ready   ·   %d unchanged   ·   %d do not match   ·   %d cannot be saved",
+  "de": "%d bereit   ·   %d unverändert   ·   %d passen nicht   ·   %d nicht speicherbar",
+  "fr": "%d prêts   ·   %d inchangés   ·   %d ne correspondent pas   ·   %d non enregistrables",
+  "it": "%d pronti   ·   %d invariati   ·   %d non corrispondono   ·   %d non salvabili",
+  "sv": "%d klara   ·   %d oförändrade   ·   %d matchar inte   ·   %d kan inte sparas",
+  "es": "%d listos   ·   %d sin cambios   ·   %d no coinciden   ·   %d no se pueden guardar"
+ },
+ "Skriv tags": {
+  "en": "Write tags",
+  "de": "Tags schreiben",
+  "fr": "Écrire les tags",
+  "it": "Scrivi tag",
+  "sv": "Skriv taggar",
+  "es": "Escribir etiquetas"
+ },
+ "Skriv tags i %d filer?": {
+  "en": "Write tags to %d files?",
+  "de": "Tags in %d Dateien schreiben?",
+  "fr": "Écrire les tags dans %d fichiers ?",
+  "it": "Scrivere i tag in %d file?",
+  "sv": "Skriva taggar till %d filer?",
+  "es": "¿Escribir etiquetas en %d archivos?"
+ },
+ "Skriver %d af %d: %s": {
+  "en": "Writing %d of %d: %s",
+  "de": "Schreibe %d von %d: %s",
+  "fr": "Écriture %d sur %d : %s",
+  "it": "Scrittura %d di %d: %s",
+  "sv": "Skriver %d av %d: %s",
+  "es": "Escribiendo %d de %d: %s"
+ },
+ "Metadata-blokken er for stor (billedet er over 16 MB)": {
+  "en": "The metadata block is too large (the picture is over 16 MB)",
+  "de": "Der Metadatenblock ist zu groß (das Bild ist über 16 MB)",
+  "fr": "Le bloc de métadonnées est trop grand (l'image dépasse 16 Mo)",
+  "it": "Il blocco di metadati è troppo grande (l'immagine supera 16 MB)",
+  "sv": "Metadatablocket är för stort (bilden är över 16 MB)",
+  "es": "El bloque de metadatos es demasiado grande (la imagen supera 16 MB)"
+ },
+ "Ikke en gyldig FLAC-fil": {
+  "en": "Not a valid FLAC file",
+  "de": "Keine gültige FLAC-Datei",
+  "fr": "Fichier FLAC non valide",
+  "it": "File FLAC non valido",
+  "sv": "Inte en giltig FLAC-fil",
+  "es": "No es un archivo FLAC válido"
+ },
+ "FLAC-metadata er afkortet": {
+  "en": "FLAC metadata is truncated",
+  "de": "FLAC-Metadaten sind abgeschnitten",
+  "fr": "Les métadonnées FLAC sont tronquées",
+  "it": "I metadati FLAC sono troncati",
+  "sv": "FLAC-metadata är avkortade",
+  "es": "Los metadatos FLAC están truncados"
+ },
+ "Ugyldig FLAC-metadatablok": {
+  "en": "Invalid FLAC metadata block",
+  "de": "Ungültiger FLAC-Metadatenblock",
+  "fr": "Bloc de métadonnées FLAC non valide",
+  "it": "Blocco di metadati FLAC non valido",
+  "sv": "Ogiltigt FLAC-metadatablock",
+  "es": "Bloque de metadatos FLAC no válido"
+ },
+ "FLAC-filen mangler STREAMINFO": {
+  "en": "FLAC file has no STREAMINFO",
+  "de": "FLAC-Datei ohne STREAMINFO",
+  "fr": "Le fichier FLAC n'a pas de STREAMINFO",
+  "it": "Il file FLAC non ha STREAMINFO",
+  "sv": "FLAC-filen saknar STREAMINFO",
+  "es": "El archivo FLAC no tiene STREAMINFO"
+ },
+ "ID3v2.%d understøttes ikke": {
+  "en": "ID3v2.%d is not supported",
+  "de": "ID3v2.%d wird nicht unterstützt",
+  "fr": "ID3v2.%d n'est pas pris en charge",
+  "it": "ID3v2.%d non è supportato",
+  "sv": "ID3v2.%d stöds inte",
+  "es": "ID3v2.%d no es compatible"
+ },
+ "Sprog (Language)": {
+  "en": "Language",
+  "de": "Sprache (Language)",
+  "fr": "Langue (Language)",
+  "it": "Lingua (Language)",
+  "sv": "Språk (Language)",
+  "es": "Idioma (Language)"
+ },
+ "Sprog": {
+  "en": "Language",
+  "de": "Sprache",
+  "fr": "Langue",
+  "it": "Lingua",
+  "sv": "Språk",
+  "es": "Idioma"
+ },
+ "Automatisk (Windows-sprog)": {
+  "en": "Automatic (Windows language)",
+  "de": "Automatisch (Windows-Sprache)",
+  "fr": "Automatique (langue de Windows)",
+  "it": "Automatica (lingua di Windows)",
+  "sv": "Automatiskt (Windows-språk)",
+  "es": "Automático (idioma de Windows)"
+ },
+ "Sproget skiftes, når TagKlon startes igen. Genstart nu?": {
+  "en": "The language changes when TagKlon is started again. Restart now?",
+  "de": "Die Sprache wird beim nächsten Start von TagKlon gewechselt. Jetzt neu starten?",
+  "fr": "La langue change au prochain démarrage de TagKlon. Redémarrer maintenant ?",
+  "it": "La lingua cambia al prossimo avvio di TagKlon. Riavviare ora?",
+  "sv": "Språket byts när TagKlon startas igen. Starta om nu?",
+  "es": "El idioma cambia cuando TagKlon se vuelve a iniciar. ¿Reiniciar ahora?"
+ },
+ "Multi-fil-tag-editor": {
+  "en": "Multi-file tag editor",
+  "de": "Mehrfach-Tag-Editor",
+  "fr": "Éditeur de tags multi-fichiers",
+  "it": "Editor tag multi-file",
+  "sv": "Taggredigerare för flera filer",
+  "es": "Editor de etiquetas múltiple"
+ },
+ "filer": {
+  "en": "files",
+  "de": "Dateien",
+  "fr": "fichiers",
+  "it": "file",
+  "sv": "filer",
+  "es": "archivos"
+ },
+ "mapper": {
+  "en": "folders",
+  "de": "Ordner",
+  "fr": "dossiers",
+  "it": "cartelle",
+  "sv": "mappar",
+  "es": "carpetas"
+ },
+ "%1|Kunstner": {
+  "en": "%1|Artist",
+  "de": "%1|Interpret",
+  "fr": "%1|Artiste",
+  "it": "%1|Artista",
+  "sv": "%1|Artist",
+  "es": "%1|Artista"
+ },
+ "%2|Titel": {
+  "en": "%2|Title",
+  "de": "%2|Titel",
+  "fr": "%2|Titre",
+  "it": "%2|Titolo",
+  "sv": "%2|Titel",
+  "es": "%2|Título"
+ },
+ "%3|Album": {
+  "en": "%3|Album",
+  "de": "%3|Album",
+  "fr": "%3|Album",
+  "it": "%3|Album",
+  "sv": "%3|Album",
+  "es": "%3|Álbum"
+ },
+ "%4|År": {
+  "en": "%4|Year",
+  "de": "%4|Jahr",
+  "fr": "%4|Année",
+  "it": "%4|Anno",
+  "sv": "%4|År",
+  "es": "%4|Año"
+ },
+ "%5|Genre": {
+  "en": "%5|Genre",
+  "de": "%5|Genre",
+  "fr": "%5|Genre",
+  "it": "%5|Genere",
+  "sv": "%5|Genre",
+  "es": "%5|Género"
+ },
+ "%6|Spor": {
+  "en": "%6|Track",
+  "de": "%6|Track",
+  "fr": "%6|Piste",
+  "it": "%6|Traccia",
+  "sv": "%6|Spår",
+  "es": "%6|Pista"
+ },
+ "%#|Disc": {
+  "en": "%#|Disc",
+  "de": "%#|Disc",
+  "fr": "%#|Disque",
+  "it": "%#|Disco",
+  "sv": "%#|Skiva",
+  "es": "%#|Disco"
+ },
+ "%7|Filnavn": {
+  "en": "%7|File name",
+  "de": "%7|Dateiname",
+  "fr": "%7|Nom de fichier",
+  "it": "%7|Nome file",
+  "sv": "%7|Filnamn",
+  "es": "%7|Nombre de archivo"
+ },
+ "%8|Filnummer": {
+  "en": "%8|File number",
+  "de": "%8|Dateinummer",
+  "fr": "%8|Numéro de fichier",
+  "it": "%8|Numero file",
+  "sv": "%8|Filnummer",
+  "es": "%8|Número de archivo"
+ },
+ "%9|Kommentar": {
+  "en": "%9|Comment",
+  "de": "%9|Kommentar",
+  "fr": "%9|Commentaire",
+  "it": "%9|Commento",
+  "sv": "%9|Kommentar",
+  "es": "%9|Comentario"
+ },
+ "%0|Bitrate": {
+  "en": "%0|Bitrate",
+  "de": "%0|Bitrate",
+  "fr": "%0|Débit",
+  "it": "%0|Bitrate",
+  "sv": "%0|Bithastighet",
+  "es": "%0|Tasa de bits"
+ },
+ "%b|BPM": {
+  "en": "%b|BPM",
+  "de": "%b|BPM",
+  "fr": "%b|BPM",
+  "it": "%b|BPM",
+  "sv": "%b|BPM",
+  "es": "%b|BPM"
+ },
+ "%t|Spilletid": {
+  "en": "%t|Playing time",
+  "de": "%t|Spieldauer",
+  "fr": "%t|Durée",
+  "it": "%t|Durata",
+  "sv": "%t|Speltid",
+  "es": "%t|Duración"
+ },
+ "%aa|Albumkunstner": {
+  "en": "%aa|Album artist",
+  "de": "%aa|Album-Interpret",
+  "fr": "%aa|Artiste de l'album",
+  "it": "%aa|Artista album",
+  "sv": "%aa|Albumartist",
+  "es": "%aa|Artista del álbum"
+ },
+ "%cp|Komponist": {
+  "en": "%cp|Composer",
+  "de": "%cp|Komponist",
+  "fr": "%cp|Compositeur",
+  "it": "%cp|Compositore",
+  "sv": "%cp|Kompositör",
+  "es": "%cp|Compositor"
+ },
+ "%co|Dirigent": {
+  "en": "%co|Conductor",
+  "de": "%co|Dirigent",
+  "fr": "%co|Chef d'orchestre",
+  "it": "%co|Direttore",
+  "sv": "%co|Dirigent",
+  "es": "%co|Director"
+ },
+ "%lb|Pladeselskab": {
+  "en": "%lb|Label",
+  "de": "%lb|Label",
+  "fr": "%lb|Label",
+  "it": "%lb|Etichetta",
+  "sv": "%lb|Skivbolag",
+  "es": "%lb|Sello"
+ },
+ "%cat|Katalognr.": {
+  "en": "%cat|Catalog no.",
+  "de": "%cat|Katalognr.",
+  "fr": "%cat|N° de catalogue",
+  "it": "%cat|N. catalogo",
+  "sv": "%cat|Katalognr",
+  "es": "%cat|N.º de catálogo"
+ },
+ "%grp|Gruppering": {
+  "en": "%grp|Grouping",
+  "de": "%grp|Gruppierung",
+  "fr": "%grp|Regroupement",
+  "it": "%grp|Raggruppamento",
+  "sv": "%grp|Gruppering",
+  "es": "%grp|Agrupación"
+ },
+ "%rb|Remixet af": {
+  "en": "%rb|Remixed by",
+  "de": "%rb|Remix von",
+  "fr": "%rb|Remixé par",
+  "it": "%rb|Remix di",
+  "sv": "%rb|Remixad av",
+  "es": "%rb|Remezclado por"
+ },
+ "%md|Stemning": {
+  "en": "%md|Mood",
+  "de": "%md|Stimmung",
+  "fr": "%md|Ambiance",
+  "it": "%md|Atmosfera",
+  "sv": "%md|Stämning",
+  "es": "%md|Estado de ánimo"
+ },
+ "%key|Toneart": {
+  "en": "%key|Key",
+  "de": "%key|Tonart",
+  "fr": "%key|Tonalité",
+  "it": "%key|Tonalità",
+  "sv": "%key|Tonart",
+  "es": "%key|Tonalidad"
+ },
+ "%ext|Filtype": {
+  "en": "%ext|File type",
+  "de": "%ext|Dateityp",
+  "fr": "%ext|Type de fichier",
+  "it": "%ext|Tipo di file",
+  "sv": "%ext|Filtyp",
+  "es": "%ext|Tipo de archivo"
+ },
+ "%khz|Samplerate": {
+  "en": "%khz|Sample rate",
+  "de": "%khz|Abtastrate",
+  "fr": "%khz|Fréquence d'échantillonnage",
+  "it": "%khz|Frequenza di campionamento",
+  "sv": "%khz|Samplingsfrekvens",
+  "es": "%khz|Frecuencia de muestreo"
+ },
+ " - |\" - \" (bindestreg)": {
+  "en": " - |\" - \" (hyphen)",
+  "de": " - |\" - \" (Bindestrich)",
+  "fr": " - |« - » (tiret)",
+  "it": " - |\" - \" (trattino)",
+  "sv": " - |\" - \" (bindestreck)",
+  "es": " - |\" - \" (guion)"
+ },
+ "\\|\\ (ny mappe)": {
+  "en": "\\|\\ (new folder)",
+  "de": "\\|\\ (neuer Ordner)",
+  "fr": "\\|\\ (nouveau dossier)",
+  "it": "\\|\\ (nuova cartella)",
+  "sv": "\\|\\ (ny mapp)",
+  "es": "\\|\\ (nueva carpeta)"
+ },
+ "%6 - %1 - %2|Eksempel: spor - kunstner - titel": {
+  "en": "%6 - %1 - %2|Example: track - artist - title",
+  "de": "%6 - %1 - %2|Beispiel: Track - Interpret - Titel",
+  "fr": "%6 - %1 - %2|Exemple : piste - artiste - titre",
+  "it": "%6 - %1 - %2|Esempio: traccia - artista - titolo",
+  "sv": "%6 - %1 - %2|Exempel: spår - artist - titel",
+  "es": "%6 - %1 - %2|Ejemplo: pista - artista - título"
+ },
+ "%1\\%3\\%6 - %2|Eksempel: mapper pr. kunstner og album": {
+  "en": "%1\\%3\\%6 - %2|Example: folders per artist and album",
+  "de": "%1\\%3\\%6 - %2|Beispiel: Ordner pro Interpret und Album",
+  "fr": "%1\\%3\\%6 - %2|Exemple : dossiers par artiste et album",
+  "it": "%1\\%3\\%6 - %2|Esempio: cartelle per artista e album",
+  "sv": "%1\\%3\\%6 - %2|Exempel: mappar per artist och album",
+  "es": "%1\\%3\\%6 - %2|Ejemplo: carpetas por artista y álbum"
+ },
+ "%d|Spring over": {
+  "en": "%d|Skip",
+  "de": "%d|Überspringen",
+  "fr": "%d|Ignorer",
+  "it": "%d|Salta",
+  "sv": "%d|Hoppa över",
+  "es": "%d|Omitir"
+ },
+ "\\|\\ (mappeniveau)": {
+  "en": "\\|\\ (folder level)",
+  "de": "\\|\\ (Ordnerebene)",
+  "fr": "\\|\\ (niveau de dossier)",
+  "it": "\\|\\ (livello cartella)",
+  "sv": "\\|\\ (mappnivå)",
+  "es": "\\|\\ (nivel de carpeta)"
+ },
+ "Alle felter": {
+  "en": "All fields",
+  "de": "Alle Felder",
+  "fr": "Tous les champs",
+  "it": "Tutti i campi",
+  "sv": "Alla fält",
+  "es": "Todos los campos"
+ },
+ "Tid": {
+  "en": "Time",
+  "de": "Zeit",
+  "fr": "Durée",
+  "it": "Durata",
+  "sv": "Tid",
+  "es": "Tiempo"
+ },
+ "Størrelse": {
+  "en": "Size",
+  "de": "Größe",
+  "fr": "Taille",
+  "it": "Dimensione",
+  "sv": "Storlek",
+  "es": "Tamaño"
+ },
+ "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor\n%# Disc   %7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate\n%b BPM   %t Spilletid   %aa Albumkunstner   %cp Komponist\n%co Dirigent   %lb Pladeselskab   %grp Gruppering   ... (se \"Variabler\")\n\\ laver mapper, fx  %1\\%3\\%6 - %2\nGælder de afkrydsede filer (ellers de markerede).": {
+  "en": "%1 Artist   %2 Title   %3 Album   %4 Year   %5 Genre   %6 Track\n%# Disc   %7 File name   %8 File number   %9 Comment   %0 Bitrate\n%b BPM   %t Playing time   %aa Album artist   %cp Composer\n%co Conductor   %lb Label   %grp Grouping   ... (see \"Variables\")\n\\ creates folders, e.g.  %1\\%3\\%6 - %2\nApplies to the checked files (otherwise the selected ones).",
+  "de": "%1 Interpret   %2 Titel   %3 Album   %4 Jahr   %5 Genre   %6 Track\n%# Disc   %7 Dateiname   %8 Dateinummer   %9 Kommentar   %0 Bitrate\n%b BPM   %t Spieldauer   %aa Album-Interpret   %cp Komponist\n%co Dirigent   %lb Label   %grp Gruppierung   ... (siehe \"Variablen\")\n\\ erstellt Ordner, z. B.  %1\\%3\\%6 - %2\nGilt für die abgehakten Dateien (sonst die markierten).",
+  "fr": "%1 Artiste   %2 Titre   %3 Album   %4 Année   %5 Genre   %6 Piste\n%# Disque   %7 Nom de fichier   %8 N° de fichier   %9 Commentaire   %0 Débit\n%b BPM   %t Durée   %aa Artiste de l'album   %cp Compositeur\n%co Chef d'orchestre   %lb Label   %grp Regroupement   ... (voir « Variables »)\n\\ crée des dossiers, p. ex.  %1\\%3\\%6 - %2\nS'applique aux fichiers cochés (sinon aux fichiers sélectionnés).",
+  "it": "%1 Artista   %2 Titolo   %3 Album   %4 Anno   %5 Genere   %6 Traccia\n%# Disco   %7 Nome file   %8 Numero file   %9 Commento   %0 Bitrate\n%b BPM   %t Durata   %aa Artista album   %cp Compositore\n%co Direttore   %lb Etichetta   %grp Raggruppamento   ... (vedi \"Variabili\")\n\\ crea cartelle, es.  %1\\%3\\%6 - %2\nVale per i file spuntati (altrimenti quelli selezionati).",
+  "sv": "%1 Artist   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spår\n%# Skiva   %7 Filnamn   %8 Filnummer   %9 Kommentar   %0 Bithastighet\n%b BPM   %t Speltid   %aa Albumartist   %cp Kompositör\n%co Dirigent   %lb Skivbolag   %grp Gruppering   ... (se \"Variabler\")\n\\ skapar mappar, t.ex.  %1\\%3\\%6 - %2\nGäller de förbockade filerna (annars de markerade).",
+  "es": "%1 Artista   %2 Título   %3 Álbum   %4 Año   %5 Género   %6 Pista\n%# Disco   %7 Nombre de archivo   %8 N.º de archivo   %9 Comentario   %0 Tasa de bits\n%b BPM   %t Duración   %aa Artista del álbum   %cp Compositor\n%co Director   %lb Sello   %grp Agrupación   ... (ver \"Variables\")\n\\ crea carpetas, p. ej.  %1\\%3\\%6 - %2\nSe aplica a los archivos marcados (si no, a los seleccionados)."
+ },
+ "1. Kun felter med flueben bliver ændret (et felt får flueben, når du skriver i det).\n2. Tags gemmes i de afkrydsede filer (ellers de markerede).\n3. Et tomt felt med flueben bliver ryddet.\n4. \"Alle felter...\" redigerer flere felter og cover på én gang.": {
+  "en": "1. Only fields with a tick are changed (a field gets a tick when you type in it).\n2. Tags are saved in the checked files (otherwise the selected ones).\n3. An empty field with a tick is cleared.\n4. \"All fields...\" edits more fields and the cover at once.",
+  "de": "1. Nur Felder mit Häkchen werden geändert (ein Feld erhält ein Häkchen, sobald du darin tippst).\n2. Tags werden in den abgehakten Dateien gespeichert (sonst in den markierten).\n3. Ein leeres Feld mit Häkchen wird geleert.\n4. \"Alle Felder...\" bearbeitet weitere Felder und das Cover auf einmal.",
+  "fr": "1. Seuls les champs cochés sont modifiés (un champ est coché dès que vous y tapez).\n2. Les tags sont enregistrés dans les fichiers cochés (sinon dans les fichiers sélectionnés).\n3. Un champ vide coché est effacé.\n4. « Tous les champs... » modifie d'autres champs et la pochette en une fois.",
+  "it": "1. Vengono modificati solo i campi spuntati (un campo viene spuntato quando ci scrivi).\n2. I tag vengono salvati nei file spuntati (altrimenti in quelli selezionati).\n3. Un campo vuoto spuntato viene svuotato.\n4. \"Tutti i campi...\" modifica altri campi e la copertina in una volta.",
+  "sv": "1. Endast fält med bock ändras (ett fält får en bock när du skriver i det).\n2. Taggar sparas i de förbockade filerna (annars i de markerade).\n3. Ett tomt fält med bock töms.\n4. \"Alla fält...\" redigerar fler fält och omslaget på en gång.",
+  "es": "1. Solo se cambian los campos marcados (un campo se marca al escribir en él).\n2. Las etiquetas se guardan en los archivos marcados (si no, en los seleccionados).\n3. Un campo vacío marcado se borra.\n4. \"Todos los campos...\" edita más campos y la portada a la vez."
+ },
+ "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor\n%# Disc   %9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist\n%d Spring en del over.   Filtypen fjernes automatisk.\n\\ bruger mappenavne, fx  %1\\%3\\%6 - %2\nGælder de afkrydsede filer (ellers de markerede).": {
+  "en": "%1 Artist   %2 Title   %3 Album   %4 Year   %5 Genre   %6 Track\n%# Disc   %9 Comment   %b BPM   %aa Album artist   %cp Composer\n%d Skip a part.   The file extension is removed automatically.\n\\ uses folder names, e.g.  %1\\%3\\%6 - %2\nApplies to the checked files (otherwise the selected ones).",
+  "de": "%1 Interpret   %2 Titel   %3 Album   %4 Jahr   %5 Genre   %6 Track\n%# Disc   %9 Kommentar   %b BPM   %aa Album-Interpret   %cp Komponist\n%d Teil überspringen.   Die Dateiendung wird automatisch entfernt.\n\\ verwendet Ordnernamen, z. B.  %1\\%3\\%6 - %2\nGilt für die abgehakten Dateien (sonst die markierten).",
+  "fr": "%1 Artiste   %2 Titre   %3 Album   %4 Année   %5 Genre   %6 Piste\n%# Disque   %9 Commentaire   %b BPM   %aa Artiste de l'album   %cp Compositeur\n%d Ignorer une partie.   L'extension est supprimée automatiquement.\n\\ utilise les noms de dossier, p. ex.  %1\\%3\\%6 - %2\nS'applique aux fichiers cochés (sinon aux fichiers sélectionnés).",
+  "it": "%1 Artista   %2 Titolo   %3 Album   %4 Anno   %5 Genere   %6 Traccia\n%# Disco   %9 Commento   %b BPM   %aa Artista album   %cp Compositore\n%d Salta una parte.   L'estensione viene rimossa automaticamente.\n\\ usa i nomi delle cartelle, es.  %1\\%3\\%6 - %2\nVale per i file spuntati (altrimenti quelli selezionati).",
+  "sv": "%1 Artist   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spår\n%# Skiva   %9 Kommentar   %b BPM   %aa Albumartist   %cp Kompositör\n%d Hoppa över en del.   Filändelsen tas bort automatiskt.\n\\ använder mappnamn, t.ex.  %1\\%3\\%6 - %2\nGäller de förbockade filerna (annars de markerade).",
+  "es": "%1 Artista   %2 Título   %3 Álbum   %4 Año   %5 Género   %6 Pista\n%# Disco   %9 Comentario   %b BPM   %aa Artista del álbum   %cp Compositor\n%d Omitir una parte.   La extensión se quita automáticamente.\n\\ usa nombres de carpeta, p. ej.  %1\\%3\\%6 - %2\nSe aplica a los archivos marcados (si no, a los seleccionados)."
+ },
+ "Åbn mappe...": {
+  "en": "Open folder...",
+  "de": "Ordner öffnen...",
+  "fr": "Ouvrir un dossier...",
+  "it": "Apri cartella...",
+  "sv": "Öppna mapp...",
+  "es": "Abrir carpeta..."
+ },
+ "Åbn en mappe": {
+  "en": "Open a folder",
+  "de": "Einen Ordner öffnen",
+  "fr": "Ouvrir un dossier",
+  "it": "Apri una cartella",
+  "sv": "Öppna en mapp",
+  "es": "Abrir una carpeta"
+ },
+ "Opdater fillisten": {
+  "en": "Refresh file list",
+  "de": "Dateiliste aktualisieren",
+  "fr": "Actualiser la liste",
+  "it": "Aggiorna elenco file",
+  "sv": "Uppdatera fillistan",
+  "es": "Actualizar lista de archivos"
+ },
+ "Læs mappen igen (F5)": {
+  "en": "Read the folder again (F5)",
+  "de": "Ordner neu einlesen (F5)",
+  "fr": "Relire le dossier (F5)",
+  "it": "Rileggi la cartella (F5)",
+  "sv": "Läs mappen igen (F5)",
+  "es": "Volver a leer la carpeta (F5)"
+ },
+ "Rediger tag...": {
+  "en": "Edit tag...",
+  "de": "Tag bearbeiten...",
+  "fr": "Modifier le tag...",
+  "it": "Modifica tag...",
+  "sv": "Redigera tagg...",
+  "es": "Editar etiqueta..."
+ },
+ "Rediger tag for den markerede fil (Enter)": {
+  "en": "Edit the tag of the selected file (Enter)",
+  "de": "Tag der markierten Datei bearbeiten (Enter)",
+  "fr": "Modifier le tag du fichier sélectionné (Entrée)",
+  "it": "Modifica il tag del file selezionato (Invio)",
+  "sv": "Redigera taggen för den markerade filen (Enter)",
+  "es": "Editar la etiqueta del archivo seleccionado (Intro)"
+ },
+ "Rediger flere filer...": {
+  "en": "Edit multiple files...",
+  "de": "Mehrere Dateien bearbeiten...",
+  "fr": "Modifier plusieurs fichiers...",
+  "it": "Modifica più file...",
+  "sv": "Redigera flera filer...",
+  "es": "Editar varios archivos..."
+ },
+ "Ret felter og cover i alle afkrydsede (eller markerede) filer": {
+  "en": "Edit fields and cover in all checked (or selected) files",
+  "de": "Felder und Cover in allen abgehakten (oder markierten) Dateien bearbeiten",
+  "fr": "Modifier les champs et la pochette de tous les fichiers cochés (ou sélectionnés)",
+  "it": "Modifica campi e copertina in tutti i file spuntati (o selezionati)",
+  "sv": "Redigera fält och omslag i alla förbockade (eller markerade) filer",
+  "es": "Editar campos y portada en todos los archivos marcados (o seleccionados)"
+ },
+ "Omdøb mapper...": {
+  "en": "Rename folders...",
+  "de": "Ordner umbenennen...",
+  "fr": "Renommer les dossiers...",
+  "it": "Rinomina cartelle...",
+  "sv": "Byt namn på mappar...",
+  "es": "Renombrar carpetas..."
+ },
+ "Omdøb mapperne ud fra filernes tags": {
+  "en": "Rename the folders from the files' tags",
+  "de": "Ordner anhand der Tags der Dateien umbenennen",
+  "fr": "Renommer les dossiers d'après les tags des fichiers",
+  "it": "Rinomina le cartelle in base ai tag dei file",
+  "sv": "Byt namn på mapparna utifrån filernas taggar",
+  "es": "Renombrar las carpetas a partir de las etiquetas de los archivos"
+ },
+ "Afspil fil": {
+  "en": "Play file",
+  "de": "Datei abspielen",
+  "fr": "Lire le fichier",
+  "it": "Riproduci file",
+  "sv": "Spela upp fil",
+  "es": "Reproducir archivo"
+ },
+ "Afspil den markerede fil": {
+  "en": "Play the selected file",
+  "de": "Markierte Datei abspielen",
+  "fr": "Lire le fichier sélectionné",
+  "it": "Riproduci il file selezionato",
+  "sv": "Spela upp den markerade filen",
+  "es": "Reproducir el archivo seleccionado"
+ },
+ "Vis i Stifinder": {
+  "en": "Show in File Explorer",
+  "de": "Im Explorer anzeigen",
+  "fr": "Afficher dans l'Explorateur",
+  "it": "Mostra in Esplora file",
+  "sv": "Visa i Utforskaren",
+  "es": "Mostrar en el Explorador"
+ },
+ "Afslut": {
+  "en": "Exit",
+  "de": "Beenden",
+  "fr": "Quitter",
+  "it": "Esci",
+  "sv": "Avsluta",
+  "es": "Salir"
+ },
+ "Markér alle": {
+  "en": "Select all",
+  "de": "Alle markieren",
+  "fr": "Tout sélectionner",
+  "it": "Seleziona tutto",
+  "sv": "Markera alla",
+  "es": "Seleccionar todo"
+ },
+ "Fjern markering": {
+  "en": "Clear selection",
+  "de": "Markierung aufheben",
+  "fr": "Désélectionner",
+  "it": "Deseleziona",
+  "sv": "Avmarkera",
+  "es": "Quitar selección"
+ },
+ "Afkryds markerede filer\tMellemrum": {
+  "en": "Check selected files\tSpace",
+  "de": "Markierte Dateien abhaken\tLeertaste",
+  "fr": "Cocher les fichiers sélectionnés\tEspace",
+  "it": "Spunta i file selezionati\tSpazio",
+  "sv": "Bocka för markerade filer\tMellanslag",
+  "es": "Marcar archivos seleccionados\tEspacio"
+ },
+ "Afkryds de markerede filer": {
+  "en": "Check the selected files",
+  "de": "Die markierten Dateien abhaken",
+  "fr": "Cocher les fichiers sélectionnés",
+  "it": "Spunta i file selezionati",
+  "sv": "Bocka för de markerade filerna",
+  "es": "Marcar los archivos seleccionados"
+ },
+ "Fjern afkrydsning fra markerede filer": {
+  "en": "Uncheck selected files",
+  "de": "Häkchen von markierten Dateien entfernen",
+  "fr": "Décocher les fichiers sélectionnés",
+  "it": "Togli la spunta ai file selezionati",
+  "sv": "Avbocka markerade filer",
+  "es": "Desmarcar archivos seleccionados"
+ },
+ "Afkryds alle filer": {
+  "en": "Check all files",
+  "de": "Alle Dateien abhaken",
+  "fr": "Cocher tous les fichiers",
+  "it": "Spunta tutti i file",
+  "sv": "Bocka för alla filer",
+  "es": "Marcar todos los archivos"
+ },
+ "Afkryds alle filer i listen": {
+  "en": "Check all files in the list",
+  "de": "Alle Dateien der Liste abhaken",
+  "fr": "Cocher tous les fichiers de la liste",
+  "it": "Spunta tutti i file dell'elenco",
+  "sv": "Bocka för alla filer i listan",
+  "es": "Marcar todos los archivos de la lista"
+ },
+ "Fjern alle afkrydsninger": {
+  "en": "Uncheck all",
+  "de": "Alle Häkchen entfernen",
+  "fr": "Tout décocher",
+  "it": "Togli tutte le spunte",
+  "sv": "Avbocka alla",
+  "es": "Desmarcar todo"
+ },
+ "Inverter afkrydsning": {
+  "en": "Invert checks",
+  "de": "Häkchen umkehren",
+  "fr": "Inverser les coches",
+  "it": "Inverti spunte",
+  "sv": "Invertera bockar",
+  "es": "Invertir marcas"
+ },
+ "Kopiér tag": {
+  "en": "Copy tag",
+  "de": "Tag kopieren",
+  "fr": "Copier le tag",
+  "it": "Copia tag",
+  "sv": "Kopiera tagg",
+  "es": "Copiar etiqueta"
+ },
+ "Kopiér tag fra den markerede fil": {
+  "en": "Copy the tag of the selected file",
+  "de": "Tag der markierten Datei kopieren",
+  "fr": "Copier le tag du fichier sélectionné",
+  "it": "Copia il tag del file selezionato",
+  "sv": "Kopiera taggen från den markerade filen",
+  "es": "Copiar la etiqueta del archivo seleccionado"
+ },
+ "Indsæt tag": {
+  "en": "Paste tag",
+  "de": "Tag einfügen",
+  "fr": "Coller le tag",
+  "it": "Incolla tag",
+  "sv": "Klistra in tagg",
+  "es": "Pegar etiqueta"
+ },
+ "Indsæt det kopierede tag (undtagen titel og spor) i de afkrydsede/markerede filer": {
+  "en": "Paste the copied tag (except title and track) into the checked/selected files",
+  "de": "Kopiertes Tag (außer Titel und Track) in die abgehakten/markierten Dateien einfügen",
+  "fr": "Coller le tag copié (sauf titre et piste) dans les fichiers cochés/sélectionnés",
+  "it": "Incolla il tag copiato (tranne titolo e traccia) nei file spuntati/selezionati",
+  "sv": "Klistra in den kopierade taggen (utom titel och spår) i de förbockade/markerade filerna",
+  "es": "Pegar la etiqueta copiada (salvo título y pista) en los archivos marcados/seleccionados"
+ },
+ "Flyt fil op": {
+  "en": "Move file up",
+  "de": "Datei nach oben",
+  "fr": "Monter le fichier",
+  "it": "Sposta file su",
+  "sv": "Flytta fil upp",
+  "es": "Subir archivo"
+ },
+ "Flyt de markerede filer et trin op (manuel rækkefølge)": {
+  "en": "Move the selected files one step up (manual order)",
+  "de": "Markierte Dateien eine Position nach oben (manuelle Reihenfolge)",
+  "fr": "Monter les fichiers sélectionnés d'un cran (ordre manuel)",
+  "it": "Sposta i file selezionati di una posizione in su (ordine manuale)",
+  "sv": "Flytta de markerade filerna ett steg upp (manuell ordning)",
+  "es": "Subir un puesto los archivos seleccionados (orden manual)"
+ },
+ "Flyt fil ned": {
+  "en": "Move file down",
+  "de": "Datei nach unten",
+  "fr": "Descendre le fichier",
+  "it": "Sposta file giù",
+  "sv": "Flytta fil ned",
+  "es": "Bajar archivo"
+ },
+ "Flyt de markerede filer et trin ned (manuel rækkefølge)": {
+  "en": "Move the selected files one step down (manual order)",
+  "de": "Markierte Dateien eine Position nach unten (manuelle Reihenfolge)",
+  "fr": "Descendre les fichiers sélectionnés d'un cran (ordre manuel)",
+  "it": "Sposta i file selezionati di una posizione in giù (ordine manuale)",
+  "sv": "Flytta de markerade filerna ett steg ned (manuell ordning)",
+  "es": "Bajar un puesto los archivos seleccionados (orden manual)"
+ },
+ "Eksportér/importér tags...": {
+  "en": "Export/import tags...",
+  "de": "Tags exportieren/importieren...",
+  "fr": "Exporter/importer les tags...",
+  "it": "Esporta/importa tag...",
+  "sv": "Exportera/importera taggar...",
+  "es": "Exportar/importar etiquetas..."
+ },
+ "Eksportér til CSV/TXT/HTML/XML eller importér fra CSV/XLSX": {
+  "en": "Export to CSV/TXT/HTML/XML or import from CSV/XLSX",
+  "de": "Nach CSV/TXT/HTML/XML exportieren oder aus CSV/XLSX importieren",
+  "fr": "Exporter en CSV/TXT/HTML/XML ou importer depuis CSV/XLSX",
+  "it": "Esporta in CSV/TXT/HTML/XML o importa da CSV/XLSX",
+  "sv": "Exportera till CSV/TXT/HTML/XML eller importera från CSV/XLSX",
+  "es": "Exportar a CSV/TXT/HTML/XML o importar desde CSV/XLSX"
+ },
+ "Find / filtrér...": {
+  "en": "Find / filter...",
+  "de": "Suchen / filtern...",
+  "fr": "Rechercher / filtrer...",
+  "it": "Trova / filtra...",
+  "sv": "Sök / filtrera...",
+  "es": "Buscar / filtrar..."
+ },
+ "Filtrér fillisten": {
+  "en": "Filter the file list",
+  "de": "Dateiliste filtern",
+  "fr": "Filtrer la liste des fichiers",
+  "it": "Filtra l'elenco file",
+  "sv": "Filtrera fillistan",
+  "es": "Filtrar la lista de archivos"
+ },
+ "Værktøjspanel": {
+  "en": "Tools panel",
+  "de": "Werkzeugleiste",
+  "fr": "Panneau d'outils",
+  "it": "Pannello strumenti",
+  "sv": "Verktygspanel",
+  "es": "Panel de herramientas"
+ },
+ "Vis/skjul værktøjspanelet (F8)": {
+  "en": "Show/hide the tools panel (F8)",
+  "de": "Werkzeugleiste ein-/ausblenden (F8)",
+  "fr": "Afficher/masquer le panneau d'outils (F8)",
+  "it": "Mostra/nascondi il pannello strumenti (F8)",
+  "sv": "Visa/dölj verktygspanelen (F8)",
+  "es": "Mostrar/ocultar el panel de herramientas (F8)"
+ },
+ "Mappepanel": {
+  "en": "Folder panel",
+  "de": "Ordnerbereich",
+  "fr": "Panneau des dossiers",
+  "it": "Pannello cartelle",
+  "sv": "Mappanel",
+  "es": "Panel de carpetas"
+ },
+ "Adresselinje": {
+  "en": "Address bar",
+  "de": "Adressleiste",
+  "fr": "Barre d'adresse",
+  "it": "Barra degli indirizzi",
+  "sv": "Adressfält",
+  "es": "Barra de direcciones"
+ },
+ "Filterlinje": {
+  "en": "Filter bar",
+  "de": "Filterleiste",
+  "fr": "Barre de filtre",
+  "it": "Barra dei filtri",
+  "sv": "Filterfält",
+  "es": "Barra de filtro"
+ },
+ "Søg i undermapper": {
+  "en": "Search subfolders",
+  "de": "Unterordner durchsuchen",
+  "fr": "Inclure les sous-dossiers",
+  "it": "Cerca nelle sottocartelle",
+  "sv": "Sök i undermappar",
+  "es": "Buscar en subcarpetas"
+ },
+ "Medtag filer i undermapper": {
+  "en": "Include files in subfolders",
+  "de": "Dateien in Unterordnern einbeziehen",
+  "fr": "Inclure les fichiers des sous-dossiers",
+  "it": "Includi i file nelle sottocartelle",
+  "sv": "Ta med filer i undermappar",
+  "es": "Incluir archivos de las subcarpetas"
+ },
+ "Gem afkrydsede/markerede filer som playliste...": {
+  "en": "Save checked/selected files as playlist...",
+  "de": "Abgehakte/markierte Dateien als Wiedergabeliste speichern...",
+  "fr": "Enregistrer les fichiers cochés/sélectionnés comme liste de lecture...",
+  "it": "Salva i file spuntati/selezionati come playlist...",
+  "sv": "Spara förbockade/markerade filer som spellista...",
+  "es": "Guardar los archivos marcados/seleccionados como lista de reproducción..."
+ },
+ "Gem alle filer som playliste...": {
+  "en": "Save all files as playlist...",
+  "de": "Alle Dateien als Wiedergabeliste speichern...",
+  "fr": "Enregistrer tous les fichiers comme liste de lecture...",
+  "it": "Salva tutti i file come playlist...",
+  "sv": "Spara alla filer som spellista...",
+  "es": "Guardar todos los archivos como lista de reproducción..."
+ },
+ "Omdøb filer": {
+  "en": "Rename files",
+  "de": "Dateien umbenennen",
+  "fr": "Renommer les fichiers",
+  "it": "Rinomina file",
+  "sv": "Byt namn på filer",
+  "es": "Renombrar archivos"
+ },
+ "Vis fanebladet Omdøb filer": {
+  "en": "Show the Rename files tab",
+  "de": "Registerkarte Dateien umbenennen anzeigen",
+  "fr": "Afficher l'onglet Renommer les fichiers",
+  "it": "Mostra la scheda Rinomina file",
+  "sv": "Visa fliken Byt namn på filer",
+  "es": "Mostrar la pestaña Renombrar archivos"
+ },
+ "Vis fanebladet Multi-fil-tag-editor": {
+  "en": "Show the Multi-file tag editor tab",
+  "de": "Registerkarte Mehrfach-Tag-Editor anzeigen",
+  "fr": "Afficher l'onglet Éditeur de tags multi-fichiers",
+  "it": "Mostra la scheda Editor tag multi-file",
+  "sv": "Visa fliken Taggredigerare för flera filer",
+  "es": "Mostrar la pestaña Editor de etiquetas múltiple"
+ },
+ "Tags fra filnavn": {
+  "en": "Tags from file name",
+  "de": "Tags aus Dateiname",
+  "fr": "Tags depuis le nom de fichier",
+  "it": "Tag dal nome file",
+  "sv": "Taggar från filnamn",
+  "es": "Etiquetas desde el nombre"
+ },
+ "Vis fanebladet Tags fra filnavn": {
+  "en": "Show the Tags from file name tab",
+  "de": "Registerkarte Tags aus Dateiname anzeigen",
+  "fr": "Afficher l'onglet Tags depuis le nom de fichier",
+  "it": "Mostra la scheda Tag dal nome file",
+  "sv": "Visa fliken Taggar från filnamn",
+  "es": "Mostrar la pestaña Etiquetas desde el nombre"
+ },
+ "Omdøb filer med forhåndsvisning...": {
+  "en": "Rename files with preview...",
+  "de": "Dateien mit Vorschau umbenennen...",
+  "fr": "Renommer les fichiers avec aperçu...",
+  "it": "Rinomina file con anteprima...",
+  "sv": "Byt namn på filer med förhandsvisning...",
+  "es": "Renombrar archivos con vista previa..."
+ },
+ "Tags fra filnavn med forhåndsvisning...": {
+  "en": "Tags from file name with preview...",
+  "de": "Tags aus Dateiname mit Vorschau...",
+  "fr": "Tags depuis le nom de fichier avec aperçu...",
+  "it": "Tag dal nome file con anteprima...",
+  "sv": "Taggar från filnamn med förhandsvisning...",
+  "es": "Etiquetas desde el nombre con vista previa..."
+ },
+ "Formatér eller nummerér spornumre": {
+  "en": "Format or number tracks",
+  "de": "Tracknummern formatieren oder nummerieren",
+  "fr": "Formater ou numéroter les pistes",
+  "it": "Formatta o numera le tracce",
+  "sv": "Formatera eller numrera spår",
+  "es": "Formatear o numerar pistas"
+ },
+ "Web-opslag (MusicBrainz/Discogs)...": {
+  "en": "Web lookup (MusicBrainz/Discogs)...",
+  "de": "Web-Suche (MusicBrainz/Discogs)...",
+  "fr": "Recherche web (MusicBrainz/Discogs)...",
+  "it": "Ricerca web (MusicBrainz/Discogs)...",
+  "sv": "Webbsökning (MusicBrainz/Discogs)...",
+  "es": "Búsqueda web (MusicBrainz/Discogs)..."
+ },
+ "Hent titler, spornumre og cover fra MusicBrainz eller Discogs": {
+  "en": "Get titles, track numbers and cover from MusicBrainz or Discogs",
+  "de": "Titel, Tracknummern und Cover von MusicBrainz oder Discogs holen",
+  "fr": "Récupérer titres, numéros de piste et pochette depuis MusicBrainz ou Discogs",
+  "it": "Recupera titoli, numeri di traccia e copertina da MusicBrainz o Discogs",
+  "sv": "Hämta titlar, spårnummer och omslag från MusicBrainz eller Discogs",
+  "es": "Obtener títulos, números de pista y portada de MusicBrainz o Discogs"
+ },
+ "Fortryd omdøbning": {
+  "en": "Undo rename",
+  "de": "Umbenennen rückgängig",
+  "fr": "Annuler le renommage",
+  "it": "Annulla rinomina",
+  "sv": "Ångra namnbyte",
+  "es": "Deshacer cambio de nombre"
+ },
+ "Giv de senest omdøbte filer/mapper deres gamle navne igen": {
+  "en": "Give the most recently renamed files/folders their old names back",
+  "de": "Den zuletzt umbenannten Dateien/Ordnern ihre alten Namen zurückgeben",
+  "fr": "Redonner leurs anciens noms aux derniers fichiers/dossiers renommés",
+  "it": "Ripristina i vecchi nomi degli ultimi file/cartelle rinominati",
+  "sv": "Ge de senast omdöpta filerna/mapparna deras gamla namn igen",
+  "es": "Devolver sus nombres anteriores a los últimos archivos/carpetas renombrados"
+ },
+ "Bevar filernes dato ved gem": {
+  "en": "Keep file dates when saving",
+  "de": "Dateidatum beim Speichern beibehalten",
+  "fr": "Conserver la date des fichiers à l'enregistrement",
+  "it": "Mantieni la data dei file al salvataggio",
+  "sv": "Behåll filernas datum vid sparande",
+  "es": "Conservar la fecha de los archivos al guardar"
+ },
+ "Tastaturgenveje": {
+  "en": "Keyboard shortcuts",
+  "de": "Tastenkürzel",
+  "fr": "Raccourcis clavier",
+  "it": "Scorciatoie da tastiera",
+  "sv": "Kortkommandon",
+  "es": "Atajos de teclado"
+ },
+ "Om TagKlon...": {
+  "en": "About TagKlon...",
+  "de": "Über TagKlon...",
+  "fr": "À propos de TagKlon...",
+  "it": "Informazioni su TagKlon...",
+  "sv": "Om TagKlon...",
+  "es": "Acerca de TagKlon..."
+ },
+ "Gå en mappe op": {
+  "en": "Go up one folder",
+  "de": "Einen Ordner nach oben",
+  "fr": "Remonter d'un dossier",
+  "it": "Sali di una cartella",
+  "sv": "Gå upp en mapp",
+  "es": "Subir una carpeta"
+ },
+ "Favoritter": {
+  "en": "Favorites",
+  "de": "Favoriten",
+  "fr": "Favoris",
+  "it": "Preferiti",
+  "sv": "Favoriter",
+  "es": "Favoritos"
+ },
+ "Favoritmapper": {
+  "en": "Favorite folders",
+  "de": "Lieblingsordner",
+  "fr": "Dossiers favoris",
+  "it": "Cartelle preferite",
+  "sv": "Favoritmappar",
+  "es": "Carpetas favoritas"
+ },
+ "Ny mappe...": {
+  "en": "New folder...",
+  "de": "Neuer Ordner...",
+  "fr": "Nouveau dossier...",
+  "it": "Nuova cartella...",
+  "sv": "Ny mapp...",
+  "es": "Nueva carpeta..."
+ },
+ "Opret en undermappe i den åbne mappe": {
+  "en": "Create a subfolder in the open folder",
+  "de": "Unterordner im geöffneten Ordner erstellen",
+  "fr": "Créer un sous-dossier dans le dossier ouvert",
+  "it": "Crea una sottocartella nella cartella aperta",
+  "sv": "Skapa en undermapp i den öppna mappen",
+  "es": "Crear una subcarpeta en la carpeta abierta"
+ },
+ "Opdater mappetræet": {
+  "en": "Refresh folder tree",
+  "de": "Ordnerbaum aktualisieren",
+  "fr": "Actualiser l'arborescence",
+  "it": "Aggiorna l'albero delle cartelle",
+  "sv": "Uppdatera mappträdet",
+  "es": "Actualizar el árbol de carpetas"
+ },
+ "Skjul mappepanelet": {
+  "en": "Hide the folder panel",
+  "de": "Ordnerbereich ausblenden",
+  "fr": "Masquer le panneau des dossiers",
+  "it": "Nascondi il pannello cartelle",
+  "sv": "Dölj mappanelen",
+  "es": "Ocultar el panel de carpetas"
+ },
+ "&Filer": {
+  "en": "&File",
+  "de": "&Datei",
+  "fr": "&Fichier",
+  "it": "&File",
+  "sv": "&Arkiv",
+  "es": "&Archivo"
+ },
+ "&Rediger": {
+  "en": "&Edit",
+  "de": "&Bearbeiten",
+  "fr": "É&dition",
+  "it": "&Modifica",
+  "sv": "&Redigera",
+  "es": "&Edición"
+ },
+ "&Vis": {
+  "en": "&View",
+  "de": "&Ansicht",
+  "fr": "&Affichage",
+  "it": "&Visualizza",
+  "sv": "&Visa",
+  "es": "&Ver"
+ },
+ "&Playliste": {
+  "en": "&Playlist",
+  "de": "&Wiedergabeliste",
+  "fr": "&Liste de lecture",
+  "it": "&Playlist",
+  "sv": "S&pellista",
+  "es": "&Lista"
+ },
+ "Vær&ktøjer": {
+  "en": "&Tools",
+  "de": "&Werkzeuge",
+  "fr": "&Outils",
+  "it": "&Strumenti",
+  "sv": "Ver&ktyg",
+  "es": "&Herramientas"
+ },
+ "&Indstillinger": {
+  "en": "&Settings",
+  "de": "E&instellungen",
+  "fr": "&Paramètres",
+  "it": "&Impostazioni",
+  "sv": "&Inställningar",
+  "es": "&Configuración"
+ },
+ "&Hjælp": {
+  "en": "&Help",
+  "de": "&Hilfe",
+  "fr": "&Aide",
+  "it": "&Guida",
+  "sv": "&Hjälp",
+  "es": "A&yuda"
+ },
+ "Fejl: ": {
+  "en": "Error: ",
+  "de": "Fehler: ",
+  "fr": "Erreur : ",
+  "it": "Errore: ",
+  "sv": "Fel: ",
+  "es": "Error: "
+ },
+ "(ikke understøttet endnu)": {
+  "en": "(not supported yet)",
+  "de": "(noch nicht unterstützt)",
+  "fr": "(pas encore pris en charge)",
+  "it": "(non ancora supportato)",
+  "sv": "(stöds inte ännu)",
+  "es": "(aún no compatible)"
+ },
+ "Manuel rækkefølge - klik på en kolonneoverskrift for at sortere igen": {
+  "en": "Manual order - click a column heading to sort again",
+  "de": "Manuelle Reihenfolge - auf eine Spaltenüberschrift klicken, um wieder zu sortieren",
+  "fr": "Ordre manuel - cliquez sur un en-tête de colonne pour trier à nouveau",
+  "it": "Ordine manuale - fai clic su un'intestazione di colonna per riordinare",
+  "sv": "Manuell ordning - klicka på en kolumnrubrik för att sortera igen",
+  "es": "Orden manual - haz clic en un encabezado de columna para volver a ordenar"
+ },
+ "Vent venligst, til alle tags er læst.": {
+  "en": "Please wait until all tags have been read.",
+  "de": "Bitte warten, bis alle Tags gelesen sind.",
+  "fr": "Veuillez patienter jusqu'à ce que tous les tags soient lus.",
+  "it": "Attendi che tutti i tag siano stati letti.",
+  "sv": "Vänta tills alla taggar har lästs.",
+  "es": "Espera a que se hayan leído todas las etiquetas."
+ },
+ "Afkrydsede filer (%d)": {
+  "en": "Checked files (%d)",
+  "de": "Abgehakte Dateien (%d)",
+  "fr": "Fichiers cochés (%d)",
+  "it": "File spuntati (%d)",
+  "sv": "Förbockade filer (%d)",
+  "es": "Archivos marcados (%d)"
+ },
+ "Markerede filer (%d)": {
+  "en": "Selected files (%d)",
+  "de": "Markierte Dateien (%d)",
+  "fr": "Fichiers sélectionnés (%d)",
+  "it": "File selezionati (%d)",
+  "sv": "Markerade filer (%d)",
+  "es": "Archivos seleccionados (%d)"
+ },
+ "Afkryds (☑) eller markér de filer, det skal gælde.": {
+  "en": "Check (☑) or select the files it should apply to.",
+  "de": "Hake (☑) die betroffenen Dateien ab oder markiere sie.",
+  "fr": "Cochez (☑) ou sélectionnez les fichiers concernés.",
+  "it": "Spunta (☑) o seleziona i file a cui applicarlo.",
+  "sv": "Bocka för (☑) eller markera filerna det ska gälla.",
+  "es": "Marca (☑) o selecciona los archivos a los que debe aplicarse."
+ },
+ "Mappen findes ikke:": {
+  "en": "The folder does not exist:",
+  "de": "Der Ordner existiert nicht:",
+  "fr": "Le dossier n'existe pas :",
+  "it": "La cartella non esiste:",
+  "sv": "Mappen finns inte:",
+  "es": "La carpeta no existe:"
+ },
+ "Læser tags: %d af %d filer...": {
+  "en": "Reading tags: %d of %d files...",
+  "de": "Lese Tags: %d von %d Dateien...",
+  "fr": "Lecture des tags : %d sur %d fichiers...",
+  "it": "Lettura tag: %d di %d file...",
+  "sv": "Läser taggar: %d av %d filer...",
+  "es": "Leyendo etiquetas: %d de %d archivos..."
+ },
+ "Søger efter filer...": {
+  "en": "Searching for files...",
+  "de": "Suche nach Dateien...",
+  "fr": "Recherche des fichiers...",
+  "it": "Ricerca dei file...",
+  "sv": "Söker efter filer...",
+  "es": "Buscando archivos..."
+ },
+ "Læser tags": {
+  "en": "Reading tags",
+  "de": "Lese Tags",
+  "fr": "Lecture des tags",
+  "it": "Lettura tag",
+  "sv": "Läser taggar",
+  "es": "Leyendo etiquetas"
+ },
+ "Søger efter": {
+  "en": "Searching",
+  "de": "Suche",
+  "fr": "Recherche",
+  "it": "Ricerca",
+  "sv": "Söker",
+  "es": "Buscando"
+ },
+ "Filer: %d (+%d skjult)": {
+  "en": "Files: %d (+%d hidden)",
+  "de": "Dateien: %d (+%d ausgeblendet)",
+  "fr": "Fichiers : %d (+%d masqués)",
+  "it": "File: %d (+%d nascosti)",
+  "sv": "Filer: %d (+%d dolda)",
+  "es": "Archivos: %d (+%d ocultos)"
+ },
+ "Filer i alt: %d": {
+  "en": "Total files: %d",
+  "de": "Dateien gesamt: %d",
+  "fr": "Fichiers au total : %d",
+  "it": "File totali: %d",
+  "sv": "Filer totalt: %d",
+  "es": "Archivos en total: %d"
+ },
+ "Markerede: %d": {
+  "en": "Selected: %d",
+  "de": "Markiert: %d",
+  "fr": "Sélectionnés : %d",
+  "it": "Selezionati: %d",
+  "sv": "Markerade: %d",
+  "es": "Seleccionados: %d"
+ },
+ "Samlet tid: ": {
+  "en": "Total time: ",
+  "de": "Gesamtzeit: ",
+  "fr": "Durée totale : ",
+  "it": "Durata totale: ",
+  "sv": "Total tid: ",
+  "es": "Tiempo total: "
+ },
+ "Markeret tid: ": {
+  "en": "Selected time: ",
+  "de": "Markierte Zeit: ",
+  "fr": "Durée sélectionnée : ",
+  "it": "Durata selezionata: ",
+  "sv": "Markerad tid: ",
+  "es": "Tiempo seleccionado: "
+ },
+ "Afkrydset: %d": {
+  "en": "Checked: %d",
+  "de": "Abgehakt: %d",
+  "fr": "Cochés : %d",
+  "it": "Spuntati: %d",
+  "sv": "Förbockade: %d",
+  "es": "Marcados: %d"
+ },
+ "Fortryd omdøbning af %d %s": {
+  "en": "Undo rename of %d %s",
+  "de": "Umbenennen von %d %s rückgängig",
+  "fr": "Annuler le renommage de %d %s",
+  "it": "Annulla rinomina di %d %s",
+  "sv": "Ångra namnbyte av %d %s",
+  "es": "Deshacer el cambio de nombre de %d %s"
+ },
+ "Giv %d filer/mapper deres tidligere navn igen?": {
+  "en": "Give %d files/folders their previous names back?",
+  "de": "%d Dateien/Ordnern ihre vorherigen Namen zurückgeben?",
+  "fr": "Redonner leurs noms précédents à %d fichiers/dossiers ?",
+  "it": "Ripristinare i nomi precedenti di %d file/cartelle?",
+  "sv": "Ge %d filer/mappar deras tidigare namn igen?",
+  "es": "¿Devolver sus nombres anteriores a %d archivos/carpetas?"
+ },
+ "%d filer/mapper fik deres gamle navn igen": {
+  "en": "%d files/folders got their old names back",
+  "de": "%d Dateien/Ordner haben ihre alten Namen zurück",
+  "fr": "%d fichiers/dossiers ont retrouvé leur ancien nom",
+  "it": "%d file/cartelle hanno ripreso il vecchio nome",
+  "sv": "%d filer/mappar fick sina gamla namn igen",
+  "es": "%d archivos/carpetas recuperaron su nombre anterior"
+ },
+ "%d filer/mapper fik deres gamle navn igen. Problemer:": {
+  "en": "%d files/folders got their old names back. Problems:",
+  "de": "%d Dateien/Ordner haben ihre alten Namen zurück. Probleme:",
+  "fr": "%d fichiers/dossiers ont retrouvé leur ancien nom. Problèmes :",
+  "it": "%d file/cartelle hanno ripreso il vecchio nome. Problemi:",
+  "sv": "%d filer/mappar fick sina gamla namn igen. Problem:",
+  "es": "%d archivos/carpetas recuperaron su nombre anterior. Problemas:"
+ },
+ "Mangler: ": {
+  "en": "Missing: ",
+  "de": "Fehlt: ",
+  "fr": "Manquant : ",
+  "it": "Mancante: ",
+  "sv": "Saknas: ",
+  "es": "Falta: "
+ },
+ "(ugyldig maske)": {
+  "en": "(invalid mask)",
+  "de": "(ungültige Maske)",
+  "fr": "(masque non valide)",
+  "it": "(maschera non valida)",
+  "sv": "(ogiltig mask)",
+  "es": "(máscara no válida)"
+ },
+ "(filnavnet passer ikke til masken)": {
+  "en": "(the file name does not match the mask)",
+  "de": "(Dateiname passt nicht zur Maske)",
+  "fr": "(le nom de fichier ne correspond pas au masque)",
+  "it": "(il nome file non corrisponde alla maschera)",
+  "sv": "(filnamnet matchar inte masken)",
+  "es": "(el nombre de archivo no coincide con la máscara)"
+ },
+ "Eksempel": {
+  "en": "Example",
+  "de": "Beispiel",
+  "fr": "Exemple",
+  "it": "Esempio",
+  "sv": "Exempel",
+  "es": "Ejemplo"
+ },
+ "Alle filer har allerede det navn, masken giver.": {
+  "en": "All files already have the name the mask gives.",
+  "de": "Alle Dateien haben bereits den Namen, den die Maske ergibt.",
+  "fr": "Tous les fichiers portent déjà le nom donné par le masque.",
+  "it": "Tutti i file hanno già il nome prodotto dalla maschera.",
+  "sv": "Alla filer har redan det namn som masken ger.",
+  "es": "Todos los archivos ya tienen el nombre que da la máscara."
+ },
+ "Intet at omdøbe": {
+  "en": "Nothing to rename",
+  "de": "Nichts umzubenennen",
+  "fr": "Rien à renommer",
+  "it": "Niente da rinominare",
+  "sv": "Inget att byta namn på",
+  "es": "Nada que renombrar"
+ },
+ "Omdøb %d filer?%s": {
+  "en": "Rename %d files?%s",
+  "de": "%d Dateien umbenennen?%s",
+  "fr": "Renommer %d fichiers ?%s",
+  "it": "Rinominare %d file?%s",
+  "sv": "Byta namn på %d filer?%s",
+  "es": "¿Renombrar %d archivos?%s"
+ },
+ " (%d springes over - brug \"Forhåndsvis...\" for at se hvorfor)": {
+  "en": " (%d are skipped - use \"Preview...\" to see why)",
+  "de": " (%d werden übersprungen - \"Vorschau...\" zeigt warum)",
+  "fr": " (%d sont ignorés - utilisez « Aperçu... » pour savoir pourquoi)",
+  "it": " (%d vengono saltati - usa \"Anteprima...\" per vedere perché)",
+  "sv": " (%d hoppas över - använd \"Förhandsvisa...\" för att se varför)",
+  "es": " (se omiten %d - usa \"Vista previa...\" para ver por qué)"
+ },
+ "%d filer omdøbt, %d fejl": {
+  "en": "%d files renamed, %d errors",
+  "de": "%d Dateien umbenannt, %d Fehler",
+  "fr": "%d fichiers renommés, %d erreurs",
+  "it": "%d file rinominati, %d errori",
+  "sv": "%d filer omdöpta, %d fel",
+  "es": "%d archivos renombrados, %d errores"
+ },
+ "Nogle filer blev ikke omdøbt": {
+  "en": "Some files were not renamed",
+  "de": "Einige Dateien wurden nicht umbenannt",
+  "fr": "Certains fichiers n'ont pas été renommés",
+  "it": "Alcuni file non sono stati rinominati",
+  "sv": "Vissa filer fick inte nytt namn",
+  "es": "Algunos archivos no se renombraron"
+ },
+ "%s: %d af %d...": {
+  "en": "%s: %d of %d...",
+  "de": "%s: %d von %d...",
+  "fr": "%s : %d sur %d...",
+  "it": "%s: %d di %d...",
+  "sv": "%s: %d av %d...",
+  "es": "%s: %d de %d..."
+ },
+ "%s: gemt i %d filer, %d fejl%s": {
+  "en": "%s: saved in %d files, %d errors%s",
+  "de": "%s: in %d Dateien gespeichert, %d Fehler%s",
+  "fr": "%s : enregistré dans %d fichiers, %d erreurs%s",
+  "it": "%s: salvato in %d file, %d errori%s",
+  "sv": "%s: sparat i %d filer, %d fel%s",
+  "es": "%s: guardado en %d archivos, %d errores%s"
+ },
+ ", %d sprunget over (filtype)": {
+  "en": ", %d skipped (file type)",
+  "de": ", %d übersprungen (Dateityp)",
+  "fr": ", %d ignorés (type de fichier)",
+  "it": ", %d saltati (tipo di file)",
+  "sv": ", %d överhoppade (filtyp)",
+  "es": ", %d omitidos (tipo de archivo)"
+ },
+ "Nogle filer blev ikke gemt": {
+  "en": "Some files were not saved",
+  "de": "Einige Dateien wurden nicht gespeichert",
+  "fr": "Certains fichiers n'ont pas été enregistrés",
+  "it": "Alcuni file non sono stati salvati",
+  "sv": "Vissa filer sparades inte",
+  "es": "Algunos archivos no se guardaron"
+ },
+ "Sæt flueben ved de felter, der skal gemmes.": {
+  "en": "Tick the fields that should be saved.",
+  "de": "Setze Häkchen bei den Feldern, die gespeichert werden sollen.",
+  "fr": "Cochez les champs à enregistrer.",
+  "it": "Spunta i campi da salvare.",
+  "sv": "Bocka för de fält som ska sparas.",
+  "es": "Marca los campos que se deben guardar."
+ },
+ "Gem tags": {
+  "en": "Save tags",
+  "de": "Tags speichern",
+  "fr": "Enregistrer les tags",
+  "it": "Salva tag",
+  "sv": "Spara taggar",
+  "es": "Guardar etiquetas"
+ },
+ "Gem i %d filer?": {
+  "en": "Save in %d files?",
+  "de": "In %d Dateien speichern?",
+  "fr": "Enregistrer dans %d fichiers ?",
+  "it": "Salvare in %d file?",
+  "sv": "Spara i %d filer?",
+  "es": "¿Guardar en %d archivos?"
+ },
+ "Disse felter bliver ryddet: ": {
+  "en": "These fields will be cleared: ",
+  "de": "Diese Felder werden geleert: ",
+  "fr": "Ces champs seront effacés : ",
+  "it": "Questi campi verranno svuotati: ",
+  "sv": "Dessa fält töms: ",
+  "es": "Estos campos se borrarán: "
+ },
+ "Intet at skrive": {
+  "en": "Nothing to write",
+  "de": "Nichts zu schreiben",
+  "fr": "Rien à écrire",
+  "it": "Niente da scrivere",
+  "sv": "Inget att skriva",
+  "es": "Nada que escribir"
+ },
+ "Ingen filer ændres (%d passer ikke til masken). Brug \"Forhåndsvis...\" for at se detaljer.": {
+  "en": "No files are changed (%d do not match the mask). Use \"Preview...\" to see details.",
+  "de": "Keine Dateien werden geändert (%d passen nicht zur Maske). \"Vorschau...\" zeigt Details.",
+  "fr": "Aucun fichier n'est modifié (%d ne correspondent pas au masque). Utilisez « Aperçu... » pour voir les détails.",
+  "it": "Nessun file viene modificato (%d non corrispondono alla maschera). Usa \"Anteprima...\" per i dettagli.",
+  "sv": "Inga filer ändras (%d matchar inte masken). Använd \"Förhandsvisa...\" för att se detaljer.",
+  "es": "No se cambia ningún archivo (%d no coinciden con la máscara). Usa \"Vista previa...\" para ver los detalles."
+ },
+ "Skriv tags fra filnavnet i %d filer?%s": {
+  "en": "Write tags from the file name to %d files?%s",
+  "de": "Tags aus dem Dateinamen in %d Dateien schreiben?%s",
+  "fr": "Écrire les tags du nom de fichier dans %d fichiers ?%s",
+  "it": "Scrivere i tag dal nome file in %d file?%s",
+  "sv": "Skriva taggar från filnamnet till %d filer?%s",
+  "es": "¿Escribir etiquetas desde el nombre en %d archivos?%s"
+ },
+ " (%d passer ikke til masken og springes over)": {
+  "en": " (%d do not match the mask and are skipped)",
+  "de": " (%d passen nicht zur Maske und werden übersprungen)",
+  "fr": " (%d ne correspondent pas au masque et sont ignorés)",
+  "it": " (%d non corrispondono alla maschera e vengono saltati)",
+  "sv": " (%d matchar inte masken och hoppas över)",
+  "es": " (%d no coinciden con la máscara y se omiten)"
+ },
+ "Intet billede. Træk et billede hertil.": {
+  "en": "No picture. Drag a picture here.",
+  "de": "Kein Bild. Bild hierher ziehen.",
+  "fr": "Aucune image. Faites glisser une image ici.",
+  "it": "Nessuna immagine. Trascina qui un'immagine.",
+  "sv": "Ingen bild. Dra en bild hit.",
+  "es": "Sin imagen. Arrastra una imagen aquí."
+ },
+ "%s  %dx%d": {
+  "en": "%s  %dx%d",
+  "de": "%s  %dx%d",
+  "fr": "%s  %dx%d",
+  "it": "%s  %dx%d",
+  "sv": "%s  %dx%d",
+  "es": "%s  %dx%d"
+ },
+ "Intet cover. Træk et billede hertil.": {
+  "en": "No cover. Drag a picture here.",
+  "de": "Kein Cover. Bild hierher ziehen.",
+  "fr": "Aucune pochette. Faites glisser une image ici.",
+  "it": "Nessuna copertina. Trascina qui un'immagine.",
+  "sv": "Inget omslag. Dra en bild hit.",
+  "es": "Sin portada. Arrastra una imagen aquí."
+ },
+ "Kun JPEG- og PNG-billeder kan bruges som cover.": {
+  "en": "Only JPEG and PNG pictures can be used as cover.",
+  "de": "Nur JPEG- und PNG-Bilder können als Cover verwendet werden.",
+  "fr": "Seules les images JPEG et PNG peuvent servir de pochette.",
+  "it": "Solo le immagini JPEG e PNG possono essere usate come copertina.",
+  "sv": "Endast JPEG- och PNG-bilder kan användas som omslag.",
+  "es": "Solo las imágenes JPEG y PNG pueden usarse como portada."
+ },
+ "Mappens cover": {
+  "en": "Folder cover",
+  "de": "Ordner-Cover",
+  "fr": "Pochette du dossier",
+  "it": "Copertina della cartella",
+  "sv": "Mappens omslag",
+  "es": "Portada de la carpeta"
+ },
+ "%s findes allerede. Erstat det?": {
+  "en": "%s already exists. Replace it?",
+  "de": "%s existiert bereits. Ersetzen?",
+  "fr": "%s existe déjà. Le remplacer ?",
+  "it": "%s esiste già. Sostituirlo?",
+  "sv": "%s finns redan. Ersätta den?",
+  "es": "%s ya existe. ¿Reemplazarlo?"
+ },
+ "Billedet kunne ikke gemmes:": {
+  "en": "The picture could not be saved:",
+  "de": "Das Bild konnte nicht gespeichert werden:",
+  "fr": "L'image n'a pas pu être enregistrée :",
+  "it": "Impossibile salvare l'immagine:",
+  "sv": "Bilden kunde inte sparas:",
+  "es": "No se pudo guardar la imagen:"
+ },
+ "Mappens cover gemt som ": {
+  "en": "Folder cover saved as ",
+  "de": "Ordner-Cover gespeichert als ",
+  "fr": "Pochette du dossier enregistrée sous ",
+  "it": "Copertina della cartella salvata come ",
+  "sv": "Mappens omslag sparat som ",
+  "es": "Portada de la carpeta guardada como "
+ },
+ "Filens cover": {
+  "en": "File cover",
+  "de": "Datei-Cover",
+  "fr": "Pochette du fichier",
+  "it": "Copertina del file",
+  "sv": "Filens omslag",
+  "es": "Portada del archivo"
+ },
+ "Sæt billedet som forside-cover i %d filer?": {
+  "en": "Set the picture as front cover in %d files?",
+  "de": "Bild als Vorderseiten-Cover in %d Dateien setzen?",
+  "fr": "Définir l'image comme pochette recto dans %d fichiers ?",
+  "it": "Impostare l'immagine come copertina frontale in %d file?",
+  "sv": "Använda bilden som framsidesomslag i %d filer?",
+  "es": "¿Usar la imagen como portada en %d archivos?"
+ },
+ "Vælg mappe": {
+  "en": "Select folder",
+  "de": "Ordner wählen",
+  "fr": "Choisir un dossier",
+  "it": "Scegli cartella",
+  "sv": "Välj mapp",
+  "es": "Elegir carpeta"
+ },
+ "Afkryds (☑) eller markér filerne fra ét album, og prøv igen.": {
+  "en": "Check (☑) or select the files of one album and try again.",
+  "de": "Hake (☑) die Dateien eines Albums ab oder markiere sie und versuche es erneut.",
+  "fr": "Cochez (☑) ou sélectionnez les fichiers d'un album, puis réessayez.",
+  "it": "Spunta (☑) o seleziona i file di un album e riprova.",
+  "sv": "Bocka för (☑) eller markera filerna från ett album och försök igen.",
+  "es": "Marca (☑) o selecciona los archivos de un álbum y vuelve a intentarlo."
+ },
+ "Tag kopieret fra ": {
+  "en": "Tag copied from ",
+  "de": "Tag kopiert von ",
+  "fr": "Tag copié depuis ",
+  "it": "Tag copiato da ",
+  "sv": "Taggen kopierad från ",
+  "es": "Etiqueta copiada de "
+ },
+ "Indsæt det kopierede tag i %d filer?\nAlle felter undtagen titel og spornummer overskrives.": {
+  "en": "Paste the copied tag into %d files?\nAll fields except title and track number are overwritten.",
+  "de": "Kopiertes Tag in %d Dateien einfügen?\nAlle Felder außer Titel und Tracknummer werden überschrieben.",
+  "fr": "Coller le tag copié dans %d fichiers ?\nTous les champs sauf le titre et le numéro de piste sont remplacés.",
+  "it": "Incollare il tag copiato in %d file?\nTutti i campi tranne titolo e numero di traccia vengono sovrascritti.",
+  "sv": "Klistra in den kopierade taggen i %d filer?\nAlla fält utom titel och spårnummer skrivs över.",
+  "es": "¿Pegar la etiqueta copiada en %d archivos?\nSe sobrescriben todos los campos salvo el título y el número de pista."
+ },
+ "Der er ingen filer at gemme.": {
+  "en": "There are no files to save.",
+  "de": "Es gibt keine Dateien zum Speichern.",
+  "fr": "Il n'y a aucun fichier à enregistrer.",
+  "it": "Non ci sono file da salvare.",
+  "sv": "Det finns inga filer att spara.",
+  "es": "No hay archivos que guardar."
+ },
+ "Gem playliste": {
+  "en": "Save playlist",
+  "de": "Wiedergabeliste speichern",
+  "fr": "Enregistrer la liste de lecture",
+  "it": "Salva playlist",
+  "sv": "Spara spellista",
+  "es": "Guardar lista de reproducción"
+ },
+ "Playliste (UTF-8) (*.m3u8)|*.m3u8|Playliste (*.m3u)|*.m3u": {
+  "en": "Playlist (UTF-8) (*.m3u8)|*.m3u8|Playlist (*.m3u)|*.m3u",
+  "de": "Wiedergabeliste (UTF-8) (*.m3u8)|*.m3u8|Wiedergabeliste (*.m3u)|*.m3u",
+  "fr": "Liste de lecture (UTF-8) (*.m3u8)|*.m3u8|Liste de lecture (*.m3u)|*.m3u",
+  "it": "Playlist (UTF-8) (*.m3u8)|*.m3u8|Playlist (*.m3u)|*.m3u",
+  "sv": "Spellista (UTF-8) (*.m3u8)|*.m3u8|Spellista (*.m3u)|*.m3u",
+  "es": "Lista de reproducción (UTF-8) (*.m3u8)|*.m3u8|Lista de reproducción (*.m3u)|*.m3u"
+ },
+ "Playliste med %d filer gemt: %s": {
+  "en": "Playlist with %d files saved: %s",
+  "de": "Wiedergabeliste mit %d Dateien gespeichert: %s",
+  "fr": "Liste de lecture de %d fichiers enregistrée : %s",
+  "it": "Playlist con %d file salvata: %s",
+  "sv": "Spellista med %d filer sparad: %s",
+  "es": "Lista de reproducción con %d archivos guardada: %s"
+ },
+ "Lav et personligt token på discogs.com: Settings > Developers > Generate new token.\nIndsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):": {
+  "en": "Create a personal token on discogs.com: Settings > Developers > Generate new token.\nPaste it here (it is only stored on this computer, in TagKlon's settings file):",
+  "de": "Erstelle ein persönliches Token auf discogs.com: Settings > Developers > Generate new token.\nFüge es hier ein (es wird nur auf diesem Computer in der Einstellungsdatei von TagKlon gespeichert):",
+  "fr": "Créez un jeton personnel sur discogs.com : Settings > Developers > Generate new token.\nCollez-le ici (il est enregistré uniquement sur cet ordinateur, dans le fichier de paramètres de TagKlon) :",
+  "it": "Crea un token personale su discogs.com: Settings > Developers > Generate new token.\nIncollalo qui (viene salvato solo su questo computer, nel file di impostazioni di TagKlon):",
+  "sv": "Skapa en personlig token på discogs.com: Settings > Developers > Generate new token.\nKlistra in den här (den sparas bara på den här datorn, i TagKlons inställningsfil):",
+  "es": "Crea un token personal en discogs.com: Settings > Developers > Generate new token.\nPégalo aquí (solo se guarda en este equipo, en el archivo de configuración de TagKlon):"
+ },
+ "Discogs-token fjernet": {
+  "en": "Discogs token removed",
+  "de": "Discogs-Token entfernt",
+  "fr": "Jeton Discogs supprimé",
+  "it": "Token Discogs rimosso",
+  "sv": "Discogs-token borttagen",
+  "es": "Token de Discogs eliminado"
+ },
+ "Discogs-token gemt": {
+  "en": "Discogs token saved",
+  "de": "Discogs-Token gespeichert",
+  "fr": "Jeton Discogs enregistré",
+  "it": "Token Discogs salvato",
+  "sv": "Discogs-token sparad",
+  "es": "Token de Discogs guardado"
+ },
+ "Enter / dobbeltklik\tRediger tag for den markerede fil\nMellemrum\t\tAfkryds/fjern afkrydsning på markerede filer\nF4\t\t\tOmdøb filer\nCtrl+F4\t\tMulti-fil-tag-editor\nShift+F4\t\tTags fra filnavn\nF8\t\t\tVis/skjul værktøjspanelet\nF5\t\t\tOpdater fillisten\nCtrl+E\t\tRediger flere filer\nCtrl+T\t\tSpornumre\nCtrl+W\t\tWeb-opslag\nCtrl+Z\t\tFortryd omdøbning\nCtrl+Shift+C / V\tKopiér / indsæt tag\nCtrl+Op / Ned\tFlyt markerede filer op / ned\nCtrl+Shift+X\tEksportér / importér tags\nCtrl+F\t\tFiltrér listen (Esc rydder filteret)\nCtrl+O\t\tÅbn mappe\nAlt+Backspace\tMappe op": {
+  "en": "Enter / double-click\tEdit the tag of the selected file\nSpace\t\tCheck/uncheck selected files\nF4\t\t\tRename files\nCtrl+F4\t\tMulti-file tag editor\nShift+F4\t\tTags from file name\nF8\t\t\tShow/hide the tools panel\nF5\t\t\tRefresh file list\nCtrl+E\t\tEdit multiple files\nCtrl+T\t\tTrack numbers\nCtrl+W\t\tWeb lookup\nCtrl+Z\t\tUndo rename\nCtrl+Shift+C / V\tCopy / paste tag\nCtrl+Up / Down\tMove selected files up / down\nCtrl+Shift+X\tExport / import tags\nCtrl+F\t\tFilter the list (Esc clears the filter)\nCtrl+O\t\tOpen folder\nAlt+Backspace\tFolder up",
+  "de": "Enter / Doppelklick\tTag der markierten Datei bearbeiten\nLeertaste\t\tMarkierte Dateien ab-/anhaken\nF4\t\t\tDateien umbenennen\nStrg+F4\t\tMehrfach-Tag-Editor\nUmschalt+F4\t\tTags aus Dateiname\nF8\t\t\tWerkzeugleiste ein-/ausblenden\nF5\t\t\tDateiliste aktualisieren\nStrg+E\t\tMehrere Dateien bearbeiten\nStrg+T\t\tTracknummern\nStrg+W\t\tWeb-Suche\nStrg+Z\t\tUmbenennen rückgängig\nStrg+Umschalt+C / V\tTag kopieren / einfügen\nStrg+Auf / Ab\tMarkierte Dateien nach oben / unten\nStrg+Umschalt+X\tTags exportieren / importieren\nStrg+F\t\tListe filtern (Esc löscht den Filter)\nStrg+O\t\tOrdner öffnen\nAlt+Rück\tOrdner nach oben",
+  "fr": "Entrée / double-clic\tModifier le tag du fichier sélectionné\nEspace\t\tCocher/décocher les fichiers sélectionnés\nF4\t\t\tRenommer les fichiers\nCtrl+F4\t\tÉditeur de tags multi-fichiers\nMaj+F4\t\tTags depuis le nom de fichier\nF8\t\t\tAfficher/masquer le panneau d'outils\nF5\t\t\tActualiser la liste\nCtrl+E\t\tModifier plusieurs fichiers\nCtrl+T\t\tNuméros de piste\nCtrl+W\t\tRecherche web\nCtrl+Z\t\tAnnuler le renommage\nCtrl+Maj+C / V\tCopier / coller le tag\nCtrl+Haut / Bas\tMonter / descendre les fichiers sélectionnés\nCtrl+Maj+X\tExporter / importer les tags\nCtrl+F\t\tFiltrer la liste (Échap efface le filtre)\nCtrl+O\t\tOuvrir un dossier\nAlt+Retour arrière\tDossier parent",
+  "it": "Invio / doppio clic\tModifica il tag del file selezionato\nSpazio\t\tSpunta/togli spunta ai file selezionati\nF4\t\t\tRinomina file\nCtrl+F4\t\tEditor tag multi-file\nMaiusc+F4\t\tTag dal nome file\nF8\t\t\tMostra/nascondi il pannello strumenti\nF5\t\t\tAggiorna elenco file\nCtrl+E\t\tModifica più file\nCtrl+T\t\tNumeri di traccia\nCtrl+W\t\tRicerca web\nCtrl+Z\t\tAnnulla rinomina\nCtrl+Maiusc+C / V\tCopia / incolla tag\nCtrl+Su / Giù\tSposta su / giù i file selezionati\nCtrl+Maiusc+X\tEsporta / importa tag\nCtrl+F\t\tFiltra l'elenco (Esc cancella il filtro)\nCtrl+O\t\tApri cartella\nAlt+Backspace\tCartella superiore",
+  "sv": "Enter / dubbelklick\tRedigera taggen för den markerade filen\nMellanslag\t\tBocka för/avbocka markerade filer\nF4\t\t\tByt namn på filer\nCtrl+F4\t\tTaggredigerare för flera filer\nSkift+F4\t\tTaggar från filnamn\nF8\t\t\tVisa/dölj verktygspanelen\nF5\t\t\tUppdatera fillistan\nCtrl+E\t\tRedigera flera filer\nCtrl+T\t\tSpårnummer\nCtrl+W\t\tWebbsökning\nCtrl+Z\t\tÅngra namnbyte\nCtrl+Skift+C / V\tKopiera / klistra in tagg\nCtrl+Upp / Ned\tFlytta markerade filer upp / ned\nCtrl+Skift+X\tExportera / importera taggar\nCtrl+F\t\tFiltrera listan (Esc rensar filtret)\nCtrl+O\t\tÖppna mapp\nAlt+Backsteg\tMapp upp",
+  "es": "Intro / doble clic\tEditar la etiqueta del archivo seleccionado\nEspacio\t\tMarcar/desmarcar archivos seleccionados\nF4\t\t\tRenombrar archivos\nCtrl+F4\t\tEditor de etiquetas múltiple\nMayús+F4\t\tEtiquetas desde el nombre\nF8\t\t\tMostrar/ocultar el panel de herramientas\nF5\t\t\tActualizar lista de archivos\nCtrl+E\t\tEditar varios archivos\nCtrl+T\t\tNúmeros de pista\nCtrl+W\t\tBúsqueda web\nCtrl+Z\t\tDeshacer cambio de nombre\nCtrl+Mayús+C / V\tCopiar / pegar etiqueta\nCtrl+Arriba / Abajo\tSubir / bajar archivos seleccionados\nCtrl+Mayús+X\tExportar / importar etiquetas\nCtrl+F\t\tFiltrar la lista (Esc borra el filtro)\nCtrl+O\t\tAbrir carpeta\nAlt+Retroceso\tCarpeta superior"
+ },
+ "Om TagKlon": {
+  "en": "About TagKlon",
+  "de": "Über TagKlon",
+  "fr": "À propos de TagKlon",
+  "it": "Informazioni su TagKlon",
+  "sv": "Om TagKlon",
+  "es": "Acerca de TagKlon"
+ },
+ "TagKlon - tag-editor og musikorganisator\nLavet i Lazarus / Free Pascal.": {
+  "en": "TagKlon - tag editor and music organizer\nMade with Lazarus / Free Pascal.",
+  "de": "TagKlon - Tag-Editor und Musikorganisator\nErstellt mit Lazarus / Free Pascal.",
+  "fr": "TagKlon - éditeur de tags et organiseur de musique\nRéalisé avec Lazarus / Free Pascal.",
+  "it": "TagKlon - editor di tag e organizzatore musicale\nRealizzato con Lazarus / Free Pascal.",
+  "sv": "TagKlon - taggredigerare och musikorganiserare\nGjord med Lazarus / Free Pascal.",
+  "es": "TagKlon - editor de etiquetas y organizador de música\nHecho con Lazarus / Free Pascal."
+ },
+ "Web-data: MusicBrainz (musicbrainz.org), Cover Art Archive og Discogs.\nIkoner: Lazarus \"general_purpose\" af Roland Hahn (CC0).": {
+  "en": "Web data: MusicBrainz (musicbrainz.org), Cover Art Archive and Discogs.\nIcons: Lazarus \"general_purpose\" by Roland Hahn (CC0).",
+  "de": "Webdaten: MusicBrainz (musicbrainz.org), Cover Art Archive und Discogs.\nSymbole: Lazarus \"general_purpose\" von Roland Hahn (CC0).",
+  "fr": "Données web : MusicBrainz (musicbrainz.org), Cover Art Archive et Discogs.\nIcônes : Lazarus « general_purpose » par Roland Hahn (CC0).",
+  "it": "Dati web: MusicBrainz (musicbrainz.org), Cover Art Archive e Discogs.\nIcone: Lazarus \"general_purpose\" di Roland Hahn (CC0).",
+  "sv": "Webbdata: MusicBrainz (musicbrainz.org), Cover Art Archive och Discogs.\nIkoner: Lazarus \"general_purpose\" av Roland Hahn (CC0).",
+  "es": "Datos web: MusicBrainz (musicbrainz.org), Cover Art Archive y Discogs.\nIconos: Lazarus \"general_purpose\" de Roland Hahn (CC0)."
+ },
+ "Indstillinger: ": {
+  "en": "Settings: ",
+  "de": "Einstellungen: ",
+  "fr": "Paramètres : ",
+  "it": "Impostazioni: ",
+  "sv": "Inställningar: ",
+  "es": "Configuración: "
+ },
+ "Tilføj den åbne mappe": {
+  "en": "Add the open folder",
+  "de": "Geöffneten Ordner hinzufügen",
+  "fr": "Ajouter le dossier ouvert",
+  "it": "Aggiungi la cartella aperta",
+  "sv": "Lägg till den öppna mappen",
+  "es": "Añadir la carpeta abierta"
+ },
+ "Fjern den åbne mappe": {
+  "en": "Remove the open folder",
+  "de": "Geöffneten Ordner entfernen",
+  "fr": "Retirer le dossier ouvert",
+  "it": "Rimuovi la cartella aperta",
+  "sv": "Ta bort den öppna mappen",
+  "es": "Quitar la carpeta abierta"
+ },
+ "Ny mappe": {
+  "en": "New folder",
+  "de": "Neuer Ordner",
+  "fr": "Nouveau dossier",
+  "it": "Nuova cartella",
+  "sv": "Ny mapp",
+  "es": "Nueva carpeta"
+ },
+ "Navn på den nye mappe i ": {
+  "en": "Name of the new folder in ",
+  "de": "Name des neuen Ordners in ",
+  "fr": "Nom du nouveau dossier dans ",
+  "it": "Nome della nuova cartella in ",
+  "sv": "Namn på den nya mappen i ",
+  "es": "Nombre de la nueva carpeta en "
+ },
+ "Mappen kunne ikke oprettes:": {
+  "en": "The folder could not be created:",
+  "de": "Der Ordner konnte nicht erstellt werden:",
+  "fr": "Le dossier n'a pas pu être créé :",
+  "it": "Impossibile creare la cartella:",
+  "sv": "Mappen kunde inte skapas:",
+  "es": "No se pudo crear la carpeta:"
+ },
+ "Mappe oprettet: ": {
+  "en": "Folder created: ",
+  "de": "Ordner erstellt: ",
+  "fr": "Dossier créé : ",
+  "it": "Cartella creata: ",
+  "sv": "Mapp skapad: ",
+  "es": "Carpeta creada: "
+ },
+ "moov-atom er for stor": {
+  "en": "moov atom is too large",
+  "de": "moov-Atom ist zu groß",
+  "fr": "L'atome moov est trop grand",
+  "it": "L'atomo moov è troppo grande",
+  "sv": "moov-atomen är för stor",
+  "es": "El átomo moov es demasiado grande"
+ },
+ "Ingen moov-atom - ikke en gyldig MP4-fil": {
+  "en": "No moov atom - not a valid MP4 file",
+  "de": "Kein moov-Atom - keine gültige MP4-Datei",
+  "fr": "Pas d'atome moov - fichier MP4 non valide",
+  "it": "Nessun atomo moov - file MP4 non valido",
+  "sv": "Ingen moov-atom - inte en giltig MP4-fil",
+  "es": "Sin átomo moov - no es un archivo MP4 válido"
+ },
+ "Metadata-atom er for stor": {
+  "en": "Metadata atom is too large",
+  "de": "Metadaten-Atom ist zu groß",
+  "fr": "L'atome de métadonnées est trop grand",
+  "it": "L'atomo dei metadati è troppo grande",
+  "sv": "Metadataatomen är för stor",
+  "es": "El átomo de metadatos es demasiado grande"
+ },
+ "Ugyldig atom-struktur i moov": {
+  "en": "Invalid atom structure in moov",
+  "de": "Ungültige Atom-Struktur in moov",
+  "fr": "Structure d'atomes non valide dans moov",
+  "it": "Struttura degli atomi non valida in moov",
+  "sv": "Ogiltig atomstruktur i moov",
+  "es": "Estructura de átomos no válida en moov"
+ },
+ "Ugyldig stco-tabel": {
+  "en": "Invalid stco table",
+  "de": "Ungültige stco-Tabelle",
+  "fr": "Table stco non valide",
+  "it": "Tabella stco non valida",
+  "sv": "Ogiltig stco-tabell",
+  "es": "Tabla stco no válida"
+ },
+ "Filen bliver for stor til 32-bit chunk-offsets": {
+  "en": "The file becomes too large for 32-bit chunk offsets",
+  "de": "Die Datei wird zu groß für 32-Bit-Chunk-Offsets",
+  "fr": "Le fichier devient trop grand pour des offsets de chunk 32 bits",
+  "it": "Il file diventa troppo grande per offset di chunk a 32 bit",
+  "sv": "Filen blir för stor för 32-bitars chunk-offset",
+  "es": "El archivo es demasiado grande para offsets de chunk de 32 bits"
+ },
+ "Ugyldig co64-tabel": {
+  "en": "Invalid co64 table",
+  "de": "Ungültige co64-Tabelle",
+  "fr": "Table co64 non valide",
+  "it": "Tabella co64 non valida",
+  "sv": "Ogiltig co64-tabell",
+  "es": "Tabla co64 no válida"
+ },
+ "Ugyldig MP4-struktur": {
+  "en": "Invalid MP4 structure",
+  "de": "Ungültige MP4-Struktur",
+  "fr": "Structure MP4 non valide",
+  "it": "Struttura MP4 non valida",
+  "sv": "Ogiltig MP4-struktur",
+  "es": "Estructura MP4 no válida"
+ },
+ "Fragmenterede MP4-filer understøttes ikke": {
+  "en": "Fragmented MP4 files are not supported",
+  "de": "Fragmentierte MP4-Dateien werden nicht unterstützt",
+  "fr": "Les fichiers MP4 fragmentés ne sont pas pris en charge",
+  "it": "I file MP4 frammentati non sono supportati",
+  "sv": "Fragmenterade MP4-filer stöds inte",
+  "es": "Los archivos MP4 fragmentados no son compatibles"
+ },
+ "(forskellige værdier)": {
+  "en": "(different values)",
+  "de": "(verschiedene Werte)",
+  "fr": "(valeurs différentes)",
+  "it": "(valori diversi)",
+  "sv": "(olika värden)",
+  "es": "(valores distintos)"
+ },
+ "Rediger flere filer - ": {
+  "en": "Edit multiple files - ",
+  "de": "Mehrere Dateien bearbeiten - ",
+  "fr": "Modifier plusieurs fichiers - ",
+  "it": "Modifica più file - ",
+  "sv": "Redigera flera filer - ",
+  "es": "Editar varios archivos - "
+ },
+ "Ændringerne gemmes i %d filer. Kun felter med flueben ændres; et tomt felt med flueben bliver ryddet.": {
+  "en": "The changes are saved in %d files. Only ticked fields are changed; an empty ticked field is cleared.",
+  "de": "Die Änderungen werden in %d Dateien gespeichert. Nur Felder mit Häkchen werden geändert; ein leeres Feld mit Häkchen wird geleert.",
+  "fr": "Les modifications sont enregistrées dans %d fichiers. Seuls les champs cochés sont modifiés ; un champ vide coché est effacé.",
+  "it": "Le modifiche vengono salvate in %d file. Solo i campi spuntati vengono modificati; un campo vuoto spuntato viene svuotato.",
+  "sv": "Ändringarna sparas i %d filer. Endast fält med bock ändras; ett tomt fält med bock töms.",
+  "es": "Los cambios se guardan en %d archivos. Solo se cambian los campos marcados; un campo vacío marcado se borra."
+ },
+ "Gem i %d filer": {
+  "en": "Save in %d files",
+  "de": "In %d Dateien speichern",
+  "fr": "Enregistrer dans %d fichiers",
+  "it": "Salva in %d file",
+  "sv": "Spara i %d filer",
+  "es": "Guardar en %d archivos"
+ },
+ "Sæt flueben for at gemme dette felt": {
+  "en": "Tick to save this field",
+  "de": "Häkchen setzen, um dieses Feld zu speichern",
+  "fr": "Cochez pour enregistrer ce champ",
+  "it": "Spunta per salvare questo campo",
+  "sv": "Bocka för för att spara det här fältet",
+  "es": "Marca para guardar este campo"
+ },
+ "  (%d KB)": {
+  "en": "  (%d KB)",
+  "de": "  (%d KB)",
+  "fr": "  (%d Ko)",
+  "it": "  (%d KB)",
+  "sv": "  (%d KB)",
+  "es": "  (%d KB)"
+ },
+ "Ryd felter": {
+  "en": "Clear fields",
+  "de": "Felder leeren",
+  "fr": "Effacer les champs",
+  "it": "Svuota campi",
+  "sv": "Töm fält",
+  "es": "Borrar campos"
+ },
+ "Felterne %s er tomme og bliver ryddet i %d filer. Fortsæt?": {
+  "en": "The fields %s are empty and will be cleared in %d files. Continue?",
+  "de": "Die Felder %s sind leer und werden in %d Dateien geleert. Fortfahren?",
+  "fr": "Les champs %s sont vides et seront effacés dans %d fichiers. Continuer ?",
+  "it": "I campi %s sono vuoti e verranno svuotati in %d file. Continuare?",
+  "sv": "Fälten %s är tomma och töms i %d filer. Fortsätta?",
+  "es": "Los campos %s están vacíos y se borrarán en %d archivos. ¿Continuar?"
+ },
+ "Gem": {
+  "en": "Save",
+  "de": "Speichern",
+  "fr": "Enregistrer",
+  "it": "Salva",
+  "sv": "Spara",
+  "es": "Guardar"
+ },
+ "Gem ændringerne i %d filer?": {
+  "en": "Save the changes in %d files?",
+  "de": "Änderungen in %d Dateien speichern?",
+  "fr": "Enregistrer les modifications dans %d fichiers ?",
+  "it": "Salvare le modifiche in %d file?",
+  "sv": "Spara ändringarna i %d filer?",
+  "es": "¿Guardar los cambios en %d archivos?"
+ },
+ "Annuller": {
+  "en": "Cancel",
+  "de": "Abbrechen",
+  "fr": "Annuler",
+  "it": "Annulla",
+  "sv": "Avbryt",
+  "es": "Cancelar"
+ },
+ "Gemmer %d af %d: %s": {
+  "en": "Saving %d of %d: %s",
+  "de": "Speichere %d von %d: %s",
+  "fr": "Enregistrement %d sur %d : %s",
+  "it": "Salvataggio %d di %d: %s",
+  "sv": "Sparar %d av %d: %s",
+  "es": "Guardando %d de %d: %s"
+ },
+ "Gemt i %d filer   ·   %d sprunget over (filtypen kan ikke gemmes endnu)   ·   %d fejl": {
+  "en": "Saved in %d files   ·   %d skipped (file type cannot be saved yet)   ·   %d errors",
+  "de": "In %d Dateien gespeichert   ·   %d übersprungen (Dateityp noch nicht speicherbar)   ·   %d Fehler",
+  "fr": "Enregistré dans %d fichiers   ·   %d ignorés (type de fichier pas encore enregistrable)   ·   %d erreurs",
+  "it": "Salvato in %d file   ·   %d saltati (tipo di file non ancora salvabile)   ·   %d errori",
+  "sv": "Sparat i %d filer   ·   %d överhoppade (filtypen kan inte sparas ännu)   ·   %d fel",
+  "es": "Guardado en %d archivos   ·   %d omitidos (el tipo de archivo aún no se puede guardar)   ·   %d errores"
+ },
+ "Afbrudt.  ": {
+  "en": "Cancelled.  ",
+  "de": "Abgebrochen.  ",
+  "fr": "Annulé.  ",
+  "it": "Annullato.  ",
+  "sv": "Avbrutet.  ",
+  "es": "Cancelado.  "
+ },
+ "Luk": {
+  "en": "Close",
+  "de": "Schließen",
+  "fr": "Fermer",
+  "it": "Chiudi",
+  "sv": "Stäng",
+  "es": "Cerrar"
+ },
+ "Kunne ikke starte netværksforbindelsen (fejl %d)": {
+  "en": "Could not start the network connection (error %d)",
+  "de": "Netzwerkverbindung konnte nicht gestartet werden (Fehler %d)",
+  "fr": "Impossible de démarrer la connexion réseau (erreur %d)",
+  "it": "Impossibile avviare la connessione di rete (errore %d)",
+  "sv": "Kunde inte starta nätverksanslutningen (fel %d)",
+  "es": "No se pudo iniciar la conexión de red (error %d)"
+ },
+ "Ingen forbindelse til %s (fejl %d). Tjek internetforbindelsen.": {
+  "en": "No connection to %s (error %d). Check the internet connection.",
+  "de": "Keine Verbindung zu %s (Fehler %d). Prüfe die Internetverbindung.",
+  "fr": "Pas de connexion à %s (erreur %d). Vérifiez la connexion Internet.",
+  "it": "Nessuna connessione a %s (errore %d). Controlla la connessione a Internet.",
+  "sv": "Ingen anslutning till %s (fel %d). Kontrollera internetanslutningen.",
+  "es": "Sin conexión con %s (error %d). Comprueba la conexión a Internet."
+ },
+ "Forbindelsen blev afbrudt (fejl %d)": {
+  "en": "The connection was interrupted (error %d)",
+  "de": "Die Verbindung wurde unterbrochen (Fehler %d)",
+  "fr": "La connexion a été interrompue (erreur %d)",
+  "it": "La connessione è stata interrotta (errore %d)",
+  "sv": "Anslutningen avbröts (fel %d)",
+  "es": "La conexión se interrumpió (error %d)"
+ },
+ "Web-opslag understøttes kun på Windows i denne version": {
+  "en": "Web lookup is only supported on Windows in this version",
+  "de": "Web-Suche wird in dieser Version nur unter Windows unterstützt",
+  "fr": "La recherche web n'est prise en charge que sous Windows dans cette version",
+  "it": "La ricerca web è supportata solo su Windows in questa versione",
+  "sv": "Webbsökning stöds bara på Windows i den här versionen",
+  "es": "La búsqueda web solo es compatible con Windows en esta versión"
+ },
+ "MusicBrainz har travlt lige nu (503). Prøv igen om et øjeblik.": {
+  "en": "MusicBrainz is busy right now (503). Try again in a moment.",
+  "de": "MusicBrainz ist gerade ausgelastet (503). Gleich noch einmal versuchen.",
+  "fr": "MusicBrainz est occupé en ce moment (503). Réessayez dans un instant.",
+  "it": "MusicBrainz è occupato al momento (503). Riprova tra poco.",
+  "sv": "MusicBrainz är upptaget just nu (503). Försök igen om en stund.",
+  "es": "MusicBrainz está ocupado ahora mismo (503). Inténtalo de nuevo en un momento."
+ },
+ "MusicBrainz kender ikke denne udgivelse": {
+  "en": "MusicBrainz does not know this release",
+  "de": "MusicBrainz kennt diese Veröffentlichung nicht",
+  "fr": "MusicBrainz ne connaît pas cette parution",
+  "it": "MusicBrainz non conosce questa pubblicazione",
+  "sv": "MusicBrainz känner inte till den här utgåvan",
+  "es": "MusicBrainz no conoce esta publicación"
+ },
+ "MusicBrainz svarede med fejl %d": {
+  "en": "MusicBrainz replied with error %d",
+  "de": "MusicBrainz antwortete mit Fehler %d",
+  "fr": "MusicBrainz a répondu avec l'erreur %d",
+  "it": "MusicBrainz ha risposto con l'errore %d",
+  "sv": "MusicBrainz svarade med fel %d",
+  "es": "MusicBrainz respondió con el error %d"
+ },
+ "Blandet": {
+  "en": "Mixed",
+  "de": "Gemischt",
+  "fr": "Mixte",
+  "it": "Misto",
+  "sv": "Blandat",
+  "es": "Mixto"
+ },
+ "Uventet svar fra MusicBrainz": {
+  "en": "Unexpected response from MusicBrainz",
+  "de": "Unerwartete Antwort von MusicBrainz",
+  "fr": "Réponse inattendue de MusicBrainz",
+  "it": "Risposta inattesa da MusicBrainz",
+  "sv": "Oväntat svar från MusicBrainz",
+  "es": "Respuesta inesperada de MusicBrainz"
+ },
+ "Skriv kunstner og/eller album": {
+  "en": "Enter artist and/or album",
+  "de": "Interpret und/oder Album eingeben",
+  "fr": "Saisissez l'artiste et/ou l'album",
+  "it": "Inserisci artista e/o album",
+  "sv": "Ange artist och/eller album",
+  "es": "Escribe el artista y/o el álbum"
+ },
+ "Ugyldig Ogg-side (filen er beskadiget eller ikke Ogg)": {
+  "en": "Invalid Ogg page (the file is damaged or not Ogg)",
+  "de": "Ungültige Ogg-Seite (Datei beschädigt oder kein Ogg)",
+  "fr": "Page Ogg non valide (fichier endommagé ou pas Ogg)",
+  "it": "Pagina Ogg non valida (file danneggiato o non Ogg)",
+  "sv": "Ogiltig Ogg-sida (filen är skadad eller inte Ogg)",
+  "es": "Página Ogg no válida (el archivo está dañado o no es Ogg)"
+ },
+ "Ogg-filen er afkortet": {
+  "en": "The Ogg file is truncated",
+  "de": "Die Ogg-Datei ist abgeschnitten",
+  "fr": "Le fichier Ogg est tronqué",
+  "it": "Il file Ogg è troncato",
+  "sv": "Ogg-filen är avkortad",
+  "es": "El archivo Ogg está truncado"
+ },
+ "Ugyldig Ogg-fil": {
+  "en": "Invalid Ogg file",
+  "de": "Ungültige Ogg-Datei",
+  "fr": "Fichier Ogg non valide",
+  "it": "File Ogg non valido",
+  "sv": "Ogiltig Ogg-fil",
+  "es": "Archivo Ogg no válido"
+ },
+ "Uventet Ogg-struktur (identifikationspakken fylder mere end én side)": {
+  "en": "Unexpected Ogg structure (the identification packet spans more than one page)",
+  "de": "Unerwartete Ogg-Struktur (Identifikationspaket über mehr als eine Seite)",
+  "fr": "Structure Ogg inattendue (le paquet d'identification occupe plus d'une page)",
+  "it": "Struttura Ogg inattesa (il pacchetto di identificazione occupa più di una pagina)",
+  "sv": "Oväntad Ogg-struktur (identifieringspaketet tar mer än en sida)",
+  "es": "Estructura Ogg inesperada (el paquete de identificación ocupa más de una página)"
+ },
+ "Kun Ogg Vorbis og Ogg Opus kan gemmes": {
+  "en": "Only Ogg Vorbis and Ogg Opus can be saved",
+  "de": "Nur Ogg Vorbis und Ogg Opus können gespeichert werden",
+  "fr": "Seuls Ogg Vorbis et Ogg Opus peuvent être enregistrés",
+  "it": "Solo Ogg Vorbis e Ogg Opus possono essere salvati",
+  "sv": "Endast Ogg Vorbis och Ogg Opus kan sparas",
+  "es": "Solo se pueden guardar Ogg Vorbis y Ogg Opus"
+ },
+ "Uventet Ogg-struktur (første side)": {
+  "en": "Unexpected Ogg structure (first page)",
+  "de": "Unerwartete Ogg-Struktur (erste Seite)",
+  "fr": "Structure Ogg inattendue (première page)",
+  "it": "Struttura Ogg inattesa (prima pagina)",
+  "sv": "Oväntad Ogg-struktur (första sidan)",
+  "es": "Estructura Ogg inesperada (primera página)"
+ },
+ "Ogg-filen slutter før header-pakkerne": {
+  "en": "The Ogg file ends before the header packets",
+  "de": "Die Ogg-Datei endet vor den Header-Paketen",
+  "fr": "Le fichier Ogg se termine avant les paquets d'en-tête",
+  "it": "Il file Ogg termina prima dei pacchetti di intestazione",
+  "sv": "Ogg-filen slutar före huvudpaketen",
+  "es": "El archivo Ogg termina antes de los paquetes de encabezado"
+ },
+ "Ogg-filer med flere strømme kan ikke gemmes endnu": {
+  "en": "Ogg files with several streams cannot be saved yet",
+  "de": "Ogg-Dateien mit mehreren Streams können noch nicht gespeichert werden",
+  "fr": "Les fichiers Ogg à plusieurs flux ne peuvent pas encore être enregistrés",
+  "it": "I file Ogg con più flussi non possono ancora essere salvati",
+  "sv": "Ogg-filer med flera strömmar kan inte sparas ännu",
+  "es": "Los archivos Ogg con varios flujos aún no se pueden guardar"
+ },
+ "Uventet Ogg-struktur (lyd på samme side som header)": {
+  "en": "Unexpected Ogg structure (audio on the same page as the header)",
+  "de": "Unerwartete Ogg-Struktur (Audio auf derselben Seite wie der Header)",
+  "fr": "Structure Ogg inattendue (audio sur la même page que l'en-tête)",
+  "it": "Struttura Ogg inattesa (audio sulla stessa pagina dell'intestazione)",
+  "sv": "Oväntad Ogg-struktur (ljud på samma sida som huvudet)",
+  "es": "Estructura Ogg inesperada (audio en la misma página que el encabezado)"
+ },
+ "Mangler OpusTags": {
+  "en": "OpusTags missing",
+  "de": "OpusTags fehlt",
+  "fr": "OpusTags manquant",
+  "it": "OpusTags mancante",
+  "sv": "OpusTags saknas",
+  "es": "Falta OpusTags"
+ },
+ "Mangler Vorbis-kommentarpakken": {
+  "en": "Vorbis comment packet missing",
+  "de": "Vorbis-Kommentarpaket fehlt",
+  "fr": "Paquet de commentaires Vorbis manquant",
+  "it": "Pacchetto commenti Vorbis mancante",
+  "sv": "Vorbis-kommentarpaketet saknas",
+  "es": "Falta el paquete de comentarios Vorbis"
+ },
+ "Hvert Ord Med Stort": {
+  "en": "Each Word Capitalized",
+  "de": "Jedes Wort Groß",
+  "fr": "Chaque Mot En Majuscule",
+  "it": "Ogni Parola Maiuscola",
+  "sv": "Varje Ord Med Versal",
+  "es": "Cada Palabra En Mayúscula"
+ },
+ "Første bogstav stort": {
+  "en": "First letter capitalized",
+  "de": "Erster Buchstabe groß",
+  "fr": "Première lettre en majuscule",
+  "it": "Prima lettera maiuscola",
+  "sv": "Första bokstaven versal",
+  "es": "Primera letra en mayúscula"
+ },
+ "små bogstaver": {
+  "en": "lower case",
+  "de": "kleinbuchstaben",
+  "fr": "minuscules",
+  "it": "minuscolo",
+  "sv": "gemener",
+  "es": "minúsculas"
+ },
+ "STORE BOGSTAVER": {
+  "en": "UPPER CASE",
+  "de": "GROSSBUCHSTABEN",
+  "fr": "MAJUSCULES",
+  "it": "MAIUSCOLO",
+  "sv": "VERSALER",
+  "es": "MAYÚSCULAS"
+ },
+ "Omdøbes": {
+  "en": "To rename",
+  "de": "Wird umbenannt",
+  "fr": "À renommer",
+  "it": "Da rinominare",
+  "sv": "Byter namn",
+  "es": "Se renombra"
+ },
+ "Mangler felt": {
+  "en": "Field missing",
+  "de": "Feld fehlt",
+  "fr": "Champ manquant",
+  "it": "Campo mancante",
+  "sv": "Fält saknas",
+  "es": "Falta un campo"
+ },
+ "Findes allerede": {
+  "en": "Already exists",
+  "de": "Existiert bereits",
+  "fr": "Existe déjà",
+  "it": "Esiste già",
+  "sv": "Finns redan",
+  "es": "Ya existe"
+ },
+ "Samme navn som en anden fil": {
+  "en": "Same name as another file",
+  "de": "Gleicher Name wie eine andere Datei",
+  "fr": "Même nom qu'un autre fichier",
+  "it": "Stesso nome di un altro file",
+  "sv": "Samma namn som en annan fil",
+  "es": "Mismo nombre que otro archivo"
+ },
+ "Ugyldigt navn": {
+  "en": "Invalid name",
+  "de": "Ungültiger Name",
+  "fr": "Nom non valide",
+  "it": "Nome non valido",
+  "sv": "Ogiltigt namn",
+  "es": "Nombre no válido"
+ },
+ "Omdøbt": {
+  "en": "Renamed",
+  "de": "Umbenannt",
+  "fr": "Renommé",
+  "it": "Rinominato",
+  "sv": "Namn bytt",
+  "es": "Renombrado"
+ },
+ "%1 Kunstner   %3 Album   %4 År   %5 Genre   %# Disc   %aa Albumkunstner   %cp Komponist\n%f Nuværende mappenavn.  Kun værdier, der er ens for alle filer i mappen, kan bruges\n(er kunstnerne forskellige, bruges albumkunstneren).\nBrug \\ for undermapper, fx  %1\\%4 - %3": {
+  "en": "%1 Artist   %3 Album   %4 Year   %5 Genre   %# Disc   %aa Album artist   %cp Composer\n%f Current folder name.  Only values that are the same for all files in the folder can be used\n(if the artists differ, the album artist is used).\nUse \\ for subfolders, e.g.  %1\\%4 - %3",
+  "de": "%1 Interpret   %3 Album   %4 Jahr   %5 Genre   %# Disc   %aa Album-Interpret   %cp Komponist\n%f Aktueller Ordnername.  Nur Werte, die für alle Dateien im Ordner gleich sind, können verwendet werden\n(bei verschiedenen Interpreten wird der Album-Interpret verwendet).\n\\ für Unterordner, z. B.  %1\\%4 - %3",
+  "fr": "%1 Artiste   %3 Album   %4 Année   %5 Genre   %# Disque   %aa Artiste de l'album   %cp Compositeur\n%f Nom actuel du dossier.  Seules les valeurs identiques pour tous les fichiers du dossier sont utilisables\n(si les artistes diffèrent, l'artiste de l'album est utilisé).\nUtilisez \\ pour les sous-dossiers, p. ex.  %1\\%4 - %3",
+  "it": "%1 Artista   %3 Album   %4 Anno   %5 Genere   %# Disco   %aa Artista album   %cp Compositore\n%f Nome attuale della cartella.  Si possono usare solo valori uguali per tutti i file della cartella\n(se gli artisti sono diversi, si usa l'artista dell'album).\nUsa \\ per le sottocartelle, es.  %1\\%4 - %3",
+  "sv": "%1 Artist   %3 Album   %4 År   %5 Genre   %# Skiva   %aa Albumartist   %cp Kompositör\n%f Nuvarande mappnamn.  Endast värden som är lika för alla filer i mappen kan användas\n(om artisterna skiljer sig används albumartisten).\nAnvänd \\ för undermappar, t.ex.  %1\\%4 - %3",
+  "es": "%1 Artista   %3 Álbum   %4 Año   %5 Género   %# Disco   %aa Artista del álbum   %cp Compositor\n%f Nombre actual de la carpeta.  Solo se pueden usar valores iguales para todos los archivos de la carpeta\n(si los artistas son distintos, se usa el artista del álbum).\nUsa \\ para subcarpetas, p. ej.  %1\\%4 - %3"
+ },
+ "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc\n%7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate   %b BPM   %t Spilletid\n%aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab   %cat Katalognr.\n%grp Gruppering   %rb Remixet af   %md Stemning   %key Toneart   %ext Filtype   %khz Samplerate\nBrug \\ for at lave mapper, fx  %1\\%3\\%6 - %2": {
+  "en": "%1 Artist   %2 Title   %3 Album   %4 Year   %5 Genre   %6 Track   %# Disc\n%7 File name   %8 File number   %9 Comment   %0 Bitrate   %b BPM   %t Playing time\n%aa Album artist   %cp Composer   %co Conductor   %lb Label   %cat Catalog no.\n%grp Grouping   %rb Remixed by   %md Mood   %key Key   %ext File type   %khz Sample rate\nUse \\ to create folders, e.g.  %1\\%3\\%6 - %2",
+  "de": "%1 Interpret   %2 Titel   %3 Album   %4 Jahr   %5 Genre   %6 Track   %# Disc\n%7 Dateiname   %8 Dateinummer   %9 Kommentar   %0 Bitrate   %b BPM   %t Spieldauer\n%aa Album-Interpret   %cp Komponist   %co Dirigent   %lb Label   %cat Katalognr.\n%grp Gruppierung   %rb Remix von   %md Stimmung   %key Tonart   %ext Dateityp   %khz Abtastrate\n\\ erstellt Ordner, z. B.  %1\\%3\\%6 - %2",
+  "fr": "%1 Artiste   %2 Titre   %3 Album   %4 Année   %5 Genre   %6 Piste   %# Disque\n%7 Nom de fichier   %8 N° de fichier   %9 Commentaire   %0 Débit   %b BPM   %t Durée\n%aa Artiste de l'album   %cp Compositeur   %co Chef d'orchestre   %lb Label   %cat N° de catalogue\n%grp Regroupement   %rb Remixé par   %md Ambiance   %key Tonalité   %ext Type de fichier   %khz Fréquence\nUtilisez \\ pour créer des dossiers, p. ex.  %1\\%3\\%6 - %2",
+  "it": "%1 Artista   %2 Titolo   %3 Album   %4 Anno   %5 Genere   %6 Traccia   %# Disco\n%7 Nome file   %8 Numero file   %9 Commento   %0 Bitrate   %b BPM   %t Durata\n%aa Artista album   %cp Compositore   %co Direttore   %lb Etichetta   %cat N. catalogo\n%grp Raggruppamento   %rb Remix di   %md Atmosfera   %key Tonalità   %ext Tipo di file   %khz Campionamento\nUsa \\ per creare cartelle, es.  %1\\%3\\%6 - %2",
+  "sv": "%1 Artist   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spår   %# Skiva\n%7 Filnamn   %8 Filnummer   %9 Kommentar   %0 Bithastighet   %b BPM   %t Speltid\n%aa Albumartist   %cp Kompositör   %co Dirigent   %lb Skivbolag   %cat Katalognr\n%grp Gruppering   %rb Remixad av   %md Stämning   %key Tonart   %ext Filtyp   %khz Samplingsfrekvens\nAnvänd \\ för att skapa mappar, t.ex.  %1\\%3\\%6 - %2",
+  "es": "%1 Artista   %2 Título   %3 Álbum   %4 Año   %5 Género   %6 Pista   %# Disco\n%7 Nombre de archivo   %8 N.º de archivo   %9 Comentario   %0 Tasa de bits   %b BPM   %t Duración\n%aa Artista del álbum   %cp Compositor   %co Director   %lb Sello   %cat N.º de catálogo\n%grp Agrupación   %rb Remezclado por   %md Estado de ánimo   %key Tonalidad   %ext Tipo de archivo   %khz Frecuencia\nUsa \\ para crear carpetas, p. ej.  %1\\%3\\%6 - %2"
+ },
+ " (forskellige)": {
+  "en": " (different)",
+  "de": " (verschieden)",
+  "fr": " (différents)",
+  "it": " (diversi)",
+  "sv": " (olika)",
+  "es": " (distintos)"
+ },
+ "indeholder en anden valgt mappe": {
+  "en": "contains another selected folder",
+  "de": "enthält einen anderen gewählten Ordner",
+  "fr": "contient un autre dossier sélectionné",
+  "it": "contiene un'altra cartella selezionata",
+  "sv": "innehåller en annan vald mapp",
+  "es": "contiene otra carpeta seleccionada"
+ },
+ "kan ikke flyttes ind i sig selv": {
+  "en": "cannot be moved into itself",
+  "de": "kann nicht in sich selbst verschoben werden",
+  "fr": "ne peut pas être déplacé dans lui-même",
+  "it": "non può essere spostata in se stessa",
+  "sv": "kan inte flyttas in i sig själv",
+  "es": "no se puede mover dentro de sí misma"
+ },
+ "stien er for lang": {
+  "en": "the path is too long",
+  "de": "der Pfad ist zu lang",
+  "fr": "le chemin est trop long",
+  "it": "il percorso è troppo lungo",
+  "sv": "sökvägen är för lång",
+  "es": "la ruta es demasiado larga"
+ },
+ "kunne ikke oprette mappen ": {
+  "en": "could not create the folder ",
+  "de": "Ordner konnte nicht erstellt werden: ",
+  "fr": "impossible de créer le dossier ",
+  "it": "impossibile creare la cartella ",
+  "sv": "kunde inte skapa mappen ",
+  "es": "no se pudo crear la carpeta "
+ },
+ ": findes ikke længere": {
+  "en": ": no longer exists",
+  "de": ": existiert nicht mehr",
+  "fr": ": n'existe plus",
+  "it": ": non esiste più",
+  "sv": ": finns inte längre",
+  "es": ": ya no existe"
+ },
+ ": der ligger allerede en fil med det navn": {
+  "en": ": a file with that name already exists",
+  "de": ": eine Datei mit diesem Namen existiert bereits",
+  "fr": ": un fichier portant ce nom existe déjà",
+  "it": ": esiste già un file con quel nome",
+  "sv": ": det finns redan en fil med det namnet",
+  "es": ": ya existe un archivo con ese nombre"
+ },
+ "Omdøb mapper ud fra tags": {
+  "en": "Rename folders from tags",
+  "de": "Ordner anhand der Tags umbenennen",
+  "fr": "Renommer les dossiers d'après les tags",
+  "it": "Rinomina cartelle dai tag",
+  "sv": "Byt namn på mappar utifrån taggar",
+  "es": "Renombrar carpetas a partir de etiquetas"
+ },
+ "Nuværende mappe": {
+  "en": "Current folder",
+  "de": "Aktueller Ordner",
+  "fr": "Dossier actuel",
+  "it": "Cartella attuale",
+  "sv": "Nuvarande mapp",
+  "es": "Carpeta actual"
+ },
+ "Omdøb mapper": {
+  "en": "Rename folders",
+  "de": "Ordner umbenennen",
+  "fr": "Renommer les dossiers",
+  "it": "Rinomina cartelle",
+  "sv": "Byt namn på mappar",
+  "es": "Renombrar carpetas"
+ },
+ "%s - %d mapper": {
+  "en": "%s - %d folders",
+  "de": "%s - %d Ordner",
+  "fr": "%s - %d dossiers",
+  "it": "%s - %d cartelle",
+  "sv": "%s - %d mappar",
+  "es": "%s - %d carpetas"
+ },
+ "Alle filer i listen - %d mapper": {
+  "en": "All files in the list - %d folders",
+  "de": "Alle Dateien der Liste - %d Ordner",
+  "fr": "Tous les fichiers de la liste - %d dossiers",
+  "it": "Tutti i file dell'elenco - %d cartelle",
+  "sv": "Alla filer i listan - %d mappar",
+  "es": "Todos los archivos de la lista - %d carpetas"
+ },
+ "%d omdøbes   ·   %d uændret   ·   %d springes over": {
+  "en": "%d to rename   ·   %d unchanged   ·   %d skipped",
+  "de": "%d werden umbenannt   ·   %d unverändert   ·   %d übersprungen",
+  "fr": "%d à renommer   ·   %d inchangés   ·   %d ignorés",
+  "it": "%d da rinominare   ·   %d invariati   ·   %d saltati",
+  "sv": "%d byter namn   ·   %d oförändrade   ·   %d hoppas över",
+  "es": "%d se renombran   ·   %d sin cambios   ·   %d se omiten"
+ },
+ "%d omdøbt   ·   %d fejl   ·   kan fortrydes fra hovedvinduet": {
+  "en": "%d renamed   ·   %d errors   ·   can be undone from the main window",
+  "de": "%d umbenannt   ·   %d Fehler   ·   im Hauptfenster rückgängig zu machen",
+  "fr": "%d renommés   ·   %d erreurs   ·   annulable depuis la fenêtre principale",
+  "it": "%d rinominati   ·   %d errori   ·   annullabile dalla finestra principale",
+  "sv": "%d omdöpta   ·   %d fel   ·   kan ångras från huvudfönstret",
+  "es": "%d renombrados   ·   %d errores   ·   se puede deshacer desde la ventana principal"
+ },
+ "Omdøb %d mapper?": {
+  "en": "Rename %d folders?",
+  "de": "%d Ordner umbenennen?",
+  "fr": "Renommer %d dossiers ?",
+  "it": "Rinominare %d cartelle?",
+  "sv": "Byta namn på %d mappar?",
+  "es": "¿Renombrar %d carpetas?"
+ },
+ "Omdøb %d filer?": {
+  "en": "Rename %d files?",
+  "de": "%d Dateien umbenennen?",
+  "fr": "Renommer %d fichiers ?",
+  "it": "Rinominare %d file?",
+  "sv": "Byta namn på %d filer?",
+  "es": "¿Renombrar %d archivos?"
+ },
+ "ingen": {
+  "en": "none",
+  "de": "keine",
+  "fr": "aucun",
+  "it": "nessuno",
+  "sv": "inga",
+  "es": "ninguna"
+ },
+ "Sorteringsfelter bestemmer, hvordan afspillere sorterer, fx \"Beatles, The\" eller \"Nielsen, Carl\", uden at ændre det viste navn.": {
+  "en": "Sort fields determine how players sort, e.g. \"Beatles, The\" or \"Nielsen, Carl\", without changing the displayed name.",
+  "de": "Sortierfelder bestimmen, wie Player sortieren, z. B. \"Beatles, The\" oder \"Nielsen, Carl\", ohne den angezeigten Namen zu ändern.",
+  "fr": "Les champs de tri déterminent l'ordre de tri des lecteurs, p. ex. « Beatles, The » ou « Nielsen, Carl », sans changer le nom affiché.",
+  "it": "I campi di ordinamento stabiliscono come i lettori ordinano, es. \"Beatles, The\" o \"Nielsen, Carl\", senza cambiare il nome mostrato.",
+  "sv": "Sorteringsfält bestämmer hur spelare sorterar, t.ex. \"Beatles, The\" eller \"Nielsen, Carl\", utan att ändra det visade namnet.",
+  "es": "Los campos de orden determinan cómo ordenan los reproductores, p. ej. \"Beatles, The\" o \"Nielsen, Carl\", sin cambiar el nombre mostrado."
+ },
+ "Rediger tag (%d af %d) - %s": {
+  "en": "Edit tag (%d of %d) - %s",
+  "de": "Tag bearbeiten (%d von %d) - %s",
+  "fr": "Modifier le tag (%d sur %d) - %s",
+  "it": "Modifica tag (%d di %d) - %s",
+  "sv": "Redigera tagg (%d av %d) - %s",
+  "es": "Editar etiqueta (%d de %d) - %s"
+ },
+ "Fejl ved læsning: ": {
+  "en": "Error while reading: ",
+  "de": "Fehler beim Lesen: ",
+  "fr": "Erreur de lecture : ",
+  "it": "Errore di lettura: ",
+  "sv": "Fel vid läsning: ",
+  "es": "Error al leer: "
+ },
+ "%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d kanaler  ·  Tags: %s": {
+  "en": "%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d channels  ·  Tags: %s",
+  "de": "%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d Kanäle  ·  Tags: %s",
+  "fr": "%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d canaux  ·  Tags : %s",
+  "it": "%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d canali  ·  Tag: %s",
+  "sv": "%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d kanaler  ·  Taggar: %s",
+  "es": "%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d canales  ·  Etiquetas: %s"
+ },
+ "   (kan ikke gemme denne filtype endnu)": {
+  "en": "   (this file type cannot be saved yet)",
+  "de": "   (dieser Dateityp kann noch nicht gespeichert werden)",
+  "fr": "   (ce type de fichier ne peut pas encore être enregistré)",
+  "it": "   (questo tipo di file non può ancora essere salvato)",
+  "sv": "   (den här filtypen kan inte sparas ännu)",
+  "es": "   (este tipo de archivo aún no se puede guardar)"
+ },
+ "Intet billede": {
+  "en": "No picture",
+  "de": "Kein Bild",
+  "fr": "Aucune image",
+  "it": "Nessuna immagine",
+  "sv": "Ingen bild",
+  "es": "Sin imagen"
+ },
+ "Billede %d af %d  ·  %s  ·  %s": {
+  "en": "Picture %d of %d  ·  %s  ·  %s",
+  "de": "Bild %d von %d  ·  %s  ·  %s",
+  "fr": "Image %d sur %d  ·  %s  ·  %s",
+  "it": "Immagine %d di %d  ·  %s  ·  %s",
+  "sv": "Bild %d av %d  ·  %s  ·  %s",
+  "es": "Imagen %d de %d  ·  %s  ·  %s"
+ },
+ "  ·  %dx%d": {
+  "en": "  ·  %dx%d",
+  "de": "  ·  %dx%d",
+  "fr": "  ·  %dx%d",
+  "it": "  ·  %dx%d",
+  "sv": "  ·  %dx%d",
+  "es": "  ·  %dx%d"
+ },
+ "  ·  %d KB": {
+  "en": "  ·  %d KB",
+  "de": "  ·  %d KB",
+  "fr": "  ·  %d Ko",
+  "it": "  ·  %d KB",
+  "sv": "  ·  %d KB",
+  "es": "  ·  %d KB"
+ },
+ "Gem *": {
+  "en": "Save *",
+  "de": "Speichern *",
+  "fr": "Enregistrer *",
+  "it": "Salva *",
+  "sv": "Spara *",
+  "es": "Guardar *"
+ },
+ "Kunne ikke gemme": {
+  "en": "Could not save",
+  "de": "Speichern fehlgeschlagen",
+  "fr": "Échec de l'enregistrement",
+  "it": "Impossibile salvare",
+  "sv": "Kunde inte spara",
+  "es": "No se pudo guardar"
+ },
+ "Tags blev ikke gemt i": {
+  "en": "Tags were not saved in",
+  "de": "Tags wurden nicht gespeichert in",
+  "fr": "Les tags n'ont pas été enregistrés dans",
+  "it": "I tag non sono stati salvati in",
+  "sv": "Taggarna sparades inte i",
+  "es": "No se guardaron las etiquetas en"
+ },
+ "Gem ændringer?": {
+  "en": "Save changes?",
+  "de": "Änderungen speichern?",
+  "fr": "Enregistrer les modifications ?",
+  "it": "Salvare le modifiche?",
+  "sv": "Spara ändringar?",
+  "es": "¿Guardar los cambios?"
+ },
+ "Der er ændringer, som ikke er gemt. Vil du gemme dem?": {
+  "en": "There are unsaved changes. Do you want to save them?",
+  "de": "Es gibt ungespeicherte Änderungen. Möchtest du sie speichern?",
+  "fr": "Il y a des modifications non enregistrées. Voulez-vous les enregistrer ?",
+  "it": "Ci sono modifiche non salvate. Vuoi salvarle?",
+  "sv": "Det finns ändringar som inte har sparats. Vill du spara dem?",
+  "es": "Hay cambios sin guardar. ¿Quieres guardarlos?"
+ },
+ "PNG-billede|*.png": {
+  "en": "PNG picture|*.png",
+  "de": "PNG-Bild|*.png",
+  "fr": "Image PNG|*.png",
+  "it": "Immagine PNG|*.png",
+  "sv": "PNG-bild|*.png",
+  "es": "Imagen PNG|*.png"
+ },
+ "JPEG-billede|*.jpg": {
+  "en": "JPEG picture|*.jpg",
+  "de": "JPEG-Bild|*.jpg",
+  "fr": "Image JPEG|*.jpg",
+  "it": "Immagine JPEG|*.jpg",
+  "sv": "JPEG-bild|*.jpg",
+  "es": "Imagen JPEG|*.jpg"
+ },
+ "Intern fejl: filen er læst uden billeder": {
+  "en": "Internal error: the file was read without pictures",
+  "de": "Interner Fehler: Datei wurde ohne Bilder gelesen",
+  "fr": "Erreur interne : le fichier a été lu sans les images",
+  "it": "Errore interno: il file è stato letto senza immagini",
+  "sv": "Internt fel: filen lästes utan bilder",
+  "es": "Error interno: el archivo se leyó sin imágenes"
+ },
+ "Skrivning af denne filtype understøttes ikke endnu": {
+  "en": "Writing this file type is not supported yet",
+  "de": "Das Schreiben dieses Dateityps wird noch nicht unterstützt",
+  "fr": "L'écriture de ce type de fichier n'est pas encore prise en charge",
+  "it": "La scrittura di questo tipo di file non è ancora supportata",
+  "sv": "Skrivning av den här filtypen stöds inte ännu",
+  "es": "La escritura de este tipo de archivo aún no es compatible"
+ },
+ "Formatér eksisterende spornumre": {
+  "en": "Format existing track numbers",
+  "de": "Vorhandene Tracknummern formatieren",
+  "fr": "Formater les numéros de piste existants",
+  "it": "Formatta i numeri di traccia esistenti",
+  "sv": "Formatera befintliga spårnummer",
+  "es": "Formatear los números de pista existentes"
+ },
+ "Nummerér i listens rækkefølge": {
+  "en": "Number in list order",
+  "de": "In Listenreihenfolge nummerieren",
+  "fr": "Numéroter dans l'ordre de la liste",
+  "it": "Numera nell'ordine dell'elenco",
+  "sv": "Numrera i listans ordning",
+  "es": "Numerar en el orden de la lista"
+ },
+ "%d ændres   ·   %d uændret   ·   %d kan ikke gemmes": {
+  "en": "%d to change   ·   %d unchanged   ·   %d cannot be saved",
+  "de": "%d werden geändert   ·   %d unverändert   ·   %d nicht speicherbar",
+  "fr": "%d à modifier   ·   %d inchangés   ·   %d non enregistrables",
+  "it": "%d da modificare   ·   %d invariati   ·   %d non salvabili",
+  "sv": "%d ändras   ·   %d oförändrade   ·   %d kan inte sparas",
+  "es": "%d se modifican   ·   %d sin cambios   ·   %d no se pueden guardar"
+ },
+ "Gem spornumre": {
+  "en": "Save track numbers",
+  "de": "Tracknummern speichern",
+  "fr": "Enregistrer les numéros de piste",
+  "it": "Salva numeri di traccia",
+  "sv": "Spara spårnummer",
+  "es": "Guardar números de pista"
+ },
+ "Gem nye spornumre i %d filer?": {
+  "en": "Save new track numbers in %d files?",
+  "de": "Neue Tracknummern in %d Dateien speichern?",
+  "fr": "Enregistrer les nouveaux numéros de piste dans %d fichiers ?",
+  "it": "Salvare i nuovi numeri di traccia in %d file?",
+  "sv": "Spara nya spårnummer i %d filer?",
+  "es": "¿Guardar los nuevos números de pista en %d archivos?"
+ },
+ "Ikke en gyldig Ogg-fil": {
+  "en": "Not a valid Ogg file",
+  "de": "Keine gültige Ogg-Datei",
+  "fr": "Fichier Ogg non valide",
+  "it": "File Ogg non valido",
+  "sv": "Inte en giltig Ogg-fil",
+  "es": "No es un archivo Ogg válido"
+ },
+ "Ukendt Ogg-codec": {
+  "en": "Unknown Ogg codec",
+  "de": "Unbekannter Ogg-Codec",
+  "fr": "Codec Ogg inconnu",
+  "it": "Codec Ogg sconosciuto",
+  "sv": "Okänd Ogg-kodek",
+  "es": "Códec Ogg desconocido"
+ },
+ "RF64-filer (WAV over 4 GB) understøttes ikke": {
+  "en": "RF64 files (WAV over 4 GB) are not supported",
+  "de": "RF64-Dateien (WAV über 4 GB) werden nicht unterstützt",
+  "fr": "Les fichiers RF64 (WAV de plus de 4 Go) ne sont pas pris en charge",
+  "it": "I file RF64 (WAV oltre 4 GB) non sono supportati",
+  "sv": "RF64-filer (WAV över 4 GB) stöds inte",
+  "es": "Los archivos RF64 (WAV de más de 4 GB) no son compatibles"
+ },
+ "Ikke en WAV- eller AIFF-fil": {
+  "en": "Not a WAV or AIFF file",
+  "de": "Keine WAV- oder AIFF-Datei",
+  "fr": "Ce n'est pas un fichier WAV ou AIFF",
+  "it": "Non è un file WAV o AIFF",
+  "sv": "Inte en WAV- eller AIFF-fil",
+  "es": "No es un archivo WAV ni AIFF"
+ },
+ "Filen bliver større end 4 GB, hvilket WAV/AIFF ikke tillader": {
+  "en": "The file would exceed 4 GB, which WAV/AIFF does not allow",
+  "de": "Die Datei würde größer als 4 GB, was WAV/AIFF nicht erlaubt",
+  "fr": "Le fichier dépasserait 4 Go, ce que WAV/AIFF n'autorise pas",
+  "it": "Il file supererebbe 4 GB, cosa che WAV/AIFF non consente",
+  "sv": "Filen skulle bli större än 4 GB, vilket WAV/AIFF inte tillåter",
+  "es": "El archivo superaría 4 GB, lo que WAV/AIFF no permite"
+ },
+ "Filen indeholder ingen lyd": {
+  "en": "The file contains no audio",
+  "de": "Die Datei enthält keine Audiodaten",
+  "fr": "Le fichier ne contient pas d'audio",
+  "it": "Il file non contiene audio",
+  "sv": "Filen innehåller inget ljud",
+  "es": "El archivo no contiene audio"
+ },
+ "Web-opslag - %d filer": {
+  "en": "Web lookup - %d files",
+  "de": "Web-Suche - %d Dateien",
+  "fr": "Recherche web - %d fichiers",
+  "it": "Ricerca web - %d file",
+  "sv": "Webbsökning - %d filer",
+  "es": "Búsqueda web - %d archivos"
+ },
+ "Skriv kunstner og album, og tryk Søg.": {
+  "en": "Enter artist and album, and press Search.",
+  "de": "Interpret und Album eingeben und auf Suchen klicken.",
+  "fr": "Saisissez l'artiste et l'album, puis cliquez sur Rechercher.",
+  "it": "Inserisci artista e album e premi Cerca.",
+  "sv": "Ange artist och album och klicka på Sök.",
+  "es": "Escribe el artista y el álbum y pulsa Buscar."
+ },
+ "Discogs kræver et personligt token til søgning - tryk \"Discogs-token...\".": {
+  "en": "Discogs requires a personal token for searching - press \"Discogs token...\".",
+  "de": "Discogs erfordert für die Suche ein persönliches Token - auf \"Discogs-Token...\" klicken.",
+  "fr": "Discogs exige un jeton personnel pour la recherche - cliquez sur « Jeton Discogs... ».",
+  "it": "Discogs richiede un token personale per la ricerca - premi \"Token Discogs...\".",
+  "sv": "Discogs kräver en personlig token för sökning - klicka på \"Discogs-token...\".",
+  "es": "Discogs requiere un token personal para buscar - pulsa \"Token de Discogs...\"."
+ },
+ "Tryk Søg.": {
+  "en": "Press Search.",
+  "de": "Auf Suchen klicken.",
+  "fr": "Cliquez sur Rechercher.",
+  "it": "Premi Cerca.",
+  "sv": "Klicka på Sök.",
+  "es": "Pulsa Buscar."
+ },
+ "Discogs-token fjernet.": {
+  "en": "Discogs token removed.",
+  "de": "Discogs-Token entfernt.",
+  "fr": "Jeton Discogs supprimé.",
+  "it": "Token Discogs rimosso.",
+  "sv": "Discogs-token borttagen.",
+  "es": "Token de Discogs eliminado."
+ },
+ "Discogs-token gemt. Tryk Søg.": {
+  "en": "Discogs token saved. Press Search.",
+  "de": "Discogs-Token gespeichert. Auf Suchen klicken.",
+  "fr": "Jeton Discogs enregistré. Cliquez sur Rechercher.",
+  "it": "Token Discogs salvato. Premi Cerca.",
+  "sv": "Discogs-token sparad. Klicka på Sök.",
+  "es": "Token de Discogs guardado. Pulsa Buscar."
+ },
+ "Søger på ": {
+  "en": "Searching ",
+  "de": "Suche bei ",
+  "fr": "Recherche sur ",
+  "it": "Ricerca su ",
+  "sv": "Söker på ",
+  "es": "Buscando en "
+ },
+ "Ingen udgivelser fundet. Prøv med færre ord eller en anden stavemåde.": {
+  "en": "No releases found. Try fewer words or a different spelling.",
+  "de": "Keine Veröffentlichungen gefunden. Versuche es mit weniger Wörtern oder einer anderen Schreibweise.",
+  "fr": "Aucune parution trouvée. Essayez avec moins de mots ou une autre orthographe.",
+  "it": "Nessuna pubblicazione trovata. Prova con meno parole o un'altra grafia.",
+  "sv": "Inga utgåvor hittades. Försök med färre ord eller en annan stavning.",
+  "es": "No se encontraron publicaciones. Prueba con menos palabras u otra ortografía."
+ },
+ "%d udgivelser fundet på %s. Vælg den rigtige (dato, format og katalognummer hjælper).": {
+  "en": "%d releases found on %s. Choose the right one (date, format and catalog number help).",
+  "de": "%d Veröffentlichungen auf %s gefunden. Wähle die richtige (Datum, Format und Katalognummer helfen).",
+  "fr": "%d parutions trouvées sur %s. Choisissez la bonne (la date, le format et le numéro de catalogue aident).",
+  "it": "%d pubblicazioni trovate su %s. Scegli quella giusta (data, formato e numero di catalogo aiutano).",
+  "sv": "%d utgåvor hittades på %s. Välj den rätta (datum, format och katalognummer hjälper).",
+  "es": "Se encontraron %d publicaciones en %s. Elige la correcta (la fecha, el formato y el número de catálogo ayudan)."
+ },
+ "Henter sporliste...": {
+  "en": "Fetching track list...",
+  "de": "Lade Trackliste...",
+  "fr": "Récupération de la liste des pistes...",
+  "it": "Recupero dell'elenco tracce...",
+  "sv": "Hämtar spårlista...",
+  "es": "Obteniendo lista de pistas..."
+ },
+ "Filerne er parret efter deres spornumre. Henter cover...": {
+  "en": "The files are paired by their track numbers. Fetching cover...",
+  "de": "Die Dateien wurden nach ihren Tracknummern zugeordnet. Lade Cover...",
+  "fr": "Les fichiers sont associés selon leurs numéros de piste. Récupération de la pochette...",
+  "it": "I file sono abbinati in base ai numeri di traccia. Recupero copertina...",
+  "sv": "Filerna har parats ihop efter sina spårnummer. Hämtar omslag...",
+  "es": "Los archivos se emparejan por su número de pista. Obteniendo portada..."
+ },
+ "Filerne er parret i listens rækkefølge - ret med Op/Ned. Henter cover...": {
+  "en": "The files are paired in list order - adjust with Up/Down. Fetching cover...",
+  "de": "Die Dateien wurden in Listenreihenfolge zugeordnet - mit Auf/Ab korrigieren. Lade Cover...",
+  "fr": "Les fichiers sont associés dans l'ordre de la liste - ajustez avec Haut/Bas. Récupération de la pochette...",
+  "it": "I file sono abbinati nell'ordine dell'elenco - correggi con Su/Giù. Recupero copertina...",
+  "sv": "Filerna har parats ihop i listans ordning - justera med Upp/Ned. Hämtar omslag...",
+  "es": "Los archivos se emparejan en el orden de la lista - ajusta con Arriba/Abajo. Obteniendo portada..."
+ },
+ " Henter cover...": {
+  "en": " Fetching cover...",
+  "de": " Lade Cover...",
+  "fr": " Récupération de la pochette...",
+  "it": " Recupero copertina...",
+  "sv": " Hämtar omslag...",
+  "es": " Obteniendo portada..."
+ },
+ "Intet cover fundet": {
+  "en": "No cover found",
+  "de": "Kein Cover gefunden",
+  "fr": "Aucune pochette trouvée",
+  "it": "Nessuna copertina trovata",
+  "sv": "Inget omslag hittades",
+  "es": "No se encontró portada"
+ },
+ "Cover: %dx%d, %d KB": {
+  "en": "Cover: %dx%d, %d KB",
+  "de": "Cover: %dx%d, %d KB",
+  "fr": "Pochette : %dx%d, %d Ko",
+  "it": "Copertina: %dx%d, %d KB",
+  "sv": "Omslag: %dx%d, %d KB",
+  "es": "Portada: %dx%d, %d KB"
+ },
+ "(intet spor - filen ændres ikke)": {
+  "en": "(no track - the file is not changed)",
+  "de": "(kein Track - Datei wird nicht geändert)",
+  "fr": "(aucune piste - le fichier n'est pas modifié)",
+  "it": "(nessuna traccia - il file non viene modificato)",
+  "sv": "(inget spår - filen ändras inte)",
+  "es": "(sin pista - el archivo no se modifica)"
+ },
+ "Vælg, hvad der skal skrives.": {
+  "en": "Choose what should be written.",
+  "de": "Wähle, was geschrieben werden soll.",
+  "fr": "Choisissez ce qui doit être écrit.",
+  "it": "Scegli cosa scrivere.",
+  "sv": "Välj vad som ska skrivas.",
+  "es": "Elige qué se debe escribir."
+ },
+ "Skriv oplysninger fra \"%s\" i %d filer?": {
+  "en": "Write information from \"%s\" to %d files?",
+  "de": "Informationen aus \"%s\" in %d Dateien schreiben?",
+  "fr": "Écrire les informations de « %s » dans %d fichiers ?",
+  "it": "Scrivere le informazioni da \"%s\" in %d file?",
+  "sv": "Skriva information från \"%s\" till %d filer?",
+  "es": "¿Escribir la información de \"%s\" en %d archivos?"
+ },
+ "Skriver ": {
+  "en": "Writing ",
+  "de": "Schreibe ",
+  "fr": "Écriture de ",
+  "it": "Scrittura di ",
+  "sv": "Skriver ",
+  "es": "Escribiendo "
+ },
+ " findes allerede - ikke overskrevet": {
+  "en": " already exists - not overwritten",
+  "de": " existiert bereits - nicht überschrieben",
+  "fr": " existe déjà - non remplacé",
+  "it": " esiste già - non sovrascritto",
+  "sv": " finns redan - skrevs inte över",
+  "es": " ya existe - no se sobrescribió"
+ },
+ "Gemt i %d filer   ·   %d fejl   ·   %d sprunget over (filtype)": {
+  "en": "Saved in %d files   ·   %d errors   ·   %d skipped (file type)",
+  "de": "In %d Dateien gespeichert   ·   %d Fehler   ·   %d übersprungen (Dateityp)",
+  "fr": "Enregistré dans %d fichiers   ·   %d erreurs   ·   %d ignorés (type de fichier)",
+  "it": "Salvato in %d file   ·   %d errori   ·   %d saltati (tipo di file)",
+  "sv": "Sparat i %d filer   ·   %d fel   ·   %d överhoppade (filtyp)",
+  "es": "Guardado en %d archivos   ·   %d errores   ·   %d omitidos (tipo de archivo)"
+ },
+ "   ·   cover gemt i %d mapper": {
+  "en": "   ·   cover saved in %d folders",
+  "de": "   ·   Cover in %d Ordnern gespeichert",
+  "fr": "   ·   pochette enregistrée dans %d dossiers",
+  "it": "   ·   copertina salvata in %d cartelle",
+  "sv": "   ·   omslag sparat i %d mappar",
+  "es": "   ·   portada guardada en %d carpetas"
+ },
+ "Bemærk": {
+  "en": "Note",
+  "de": "Hinweis",
+  "fr": "Remarque",
+  "it": "Nota",
+  "sv": "Observera",
+  "es": "Nota"
+ },
+ "Eksportér / importér tags": {
+  "en": "Export / import tags",
+  "de": "Tags exportieren / importieren",
+  "fr": "Exporter / importer les tags",
+  "it": "Esporta / importa tag",
+  "sv": "Exportera / importera taggar",
+  "es": "Exportar / importar etiquetas"
+ },
+ "Eksport": {
+  "en": "Export",
+  "de": "Export",
+  "fr": "Exportation",
+  "it": "Esportazione",
+  "sv": "Export",
+  "es": "Exportación"
+ },
+ "Format": {
+  "en": "Format",
+  "de": "Format",
+  "fr": "Format",
+  "it": "Formato",
+  "sv": "Format",
+  "es": "Formato"
+ },
+ "Filer": {
+  "en": "Files",
+  "de": "Dateien",
+  "fr": "Fichiers",
+  "it": "File",
+  "sv": "Filer",
+  "es": "Archivos"
+ },
+ "Åbn filen bagefter": {
+  "en": "Open the file afterwards",
+  "de": "Datei anschließend öffnen",
+  "fr": "Ouvrir le fichier ensuite",
+  "it": "Apri il file al termine",
+  "sv": "Öppna filen efteråt",
+  "es": "Abrir el archivo después"
+ },
+ "Kolonner:": {
+  "en": "Columns:",
+  "de": "Spalten:",
+  "fr": "Colonnes :",
+  "it": "Colonne:",
+  "sv": "Kolumner:",
+  "es": "Columnas:"
+ },
+ "Alle": {
+  "en": "All",
+  "de": "Alle",
+  "fr": "Tous",
+  "it": "Tutti",
+  "sv": "Alla",
+  "es": "Todos"
+ },
+ "Ingen": {
+  "en": "None",
+  "de": "Keine",
+  "fr": "Aucun",
+  "it": "Nessuno",
+  "sv": "Inga",
+  "es": "Ninguno"
+ },
+ "Standard": {
+  "en": "Default",
+  "de": "Standard",
+  "fr": "Par défaut",
+  "it": "Predefinite",
+  "sv": "Standard",
+  "es": "Predeterminado"
+ },
+ "Eksportér...": {
+  "en": "Export...",
+  "de": "Exportieren...",
+  "fr": "Exporter...",
+  "it": "Esporta...",
+  "sv": "Exportera...",
+  "es": "Exportar..."
+ },
+ "Import (CSV / XLSX)": {
+  "en": "Import (CSV / XLSX)",
+  "de": "Import (CSV / XLSX)",
+  "fr": "Importation (CSV / XLSX)",
+  "it": "Importazione (CSV / XLSX)",
+  "sv": "Import (CSV / XLSX)",
+  "es": "Importación (CSV / XLSX)"
+ },
+ "Fil:": {
+  "en": "File:",
+  "de": "Datei:",
+  "fr": "Fichier :",
+  "it": "File:",
+  "sv": "Fil:",
+  "es": "Archivo:"
+ },
+ "Vælg fil...": {
+  "en": "Choose file...",
+  "de": "Datei wählen...",
+  "fr": "Choisir un fichier...",
+  "it": "Scegli file...",
+  "sv": "Välj fil...",
+  "es": "Elegir archivo..."
+ },
+ "Tomme celler rydder felterne": {
+  "en": "Empty cells clear the fields",
+  "de": "Leere Zellen leeren die Felder",
+  "fr": "Les cellules vides effacent les champs",
+  "it": "Le celle vuote svuotano i campi",
+  "sv": "Tomma celler tömmer fälten",
+  "es": "Las celdas vacías borran los campos"
+ },
+ "Vælg en CSV- eller XLSX-fil med en kolonne \"Sti\" eller \"Filnavn\" og kolonner med feltnavne (fx en eksport, du har rettet i Excel).": {
+  "en": "Choose a CSV or XLSX file with a column \"Path\" or \"File name\" and columns named after fields (e.g. an export you edited in Excel).",
+  "de": "Wähle eine CSV- oder XLSX-Datei mit einer Spalte \"Pfad\" oder \"Dateiname\" und Spalten mit Feldnamen (z. B. einen Export, den du in Excel bearbeitet hast).",
+  "fr": "Choisissez un fichier CSV ou XLSX avec une colonne « Chemin » ou « Nom de fichier » et des colonnes portant les noms des champs (p. ex. une exportation modifiée dans Excel).",
+  "it": "Scegli un file CSV o XLSX con una colonna \"Percorso\" o \"Nome file\" e colonne con i nomi dei campi (es. un'esportazione modificata in Excel).",
+  "sv": "Välj en CSV- eller XLSX-fil med en kolumn \"Sökväg\" eller \"Filnamn\" och kolumner med fältnamn (t.ex. en export som du har redigerat i Excel).",
+  "es": "Elige un archivo CSV o XLSX con una columna \"Ruta\" o \"Nombre de archivo\" y columnas con nombres de campo (p. ej. una exportación editada en Excel)."
+ },
+ "Række": {
+  "en": "Row",
+  "de": "Zeile",
+  "fr": "Ligne",
+  "it": "Riga",
+  "sv": "Rad",
+  "es": "Fila"
+ },
+ "Ændringer": {
+  "en": "Changes",
+  "de": "Änderungen",
+  "fr": "Modifications",
+  "it": "Modifiche",
+  "sv": "Ändringar",
+  "es": "Cambios"
+ },
+ "Eksportér": {
+  "en": "Export",
+  "de": "Exportieren",
+  "fr": "Exporter",
+  "it": "Esporta",
+  "sv": "Exportera",
+  "es": "Exportar"
+ },
+ "Regneark og CSV (*.xlsx;*.csv;*.txt)|*.xlsx;*.csv;*.txt|Alle filer (*.*)|*.*": {
+  "en": "Spreadsheets and CSV (*.xlsx;*.csv;*.txt)|*.xlsx;*.csv;*.txt|All files (*.*)|*.*",
+  "de": "Tabellen und CSV (*.xlsx;*.csv;*.txt)|*.xlsx;*.csv;*.txt|Alle Dateien (*.*)|*.*",
+  "fr": "Classeurs et CSV (*.xlsx;*.csv;*.txt)|*.xlsx;*.csv;*.txt|Tous les fichiers (*.*)|*.*",
+  "it": "Fogli di calcolo e CSV (*.xlsx;*.csv;*.txt)|*.xlsx;*.csv;*.txt|Tutti i file (*.*)|*.*",
+  "sv": "Kalkylblad och CSV (*.xlsx;*.csv;*.txt)|*.xlsx;*.csv;*.txt|Alla filer (*.*)|*.*",
+  "es": "Hojas de cálculo y CSV (*.xlsx;*.csv;*.txt)|*.xlsx;*.csv;*.txt|Todos los archivos (*.*)|*.*"
+ },
+ "Filnavnsmaske:": {
+  "en": "File name mask:",
+  "de": "Dateinamen-Maske:",
+  "fr": "Masque de nom de fichier :",
+  "it": "Maschera nome file:",
+  "sv": "Filnamnsmask:",
+  "es": "Máscara de nombre:"
+ },
+ "Versaler:": {
+  "en": "Case:",
+  "de": "Groß-/Kleinschreibung:",
+  "fr": "Casse :",
+  "it": "Maiuscole:",
+  "sv": "Skiftläge:",
+  "es": "Mayúsculas:"
+ },
+ "Erstat _ med mellemrum": {
+  "en": "Replace _ with space",
+  "de": "_ durch Leerzeichen ersetzen",
+  "fr": "Remplacer _ par une espace",
+  "it": "Sostituisci _ con spazio",
+  "sv": "Ersätt _ med mellanslag",
+  "es": "Reemplazar _ por espacio"
+ },
+ "Bevar filens dato": {
+  "en": "Keep file date",
+  "de": "Dateidatum beibehalten",
+  "fr": "Conserver la date du fichier",
+  "it": "Mantieni la data del file",
+  "sv": "Behåll filens datum",
+  "es": "Conservar la fecha del archivo"
+ },
+ "Omdøb filer (F4)": {
+  "en": "Rename files (F4)",
+  "de": "Dateien umbenennen (F4)",
+  "fr": "Renommer les fichiers (F4)",
+  "it": "Rinomina file (F4)",
+  "sv": "Byt namn på filer (F4)",
+  "es": "Renombrar archivos (F4)"
+ },
+ "Variabler ▾": {
+  "en": "Variables ▾",
+  "de": "Variablen ▾",
+  "fr": "Variables ▾",
+  "it": "Variabili ▾",
+  "sv": "Variabler ▾",
+  "es": "Variables ▾"
+ },
+ "Resultat:": {
+  "en": "Result:",
+  "de": "Ergebnis:",
+  "fr": "Résultat :",
+  "it": "Risultato:",
+  "sv": "Resultat:",
+  "es": "Resultado:"
+ },
+ "Erstat mellemrum med _": {
+  "en": "Replace spaces with _",
+  "de": "Leerzeichen durch _ ersetzen",
+  "fr": "Remplacer les espaces par _",
+  "it": "Sostituisci gli spazi con _",
+  "sv": "Ersätt mellanslag med _",
+  "es": "Reemplazar espacios por _"
+ },
+ "Spornummer med 2 cifre (%6)": {
+  "en": "Track number with 2 digits (%6)",
+  "de": "Tracknummer zweistellig (%6)",
+  "fr": "Numéro de piste sur 2 chiffres (%6)",
+  "it": "Numero di traccia a 2 cifre (%6)",
+  "sv": "Spårnummer med 2 siffror (%6)",
+  "es": "Número de pista con 2 cifras (%6)"
+ },
+ "Skift versaler:": {
+  "en": "Change case:",
+  "de": "Groß-/Kleinschreibung ändern:",
+  "fr": "Changer la casse :",
+  "it": "Cambia maiuscole:",
+  "sv": "Ändra skiftläge:",
+  "es": "Cambiar mayúsculas:"
+ },
+ "Forhåndsvis...": {
+  "en": "Preview...",
+  "de": "Vorschau...",
+  "fr": "Aperçu...",
+  "it": "Anteprima...",
+  "sv": "Förhandsvisa...",
+  "es": "Vista previa..."
+ },
+ "Omdøb": {
+  "en": "Rename",
+  "de": "Umbenennen",
+  "fr": "Renommer",
+  "it": "Rinomina",
+  "sv": "Byt namn",
+  "es": "Renombrar"
+ },
+ "Fortryd": {
+  "en": "Undo",
+  "de": "Rückgängig",
+  "fr": "Annuler",
+  "it": "Annulla",
+  "sv": "Ångra",
+  "es": "Deshacer"
+ },
+ "Multi-fil-tag-editor (Ctrl+F4)": {
+  "en": "Multi-file tag editor (Ctrl+F4)",
+  "de": "Mehrfach-Tag-Editor (Strg+F4)",
+  "fr": "Éditeur de tags multi-fichiers (Ctrl+F4)",
+  "it": "Editor tag multi-file (Ctrl+F4)",
+  "sv": "Taggredigerare för flera filer (Ctrl+F4)",
+  "es": "Editor de etiquetas múltiple (Ctrl+F4)"
+ },
+ "Album": {
+  "en": "Album",
+  "de": "Album",
+  "fr": "Album",
+  "it": "Album",
+  "sv": "Album",
+  "es": "Álbum"
+ },
+ "Genre": {
+  "en": "Genre",
+  "de": "Genre",
+  "fr": "Genre",
+  "it": "Genere",
+  "sv": "Genre",
+  "es": "Género"
+ },
+ "Kopiér fra fil": {
+  "en": "Copy from file",
+  "de": "Aus Datei kopieren",
+  "fr": "Copier depuis le fichier",
+  "it": "Copia dal file",
+  "sv": "Kopiera från fil",
+  "es": "Copiar del archivo"
+ },
+ "Udfyld felterne med værdierne fra den fokuserede fil": {
+  "en": "Fill the fields with the values of the focused file",
+  "de": "Felder mit den Werten der fokussierten Datei füllen",
+  "fr": "Remplir les champs avec les valeurs du fichier actif",
+  "it": "Compila i campi con i valori del file attivo",
+  "sv": "Fyll i fälten med värdena från den aktiva filen",
+  "es": "Rellenar los campos con los valores del archivo activo"
+ },
+ "Alle felter...": {
+  "en": "All fields...",
+  "de": "Alle Felder...",
+  "fr": "Tous les champs...",
+  "it": "Tutti i campi...",
+  "sv": "Alla fält...",
+  "es": "Todos los campos..."
+ },
+ "Rediger flere felter (og cover) i alle afkrydsede/markerede filer": {
+  "en": "Edit more fields (and cover) in all checked/selected files",
+  "de": "Weitere Felder (und Cover) in allen abgehakten/markierten Dateien bearbeiten",
+  "fr": "Modifier d'autres champs (et la pochette) dans tous les fichiers cochés/sélectionnés",
+  "it": "Modifica altri campi (e la copertina) in tutti i file spuntati/selezionati",
+  "sv": "Redigera fler fält (och omslag) i alla förbockade/markerade filer",
+  "es": "Editar más campos (y la portada) en todos los archivos marcados/seleccionados"
+ },
+ "Tags fra filnavn (Shift+F4)": {
+  "en": "Tags from file name (Shift+F4)",
+  "de": "Tags aus Dateiname (Umschalt+F4)",
+  "fr": "Tags depuis le nom de fichier (Maj+F4)",
+  "it": "Tag dal nome file (Maiusc+F4)",
+  "sv": "Taggar från filnamn (Skift+F4)",
+  "es": "Etiquetas desde el nombre (Mayús+F4)"
+ },
+ "Træk et billede hertil": {
+  "en": "Drag a picture here",
+  "de": "Bild hierher ziehen",
+  "fr": "Faites glisser une image ici",
+  "it": "Trascina qui un'immagine",
+  "sv": "Dra en bild hit",
+  "es": "Arrastra una imagen aquí"
+ },
+ "Adresse:": {
+  "en": "Address:",
+  "de": "Adresse:",
+  "fr": "Adresse :",
+  "it": "Indirizzo:",
+  "sv": "Adress:",
+  "es": "Dirección:"
+ },
+ "Filtrer efter": {
+  "en": "Filter by",
+  "de": "Filtern nach",
+  "fr": "Filtrer par",
+  "it": "Filtra per",
+  "sv": "Filtrera efter",
+  "es": "Filtrar por"
+ },
+ "Filtrer!": {
+  "en": "Filter!",
+  "de": "Filtern!",
+  "fr": "Filtrer !",
+  "it": "Filtra!",
+  "sv": "Filtrera!",
+  "es": "¡Filtrar!"
+ },
+ "Skjul valgte filer": {
+  "en": "Hide selected files",
+  "de": "Markierte Dateien ausblenden",
+  "fr": "Masquer les fichiers sélectionnés",
+  "it": "Nascondi i file selezionati",
+  "sv": "Dölj markerade filer",
+  "es": "Ocultar archivos seleccionados"
+ },
+ "Vis alle": {
+  "en": "Show all",
+  "de": "Alle anzeigen",
+  "fr": "Tout afficher",
+  "it": "Mostra tutti",
+  "sv": "Visa alla",
+  "es": "Mostrar todo"
+ },
+ "Mapper:": {
+  "en": "Folders:",
+  "de": "Ordner:",
+  "fr": "Dossiers :",
+  "it": "Cartelle:",
+  "sv": "Mappar:",
+  "es": "Carpetas:"
+ },
+ "Rediger flere filer": {
+  "en": "Edit multiple files",
+  "de": "Mehrere Dateien bearbeiten",
+  "fr": "Modifier plusieurs fichiers",
+  "it": "Modifica più file",
+  "sv": "Redigera flera filer",
+  "es": "Editar varios archivos"
+ },
+ "Erstat alle covers med:": {
+  "en": "Replace all covers with:",
+  "de": "Alle Cover ersetzen durch:",
+  "fr": "Remplacer toutes les pochettes par :",
+  "it": "Sostituisci tutte le copertine con:",
+  "sv": "Ersätt alla omslag med:",
+  "es": "Reemplazar todas las portadas por:"
+ },
+ "Vælg billede...": {
+  "en": "Choose picture...",
+  "de": "Bild wählen...",
+  "fr": "Choisir une image...",
+  "it": "Scegli immagine...",
+  "sv": "Välj bild...",
+  "es": "Elegir imagen..."
+ },
+ "(intet billede valgt)": {
+  "en": "(no picture chosen)",
+  "de": "(kein Bild gewählt)",
+  "fr": "(aucune image choisie)",
+  "it": "(nessuna immagine scelta)",
+  "sv": "(ingen bild vald)",
+  "es": "(ninguna imagen elegida)"
+ },
+ "Fjern alle cover-billeder": {
+  "en": "Remove all cover pictures",
+  "de": "Alle Cover-Bilder entfernen",
+  "fr": "Supprimer toutes les pochettes",
+  "it": "Rimuovi tutte le copertine",
+  "sv": "Ta bort alla omslagsbilder",
+  "es": "Quitar todas las portadas"
+ },
+ "Bevar filernes dato (tidsstempel)": {
+  "en": "Keep file dates (timestamp)",
+  "de": "Dateidatum beibehalten (Zeitstempel)",
+  "fr": "Conserver la date des fichiers (horodatage)",
+  "it": "Mantieni la data dei file (timestamp)",
+  "sv": "Behåll filernas datum (tidsstämpel)",
+  "es": "Conservar la fecha de los archivos (marca de tiempo)"
+ },
+ "Vælg cover-billede": {
+  "en": "Choose cover picture",
+  "de": "Cover-Bild wählen",
+  "fr": "Choisir l'image de pochette",
+  "it": "Scegli l'immagine di copertina",
+  "sv": "Välj omslagsbild",
+  "es": "Elegir imagen de portada"
+ },
+ "Billeder (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png": {
+  "en": "Pictures (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png",
+  "de": "Bilder (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png",
+  "fr": "Images (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png",
+  "it": "Immagini (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png",
+  "sv": "Bilder (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png",
+  "es": "Imágenes (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png"
+ },
+ "Omdøb filer ud fra tags": {
+  "en": "Rename files from tags",
+  "de": "Dateien anhand der Tags umbenennen",
+  "fr": "Renommer les fichiers d'après les tags",
+  "it": "Rinomina file dai tag",
+  "sv": "Byt namn på filer utifrån taggar",
+  "es": "Renombrar archivos a partir de etiquetas"
+ },
+ "Nuværende navn": {
+  "en": "Current name",
+  "de": "Aktueller Name",
+  "fr": "Nom actuel",
+  "it": "Nome attuale",
+  "sv": "Nuvarande namn",
+  "es": "Nombre actual"
+ },
+ "Nyt navn": {
+  "en": "New name",
+  "de": "Neuer Name",
+  "fr": "Nouveau nom",
+  "it": "Nuovo nome",
+  "sv": "Nytt namn",
+  "es": "Nombre nuevo"
+ },
+ "Rediger tag": {
+  "en": "Edit tag",
+  "de": "Tag bearbeiten",
+  "fr": "Modifier le tag",
+  "it": "Modifica tag",
+  "sv": "Redigera tagg",
+  "es": "Editar etiqueta"
+ },
+ "Generelt": {
+  "en": "General",
+  "de": "Allgemein",
+  "fr": "Général",
+  "it": "Generale",
+  "sv": "Allmänt",
+  "es": "General"
+ },
+ "Disc": {
+  "en": "Disc",
+  "de": "Disc",
+  "fr": "Disque",
+  "it": "Disco",
+  "sv": "Skiva",
+  "es": "Disco"
+ },
+ "BPM": {
+  "en": "BPM",
+  "de": "BPM",
+  "fr": "BPM",
+  "it": "BPM",
+  "sv": "BPM",
+  "es": "BPM"
+ },
+ "Tilføj...": {
+  "en": "Add...",
+  "de": "Hinzufügen...",
+  "fr": "Ajouter...",
+  "it": "Aggiungi...",
+  "sv": "Lägg till...",
+  "es": "Añadir..."
+ },
+ "Fjern": {
+  "en": "Remove",
+  "de": "Entfernen",
+  "fr": "Supprimer",
+  "it": "Rimuovi",
+  "sv": "Ta bort",
+  "es": "Quitar"
+ },
+ "Gem som...": {
+  "en": "Save...",
+  "de": "Speichern...",
+  "fr": "Enregistrer...",
+  "it": "Salva...",
+  "sv": "Spara...",
+  "es": "Guardar..."
+ },
+ "Flere felter": {
+  "en": "More fields",
+  "de": "Weitere Felder",
+  "fr": "Autres champs",
+  "it": "Altri campi",
+  "sv": "Fler fält",
+  "es": "Más campos"
+ },
+ "Sortering": {
+  "en": "Sorting",
+  "de": "Sortierung",
+  "fr": "Tri",
+  "it": "Ordinamento",
+  "sv": "Sortering",
+  "es": "Orden"
+ },
+ "Indlæs fra tekstfil...": {
+  "en": "Load from text file...",
+  "de": "Aus Textdatei laden...",
+  "fr": "Charger depuis un fichier texte...",
+  "it": "Carica da file di testo...",
+  "sv": "Läs in från textfil...",
+  "es": "Cargar desde archivo de texto..."
+ },
+ "Gem som tekstfil...": {
+  "en": "Save as text file...",
+  "de": "Als Textdatei speichern...",
+  "fr": "Enregistrer comme fichier texte...",
+  "it": "Salva come file di testo...",
+  "sv": "Spara som textfil...",
+  "es": "Guardar como archivo de texto..."
+ },
+ "Ryd": {
+  "en": "Clear",
+  "de": "Leeren",
+  "fr": "Effacer",
+  "it": "Svuota",
+  "sv": "Töm",
+  "es": "Borrar"
+ },
+ "Bevar filens dato (tidsstempel) ved gem": {
+  "en": "Keep the file date (timestamp) when saving",
+  "de": "Dateidatum (Zeitstempel) beim Speichern beibehalten",
+  "fr": "Conserver la date du fichier (horodatage) à l'enregistrement",
+  "it": "Mantieni la data del file (timestamp) al salvataggio",
+  "sv": "Behåll filens datum (tidsstämpel) vid sparande",
+  "es": "Conservar la fecha del archivo (marca de tiempo) al guardar"
+ },
+ "Gem og forrige": {
+  "en": "Save and previous",
+  "de": "Speichern und zurück",
+  "fr": "Enregistrer et précédent",
+  "it": "Salva e precedente",
+  "sv": "Spara och föregående",
+  "es": "Guardar y anterior"
+ },
+ "Gem og næste": {
+  "en": "Save and next",
+  "de": "Speichern und weiter",
+  "fr": "Enregistrer et suivant",
+  "it": "Salva e successivo",
+  "sv": "Spara och nästa",
+  "es": "Guardar y siguiente"
+ },
+ "Gem billede": {
+  "en": "Save picture",
+  "de": "Bild speichern",
+  "fr": "Enregistrer l'image",
+  "it": "Salva immagine",
+  "sv": "Spara bild",
+  "es": "Guardar imagen"
+ },
+ "Indlæs sangtekst": {
+  "en": "Load lyrics",
+  "de": "Liedtext laden",
+  "fr": "Charger les paroles",
+  "it": "Carica testo",
+  "sv": "Läs in låttext",
+  "es": "Cargar letra"
+ },
+ "Tekstfiler (*.txt;*.lrc)|*.txt;*.lrc|Alle filer (*.*)|*.*": {
+  "en": "Text files (*.txt;*.lrc)|*.txt;*.lrc|All files (*.*)|*.*",
+  "de": "Textdateien (*.txt;*.lrc)|*.txt;*.lrc|Alle Dateien (*.*)|*.*",
+  "fr": "Fichiers texte (*.txt;*.lrc)|*.txt;*.lrc|Tous les fichiers (*.*)|*.*",
+  "it": "File di testo (*.txt;*.lrc)|*.txt;*.lrc|Tutti i file (*.*)|*.*",
+  "sv": "Textfiler (*.txt;*.lrc)|*.txt;*.lrc|Alla filer (*.*)|*.*",
+  "es": "Archivos de texto (*.txt;*.lrc)|*.txt;*.lrc|Todos los archivos (*.*)|*.*"
+ },
+ "Gem sangtekst": {
+  "en": "Save lyrics",
+  "de": "Liedtext speichern",
+  "fr": "Enregistrer les paroles",
+  "it": "Salva testo",
+  "sv": "Spara låttext",
+  "es": "Guardar letra"
+ },
+ "Tekstfil (*.txt)|*.txt": {
+  "en": "Text file (*.txt)|*.txt",
+  "de": "Textdatei (*.txt)|*.txt",
+  "fr": "Fichier texte (*.txt)|*.txt",
+  "it": "File di testo (*.txt)|*.txt",
+  "sv": "Textfil (*.txt)|*.txt",
+  "es": "Archivo de texto (*.txt)|*.txt"
+ },
+ "Spornumre": {
+  "en": "Track numbers",
+  "de": "Tracknummern",
+  "fr": "Numéros de piste",
+  "it": "Numeri di traccia",
+  "sv": "Spårnummer",
+  "es": "Números de pista"
+ },
+ "Handling": {
+  "en": "Action",
+  "de": "Aktion",
+  "fr": "Action",
+  "it": "Azione",
+  "sv": "Åtgärd",
+  "es": "Acción"
+ },
+ "Format:": {
+  "en": "Format:",
+  "de": "Format:",
+  "fr": "Format :",
+  "it": "Formato:",
+  "sv": "Format:",
+  "es": "Formato:"
+ },
+ "Start ved:": {
+  "en": "Start at:",
+  "de": "Beginnen bei:",
+  "fr": "Commencer à :",
+  "it": "Inizia da:",
+  "sv": "Börja på:",
+  "es": "Empezar en:"
+ },
+ "Start forfra i hver mappe": {
+  "en": "Start over in each folder",
+  "de": "In jedem Ordner neu beginnen",
+  "fr": "Recommencer dans chaque dossier",
+  "it": "Ricomincia in ogni cartella",
+  "sv": "Börja om i varje mapp",
+  "es": "Empezar de nuevo en cada carpeta"
+ },
+ "Spor nu": {
+  "en": "Track now",
+  "de": "Track jetzt",
+  "fr": "Piste actuelle",
+  "it": "Traccia attuale",
+  "sv": "Spår nu",
+  "es": "Pista actual"
+ },
+ "Nyt spor": {
+  "en": "New track",
+  "de": "Neuer Track",
+  "fr": "Nouvelle piste",
+  "it": "Nuova traccia",
+  "sv": "Nytt spår",
+  "es": "Pista nueva"
+ },
+ "Bevar filernes dato": {
+  "en": "Keep file dates",
+  "de": "Dateidatum beibehalten",
+  "fr": "Conserver la date des fichiers",
+  "it": "Mantieni la data dei file",
+  "sv": "Behåll filernas datum",
+  "es": "Conservar la fecha de los archivos"
+ },
+ "Web-opslag": {
+  "en": "Web lookup",
+  "de": "Web-Suche",
+  "fr": "Recherche web",
+  "it": "Ricerca web",
+  "sv": "Webbsökning",
+  "es": "Búsqueda web"
+ },
+ "Discogs-token...": {
+  "en": "Discogs token...",
+  "de": "Discogs-Token...",
+  "fr": "Jeton Discogs...",
+  "it": "Token Discogs...",
+  "sv": "Discogs-token...",
+  "es": "Token de Discogs..."
+ },
+ "Kunstner:": {
+  "en": "Artist:",
+  "de": "Interpret:",
+  "fr": "Artiste :",
+  "it": "Artista:",
+  "sv": "Artist:",
+  "es": "Artista:"
+ },
+ "Album:": {
+  "en": "Album:",
+  "de": "Album:",
+  "fr": "Album :",
+  "it": "Album:",
+  "sv": "Album:",
+  "es": "Álbum:"
+ },
+ "Søg": {
+  "en": "Search",
+  "de": "Suchen",
+  "fr": "Rechercher",
+  "it": "Cerca",
+  "sv": "Sök",
+  "es": "Buscar"
+ },
+ "Dato": {
+  "en": "Date",
+  "de": "Datum",
+  "fr": "Date",
+  "it": "Data",
+  "sv": "Datum",
+  "es": "Fecha"
+ },
+ "Land": {
+  "en": "Country",
+  "de": "Land",
+  "fr": "Pays",
+  "it": "Paese",
+  "sv": "Land",
+  "es": "País"
+ },
+ "Katalognr.": {
+  "en": "Catalog no.",
+  "de": "Katalognr.",
+  "fr": "N° de catalogue",
+  "it": "N. catalogo",
+  "sv": "Katalognr",
+  "es": "N.º de catálogo"
+ },
+ "Spor på den valgte udgivelse og de filer, der får dem (flyt filer med Op/Ned):": {
+  "en": "Tracks of the chosen release and the files that get them (move files with Up/Down):",
+  "de": "Tracks der gewählten Veröffentlichung und die Dateien, die sie erhalten (Dateien mit Auf/Ab verschieben):",
+  "fr": "Pistes de la parution choisie et fichiers qui les reçoivent (déplacez les fichiers avec Haut/Bas) :",
+  "it": "Tracce della pubblicazione scelta e i file che le ricevono (sposta i file con Su/Giù):",
+  "sv": "Spår på den valda utgåvan och filerna som får dem (flytta filer med Upp/Ned):",
+  "es": "Pistas de la publicación elegida y los archivos que las reciben (mueve archivos con Arriba/Abajo):"
+ },
+ "Nr.": {
+  "en": "No.",
+  "de": "Nr.",
+  "fr": "N°",
+  "it": "N.",
+  "sv": "Nr",
+  "es": "N.º"
+ },
+ "Titel (fra kilden)": {
+  "en": "Title (from source)",
+  "de": "Titel (aus der Quelle)",
+  "fr": "Titre (de la source)",
+  "it": "Titolo (dalla fonte)",
+  "sv": "Titel (från källan)",
+  "es": "Título (de la fuente)"
+ },
+ "Længde": {
+  "en": "Length",
+  "de": "Länge",
+  "fr": "Durée",
+  "it": "Durata",
+  "sv": "Längd",
+  "es": "Duración"
+ },
+ "Op": {
+  "en": "Up",
+  "de": "Auf",
+  "fr": "Haut",
+  "it": "Su",
+  "sv": "Upp",
+  "es": "Arriba"
+ },
+ "Ned": {
+  "en": "Down",
+  "de": "Ab",
+  "fr": "Bas",
+  "it": "Giù",
+  "sv": "Ned",
+  "es": "Abajo"
+ },
+ "Skriv": {
+  "en": "Write",
+  "de": "Schreiben",
+  "fr": "Écrire",
+  "it": "Scrivi",
+  "sv": "Skriv",
+  "es": "Escribir"
+ },
+ "Titler": {
+  "en": "Titles",
+  "de": "Titel",
+  "fr": "Titres",
+  "it": "Titoli",
+  "sv": "Titlar",
+  "es": "Títulos"
+ },
+ "(kun årstal)": {
+  "en": "(year only)",
+  "de": "(nur Jahr)",
+  "fr": "(année seule)",
+  "it": "(solo anno)",
+  "sv": "(endast år)",
+  "es": "(solo el año)"
+ },
+ "(som 07/12)": {
+  "en": "(as 07/12)",
+  "de": "(als 07/12)",
+  "fr": "(comme 07/12)",
+  "it": "(come 07/12)",
+  "sv": "(som 07/12)",
+  "es": "(como 07/12)"
+ },
+ "Pladeselskab, katalognr.": {
+  "en": "Label, catalog no.",
+  "de": "Label, Katalognr.",
+  "fr": "Label, n° de catalogue",
+  "it": "Etichetta, n. catalogo",
+  "sv": "Skivbolag, katalognr",
+  "es": "Sello, n.º de catálogo"
+ },
+ "Disc-nr.": {
+  "en": "Disc no.",
+  "de": "Disc-Nr.",
+  "fr": "N° de disque",
+  "it": "N. disco",
+  "sv": "Skivnr",
+  "es": "N.º de disco"
+ },
+ "Cover i filerne": {
+  "en": "Cover in the files",
+  "de": "Cover in den Dateien",
+  "fr": "Pochette dans les fichiers",
+  "it": "Copertina nei file",
+  "sv": "Omslag i filerna",
+  "es": "Portada en los archivos"
+ },
+ "Cover som folder.jpg i mappen": {
+  "en": "Cover as folder.jpg in the folder",
+  "de": "Cover als folder.jpg im Ordner",
+  "fr": "Pochette en folder.jpg dans le dossier",
+  "it": "Copertina come folder.jpg nella cartella",
+  "sv": "Omslag som folder.jpg i mappen",
+  "es": "Portada como folder.jpg en la carpeta"
+ },
+ "%s  %dx%d  (%d billede)": {
+  "en": "%s  %dx%d  (%d picture)",
+  "de": "%s  %dx%d  (%d Bild)",
+  "fr": "%s  %dx%d  (%d image)",
+  "it": "%s  %dx%d  (%d immagine)",
+  "sv": "%s  %dx%d  (%d bild)",
+  "es": "%s  %dx%d  (%d imagen)"
+ },
+ "%s  %dx%d  (%d billeder)": {
+  "en": "%s  %dx%d  (%d pictures)",
+  "de": "%s  %dx%d  (%d Bilder)",
+  "fr": "%s  %dx%d  (%d images)",
+  "it": "%s  %dx%d  (%d immagini)",
+  "sv": "%s  %dx%d  (%d bilder)",
+  "es": "%s  %dx%d  (%d imágenes)"
+ }
+}

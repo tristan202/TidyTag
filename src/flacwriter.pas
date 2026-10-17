@@ -23,6 +23,14 @@ implementation
 uses
   base64, TagUtils, Mp3Reader;
 
+resourcestring
+  rsMetadataBlokkenErForStor = 'Metadata-blokken er for stor (billedet er over 16 MB)';
+  rsIkkeEnGyldigFlacFil = 'Ikke en gyldig FLAC-fil';
+  rsFlacMetadataErAfkortet = 'FLAC-metadata er afkortet';
+  rsUgyldigFlacMetadatablok = 'Ugyldig FLAC-metadatablok';
+  rsFlacFilenManglerStreaminfo = 'FLAC-filen mangler STREAMINFO';
+
+
 const
   NewPadding = 4096;
   MaxBlockLen = $FFFFFF;
@@ -208,7 +216,7 @@ var
   N: Cardinal;
 begin
   if Length(Data) > MaxBlockLen then
-    raise Exception.Create('Metadata-blokken er for stor (billedet er over 16 MB)');
+    raise Exception.Create(rsMetadataBlokkenErForStor);
   N := Length(Data);
   if Last then Dest.WriteByte(BlockType or $80) else Dest.WriteByte(BlockType);
   Dest.WriteByte(N shr 16);
@@ -241,28 +249,28 @@ begin
     Src.Position := Prefix;
     H := ReadStreamBytes(Src, 4);
     if not BytesAre(H, 0, 'fLaC') then
-      raise Exception.Create('Ikke en gyldig FLAC-fil');
+      raise Exception.Create(rsIkkeEnGyldigFlacFil);
 
     Blocks := nil;
     CommentBody := nil;
     repeat
       H := ReadStreamBytes(Src, 4);
-      if Length(H) < 4 then raise Exception.Create('FLAC-metadata er afkortet');
+      if Length(H) < 4 then raise Exception.Create(rsFlacMetadataErAfkortet);
       Last := H[0] and $80 <> 0;
       BlockType := H[0] and $7F;
       Len := BE24(H, 1);
-      if BlockType = 127 then raise Exception.Create('Ugyldig FLAC-metadatablok');
+      if BlockType = 127 then raise Exception.Create(rsUgyldigFlacMetadatablok);
       N := Length(Blocks);
       SetLength(Blocks, N + 1);
       Blocks[N].BlockType := BlockType;
       Blocks[N].Data := ReadStreamBytes(Src, Len);
-      if Length(Blocks[N].Data) <> Len then raise Exception.Create('FLAC-metadata er afkortet');
+      if Length(Blocks[N].Data) <> Len then raise Exception.Create(rsFlacMetadataErAfkortet);
       if (BlockType = 4) and (CommentBody = nil) then CommentBody := Blocks[N].Data;
     until Last;
     AudioStart := Src.Position;
     OldMetaLen := AudioStart - (Prefix + 4);
     if (Length(Blocks) = 0) or (Blocks[0].BlockType <> 0) then
-      raise Exception.Create('FLAC-filen mangler STREAMINFO');
+      raise Exception.Create(rsFlacFilenManglerStreaminfo);
 
     // New block order: STREAMINFO, other kept blocks, comments, pictures (padding last).
     Kept := nil;

@@ -20,6 +20,11 @@ implementation
 uses
   TagUtils, ID3Writer, FlacWriter, Mp4Writer, OggWriter, WavWriter, ApeTag, AsfWriter;
 
+resourcestring
+  rsInternFejlFilenErLaest = 'Intern fejl: filen er læst uden billeder';
+  rsSkrivningAfDenneFiltypeUnderstoettes = 'Skrivning af denne filtype understøttes ikke endnu';
+
+
 function CanWriteTags(const FileName: string): Boolean;
 begin
   case LowerCase(ExtractFileExt(FileName)) of
@@ -36,9 +41,9 @@ var
   Stamp: TFileStamp;
 begin
   if not Info.WantPictures then
-    raise Exception.Create('Intern fejl: filen er læst uden billeder');
+    raise Exception.Create(rsInternFejlFilenErLaest);
   if not CanWriteTags(Info.FileName) then
-    raise Exception.Create('Skrivning af denne filtype understøttes ikke endnu');
+    raise Exception.Create(rsSkrivningAfDenneFiltypeUnderstoettes);
   if KeepTimestamp then
     Stamp := GetFileStamp(Info.FileName);
   case LowerCase(ExtractFileExt(Info.FileName)) of

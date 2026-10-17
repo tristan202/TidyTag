@@ -1,0 +1,144 @@
+unit LayoutCheck;
+
+{ Developer check for translations: "TagKlon.exe --layoutcheck <report.txt>" creates every
+  window in the current language and lists texts that do not fit their control or that
+  overlap a neighbouring control. }
+
+{$mode objfpc}{$H+}
+
+interface
+
+function LayoutCheckRequested: Boolean;
+procedure RunLayoutCheck;
+
+implementation
+
+uses
+  Classes, SysUtils, Types, Forms, Controls, StdCtrls, ExtCtrls, ComCtrls, Buttons,
+  Graphics, MainForm, TagEditForm, RenameForm, FileToTagForm, MultiEditForm,
+  TrackToolsForm, WebLookupForm, ExportImportForm;
+
+function LayoutCheckRequested: Boolean;
+begin
+  Result := (ParamCount >= 2) and (ParamStr(1) = '--layoutcheck');
+end;
+
+function PlainCaption(const S: string): string;
+begin
+  Result := StringReplace(S, '&', '', [rfReplaceAll]);
+  if Pos(LineEnding, Result) > 0 then Result := Copy(Result, 1, Pos(LineEnding, Result) - 1);
+end;
+
+function TextW(C: TControl; const S: string): Integer;
+var
+  Bmp: TBitmap;
+begin
+  Bmp := TBitmap.Create;
+  try
+    Bmp.Canvas.Font.Assign(C.Font);
+    Result := Bmp.Canvas.TextWidth(S);
+  finally
+    Bmp.Free;
+  end;
+end;
+
+function Path(C: TControl): string;
+begin
+  Result := C.Name;
+  while (C.Parent <> nil) and not (C.Parent is TCustomForm) do
+  begin
+    C := C.Parent;
+    Result := C.Name + '.' + Result;
+  end;
+end;
+
+procedure CheckControl(C: TControl; Report: TStrings; const FormName: string);
+var
+  Need, I: Integer;
+  S: string;
+  Sib: TControl;
+  R: TRect;
+begin
+  if not C.Visible then Exit;
+  S := PlainCaption(C.Caption);
+  Need := 0;
+  if (C is TCustomButton) or (C is TSpeedButton) then
+    Need := TextW(C, S) + 12
+  else if ((C is TCustomCheckBox) or (C is TRadioButton)) and not C.AutoSize then
+    Need := TextW(C, S) + 22
+  else if (C is TCustomGroupBox) then
+    Need := TextW(C, S) + 16
+  else if (C is TCustomLabel) and not C.AutoSize and not TLabel(C).WordWrap then
+    Need := TextW(C, S);
+  if (S <> '') and (Need > C.Width) then
+    Report.Add(Format('%s  %s: "%s" needs %d px, has %d', [FormName, Path(C), S, Need, C.Width]));
+  // pushed out of its container
+  if (C.Parent <> nil) and (C.Align = alNone) and (C.Left + C.Width > C.Parent.ClientWidth + 1) then
+    Report.Add(Format('%s  %s: "%s" ends at %d, container is %d wide', [FormName, Path(C), S,
+      C.Left + C.Width, C.Parent.ClientWidth]));
+  // overlap with any sibling (texts that grew, controls that were moved)
+  if (C.Parent <> nil) and (C.Align = alNone) then
+    for I := 0 to C.Parent.ControlCount - 1 do
+    begin
+      Sib := C.Parent.Controls[I];
+      if (Sib = C) or not Sib.Visible or (Sib.Align <> alNone) then Continue;
+      // each pair once: the left one (or the upper one at equal Left) reports
+      if (Sib.Left < C.Left) or ((Sib.Left = C.Left) and (Sib.Top <= C.Top)) then Continue;
+      if not IntersectRect(R, C.BoundsRect, Sib.BoundsRect) then Continue;
+      Report.Add(Format('%s  %s: "%s" overlaps %s', [FormName, Path(C), S, Sib.Name]));
+    end;
+end;
+
+procedure CheckTree(W: TWinControl; Report: TStrings; const FormName: string);
+var
+  I: Integer;
+begin
+  for I := 0 to W.ControlCount - 1 do
+  begin
+    CheckControl(W.Controls[I], Report, FormName);
+    if W.Controls[I] is TWinControl then
+      CheckTree(TWinControl(W.Controls[I]), Report, FormName);
+  end;
+end;
+
+procedure CheckForm(F: TForm; Report: TStrings);
+var
+  I: Integer;
+begin
+  F.Show;
+  Application.ProcessMessages;
+  // visit every tab so that its controls get their real size
+  for I := 0 to F.ComponentCount - 1 do
+    if F.Components[I] is TPageControl then
+      TPageControl(F.Components[I]).ActivePageIndex := 0;
+  CheckTree(F, Report, F.ClassName);
+end;
+
+procedure RunLayoutCheck;
+const
+  Classes_: array[0..6] of TFormClass = (TFormTagEdit, TFormRename, TFormFileToTag,
+    TFormMultiEdit, TFormTrackTools, TFormWebLookup, TFormExportImport);
+var
+  Report: TStringList;
+  F: TForm;
+  C: TFormClass;
+begin
+  Report := TStringList.Create;
+  try
+    CheckForm(FormMain, Report);
+    for C in Classes_ do
+    begin
+      F := C.Create(Application);
+      try
+        CheckForm(F, Report);
+      finally
+        F.Free;
+      end;
+    end;
+    Report.SaveToFile(ParamStr(2));
+  finally
+    Report.Free;
+  end;
+end;
+
+end.

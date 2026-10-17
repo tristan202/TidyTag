@@ -11,6 +11,38 @@ interface
 uses
   Classes, SysUtils, AudioTypes, BatchWrite;
 
+resourcestring
+  rsCsvTilExcelSemikolon = 'CSV til Excel (semikolon)';
+  rsCsvKomma = 'CSV (komma)';
+  rsTekstTabulator = 'Tekst (tabulator)';
+  rsAendres = 'Ændres';
+  rsUaendret = 'Uændret';
+  rsIngenFilPasser = 'Ingen fil passer';
+  rsFlereFilerPasser = 'Flere filer passer';
+  rsFiltypenKanIkkeGemmes = 'Filtypen kan ikke gemmes';
+  rsGemt = 'Gemt';
+  rsFejl = 'Fejl';
+  rsFilnavn = 'Filnavn';
+  rsSti = 'Sti';
+  rsMappe = 'Mappe';
+  rsVarighed = 'Varighed';
+  rsBitrate = 'Bitrate';
+  rsSamplerate = 'Samplerate';
+  rsCodec = 'Codec';
+  rsStoerrelseByte = 'Størrelse (byte)';
+  rsCover = 'Cover';
+  rsJa = 'Ja';
+  rsNej = 'Nej';
+  rsRegnearketHarIntetFoersteArk = 'Regnearket har intet første ark (xl/worksheets/sheet1.xml)';
+  rsDetGamleXlsFormatUnderstoettes = 'Det gamle .xls-format understøttes ikke. Gem regnearket som .xlsx eller .csv.';
+  rsFilenHarIngenDataraekker = 'Filen har ingen datarækker.';
+  rsDerManglerEnKolonneSti = 'Der mangler en kolonne "Sti" eller "Filnavn" til at finde filerne.';
+  rsIngenKolonneoverskrifterSvarerTilTag = 'Ingen kolonneoverskrifter svarer til tag-felter (fx "Titel", "Kunstner", "Album").';
+  rsFelter = 'Felter: ';
+  rsFilerFindesViaSti = '.  Filer findes via "Sti".';
+  rsFilerFindesViaFilnavn = '.  Filer findes via "Filnavn".';
+
+
 type
   TExportKind = (ekFileName, ekPath, ekFolder, ekField, ekDuration, ekBitrate, ekSampleRate,
     ekCodec, ekSize, ekCover, ekTagTypes);
@@ -40,11 +72,11 @@ type
   TImportRows = array of TImportRow;
 
 const
-  ExportFormatNames: array[TExportFormat] of string = ('CSV til Excel (semikolon)',
-    'CSV (komma)', 'Tekst (tabulator)', 'HTML-tabel', 'XML');
+  ExportFormatNames: array[TExportFormat] of string = (rsCsvTilExcelSemikolon,
+    rsCsvKomma, rsTekstTabulator, 'HTML-tabel', 'XML');
   ExportFormatExt: array[TExportFormat] of string = ('csv', 'csv', 'txt', 'html', 'xml');
-  ImportStatusText: array[TImportStatus] of string = ('Ændres', 'Uændret', 'Ingen fil passer',
-    'Flere filer passer', 'Filtypen kan ikke gemmes', 'Gemt', 'Fejl');
+  ImportStatusText: array[TImportStatus] of string = (rsAendres, rsUaendret, rsIngenFilPasser,
+    rsFlereFilerPasser, rsFiltypenKanIkkeGemmes, rsGemt, rsFejl);
   FieldKeys: array[TTagField] of string = ('title', 'artist', 'album', 'year', 'track', 'disc',
     'genre', 'comment', 'albumartist', 'composer', 'bpm', 'lyrics', 'conductor', 'lyricist',
     'origartist', 'remixer', 'label', 'catalog', 'isrc', 'copyright', 'encodedby', 'url',
@@ -123,20 +155,20 @@ begin
   Result := nil;
   SetLength(Result, 3 + Ord(High(TTagField)) + 1 + 7);
   N := 0;
-  Result[N] := Col('Filnavn', 'filename', ekFileName); Inc(N);
-  Result[N] := Col('Sti', 'path', ekPath); Inc(N);
-  Result[N] := Col('Mappe', 'folder', ekFolder); Inc(N);
+  Result[N] := Col(rsFilnavn, 'filename', ekFileName); Inc(N);
+  Result[N] := Col(rsSti, 'path', ekPath); Inc(N);
+  Result[N] := Col(rsMappe, 'folder', ekFolder); Inc(N);
   for F := Low(TTagField) to High(TTagField) do
   begin
     Result[N] := Col(TagFieldCaptions[F], FieldKeys[F], ekField, F);
     Inc(N);
   end;
-  Result[N] := Col('Varighed', 'duration', ekDuration); Inc(N);
-  Result[N] := Col('Bitrate', 'bitrate', ekBitrate); Inc(N);
-  Result[N] := Col('Samplerate', 'samplerate', ekSampleRate); Inc(N);
-  Result[N] := Col('Codec', 'codec', ekCodec); Inc(N);
-  Result[N] := Col('Størrelse (byte)', 'size', ekSize); Inc(N);
-  Result[N] := Col('Cover', 'cover', ekCover); Inc(N);
+  Result[N] := Col(rsVarighed, 'duration', ekDuration); Inc(N);
+  Result[N] := Col(rsBitrate, 'bitrate', ekBitrate); Inc(N);
+  Result[N] := Col(rsSamplerate, 'samplerate', ekSampleRate); Inc(N);
+  Result[N] := Col(rsCodec, 'codec', ekCodec); Inc(N);
+  Result[N] := Col(rsStoerrelseByte, 'size', ekSize); Inc(N);
+  Result[N] := Col(rsCover, 'cover', ekCover); Inc(N);
   Result[N] := Col('Tag-typer', 'tagtypes', ekTagTypes); Inc(N);
   SetLength(Result, N);
 end;
@@ -153,7 +185,7 @@ begin
     ekSampleRate: if Info.SampleRate > 0 then Result := IntToStr(Info.SampleRate) else Result := '';
     ekCodec: Result := Info.Codec;
     ekSize: Result := IntToStr(Info.FileSize);
-    ekCover: if Info.HasCover then Result := 'Ja' else Result := 'Nej';
+    ekCover: if Info.HasCover then Result := rsJa else Result := rsNej;
     ekTagTypes: Result := Info.TagTypes;
   else
     Result := '';
@@ -486,7 +518,7 @@ begin
       Doc.Free;
     end;
     Doc := ReadZipXml(FileName, 'xl/worksheets/sheet1.xml');
-    if Doc = nil then raise Exception.Create('Regnearket har intet første ark (xl/worksheets/sheet1.xml)');
+    if Doc = nil then raise Exception.Create(rsRegnearketHarIntetFoersteArk);
     try
       Rows := Doc.GetElementsByTagName('row');
       for I := 0 to Rows.Count - 1 do
@@ -538,7 +570,7 @@ var
 begin
   case LowerCase(ExtractFileExt(FileName)) of
     '.xlsx', '.xlsm': Exit(ReadXlsx(FileName));
-    '.xls': raise Exception.Create('Det gamle .xls-format understøttes ikke. Gem regnearket som .xlsx eller .csv.');
+    '.xls': raise Exception.Create(rsDetGamleXlsFormatUnderstoettes);
   end;
   S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
   try
@@ -614,7 +646,7 @@ begin
   HeaderInfo := '';
   if Length(Table) < 2 then
   begin
-    HeaderInfo := 'Filen har ingen datarækker.';
+    HeaderInfo := rsFilenHarIngenDataraekker;
     Exit;
   end;
   SetLength(Kinds, Length(Table[0]));
@@ -633,19 +665,19 @@ begin
   end;
   if (PathCol < 0) and (NameCol < 0) then
   begin
-    HeaderInfo := 'Der mangler en kolonne "Sti" eller "Filnavn" til at finde filerne.';
+    HeaderInfo := rsDerManglerEnKolonneSti;
     Exit;
   end;
   if Used = [] then
   begin
-    HeaderInfo := 'Ingen kolonneoverskrifter svarer til tag-felter (fx "Titel", "Kunstner", "Album").';
+    HeaderInfo := rsIngenKolonneoverskrifterSvarerTilTag;
     Exit;
   end;
-  HeaderInfo := 'Felter: ';
+  HeaderInfo := rsFelter;
   for F in Used do HeaderInfo := HeaderInfo + TagFieldCaptions[F] + ', ';
   SetLength(HeaderInfo, Length(HeaderInfo) - 2);
-  if PathCol >= 0 then HeaderInfo := HeaderInfo + '.  Filer findes via "Sti".'
-  else HeaderInfo := HeaderInfo + '.  Filer findes via "Filnavn".';
+  if PathCol >= 0 then HeaderInfo := HeaderInfo + rsFilerFindesViaSti
+  else HeaderInfo := HeaderInfo + rsFilerFindesViaFilnavn;
 
   SetLength(Result, Length(Table) - 1);
   for I := 1 to High(Table) do

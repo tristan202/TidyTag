@@ -9,6 +9,46 @@ interface
 uses
   SysUtils;
 
+resourcestring
+  rsTitel = 'Titel';
+  rsKunstner = 'Kunstner';
+  rsAar = 'År';
+  rsSpor = 'Spor';
+  rsKommentar = 'Kommentar';
+  rsAlbumkunstner = 'Albumkunstner';
+  rsKomponist = 'Komponist';
+  rsSangtekst = 'Sangtekst';
+  rsDirigent = 'Dirigent';
+  rsTekstforfatter = 'Tekstforfatter';
+  rsOprindeligKunstner = 'Oprindelig kunstner';
+  rsRemixetAf = 'Remixet af';
+  rsPladeselskab = 'Pladeselskab';
+  rsCopyright = 'Copyright';
+  rsKodetAf = 'Kodet af';
+  rsGruppering = 'Gruppering';
+  rsUndertitel = 'Undertitel';
+  rsStemning = 'Stemning';
+  rsToneart = 'Toneart';
+  rsSorterTitel = 'Sortér titel';
+  rsSorterKunstner = 'Sortér kunstner';
+  rsSorterAlbumkunstner = 'Sortér albumkunstner';
+  rsSorterAlbum = 'Sortér album';
+  rsSorterKomponist = 'Sortér komponist';
+  rsAndet = 'Andet';
+  rsForside = 'Forside';
+  rsBagside = 'Bagside';
+  rsIndlaegsseddel = 'Indlægsseddel';
+  rsMedieCd = 'Medie (CD)';
+  rsSolist = 'Solist';
+  rsOrkester = 'Orkester';
+  rsOptagested = 'Optagested';
+  rsUnderOptagelse = 'Under optagelse';
+  rsIllustration = 'Illustration';
+  rsKunstnerlogo = 'Kunstnerlogo';
+  rsUdgiverlogo = 'Udgiverlogo';
+  rsBillede = 'Billede';
+
+
 type
   TTagField = (tfTitle, tfArtist, tfAlbum, tfYear, tfTrack, tfDisc, tfGenre,
     tfComment, tfAlbumArtist, tfComposer, tfBpm,
@@ -56,12 +96,12 @@ type
   TAudioInfoArray = array of TAudioInfo;
 
 const
-  TagFieldCaptions: array[TTagField] of string = ('Titel', 'Kunstner', 'Album',
-    'År', 'Spor', 'Disc', 'Genre', 'Kommentar', 'Albumkunstner', 'Komponist', 'BPM',
-    'Sangtekst', 'Dirigent', 'Tekstforfatter', 'Oprindelig kunstner', 'Remixet af',
-    'Pladeselskab', 'Katalognr.', 'ISRC', 'Copyright', 'Kodet af', 'URL', 'Gruppering',
-    'Undertitel', 'Stemning', 'Toneart', 'Sortér titel', 'Sortér kunstner',
-    'Sortér albumkunstner', 'Sortér album', 'Sortér komponist');
+  TagFieldCaptions: array[TTagField] of string = (rsTitel, rsKunstner, 'Album',
+    rsAar, rsSpor, 'Disc', 'Genre', rsKommentar, rsAlbumkunstner, rsKomponist, 'BPM',
+    rsSangtekst, rsDirigent, rsTekstforfatter, rsOprindeligKunstner, rsRemixetAf,
+    rsPladeselskab, 'Katalognr.', 'ISRC', rsCopyright, rsKodetAf, 'URL', rsGruppering,
+    rsUndertitel, rsStemning, rsToneart, rsSorterTitel, rsSorterKunstner,
+    rsSorterAlbumkunstner, rsSorterAlbum, rsSorterKomponist);
   PicTypeFrontCover = 3;
 
 { 'image/png' / 'image/jpeg' from the data signature; Fallback if unknown. }
@@ -173,25 +213,25 @@ end;
 function PictureTypeName(T: Byte): string;
 begin
   case T of
-    0: Result := 'Andet';
+    0: Result := rsAndet;
     1, 2: Result := 'Fil-ikon';
-    3: Result := 'Forside';
-    4: Result := 'Bagside';
-    5: Result := 'Indlægsseddel';
-    6: Result := 'Medie (CD)';
-    7: Result := 'Solist';
-    8: Result := 'Kunstner';
-    9: Result := 'Dirigent';
-    10: Result := 'Orkester';
-    11: Result := 'Komponist';
-    12: Result := 'Tekstforfatter';
-    13: Result := 'Optagested';
-    14, 15: Result := 'Under optagelse';
-    18: Result := 'Illustration';
-    19: Result := 'Kunstnerlogo';
-    20: Result := 'Udgiverlogo';
+    3: Result := rsForside;
+    4: Result := rsBagside;
+    5: Result := rsIndlaegsseddel;
+    6: Result := rsMedieCd;
+    7: Result := rsSolist;
+    8: Result := rsKunstner;
+    9: Result := rsDirigent;
+    10: Result := rsOrkester;
+    11: Result := rsKomponist;
+    12: Result := rsTekstforfatter;
+    13: Result := rsOptagested;
+    14, 15: Result := rsUnderOptagelse;
+    18: Result := rsIllustration;
+    19: Result := rsKunstnerlogo;
+    20: Result := rsUdgiverlogo;
   else
-    Result := 'Billede';
+    Result := rsBillede;
   end;
 end;
 

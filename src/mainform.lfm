@@ -511,7 +511,7 @@ object FormMain: TFormMain
       end
       object ImageFolderCover: TImage
         Left = 6
-        Height = 150
+        Height = 136
         Top = 24
         Width = 188
         Center = True
@@ -520,8 +520,8 @@ object FormMain: TFormMain
       end
       object LabelFolderCoverInfo: TLabel
         Left = 6
-        Height = 24
-        Top = 176
+        Height = 38
+        Top = 162
         Width = 188
         AutoSize = False
         Caption = 'Tr'#230'k et billede hertil'
@@ -551,7 +551,7 @@ object FormMain: TFormMain
       end
       object ImageFileCover: TImage
         Left = 6
-        Height = 150
+        Height = 136
         Top = 24
         Width = 188
         Center = True
@@ -560,8 +560,8 @@ object FormMain: TFormMain
       end
       object LabelFileCoverInfo: TLabel
         Left = 6
-        Height = 24
-        Top = 176
+        Height = 38
+        Top = 162
         Width = 188
         AutoSize = False
         Caption = 'Tr'#230'k et billede hertil'

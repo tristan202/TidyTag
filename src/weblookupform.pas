@@ -108,6 +108,35 @@ implementation
 uses
   StrUtils, IniFiles, AppSettings, AudioTags, TagWriter, TagUtils, Discogs;
 
+resourcestring
+  rsWebOpslagDFiler = 'Web-opslag - %d filer';
+  rsSkrivKunstnerOgAlbumOg = 'Skriv kunstner og album, og tryk Søg.';
+  rsDiscogsKraeverEtPersonligtToken = 'Discogs kræver et personligt token til søgning - tryk "Discogs-token...".';
+  rsTrykSoeg = 'Tryk Søg.';
+  rsLavEtPersonligtTokenPaa = 'Lav et personligt token på discogs.com: Settings > Developers > Generate new token.'#13#10'Indsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):';
+  rsDiscogsTokenFjernet = 'Discogs-token fjernet.';
+  rsDiscogsTokenGemtTrykSoeg = 'Discogs-token gemt. Tryk Søg.';
+  rsFejl = 'Fejl: ';
+  rsSoegerPaa = 'Søger på ';
+  rsIngenUdgivelserFundetProevMed = 'Ingen udgivelser fundet. Prøv med færre ord eller en anden stavemåde.';
+  rsDUdgivelserFundetPaaS = '%d udgivelser fundet på %s. Vælg den rigtige (dato, format og katalognummer hjælper).';
+  rsHenterSporliste = 'Henter sporliste...';
+  rsFilerneErParretEfterDeres = 'Filerne er parret efter deres spornumre. Henter cover...';
+  rsFilerneErParretIListens = 'Filerne er parret i listens rækkefølge - ret med Op/Ned. Henter cover...';
+  rsHenterCover = ' Henter cover...';
+  rsIntetCoverFundet = 'Intet cover fundet';
+  rsCoverDxDDKb = 'Cover: %dx%d, %d KB';
+  rsIntetSporFilenAendresIkke = '(intet spor - filen ændres ikke)';
+  rsVaelgHvadDerSkalSkrives = 'Vælg, hvad der skal skrives.';
+  rsSkrivTags = 'Skriv tags';
+  rsSkrivOplysningerFraSI = 'Skriv oplysninger fra "%s" i %d filer?';
+  rsSkriver = 'Skriver ';
+  rsFindesAlleredeIkkeOverskrevet = ' findes allerede - ikke overskrevet';
+  rsGemtIDFilerD = 'Gemt i %d filer   ·   %d fejl   ·   %d sprunget over (filtype)';
+  rsCoverGemtIDMapper = '   ·   cover gemt i %d mapper';
+  rsBemaerk = 'Bemærk';
+
+
 { TWebJob }
 
 constructor TWebJob.Create(AKind: TWebJobKind);
@@ -165,8 +194,8 @@ begin
     if Artist = '' then Artist := CommonValue(Items, tfArtist);
     F.EditArtist.Text := Artist;
     F.EditAlbum.Text := CommonValue(Items, tfAlbum);
-    F.Caption := Format('Web-opslag - %d filer', [Length(Items)]);
-    F.LabelStatus.Caption := 'Skriv kunstner og album, og tryk Søg.';
+    F.Caption := Format(rsWebOpslagDFiler, [Length(Items)]);
+    F.LabelStatus.Caption := rsSkrivKunstnerOgAlbumOg;
     F.ShowTracks;
     F.ShowModal;
     KeepTimestamp := F.CheckKeepTimestamp.Checked;
@@ -256,9 +285,9 @@ begin
   ButtonWrite.Enabled := False;
   ButtonToken.Visible := Source = wsDiscogs;
   if (Source = wsDiscogs) and (FToken = '') then
-    LabelStatus.Caption := 'Discogs kræver et personligt token til søgning - tryk "Discogs-token...".'
+    LabelStatus.Caption := rsDiscogsKraeverEtPersonligtToken
   else
-    LabelStatus.Caption := 'Tryk Søg.';
+    LabelStatus.Caption := rsTrykSoeg;
 end;
 
 procedure TFormWebLookup.ButtonTokenClick(Sender: TObject);
@@ -268,8 +297,7 @@ var
 begin
   Value := FToken;
   if not InputQuery('Discogs-token',
-    'Lav et personligt token på discogs.com: Settings > Developers > Generate new token.' + LineEnding +
-    'Indsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):', True, Value) then Exit;
+    rsLavEtPersonligtTokenPaa, True, Value) then Exit;
   FToken := Trim(Value);
   Ini := OpenSettings;
   try
@@ -277,8 +305,8 @@ begin
   finally
     Ini.Free;
   end;
-  if FToken = '' then LabelStatus.Caption := 'Discogs-token fjernet.'
-  else LabelStatus.Caption := 'Discogs-token gemt. Tryk Søg.';
+  if FToken = '' then LabelStatus.Caption := rsDiscogsTokenFjernet
+  else LabelStatus.Caption := rsDiscogsTokenGemtTrykSoeg;
 end;
 
 procedure TFormWebLookup.SetBusy(Value: Boolean);
@@ -307,7 +335,7 @@ begin
     end;
     Job.WaitFor;
     Result := Job.Error = '';
-    if not Result then LabelStatus.Caption := 'Fejl: ' + Job.Error;
+    if not Result then LabelStatus.Caption := rsFejl + Job.Error;
   finally
     SetBusy(False);
   end;
@@ -333,7 +361,7 @@ begin
   try
     Job.Artist := Trim(EditArtist.Text);
     Job.Album := Trim(EditAlbum.Text);
-    if not RunJob(Job, 'Søger på ' + SourceName + '...') then Exit;
+    if not RunJob(Job, rsSoegerPaa + SourceName + '...') then Exit;
     FReleases := Job.Releases;
   finally
     Job.Free;
@@ -358,11 +386,10 @@ begin
     ListReleases.Items.EndUpdate;
   end;
   if Length(FReleases) = 0 then
-    LabelStatus.Caption := 'Ingen udgivelser fundet. Prøv med færre ord eller en anden stavemåde.'
+    LabelStatus.Caption := rsIngenUdgivelserFundetProevMed
   else
   begin
-    LabelStatus.Caption := Format('%d udgivelser fundet på %s. Vælg den rigtige (dato, format og ' +
-      'katalognummer hjælper).', [Length(FReleases), SourceName]);
+    LabelStatus.Caption := Format(rsDUdgivelserFundetPaaS, [Length(FReleases), SourceName]);
     // Preselect the first release with as many tracks as there are files, else the best hit.
     for I := 0 to High(FReleases) do
       if FReleases[I].TrackCount = Length(FItems) then
@@ -392,7 +419,7 @@ begin
   Job := NewJob(wjDetail);
   try
     Job.ReleaseId := FReleases[Index].Id;
-    if not RunJob(Job, 'Henter sporliste...') then Exit;
+    if not RunJob(Job, rsHenterSporliste) then Exit;
     FDetail := Job.Detail;
   finally
     Job.Free;
@@ -401,9 +428,9 @@ begin
   FRows := MatchFilesToTracks(FItems, FDetail, ByNumber);
   ShowTracks;
   if ByNumber then
-    LabelStatus.Caption := 'Filerne er parret efter deres spornumre. Henter cover...'
+    LabelStatus.Caption := rsFilerneErParretEfterDeres
   else
-    LabelStatus.Caption := 'Filerne er parret i listens rækkefølge - ret med Op/Ned. Henter cover...';
+    LabelStatus.Caption := rsFilerneErParretIListens;
 
   Job := NewJob(wjCover);
   try
@@ -415,7 +442,7 @@ begin
     Job.Free;
   end;
   ShowCover;
-  LabelStatus.Caption := StringReplace(LabelStatus.Caption, ' Henter cover...', '', []);
+  LabelStatus.Caption := StringReplace(LabelStatus.Caption, rsHenterCover, '', []);
   ButtonWrite.Enabled := True;
 end;
 
@@ -427,7 +454,7 @@ begin
   ImageCover.Picture.Clear;
   if FCover = nil then
   begin
-    if FHaveDetail then LabelCover.Caption := 'Intet cover fundet'
+    if FHaveDetail then LabelCover.Caption := rsIntetCoverFundet
     else LabelCover.Caption := '';
     Exit;
   end;
@@ -445,7 +472,7 @@ begin
     S.Free;
   end;
   ImageDimensions(FCover, W, H);
-  LabelCover.Caption := Format('Cover: %dx%d, %d KB', [W, H, (Length(FCover) + 1023) div 1024]);
+  LabelCover.Caption := Format(rsCoverDxDDKb, [W, H, (Length(FCover) + 1023) div 1024]);
 end;
 
 procedure TFormWebLookup.ShowTracks(SelectRow: Integer);
@@ -490,7 +517,7 @@ begin
       else
       begin
         Item.Caption := '-';
-        Item.SubItems.Add('(intet spor - filen ændres ikke)');
+        Item.SubItems.Add(rsIntetSporFilenAendresIkke);
         Item.SubItems.Add('');
         Item.SubItems.Add('');
       end;
@@ -594,10 +621,10 @@ begin
     if (FRows[I].TrackIdx >= 0) and (FRows[I].FileIdx >= 0) then Inc(Pairs);
   if (Opt.Fields = []) and not CheckCoverTags.Checked and not CheckCoverFolder.Checked then
   begin
-    MessageDlg('Vælg, hvad der skal skrives.', mtInformation, [mbOK], 0);
+    MessageDlg(rsVaelgHvadDerSkalSkrives, mtInformation, [mbOK], 0);
     Exit;
   end;
-  if MessageDlg('Skriv tags', Format('Skriv oplysninger fra "%s" i %d filer?',
+  if MessageDlg(rsSkrivTags, Format(rsSkrivOplysningerFraSI,
     [FDetail.Release.Title, Pairs]), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
   SaveOptions;
 
@@ -615,7 +642,7 @@ begin
       Full := nil;
       with FItems[FRows[I].FileIdx] do
       begin
-        LabelStatus.Caption := 'Skriver ' + ExtractFileName(FileName) + '...';
+        LabelStatus.Caption := rsSkriver + ExtractFileName(FileName) + '...';
         Application.ProcessMessages;
         if not CanWriteTags(FileName) then
         begin
@@ -663,7 +690,7 @@ begin
         CoverName := IncludeTrailingPathDelimiter(Dir) + CoverName;
         if FileExists(CoverName) then
         begin
-          Errors.Add(CoverName + ' findes allerede - ikke overskrevet');
+          Errors.Add(CoverName + rsFindesAlleredeIkkeOverskrevet);
           Continue;
         end;
         try
@@ -681,13 +708,13 @@ begin
   finally
     SetBusy(False);
   end;
-  LabelStatus.Caption := Format('Gemt i %d filer   ·   %d fejl   ·   %d sprunget over (filtype)', [Saved, Failed, Skipped]);
+  LabelStatus.Caption := Format(rsGemtIDFilerD, [Saved, Failed, Skipped]);
   if Folders > 0 then
-    LabelStatus.Caption := LabelStatus.Caption + Format('   ·   cover gemt i %d mapper', [Folders]);
+    LabelStatus.Caption := LabelStatus.Caption + Format(rsCoverGemtIDMapper, [Folders]);
   if Errors.Count > 0 then
   begin
     while Errors.Count > 20 do Errors.Delete(Errors.Count - 1);
-    MessageDlg('Bemærk', Errors.Text, mtWarning, [mbOK], 0);
+    MessageDlg(rsBemaerk, Errors.Text, mtWarning, [mbOK], 0);
   end;
   Errors.Free;
   DoneDirs.Free;

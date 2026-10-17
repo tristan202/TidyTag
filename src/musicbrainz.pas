@@ -66,6 +66,19 @@ uses
   {$IFDEF WINDOWS}Windows, WinInet,{$ENDIF}
   SyncObjs, fpjson, jsonparser;
 
+resourcestring
+  rsKunneIkkeStarteNetvaerksforbindelsenFejl = 'Kunne ikke starte netværksforbindelsen (fejl %d)';
+  rsIngenForbindelseTilSFejl = 'Ingen forbindelse til %s (fejl %d). Tjek internetforbindelsen.';
+  rsForbindelsenBlevAfbrudtFejlD = 'Forbindelsen blev afbrudt (fejl %d)';
+  rsWebOpslagUnderstoettesKunPaa = 'Web-opslag understøttes kun på Windows i denne version';
+  rsMusicbrainzHarTravltLigeNu = 'MusicBrainz har travlt lige nu (503). Prøv igen om et øjeblik.';
+  rsMusicbrainzKenderIkkeDenneUdgivelse = 'MusicBrainz kender ikke denne udgivelse';
+  rsMusicbrainzSvaredeMedFejlD = 'MusicBrainz svarede med fejl %d';
+  rsBlandet = 'Blandet';
+  rsUventetSvarFraMusicbrainz = 'Uventet svar fra MusicBrainz';
+  rsSkrivKunstnerOgEllerAlbum = 'Skriv kunstner og/eller album';
+
+
 var
   RateLock: TCriticalSection;
   LastMBRequest: QWord = 0;
@@ -84,16 +97,16 @@ begin
   Data := nil;
   Net := InternetOpenW(PWideChar(UnicodeString(UserAgent)), INTERNET_OPEN_TYPE_PRECONFIG, nil, nil, 0);
   if Net = nil then
-    raise EWebError.CreateFmt('Kunne ikke starte netværksforbindelsen (fejl %d)', [GetLastError]);
+    raise EWebError.CreateFmt(rsKunneIkkeStarteNetvaerksforbindelsenFejl, [GetLastError]);
   try
     Timeout := 20000;
     InternetSetOptionW(Net, INTERNET_OPTION_CONNECT_TIMEOUT, @Timeout, SizeOf(Timeout));
     InternetSetOptionW(Net, INTERNET_OPTION_RECEIVE_TIMEOUT, @Timeout, SizeOf(Timeout));
-    Headers := UTF8Decode('Accept: application/json, image/*' + #13#10 + ExtraHeaders);
+    Headers := UTF8Decode('Accept: application/json, image/*'#13#10 + ExtraHeaders);
     Req := InternetOpenUrlW(Net, PWideChar(UTF8Decode(Url)), PWideChar(Headers), Length(Headers),
       INTERNET_FLAG_RELOAD or INTERNET_FLAG_NO_CACHE_WRITE or INTERNET_FLAG_KEEP_CONNECTION, 0);
     if Req = nil then
-      raise EWebError.CreateFmt('Ingen forbindelse til %s (fejl %d). Tjek internetforbindelsen.',
+      raise EWebError.CreateFmt(rsIngenForbindelseTilSFejl,
         [Copy(Url, 1, Pos('/', Copy(Url, 9, MaxInt)) + 7), GetLastError]);
     try
       Status := 0;
@@ -105,7 +118,7 @@ begin
       repeat
         Got := 0;
         if not InternetReadFile(Req, @Buf[0], SizeOf(Buf), @Got) then
-          raise EWebError.CreateFmt('Forbindelsen blev afbrudt (fejl %d)', [GetLastError]);
+          raise EWebError.CreateFmt(rsForbindelsenBlevAfbrudtFejlD, [GetLastError]);
         if Got > 0 then
         begin
           SetLength(Data, N + Got);
@@ -123,7 +136,7 @@ begin
 end;
 {$ELSE}
 begin
-  raise EWebError.Create('Web-opslag understøttes kun på Windows i denne version');
+  raise EWebError.Create(rsWebOpslagUnderstoettesKunPaa);
 end;
 {$ENDIF}
 
@@ -163,9 +176,9 @@ begin
       Continue;
     end;
     if Status = 503 then
-      raise EWebError.Create('MusicBrainz har travlt lige nu (503). Prøv igen om et øjeblik.');
-    if Status = 404 then raise EWebError.Create('MusicBrainz kender ikke denne udgivelse');
-    raise EWebError.CreateFmt('MusicBrainz svarede med fejl %d', [Status]);
+      raise EWebError.Create(rsMusicbrainzHarTravltLigeNu);
+    if Status = 404 then raise EWebError.Create(rsMusicbrainzKenderIkkeDenneUdgivelse);
+    raise EWebError.CreateFmt(rsMusicbrainzSvaredeMedFejlD, [Status]);
   end;
   Result := '';
 end;
@@ -308,7 +321,7 @@ begin
       if R.Formats = '' then
         R.Formats := Fmt
       else if R.Formats <> Fmt then
-        R.Formats := 'Blandet'; // e.g. CD + DVD
+        R.Formats := rsBlandet; // e.g. CD + DVD
     end;
     if Media.Count > 1 then R.Formats := IntToStr(Media.Count) + '×' + R.Formats;
   end;
@@ -388,7 +401,7 @@ begin
   Result.CoverUrl := '';
   Root := GetJSON(Json);
   try
-    if Root.JSONType <> jtObject then raise EWebError.Create('Uventet svar fra MusicBrainz');
+    if Root.JSONType <> jtObject then raise EWebError.Create(rsUventetSvarFraMusicbrainz);
     O := TJSONObject(Root);
     FillRelease(O, Result.Release);
     Result.AlbumArtist := Result.Release.Artist;
@@ -444,7 +457,7 @@ var
   Q: string;
 begin
   Q := BuildReleaseQuery(Artist, Album);
-  if Q = '' then raise EWebError.Create('Skriv kunstner og/eller album');
+  if Q = '' then raise EWebError.Create(rsSkrivKunstnerOgEllerAlbum);
   Result := ParseSearchJson(MBGet('release/?query=' + UrlEncode(Q) + '&fmt=json&limit=40'));
 end;
 

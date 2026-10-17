@@ -16,6 +16,11 @@ implementation
 uses
   TagUtils;
 
+resourcestring
+  rsMoovAtomErForStor = 'moov-atom er for stor';
+  rsIngenMoovAtomIkkeEn = 'Ingen moov-atom - ikke en gyldig MP4-fil';
+
+
 const
   MaxMoovSize = 64 * 1024 * 1024;
 
@@ -275,7 +280,7 @@ begin
     if AtomIs(H, 4, 'moov') then
     begin
       if Size - Hdr > MaxMoovSize then
-        raise Exception.Create('moov-atom er for stor');
+        raise Exception.Create(rsMoovAtomErForStor);
       S.Position := Pos + Hdr;
       Moov := ReadStreamBytes(S, Size - Hdr);
     end
@@ -284,7 +289,7 @@ begin
     Inc(Pos, Size);
   end;
   if Moov = nil then
-    raise Exception.Create('Ingen moov-atom - ikke en gyldig MP4-fil');
+    raise Exception.Create(rsIngenMoovAtomIkkeEn);
   ParseAtoms(Moov, 0, Length(Moov), False, Info);
   if Info.Duration > 0 then
   begin

@@ -3,7 +3,11 @@
 Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne i Tag&Rename 3.9.15
 (se [docs/Funktionsoversigt.md](docs/Funktionsoversigt.md)). Arbejdstitel – navnet kan ændres.
 
-## Status (MVP, trin 10)
+## Status (MVP, trin 11)
+- **Sprog:** dansk, engelsk, tysk, fransk, italiensk, svensk og spansk. Vælges under
+  *Indstillinger > Sprog (Language)*; "Automatisk" bruger Windows-sproget (ellers engelsk).
+  Skift af sprog genstarter programmet i samme mappe. Også LCL's dialogknapper er oversat.
+  Vinduer tilpasses længere tekster automatisk (bredere knapper, felter der rykker).
 - **Hovedvindue i Tag&Rename-stil:** menulinje (Filer, Rediger, Vis, Playliste, Værktøjer,
   Indstillinger, Hjælp), værktøjspanel (F8) med fanerne *Omdøb filer (F4)*, *Multi-fil-tag-editor
   (Ctrl+F4)* og *Tags fra filnavn (Shift+F4)* direkte i vinduet (med live-resultat for den markerede
@@ -95,6 +99,25 @@ bin\renametest.exe C:\Temp\renametest
 `dgtest.lpr` (live Discogs: `bin\dgtest.exe 249504`), `mbtest.lpr` (live-søgning: `bin\mbtest.exe "Gasolin'" "Gas 5"`), `exporttest.lpr` (eksport/import), `tagset.lpr` (sæt felter:
 `bin\tagset.exe fil.mp3 artist=X album=Y track=1`).
 
+### Oversættelser
+Kildesproget er dansk. Tekster i koden er `resourcestring`s, formularernes tekster kommer fra `.lfm`.
+`languages\src	ranslations.json` er kilden til oversættelserne (`{dansk tekst: {sprog: tekst}}`).
+Efter ændringer i tekster eller oversættelser:
+```
+C:\lazarus\lazbuild.exe TagKlon.lpi
+python tools\mkpot.py
+```
+`mkpot.py` laver `languages\TagKlon.pot` ud fra compilerens `.rsj`-filer og formularerne og skriver
+`languages\TagKlon.<sprog>.po` (formatkoder som `%d`/`%s` kontrolleres). Programmet finder `languages\`
+ved siden af exe-filen eller i `..\languages`. Nyt sprog: tilføj koden i `src\language.pas` og
+oversættelser i JSON-filen (samt `lclstrconsts.<sprog>.po` fra `C:\lazarus\lcl\languages`).
+
+Layout-kontrol for et sprog (sæt `Language=xx` under `[Main]` i indstillingsfilen først):
+```
+bin\TagKlon.exe --layoutcheck C:\Temp\layout.txt
+```
+opretter alle vinduer og skriver tekster, der ikke kan være der, overlapper eller stikker ud.
+
 Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret – gem også den tilhørende `.pas`.
 
 ## Struktur
@@ -115,6 +138,11 @@ Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret
 | `src/wavreader.pas`, `src/wavwriter.pas` | WAV/AIFF-chunks: lydinfo, ID3-chunk, LIST/INFO |
 | `src/apetag.pas`, `src/apereader.pas` | APEv2-tags; lydinfo for APE/WavPack/Musepack/OptimFROG |
 | `src/asfreader.pas`, `src/asfwriter.pas` | WMA/ASF-header-objekter |
+| `src/language.pas` | Sprogvalg og indlæsning af `.po`-filer (LCLTranslator) |
+| `src/layoutfit.pas` | Giver plads til længere oversatte tekster, når et vindue vises |
+| `src/layoutcheck.pas` | Udviklerkontrol `--layoutcheck` af alle vinduer |
+| `languages/` | `TagKlon.pot`, `TagKlon.<sprog>.po`, `lclstrconsts.<sprog>.po`, `src/translations.json` |
+| `tools/mkpot.py` | Laver `.pot` og `.po`-filer |
 | `src/tageditform.pas/.lfm` | Tag-editor for én fil |
 | `src/renamecore.pas` | Maske → fil-/mappenavn, rensning, plan/udfør/fortryd |
 | `src/filenametags.pas` | Filnavn → tags (maske-matchning) |

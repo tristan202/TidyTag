@@ -12,19 +12,16 @@ interface
 uses
   Classes, SysUtils, AudioTypes, RenameCore;
 
+resourcestring
+  FileToTagVariablesHelp = '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc'#13#10'%9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab'#13#10'%d Spring over'#13#10'Filtypen fjernes automatisk. Brug \ for mappenavne, fx  %1\%3\%6 - %2';
+
+
 type
   TFileNameMatch = record
     Ok: Boolean;
     Values: array[TTagField] of string;
     Used: TFieldSet;
   end;
-
-const
-  FileToTagVariablesHelp =
-    '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc' + LineEnding +
-    '%9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab' + LineEnding +
-    '%d Spring over' + LineEnding +
-    'Filtypen fjernes automatisk. Brug \ for mappenavne, fx  %1\%3\%6 - %2';
 
 { Which fields a mask fills (for preview columns). }
 function MaskFields(const Mask: string): TFieldSet;

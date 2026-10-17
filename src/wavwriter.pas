@@ -20,10 +20,15 @@ implementation
 uses
   TagUtils, WavReader, ID3Writer;
 
+resourcestring
+  rsFilenBliverStoerreEndGb = 'Filen bliver større end 4 GB, hvilket WAV/AIFF ikke tillader';
+  rsFilenIndeholderIngenLyd = 'Filen indeholder ingen lyd';
+
+
 procedure WriteSize(S: TStream; V: Int64; BigEndian: Boolean);
 begin
   if V > High(Cardinal) then
-    raise Exception.Create('Filen bliver større end 4 GB, hvilket WAV/AIFF ikke tillader');
+    raise Exception.Create(rsFilenBliverStoerreEndGb);
   if BigEndian then WriteBE32(S, V) else WriteLE32(S, V);
 end;
 
@@ -147,7 +152,7 @@ begin
       end
       else
         LastAudio := I;
-    if LastAudio < 0 then raise Exception.Create('Filen indeholder ingen lyd');
+    if LastAudio < 0 then raise Exception.Create(rsFilenIndeholderIngenLyd);
 
     NewID3 := BuildID3TagBytes(OldID3, Info, 0);
     if CF.IsAiff then NewInfo := nil else NewInfo := BuildInfoList(OldInfo, Info);
@@ -204,7 +209,7 @@ begin
   end;
 
   if KeepEnd + Length(TailBytes) - 8 > High(Cardinal) then
-    raise Exception.Create('Filen bliver større end 4 GB, hvilket WAV/AIFF ikke tillader');
+    raise Exception.Create(rsFilenBliverStoerreEndGb);
   S := TFileStream.Create(FileName, fmOpenReadWrite or fmShareExclusive);
   try
     S.Size := KeepEnd; // also restores a missing pad byte after the audio

@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, MainForm;
+  Forms, Language, LayoutFit, MainForm, LayoutCheck;
 
 {$R *.res}
 {$R res/icons.rc}
@@ -17,6 +17,12 @@ begin
   Application.Title := 'TagKlon';
   Application.Scaled := True;
   Application.Initialize;
+  ApplyLanguage;
   Application.CreateForm(TFormMain, FormMain);
+  if LayoutCheckRequested then
+  begin
+    RunLayoutCheck;
+    Exit;
+  end;
   Application.Run;
 end.

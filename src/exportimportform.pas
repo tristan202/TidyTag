@@ -71,6 +71,20 @@ implementation
 uses
   IniFiles, LCLIntf, AppSettings, BatchWrite;
 
+resourcestring
+  rsAlleFilerIListenD = 'Alle filer i listen (%d)';
+  rsVaelgMindstEnKolonne = 'Vælg mindst én kolonne.';
+  rsEksportenMislykkedes = 'Eksporten mislykkedes:';
+  rsDFilerEksporteretTilS = '%d filer eksporteret til'#13#10'%s';
+  rsFilenKunneIkkeLaeses = 'Filen kunne ikke læses: ';
+  rsTom = '(tom)';
+  rsDFilerGemtDFejl = '%d filer gemt   ·   %d fejl';
+  rsDAendresDUaendretD = '%d ændres   ·   %d uændret   ·   %d uden fil   ·   %d tvetydige   ·   %d kan ikke gemmes';
+  rsImporterTags = 'Importér tags';
+  rsSkrivDeImporteredeVaerdierI = 'Skriv de importerede værdier i %d filer?';
+  rsSkriverS = 'Skriver %s...';
+
+
 const
   DefaultCols: array[0..11] of string = ('filename', 'path', 'title', 'artist', 'album', 'year',
     'track', 'disc', 'genre', 'albumartist', 'comment', 'duration');
@@ -87,7 +101,7 @@ begin
     F.FSubset := Subset;
     F.FKeepTimestamp := KeepTimestamp;
     F.RadioScope.Items[0] := SubsetCaption;
-    F.RadioScope.Items[1] := Format('Alle filer i listen (%d)', [Length(All)]);
+    F.RadioScope.Items[1] := Format(rsAlleFilerIListenD, [Length(All)]);
     if Prefer and (Length(Subset) > 0) then F.RadioScope.ItemIndex := 0 else F.RadioScope.ItemIndex := 1;
     if StartWithImport then F.PageMain.ActivePage := F.TabImport else F.PageMain.ActivePage := F.TabExport;
     F.ShowModal;
@@ -194,7 +208,7 @@ begin
     end;
   if Length(Cols) = 0 then
   begin
-    MessageDlg('Vælg mindst én kolonne.', mtInformation, [mbOK], 0);
+    MessageDlg(rsVaelgMindstEnKolonne, mtInformation, [mbOK], 0);
     Exit;
   end;
   if (RadioScope.ItemIndex = 0) and (Length(FSubset) > 0) then Items := FSubset else Items := FAll;
@@ -211,12 +225,12 @@ begin
   except
     on E: Exception do
     begin
-      MessageDlg('Eksporten mislykkedes:' + LineEnding + E.Message, mtError, [mbOK], 0);
+      MessageDlg(rsEksportenMislykkedes + LineEnding + E.Message, mtError, [mbOK], 0);
       Exit;
     end;
   end;
   if CheckOpenAfter.Checked then OpenDocument(SaveExportDialog.FileName)
-  else MessageDlg(Format('%d filer eksporteret til' + LineEnding + '%s',
+  else MessageDlg(Format(rsDFilerEksporteretTilS,
     [Length(Items), SaveExportDialog.FileName]), mtInformation, [mbOK], 0);
 end;
 
@@ -232,7 +246,7 @@ begin
       FTable := nil;
       FPlan := nil;
       ShowImportRows;
-      LabelImportInfo.Caption := 'Filen kunne ikke læses: ' + E.Message;
+      LabelImportInfo.Caption := rsFilenKunneIkkeLaeses + E.Message;
       Exit;
     end;
   end;
@@ -267,8 +281,8 @@ begin
     if Length(Old) > 30 then Old := Copy(Old, 1, 28) + '…';
     if Length(New) > 30 then New := Copy(New, 1, 28) + '…';
     if Result <> '' then Result := Result + ';  ';
-    if Old = '' then Old := '(tom)';
-    if New = '' then New := '(tom)';
+    if Old = '' then Old := rsTom;
+    if New = '' then New := rsTom;
     Result := Result + TagFieldCaptions[F] + ': ' + Old + ' → ' + New;
   end;
 end;
@@ -302,9 +316,9 @@ begin
   end;
   Ready := Count[isChange];
   if Count[isSaved] + Count[isFailed] > 0 then
-    LabelImportSummary.Caption := Format('%d filer gemt   ·   %d fejl', [Count[isSaved], Count[isFailed]])
+    LabelImportSummary.Caption := Format(rsDFilerGemtDFejl, [Count[isSaved], Count[isFailed]])
   else
-    LabelImportSummary.Caption := Format('%d ændres   ·   %d uændret   ·   %d uden fil   ·   %d tvetydige   ·   %d kan ikke gemmes',
+    LabelImportSummary.Caption := Format(rsDAendresDUaendretD,
       [Ready, Count[isUnchanged], Count[isNoMatch], Count[isAmbiguous], Count[isNotWritable]]);
   ButtonImportWrite.Enabled := Ready > 0;
 end;
@@ -317,7 +331,7 @@ var
 begin
   Ready := 0;
   for I := 0 to High(FPlan) do if FPlan[I].Status = isChange then Inc(Ready);
-  if MessageDlg('Importér tags', Format('Skriv de importerede værdier i %d filer?', [Ready]),
+  if MessageDlg(rsImporterTags, Format(rsSkrivDeImporteredeVaerdierI, [Ready]),
     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
   SaveOptions;
   ButtonImportWrite.Enabled := False;
@@ -326,7 +340,7 @@ begin
     for I := 0 to High(FPlan) do
     begin
       if FPlan[I].Status <> isChange then Continue;
-      LabelImportSummary.Caption := Format('Skriver %s...', [ExtractFileName(FPlan[I].Info.FileName)]);
+      LabelImportSummary.Caption := Format(rsSkriverS, [ExtractFileName(FPlan[I].Info.FileName)]);
       Application.ProcessMessages;
       if UpdateFileTags(FPlan[I].Info, FPlan[I].Values, FPlan[I].Fields, nil, FKeepTimestamp, Err, Skip) then
       begin

@@ -60,6 +60,21 @@ implementation
 uses
   IniFiles, AppSettings;
 
+resourcestring
+  rsOmdoebMapperUdFraTags = 'Omdøb mapper ud fra tags';
+  rsNuvaerendeMappe = 'Nuværende mappe';
+  rsNyMappe = 'Ny mappe';
+  rsOmdoebMapper = 'Omdøb mapper';
+  rsSDMapper = '%s - %d mapper';
+  rsAlleFilerIListenD = 'Alle filer i listen - %d mapper';
+  rsAlleFilerIListenD2 = 'Alle filer i listen (%d)';
+  rsDOmdoebesDUaendretD = '%d omdøbes   ·   %d uændret   ·   %d springes over';
+  rsDOmdoebtDFejlKan = '%d omdøbt   ·   %d fejl   ·   kan fortrydes fra hovedvinduet';
+  rsOmdoebDMapper = 'Omdøb %d mapper?';
+  rsOmdoebFiler = 'Omdøb filer';
+  rsOmdoebDFiler = 'Omdøb %d filer?';
+
+
 const
   DefaultMasks: array[0..5] of string = ('%1 - %2', '%6 - %2', '%6 - %1 - %2',
     '%1 - %3 - %6 - %2', '%1\%3\%6 - %2', '%aa\%4 - %3\%6 - %2');
@@ -95,20 +110,20 @@ begin
     F.FFolderMode := FolderMode;
     if FolderMode then
     begin
-      F.Caption := 'Omdøb mapper ud fra tags';
+      F.Caption := rsOmdoebMapperUdFraTags;
       F.LabelMask.Caption := 'Mappemaske:';
       F.LabelVars.Caption := FolderVariablesHelp;
       F.CheckPadTrack.Visible := False;
-      F.ListPreview.Column[0].Caption := 'Nuværende mappe';
-      F.ListPreview.Column[1].Caption := 'Ny mappe';
-      F.ButtonRename.Caption := 'Omdøb mapper';
-      F.RadioScope.Items[0] := Format('%s - %d mapper', [SubsetCaption, FolderCount(Subset)]);
-      F.RadioScope.Items[1] := Format('Alle filer i listen - %d mapper', [FolderCount(All)]);
+      F.ListPreview.Column[0].Caption := rsNuvaerendeMappe;
+      F.ListPreview.Column[1].Caption := rsNyMappe;
+      F.ButtonRename.Caption := rsOmdoebMapper;
+      F.RadioScope.Items[0] := Format(rsSDMapper, [SubsetCaption, FolderCount(Subset)]);
+      F.RadioScope.Items[1] := Format(rsAlleFilerIListenD, [FolderCount(All)]);
     end
     else
     begin
       F.RadioScope.Items[0] := SubsetCaption;
-      F.RadioScope.Items[1] := Format('Alle filer i listen (%d)', [Length(All)]);
+      F.RadioScope.Items[1] := Format(rsAlleFilerIListenD2, [Length(All)]);
     end;
     F.LoadOptions;
     if Prefer and (Length(Subset) > 0) then F.RadioScope.ItemIndex := 0 else F.RadioScope.ItemIndex := 1;
@@ -244,12 +259,12 @@ begin
   finally
     ListPreview.Items.EndUpdate;
   end;
-  LabelSummary.Caption := Format('%d omdøbes   ·   %d uændret   ·   %d springes over',
+  LabelSummary.Caption := Format(rsDOmdoebesDUaendretD,
     [CountStatus(FPlan, rsOk), CountStatus(FPlan, rsUnchanged),
      Length(FPlan) - CountStatus(FPlan, rsOk) - CountStatus(FPlan, rsUnchanged) -
      CountStatus(FPlan, rsDone)]);
   if CountStatus(FPlan, rsDone) > 0 then
-    LabelSummary.Caption := Format('%d omdøbt   ·   %d fejl   ·   kan fortrydes fra hovedvinduet',
+    LabelSummary.Caption := Format(rsDOmdoebtDFejlKan,
       [CountStatus(FPlan, rsDone), CountStatus(FPlan, rsFailed)]);
   ButtonRename.Enabled := CountStatus(FPlan, rsOk) > 0;
 end;
@@ -263,13 +278,13 @@ begin
   if CountStatus(FPlan, rsOk) = 0 then Exit;
   if FFolderMode then
   begin
-    if MessageDlg('Omdøb mapper', Format('Omdøb %d mapper?', [CountStatus(FPlan, rsOk)]),
+    if MessageDlg(rsOmdoebMapper, Format(rsOmdoebDMapper, [CountStatus(FPlan, rsOk)]),
       mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
     AddComboMaskToHistory('FolderMasks', ComboMask);
   end
   else
   begin
-    if MessageDlg('Omdøb filer', Format('Omdøb %d filer?', [CountStatus(FPlan, rsOk)]),
+    if MessageDlg(rsOmdoebFiler, Format(rsOmdoebDFiler, [CountStatus(FPlan, rsOk)]),
       mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
     AddComboMaskToHistory('RenameMasks', ComboMask);
   end;

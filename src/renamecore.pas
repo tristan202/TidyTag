@@ -10,6 +10,30 @@ interface
 uses
   Classes, SysUtils, AudioTypes;
 
+resourcestring
+  rsUaendret = 'Uændret';
+  rsHvertOrdMedStort = 'Hvert Ord Med Stort';
+  rsFoersteBogstavStort = 'Første bogstav stort';
+  rsSmaaBogstaver = 'små bogstaver';
+  rsStoreBogstaver = 'STORE BOGSTAVER';
+  rsOmdoebes = 'Omdøbes';
+  rsManglerFelt = 'Mangler felt';
+  rsFindesAllerede = 'Findes allerede';
+  rsSammeNavnSomEnAnden = 'Samme navn som en anden fil';
+  rsUgyldigtNavn = 'Ugyldigt navn';
+  rsOmdoebt = 'Omdøbt';
+  rsFejl = 'Fejl';
+  FolderVariablesHelp = '%1 Kunstner   %3 Album   %4 År   %5 Genre   %# Disc   %aa Albumkunstner   %cp Komponist'#13#10'%f Nuværende mappenavn.  Kun værdier, der er ens for alle filer i mappen, kan bruges'#13#10'(er kunstnerne forskellige, bruges albumkunstneren).'#13#10'Brug \ for undermapper, fx  %1\%4 - %3';
+  RenameVariablesHelp = '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc'#13#10'%7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate   %b BPM   %t Spilletid'#13#10'%aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab   %cat Katalognr.'#13#10'%grp Gruppering   %rb Remixet af   %md Stemning   %key Toneart   %ext Filtype   %khz Samplerate'#13#10'Brug \ for at lave mapper, fx  %1\%3\%6 - %2';
+  rsForskellige = ' (forskellige)';
+  rsIndeholderEnAndenValgtMappe = 'indeholder en anden valgt mappe';
+  rsKanIkkeFlyttesIndI = 'kan ikke flyttes ind i sig selv';
+  rsStienErForLang = 'stien er for lang';
+  rsKunneIkkeOpretteMappen = 'kunne ikke oprette mappen ';
+  rsFindesIkkeLaengere = ': findes ikke længere';
+  rsDerLiggerAlleredeEnFil = ': der ligger allerede en fil med det navn';
+
+
 type
   TCaseMode = (cmNone, cmTitle, cmSentence, cmLower, cmUpper);
 
@@ -46,22 +70,11 @@ type
   end;
 
 const
-  CaseModeNames: array[TCaseMode] of string = ('Uændret', 'Hvert Ord Med Stort',
-    'Første bogstav stort', 'små bogstaver', 'STORE BOGSTAVER');
-  RenameStatusText: array[TRenameStatus] of string = ('Omdøbes', 'Uændret',
-    'Mangler felt', 'Findes allerede', 'Samme navn som en anden fil', 'Ugyldigt navn',
-    'Omdøbt', 'Fejl');
-  FolderVariablesHelp =
-    '%1 Kunstner   %3 Album   %4 År   %5 Genre   %# Disc   %aa Albumkunstner   %cp Komponist' + LineEnding +
-    '%f Nuværende mappenavn.  Kun værdier, der er ens for alle filer i mappen, kan bruges' + LineEnding +
-    '(er kunstnerne forskellige, bruges albumkunstneren).' + LineEnding +
-    'Brug \ for undermapper, fx  %1\%4 - %3';
-  RenameVariablesHelp =
-    '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc' + LineEnding +
-    '%7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate   %b BPM   %t Spilletid' + LineEnding +
-    '%aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab   %cat Katalognr.' + LineEnding +
-    '%grp Gruppering   %rb Remixet af   %md Stemning   %key Toneart   %ext Filtype   %khz Samplerate' + LineEnding +
-    'Brug \ for at lave mapper, fx  %1\%3\%6 - %2';
+  CaseModeNames: array[TCaseMode] of string = (rsUaendret, rsHvertOrdMedStort,
+    rsFoersteBogstavStort, rsSmaaBogstaver, rsStoreBogstaver);
+  RenameStatusText: array[TRenameStatus] of string = (rsOmdoebes, rsUaendret,
+    rsManglerFelt, rsFindesAllerede, rsSammeNavnSomEnAnden, rsUgyldigtNavn,
+    rsOmdoebt, rsFejl);
 
 function ApplyCase(const S: string; Mode: TCaseMode): string;
 { Makes text safe as one file/folder name component (no \ / : * ? " < > |). }
@@ -275,7 +288,7 @@ begin
     begin
       if Missing <> '' then Missing := Missing + ', ';
       Why := TagFieldCaptions[F];
-      if F in V.Different then Why := Why + ' (forskellige)';
+      if F in V.Different then Why := Why + rsForskellige;
       Missing := Missing + Why;
     end;
     Res := Res + ApplyCase(Value, Opt.CaseMode);
@@ -405,7 +418,7 @@ begin
         if (J <> I) and IsInside(Dirs[J], Dir) then
         begin
           Result[I].Status := rsInvalid;
-          Result[I].Detail := 'indeholder en anden valgt mappe';
+          Result[I].Detail := rsIndeholderEnAndenValgtMappe;
           Break;
         end;
       if Result[I].Detail <> '' then Continue;
@@ -435,12 +448,12 @@ begin
       else if IsInside(Result[I].NewName, Dir) then
       begin
         Result[I].Status := rsInvalid;
-        Result[I].Detail := 'kan ikke flyttes ind i sig selv';
+        Result[I].Detail := rsKanIkkeFlyttesIndI;
       end
       else if Length(UTF8Decode(Result[I].NewName)) >= 248 then
       begin
         Result[I].Status := rsInvalid;
-        Result[I].Detail := 'stien er for lang';
+        Result[I].Detail := rsStienErForLang;
       end
       else if Seen.Find(Result[I].NewName, Dummy) then
         Result[I].Status := rsDuplicate
@@ -521,7 +534,7 @@ begin
       else if Length(UTF8Decode(Result[I].NewName)) >= 260 then
       begin
         Result[I].Status := rsInvalid;
-        Result[I].Detail := 'stien er for lang';
+        Result[I].Detail := rsStienErForLang;
       end
       else if Seen.Find(Result[I].NewName, Dummy) then
         Result[I].Status := rsDuplicate
@@ -552,7 +565,7 @@ begin
     if not DirectoryExists(Dir) and not ForceDirectories(Dir) then
     begin
       Plan[I].Status := rsFailed;
-      Plan[I].Detail := 'kunne ikke oprette mappen ' + Dir;
+      Plan[I].Detail := rsKunneIkkeOpretteMappen + Dir;
       Continue;
     end;
     // A target that appeared after the preview must not be overwritten.
@@ -598,12 +611,12 @@ begin
   begin
     if not PathExists(Log[I].NewName) then
     begin
-      Errors.Add(Log[I].NewName + ': findes ikke længere');
+      Errors.Add(Log[I].NewName + rsFindesIkkeLaengere);
       Continue;
     end;
     if PathExists(Log[I].OldName) and not SameFileName(Log[I].OldName, Log[I].NewName) then
     begin
-      Errors.Add(Log[I].OldName + ': der ligger allerede en fil med det navn');
+      Errors.Add(Log[I].OldName + rsDerLiggerAlleredeEnFil);
       Continue;
     end;
     ForceDirectories(ExtractFileDir(Log[I].OldName));

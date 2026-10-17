@@ -33,6 +33,15 @@ implementation
 uses
   SyncObjs, fpjson, jsonparser;
 
+resourcestring
+  rsDiscogsForMangeForespoergslerVent = 'Discogs: for mange forespørgsler - vent et minut og prøv igen.';
+  rsDiscogsAfvisteDitTokenTjek = 'Discogs afviste dit token. Tjek det under "Discogs-token...".';
+  rsDiscogsKenderIkkeDenneUdgivelse = 'Discogs kender ikke denne udgivelse';
+  rsDiscogsSvaredeMedFejlD = 'Discogs svarede med fejl %d';
+  rsUventetSvarFraDiscogs = 'Uventet svar fra Discogs';
+  rsSoegningPaaDiscogsKraeverEt = 'Søgning på Discogs kræver et personligt token. Tryk "Discogs-token..." og indsæt det token, du kan lave på discogs.com under Settings > Developers.';
+
+
 var
   RateLock: TCriticalSection;
   LastRequest: QWord = 0;
@@ -70,11 +79,11 @@ begin
              Continue;
            end
            else
-             raise EWebError.Create('Discogs: for mange forespørgsler - vent et minut og prøv igen.');
-      401: raise EWebError.Create('Discogs afviste dit token. Tjek det under "Discogs-token...".');
-      404: raise EWebError.Create('Discogs kender ikke denne udgivelse');
+             raise EWebError.Create(rsDiscogsForMangeForespoergslerVent);
+      401: raise EWebError.Create(rsDiscogsAfvisteDitTokenTjek);
+      404: raise EWebError.Create(rsDiscogsKenderIkkeDenneUdgivelse);
     else
-      raise EWebError.CreateFmt('Discogs svarede med fejl %d', [Status]);
+      raise EWebError.CreateFmt(rsDiscogsSvaredeMedFejlD, [Status]);
     end;
   end;
   Result := '';
@@ -266,7 +275,7 @@ begin
   Result.Compilation := False;
   Root := GetJSON(Json);
   try
-    if Root.JSONType <> jtObject then raise EWebError.Create('Uventet svar fra Discogs');
+    if Root.JSONType <> jtObject then raise EWebError.Create(rsUventetSvarFraDiscogs);
     O := TJSONObject(Root);
     with Result.Release do
     begin
@@ -359,8 +368,7 @@ var
   Q: string;
 begin
   if Trim(Token) = '' then
-    raise EWebError.Create('Søgning på Discogs kræver et personligt token. Tryk "Discogs-token..." ' +
-      'og indsæt det token, du kan lave på discogs.com under Settings > Developers.');
+    raise EWebError.Create(rsSoegningPaaDiscogsKraeverEt);
   Q := 'type=release&per_page=50';
   if Trim(Artist) <> '' then Q := Q + '&artist=' + UrlEncode(Trim(Artist));
   if Trim(Album) <> '' then Q := Q + '&release_title=' + UrlEncode(Trim(Album));

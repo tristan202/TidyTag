@@ -210,6 +210,8 @@ type
     procedure ActDiscogsTokenExecute(Sender: TObject);
     procedure ActShortcutsExecute(Sender: TObject);
     procedure ActAboutExecute(Sender: TObject);
+    procedure AddLanguageMenu(ParentItem: TMenuItem);
+    procedure LanguageClick(Sender: TObject);
     procedure ActFolderUpExecute(Sender: TObject);
     procedure ActFavoritesExecute(Sender: TObject);
     procedure ActNewFolderExecute(Sender: TObject);
@@ -284,7 +286,216 @@ implementation
 uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
-  AppSettings;
+  AppSettings, Language, Process;
+
+resourcestring
+  rsSprogLanguage = 'Sprog (Language)';
+  rsSprog = 'Sprog';
+  rsAutomatiskWindowsSprog = 'Automatisk (Windows-sprog)';
+  rsSprogetSkiftesNaarTagklonGenstartes = 'Sproget skiftes, når TagKlon startes igen. Genstart nu?';
+  rsMultiFilTagEditor = 'Multi-fil-tag-editor';
+  rsFilerFlertal = 'filer';
+  rsMapperFlertal = 'mapper';
+  rsKunstner = '%1|Kunstner';
+  rsTitel = '%2|Titel';
+  rsAlbum = '%3|Album';
+  rsAar = '%4|År';
+  rsGenre = '%5|Genre';
+  rsSpor = '%6|Spor';
+  rsDisc = '%#|Disc';
+  rsFilnavn = '%7|Filnavn';
+  rsFilnummer = '%8|Filnummer';
+  rsKommentar = '%9|Kommentar';
+  rsBitrate = '%0|Bitrate';
+  rsBBpm = '%b|BPM';
+  rsTSpilletid = '%t|Spilletid';
+  rsAaAlbumkunstner = '%aa|Albumkunstner';
+  rsCpKomponist = '%cp|Komponist';
+  rsCoDirigent = '%co|Dirigent';
+  rsLbPladeselskab = '%lb|Pladeselskab';
+  rsCatKatalognr = '%cat|Katalognr.';
+  rsGrpGruppering = '%grp|Gruppering';
+  rsRbRemixetAf = '%rb|Remixet af';
+  rsMdStemning = '%md|Stemning';
+  rsKeyToneart = '%key|Toneart';
+  rsExtFiltype = '%ext|Filtype';
+  rsKhzSamplerate = '%khz|Samplerate';
+  rsBindestreg = ' - |" - " (bindestreg)';
+  rsNyMappe = '\|\ (ny mappe)';
+  rsEksempelSporKunstnerTitel = '%6 - %1 - %2|Eksempel: spor - kunstner - titel';
+  rsEksempelMapperPrKunstnerOg = '%1\%3\%6 - %2|Eksempel: mapper pr. kunstner og album';
+  rsDSpringOver = '%d|Spring over';
+  rsMappeniveau = '\|\ (mappeniveau)';
+  rsFilnavn2 = 'Filnavn';
+  rsTitel2 = 'Titel';
+  rsKunstner2 = 'Kunstner';
+  rsAar2 = 'År';
+  rsKommentar2 = 'Kommentar';
+  rsAlleFelter = 'Alle felter';
+  rsBitrate2 = 'Bitrate';
+  rsTid = 'Tid';
+  rsCover = 'Cover';
+  rsSamplerate = 'Samplerate';
+  rsCodec = 'Codec';
+  rsStoerrelse = 'Størrelse';
+  rsMappe = 'Mappe';
+  rsKunstnerTitelAlbumAarGenre = '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor'#13#10'%# Disc   %7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate'#13#10'%b BPM   %t Spilletid   %aa Albumkunstner   %cp Komponist'#13#10'%co Dirigent   %lb Pladeselskab   %grp Gruppering   ... (se "Variabler")'#13#10'\ laver mapper, fx  %1\%3\%6 - %2'#13#10'Gælder de afkrydsede filer (ellers de markerede).';
+  rsKunFelterMedFluebenBliver = '1. Kun felter med flueben bliver ændret (et felt får flueben, når du skriver i det).'#13#10'2. Tags gemmes i de afkrydsede filer (ellers de markerede).'#13#10'3. Et tomt felt med flueben bliver ryddet.'#13#10'4. "Alle felter..." redigerer flere felter og cover på én gang.';
+  rsKunstnerTitelAlbumAarGenre2 = '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor'#13#10'%# Disc   %9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist'#13#10'%d Spring en del over.   Filtypen fjernes automatisk.'#13#10'\ bruger mappenavne, fx  %1\%3\%6 - %2'#13#10'Gælder de afkrydsede filer (ellers de markerede).';
+  rsAabnMappe = 'Åbn mappe...';
+  rsAabnEnMappe = 'Åbn en mappe';
+  rsOpdaterFillisten = 'Opdater fillisten';
+  rsLaesMappenIgenF = 'Læs mappen igen (F5)';
+  rsRedigerTag = 'Rediger tag...';
+  rsRedigerTagForDenMarkerede = 'Rediger tag for den markerede fil (Enter)';
+  rsRedigerFlereFiler = 'Rediger flere filer...';
+  rsRetFelterOgCoverI = 'Ret felter og cover i alle afkrydsede (eller markerede) filer';
+  rsOmdoebMapper = 'Omdøb mapper...';
+  rsOmdoebMapperneUdFraFilernes = 'Omdøb mapperne ud fra filernes tags';
+  rsAfspilFil = 'Afspil fil';
+  rsAfspilDenMarkeredeFil = 'Afspil den markerede fil';
+  rsVisIStifinder = 'Vis i Stifinder';
+  rsAfslut = 'Afslut';
+  rsMarkerAlle = 'Markér alle';
+  rsFjernMarkering = 'Fjern markering';
+  rsAfkrydsMarkeredeFilerMellemrum = 'Afkryds markerede filer	Mellemrum';
+  rsAfkrydsDeMarkeredeFiler = 'Afkryds de markerede filer';
+  rsFjernAfkrydsningFraMarkeredeFiler = 'Fjern afkrydsning fra markerede filer';
+  rsAfkrydsAlleFiler = 'Afkryds alle filer';
+  rsAfkrydsAlleFilerIListen = 'Afkryds alle filer i listen';
+  rsFjernAlleAfkrydsninger = 'Fjern alle afkrydsninger';
+  rsInverterAfkrydsning = 'Inverter afkrydsning';
+  rsKopierTag = 'Kopiér tag';
+  rsKopierTagFraDenMarkerede = 'Kopiér tag fra den markerede fil';
+  rsIndsaetTag = 'Indsæt tag';
+  rsIndsaetDetKopieredeTagUndtagen = 'Indsæt det kopierede tag (undtagen titel og spor) i de afkrydsede/markerede filer';
+  rsFlytFilOp = 'Flyt fil op';
+  rsFlytDeMarkeredeFilerEt = 'Flyt de markerede filer et trin op (manuel rækkefølge)';
+  rsFlytFilNed = 'Flyt fil ned';
+  rsFlytDeMarkeredeFilerEt2 = 'Flyt de markerede filer et trin ned (manuel rækkefølge)';
+  rsEksporterImporterTags = 'Eksportér/importér tags...';
+  rsEksporterTilCsvTxtHtml = 'Eksportér til CSV/TXT/HTML/XML eller importér fra CSV/XLSX';
+  rsFindFiltrer = 'Find / filtrér...';
+  rsFiltrerFillisten = 'Filtrér fillisten';
+  rsVaerktoejspanel = 'Værktøjspanel';
+  rsVisSkjulVaerktoejspaneletF = 'Vis/skjul værktøjspanelet (F8)';
+  rsMappepanel = 'Mappepanel';
+  rsAdresselinje = 'Adresselinje';
+  rsFilterlinje = 'Filterlinje';
+  rsSoegIUndermapper = 'Søg i undermapper';
+  rsMedtagFilerIUndermapper = 'Medtag filer i undermapper';
+  rsGemAfkrydsedeMarkeredeFilerSom = 'Gem afkrydsede/markerede filer som playliste...';
+  rsGemAlleFilerSomPlayliste = 'Gem alle filer som playliste...';
+  rsOmdoebFiler = 'Omdøb filer';
+  rsVisFanebladetOmdoebFiler = 'Vis fanebladet Omdøb filer';
+  rsVisFanebladetMultiFilTag = 'Vis fanebladet Multi-fil-tag-editor';
+  rsTagsFraFilnavn = 'Tags fra filnavn';
+  rsVisFanebladetTagsFraFilnavn = 'Vis fanebladet Tags fra filnavn';
+  rsOmdoebFilerMedForhaandsvisning = 'Omdøb filer med forhåndsvisning...';
+  rsTagsFraFilnavnMedForhaandsvisning = 'Tags fra filnavn med forhåndsvisning...';
+  rsFormaterEllerNummererSpornumre = 'Formatér eller nummerér spornumre';
+  rsWebOpslagMusicbrainzDiscogs = 'Web-opslag (MusicBrainz/Discogs)...';
+  rsHentTitlerSpornumreOgCover = 'Hent titler, spornumre og cover fra MusicBrainz eller Discogs';
+  rsFortrydOmdoebning = 'Fortryd omdøbning';
+  rsGivDeSenestOmdoebteFiler = 'Giv de senest omdøbte filer/mapper deres gamle navne igen';
+  rsBevarFilernesDatoVedGem = 'Bevar filernes dato ved gem';
+  rsTastaturgenveje = 'Tastaturgenveje';
+  rsOmTagklon = 'Om TagKlon...';
+  rsGaaEnMappeOp = 'Gå en mappe op';
+  rsFavoritter = 'Favoritter';
+  rsFavoritmapper = 'Favoritmapper';
+  rsNyMappe2 = 'Ny mappe...';
+  rsOpretEnUndermappeIDen = 'Opret en undermappe i den åbne mappe';
+  rsOpdaterMappetraeet = 'Opdater mappetræet';
+  rsSkjulMappepanelet = 'Skjul mappepanelet';
+  rsFiler = '&Filer';
+  rsRediger = '&Rediger';
+  rsVis = '&Vis';
+  rsPlayliste = '&Playliste';
+  rsVaerKtoejer = 'Vær&ktøjer';
+  rsIndstillinger = '&Indstillinger';
+  rsHjaelp = '&Hjælp';
+  rsFejl = 'Fejl: ';
+  rsIkkeUnderstoettetEndnu = '(ikke understøttet endnu)';
+  rsJa = 'Ja';
+  rsManuelRaekkefoelgeKlikPaaEn = 'Manuel rækkefølge - klik på en kolonneoverskrift for at sortere igen';
+  rsVentVenligstTilAlleTags = 'Vent venligst, til alle tags er læst.';
+  rsAfkrydsedeFilerD = 'Afkrydsede filer (%d)';
+  rsMarkeredeFilerD = 'Markerede filer (%d)';
+  rsAfkrydsEllerMarkerDeFiler = 'Afkryds (☑) eller markér de filer, det skal gælde.';
+  rsMappenFindesIkke = 'Mappen findes ikke:';
+  rsLaeserTagsDAfD = 'Læser tags: %d af %d filer...';
+  rsSoegerEfterFiler = 'Søger efter filer...';
+  rsLaeserTags = 'Læser tags';
+  rsSoegerEfter = 'Søger efter';
+  rsFilerDDSkjult = 'Filer: %d (+%d skjult)';
+  rsFilerIAltD = 'Filer i alt: %d';
+  rsMarkeredeD = 'Markerede: %d';
+  rsSamletTid = 'Samlet tid: ';
+  rsMarkeretTid = 'Markeret tid: ';
+  rsAfkrydsetD = 'Afkrydset: %d';
+  rsFortrydOmdoebningAfDS = 'Fortryd omdøbning af %d %s';
+  rsGivDFilerMapperDeres = 'Giv %d filer/mapper deres tidligere navn igen?';
+  rsDFilerMapperFikDeres = '%d filer/mapper fik deres gamle navn igen';
+  rsDFilerMapperFikDeres2 = '%d filer/mapper fik deres gamle navn igen. Problemer:';
+  rsMangler = 'Mangler: ';
+  rsUgyldigMaske = '(ugyldig maske)';
+  rsFilnavnetPasserIkkeTilMasken = '(filnavnet passer ikke til masken)';
+  rsEksempel = 'Eksempel';
+  rsAlleFilerHarAlleredeDet = 'Alle filer har allerede det navn, masken giver.';
+  rsIntetAtOmdoebe = 'Intet at omdøbe';
+  rsOmdoebDFilerS = 'Omdøb %d filer?%s';
+  rsDSpringesOverBrugForhaandsvis = ' (%d springes over - brug "Forhåndsvis..." for at se hvorfor)';
+  rsDFilerOmdoebtDFejl = '%d filer omdøbt, %d fejl';
+  rsNogleFilerBlevIkkeOmdoebt = 'Nogle filer blev ikke omdøbt';
+  rsSDAfD = '%s: %d af %d...';
+  rsSGemtIDFiler = '%s: gemt i %d filer, %d fejl%s';
+  rsDSprungetOverFiltype = ', %d sprunget over (filtype)';
+  rsNogleFilerBlevIkkeGemt = 'Nogle filer blev ikke gemt';
+  rsSaetFluebenVedDeFelter = 'Sæt flueben ved de felter, der skal gemmes.';
+  rsGemTags = 'Gem tags';
+  rsGemIDFiler = 'Gem i %d filer?';
+  rsDisseFelterBliverRyddet = 'Disse felter bliver ryddet: ';
+  rsIntetAtSkrive = 'Intet at skrive';
+  rsIngenFilerAendresDPasser = 'Ingen filer ændres (%d passer ikke til masken). Brug "Forhåndsvis..." for at se detaljer.';
+  rsSkrivTags = 'Skriv tags';
+  rsSkrivTagsFraFilnavnetI = 'Skriv tags fra filnavnet i %d filer?%s';
+  rsDPasserIkkeTilMasken = ' (%d passer ikke til masken og springes over)';
+  rsIntetBilledeTraekEtBillede = 'Intet billede. Træk et billede hertil.';
+  rsSDxD = '%s  %dx%d';
+  rsIntetCoverTraekEtBillede = 'Intet cover. Træk et billede hertil.';
+  rsSDxDDBillede = '%s  %dx%d  (%d billede)';
+  rsSDxDDBilleder = '%s  %dx%d  (%d billeder)';
+  rsKunJpegOgPngBilleder = 'Kun JPEG- og PNG-billeder kan bruges som cover.';
+  rsMappensCover = 'Mappens cover';
+  rsSFindesAlleredeErstatDet = '%s findes allerede. Erstat det?';
+  rsBilledetKunneIkkeGemmes = 'Billedet kunne ikke gemmes:';
+  rsMappensCoverGemtSom = 'Mappens cover gemt som ';
+  rsFilensCover = 'Filens cover';
+  rsSaetBilledetSomForsideCover = 'Sæt billedet som forside-cover i %d filer?';
+  rsVaelgMappe = 'Vælg mappe';
+  rsAfkrydsEllerMarkerFilerneFra = 'Afkryds (☑) eller markér filerne fra ét album, og prøv igen.';
+  rsTagKopieretFra = 'Tag kopieret fra ';
+  rsIndsaetDetKopieredeTagI = 'Indsæt det kopierede tag i %d filer?'#13#10'Alle felter undtagen titel og spornummer overskrives.';
+  rsDerErIngenFilerAt = 'Der er ingen filer at gemme.';
+  rsGemPlayliste = 'Gem playliste';
+  rsPlaylisteUtfMUM = 'Playliste (UTF-8) (*.m3u8)|*.m3u8|Playliste (*.m3u)|*.m3u';
+  rsPlaylisteMedDFilerGemt = 'Playliste med %d filer gemt: %s';
+  rsLavEtPersonligtTokenPaa = 'Lav et personligt token på discogs.com: Settings > Developers > Generate new token.'#13#10'Indsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):';
+  rsDiscogsTokenFjernet = 'Discogs-token fjernet';
+  rsDiscogsTokenGemt = 'Discogs-token gemt';
+  rsEnterDobbeltklikRedigerTagFor = 'Enter / dobbeltklik	Rediger tag for den markerede fil'#13#10'Mellemrum		Afkryds/fjern afkrydsning på markerede filer'#13#10'F4			Omdøb filer'#13#10'Ctrl+F4		Multi-fil-tag-editor'#13#10'Shift+F4		Tags fra filnavn'#13#10'F8			Vis/skjul værktøjspanelet'#13#10'F5			Opdater fillisten'#13#10'Ctrl+E		Rediger flere filer'#13#10'Ctrl+T		Spornumre'#13#10'Ctrl+W		Web-opslag'#13#10'Ctrl+Z		Fortryd omdøbning'#13#10'Ctrl+Shift+C / V	Kopiér / indsæt tag'#13#10'Ctrl+Op / Ned	Flyt markerede filer op / ned'#13#10'Ctrl+Shift+X	Eksportér / importér tags'#13#10'Ctrl+F		Filtrér listen (Esc rydder filteret)'#13#10'Ctrl+O		Åbn mappe'#13#10'Alt+Backspace	Mappe op';
+  rsOmTagklon2 = 'Om TagKlon';
+  rsTagklonTagEditorOgMusikorganisator = 'TagKlon - tag-editor og musikorganisator'#13#10'Lavet i Lazarus / Free Pascal.';
+  rsWebDataMusicbrainzMusicbrainzOrg = 'Web-data: MusicBrainz (musicbrainz.org), Cover Art Archive og Discogs.'#13#10'Ikoner: Lazarus "general_purpose" af Roland Hahn (CC0).';
+  rsIndstillinger2 = 'Indstillinger: ';
+  rsTilfoejDenAabneMappe = 'Tilføj den åbne mappe';
+  rsFjernDenAabneMappe = 'Fjern den åbne mappe';
+  rsNyMappe3 = 'Ny mappe';
+  rsNavnPaaDenNyeMappe = 'Navn på den nye mappe i ';
+  rsMappenKunneIkkeOprettes = 'Mappen kunne ikke oprettes:';
+  rsMappeOprettet = 'Mappe oprettet: ';
+
 
 const
   CheckOn = '☑';
@@ -308,21 +519,21 @@ const
     '%6 %1 - %2', '%1\%3\%6 - %2', '%1\%4 - %3\%6 - %2');
 
   RenameVars: array[0..28] of string = (
-    '%1|Kunstner', '%2|Titel', '%3|Album', '%4|År', '%5|Genre', '%6|Spor', '%#|Disc',
-    '%7|Filnavn', '%8|Filnummer', '%9|Kommentar', '%0|Bitrate', '%b|BPM', '%t|Spilletid',
-    '%aa|Albumkunstner', '%cp|Komponist', '%co|Dirigent', '%lb|Pladeselskab', '%cat|Katalognr.',
-    '%grp|Gruppering', '%rb|Remixet af', '%md|Stemning', '%key|Toneart',
-    '%ext|Filtype', '%khz|Samplerate', '-|',
-    ' - |" - " (bindestreg)', '\|\ (ny mappe)', '%6 - %1 - %2|Eksempel: spor - kunstner - titel',
-    '%1\%3\%6 - %2|Eksempel: mapper pr. kunstner og album');
+    rsKunstner, rsTitel, rsAlbum, rsAar, rsGenre, rsSpor, rsDisc,
+    rsFilnavn, rsFilnummer, rsKommentar, rsBitrate, rsBBpm, rsTSpilletid,
+    rsAaAlbumkunstner, rsCpKomponist, rsCoDirigent, rsLbPladeselskab, rsCatKatalognr,
+    rsGrpGruppering, rsRbRemixetAf, rsMdStemning, rsKeyToneart,
+    rsExtFiltype, rsKhzSamplerate, '-|',
+    rsBindestreg, rsNyMappe, rsEksempelSporKunstnerTitel,
+    rsEksempelMapperPrKunstnerOg);
   F2TVars: array[0..17] of string = (
-    '%1|Kunstner', '%2|Titel', '%3|Album', '%4|År', '%5|Genre', '%6|Spor', '%#|Disc',
-    '%9|Kommentar', '%b|BPM', '%aa|Albumkunstner', '%cp|Komponist', '%co|Dirigent',
-    '%lb|Pladeselskab', '%d|Spring over',
-    '-|', ' - |" - " (bindestreg)', '\|\ (mappeniveau)', '%6 - %1 - %2|Eksempel: spor - kunstner - titel');
+    rsKunstner, rsTitel, rsAlbum, rsAar, rsGenre, rsSpor, rsDisc,
+    rsKommentar, rsBBpm, rsAaAlbumkunstner, rsCpKomponist, rsCoDirigent,
+    rsLbPladeselskab, rsDSpringOver,
+    '-|', rsBindestreg, rsMappeniveau, rsEksempelSporKunstnerTitel);
 
-  FilterFieldNames: array[0..7] of string = ('Filnavn', 'Titel', 'Kunstner', 'Album', 'År',
-    'Genre', 'Kommentar', 'Alle felter');
+  FilterFieldNames: array[0..7] of string = (rsFilnavn2, rsTitel2, rsKunstner2, 'Album', rsAar2,
+    'Genre', rsKommentar2, rsAlleFelter);
 
 var
   Columns: array of TColumnDef;
@@ -347,30 +558,30 @@ procedure DefineColumns;
 begin
   Columns := nil;
   AddColumn('✓', 30, ckCheck, tfTitle, True);
-  AddColumn('Filnavn', 260, ckFileName);
+  AddColumn(rsFilnavn2, 260, ckFileName);
   AddColumn(TagFieldCaptions[tfArtist], 160, ckField, tfArtist);
   AddColumn(TagFieldCaptions[tfAlbum], 180, ckField, tfAlbum);
   AddColumn(TagFieldCaptions[tfTitle], 220, ckField, tfTitle);
   AddColumn(TagFieldCaptions[tfYear], 70, ckField, tfYear);
   AddColumn(TagFieldCaptions[tfGenre], 110, ckField, tfGenre);
   AddColumn(TagFieldCaptions[tfTrack], 55, ckField, tfTrack, True);
-  AddColumn('Bitrate', 60, ckBitrate, tfTitle, True);
-  AddColumn('Tid', 60, ckDuration, tfTitle, True);
-  AddColumn('Cover', 50, ckCover);
+  AddColumn(rsBitrate2, 60, ckBitrate, tfTitle, True);
+  AddColumn(rsTid, 60, ckDuration, tfTitle, True);
+  AddColumn(rsCover, 50, ckCover);
   AddColumn(TagFieldCaptions[tfDisc], 45, ckField, tfDisc, True);
   AddColumn(TagFieldCaptions[tfAlbumArtist], 140, ckField, tfAlbumArtist);
   AddColumn(TagFieldCaptions[tfComposer], 120, ckField, tfComposer);
   AddColumn(TagFieldCaptions[tfComment], 160, ckField, tfComment);
   AddColumn(TagFieldCaptions[tfBpm], 45, ckField, tfBpm, True);
-  AddColumn('Samplerate', 75, ckSampleRate, tfTitle, True);
-  AddColumn('Codec', 70, ckCodec);
+  AddColumn(rsSamplerate, 75, ckSampleRate, tfTitle, True);
+  AddColumn(rsCodec, 70, ckCodec);
   AddColumn('Tag-typer', 120, ckTagTypes);
-  AddColumn('Størrelse', 75, ckSize, tfTitle, True);
+  AddColumn(rsStoerrelse, 75, ckSize, tfTitle, True);
   AddColumn(TagFieldCaptions[tfPublisher], 140, ckField, tfPublisher);
   AddColumn(TagFieldCaptions[tfCatalogNo], 90, ckField, tfCatalogNo);
   AddColumn(TagFieldCaptions[tfGrouping], 110, ckField, tfGrouping);
   AddColumn(TagFieldCaptions[tfConductor], 120, ckField, tfConductor);
-  AddColumn('Mappe', 300, ckFolder);
+  AddColumn(rsMappe, 300, ckFolder);
 end;
 
 { Leading integer of '7/12', '07', etc.; -1 if none. }
@@ -481,23 +692,11 @@ begin
     end;
     FFilterField := 0;
     LabelRenameHelp.Caption :=
-      '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor' + LineEnding +
-      '%# Disc   %7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate' + LineEnding +
-      '%b BPM   %t Spilletid   %aa Albumkunstner   %cp Komponist' + LineEnding +
-      '%co Dirigent   %lb Pladeselskab   %grp Gruppering   ... (se "Variabler")' + LineEnding +
-      '\ laver mapper, fx  %1\%3\%6 - %2' + LineEnding +
-      'Gælder de afkrydsede filer (ellers de markerede).';
+      rsKunstnerTitelAlbumAarGenre;
     LabelMultiHelp.Caption :=
-      '1. Kun felter med flueben bliver ændret (et felt får flueben, når du skriver i det).' + LineEnding +
-      '2. Tags gemmes i de afkrydsede filer (ellers de markerede).' + LineEnding +
-      '3. Et tomt felt med flueben bliver ryddet.' + LineEnding +
-      '4. "Alle felter..." redigerer flere felter og cover på én gang.';
+      rsKunFelterMedFluebenBliver;
     LabelF2THelp.Caption :=
-      '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor' + LineEnding +
-      '%# Disc   %9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist' + LineEnding +
-      '%d Spring en del over.   Filtypen fjernes automatisk.' + LineEnding +
-      '\ bruger mappenavne, fx  %1\%3\%6 - %2' + LineEnding +
-      'Gælder de afkrydsede filer (ellers de markerede).';
+      rsKunstnerTitelAlbumAarGenre2;
     LoadInlineOptions;
   finally
     FLoading := False;
@@ -612,60 +811,60 @@ begin
   FActions := TActionList.Create(Self);
   FActions.Images := ImagesMain;
 
-  aOpen := NewAction('Åbn mappe...', 'Åbn en mappe', ShortCut(VK_O, [ssCtrl]), icoOpen, @ActOpenFolderExecute);
-  aRefresh := NewAction('Opdater fillisten', 'Læs mappen igen (F5)', ShortCut(VK_F5, []), icoRefresh, @ActRefreshExecute);
-  aEdit := NewAction('Rediger tag...', 'Rediger tag for den markerede fil (Enter)', 0, icoEdit, @ActEditTagExecute);
-  aMulti := NewAction('Rediger flere filer...', 'Ret felter og cover i alle afkrydsede (eller markerede) filer',
+  aOpen := NewAction(rsAabnMappe, rsAabnEnMappe, ShortCut(VK_O, [ssCtrl]), icoOpen, @ActOpenFolderExecute);
+  aRefresh := NewAction(rsOpdaterFillisten, rsLaesMappenIgenF, ShortCut(VK_F5, []), icoRefresh, @ActRefreshExecute);
+  aEdit := NewAction(rsRedigerTag, rsRedigerTagForDenMarkerede, 0, icoEdit, @ActEditTagExecute);
+  aMulti := NewAction(rsRedigerFlereFiler, rsRetFelterOgCoverI,
     ShortCut(VK_E, [ssCtrl]), icoMultiEdit, @ActMultiEditExecute);
-  aRenameFolder := NewAction('Omdøb mapper...', 'Omdøb mapperne ud fra filernes tags', 0, icoRenameFolder, @ActRenameFolderExecute);
-  aPlay := NewAction('Afspil fil', 'Afspil den markerede fil', ShortCut(VK_P, [ssCtrl]), icoPlay, @ActPlayExecute);
-  aExplorer := NewAction('Vis i Stifinder', '', 0, icoOpen, @ActShowInExplorerExecute);
-  aExit := NewAction('Afslut', '', ShortCut(VK_F4, [ssAlt]), icoExit, @ActExitExecute);
-  aSelAll := NewAction('Markér alle', '', ShortCut(VK_A, [ssCtrl]), -1, @ActSelectAllExecute);
-  aSelNone := NewAction('Fjern markering', '', 0, -1, @ActSelectNoneExecute);
-  aChkSel := NewAction('Afkryds markerede filer' + #9 + 'Mellemrum', 'Afkryds de markerede filer', 0, icoCheckAll, @ActCheckSelectedExecute);
-  aUnchkSel := NewAction('Fjern afkrydsning fra markerede filer', '', 0, -1, @ActUncheckSelectedExecute);
-  aChkAll := NewAction('Afkryds alle filer', 'Afkryds alle filer i listen', 0, icoCheckAll, @ActCheckAllExecute);
-  aUnchkAll := NewAction('Fjern alle afkrydsninger', '', 0, icoUncheck, @ActUncheckAllExecute);
-  aInvert := NewAction('Inverter afkrydsning', '', 0, -1, @ActInvertChecksExecute);
-  aCopy := NewAction('Kopiér tag', 'Kopiér tag fra den markerede fil', ShortCut(VK_C, [ssCtrl, ssShift]), icoCopy, @ActCopyTagExecute);
-  FActPaste := NewAction('Indsæt tag', 'Indsæt det kopierede tag (undtagen titel og spor) i de afkrydsede/markerede filer',
+  aRenameFolder := NewAction(rsOmdoebMapper, rsOmdoebMapperneUdFraFilernes, 0, icoRenameFolder, @ActRenameFolderExecute);
+  aPlay := NewAction(rsAfspilFil, rsAfspilDenMarkeredeFil, ShortCut(VK_P, [ssCtrl]), icoPlay, @ActPlayExecute);
+  aExplorer := NewAction(rsVisIStifinder, '', 0, icoOpen, @ActShowInExplorerExecute);
+  aExit := NewAction(rsAfslut, '', ShortCut(VK_F4, [ssAlt]), icoExit, @ActExitExecute);
+  aSelAll := NewAction(rsMarkerAlle, '', ShortCut(VK_A, [ssCtrl]), -1, @ActSelectAllExecute);
+  aSelNone := NewAction(rsFjernMarkering, '', 0, -1, @ActSelectNoneExecute);
+  aChkSel := NewAction(rsAfkrydsMarkeredeFilerMellemrum, rsAfkrydsDeMarkeredeFiler, 0, icoCheckAll, @ActCheckSelectedExecute);
+  aUnchkSel := NewAction(rsFjernAfkrydsningFraMarkeredeFiler, '', 0, -1, @ActUncheckSelectedExecute);
+  aChkAll := NewAction(rsAfkrydsAlleFiler, rsAfkrydsAlleFilerIListen, 0, icoCheckAll, @ActCheckAllExecute);
+  aUnchkAll := NewAction(rsFjernAlleAfkrydsninger, '', 0, icoUncheck, @ActUncheckAllExecute);
+  aInvert := NewAction(rsInverterAfkrydsning, '', 0, -1, @ActInvertChecksExecute);
+  aCopy := NewAction(rsKopierTag, rsKopierTagFraDenMarkerede, ShortCut(VK_C, [ssCtrl, ssShift]), icoCopy, @ActCopyTagExecute);
+  FActPaste := NewAction(rsIndsaetTag, rsIndsaetDetKopieredeTagUndtagen,
     ShortCut(VK_V, [ssCtrl, ssShift]), icoPaste, @ActPasteTagExecute);
   FActPaste.Enabled := False;
-  aMoveUp := NewAction('Flyt fil op', 'Flyt de markerede filer et trin op (manuel rækkefølge)',
+  aMoveUp := NewAction(rsFlytFilOp, rsFlytDeMarkeredeFilerEt,
     ShortCut(VK_UP, [ssCtrl]), icoMoveUp, @ActMoveUpExecute);
-  aMoveDown := NewAction('Flyt fil ned', 'Flyt de markerede filer et trin ned (manuel rækkefølge)',
+  aMoveDown := NewAction(rsFlytFilNed, rsFlytDeMarkeredeFilerEt2,
     ShortCut(VK_DOWN, [ssCtrl]), icoMoveDown, @ActMoveDownExecute);
-  aExport := NewAction('Eksportér/importér tags...', 'Eksportér til CSV/TXT/HTML/XML eller importér fra CSV/XLSX',
+  aExport := NewAction(rsEksporterImporterTags, rsEksporterTilCsvTxtHtml,
     ShortCut(VK_X, [ssCtrl, ssShift]), icoExport, @ActExportImportExecute);
-  aFind := NewAction('Find / filtrér...', 'Filtrér fillisten', ShortCut(VK_F, [ssCtrl]), icoSearch, @ActFindExecute);
-  FActToolsPanel := NewAction('Værktøjspanel', 'Vis/skjul værktøjspanelet (F8)', ShortCut(VK_F8, []), -1, @ActToolsPanelExecute);
-  FActFolders := NewAction('Mappepanel', '', 0, -1, @ActFoldersExecute);
-  FActAddress := NewAction('Adresselinje', '', 0, -1, @ActAddressExecute);
-  FActFilter := NewAction('Filterlinje', '', 0, -1, @ActFilterBarExecute);
-  FActSubfolders := NewAction('Søg i undermapper', 'Medtag filer i undermapper', 0, icoSubfolders, @ActSubfoldersExecute);
-  aPlChecked := NewAction('Gem afkrydsede/markerede filer som playliste...', '', 0, icoSave, @ActPlaylistCheckedExecute);
-  aPlAll := NewAction('Gem alle filer som playliste...', '', 0, icoSave, @ActPlaylistAllExecute);
-  aTabRename := NewAction('Omdøb filer', 'Vis fanebladet Omdøb filer', ShortCut(VK_F4, []), icoRenameFiles, @ActTabRenameExecute);
-  aTabMulti := NewAction('Multi-fil-tag-editor', 'Vis fanebladet Multi-fil-tag-editor', ShortCut(VK_F4, [ssCtrl]), icoMultiEdit, @ActTabMultiExecute);
-  aTabF2T := NewAction('Tags fra filnavn', 'Vis fanebladet Tags fra filnavn', ShortCut(VK_F4, [ssShift]), icoFileToTag, @ActTabFileToTagExecute);
-  aRenameDlg := NewAction('Omdøb filer med forhåndsvisning...', '', 0, icoPreview, @ActRenameDialogExecute);
-  aF2TDlg := NewAction('Tags fra filnavn med forhåndsvisning...', '', 0, icoPreview, @ActFileToTagDialogExecute);
-  aTracks := NewAction('Spornumre...', 'Formatér eller nummerér spornumre', ShortCut(VK_T, [ssCtrl]), icoTracks, @ActTracksExecute);
-  aWeb := NewAction('Web-opslag (MusicBrainz/Discogs)...', 'Hent titler, spornumre og cover fra MusicBrainz eller Discogs',
+  aFind := NewAction(rsFindFiltrer, rsFiltrerFillisten, ShortCut(VK_F, [ssCtrl]), icoSearch, @ActFindExecute);
+  FActToolsPanel := NewAction(rsVaerktoejspanel, rsVisSkjulVaerktoejspaneletF, ShortCut(VK_F8, []), -1, @ActToolsPanelExecute);
+  FActFolders := NewAction(rsMappepanel, '', 0, -1, @ActFoldersExecute);
+  FActAddress := NewAction(rsAdresselinje, '', 0, -1, @ActAddressExecute);
+  FActFilter := NewAction(rsFilterlinje, '', 0, -1, @ActFilterBarExecute);
+  FActSubfolders := NewAction(rsSoegIUndermapper, rsMedtagFilerIUndermapper, 0, icoSubfolders, @ActSubfoldersExecute);
+  aPlChecked := NewAction(rsGemAfkrydsedeMarkeredeFilerSom, '', 0, icoSave, @ActPlaylistCheckedExecute);
+  aPlAll := NewAction(rsGemAlleFilerSomPlayliste, '', 0, icoSave, @ActPlaylistAllExecute);
+  aTabRename := NewAction(rsOmdoebFiler, rsVisFanebladetOmdoebFiler, ShortCut(VK_F4, []), icoRenameFiles, @ActTabRenameExecute);
+  aTabMulti := NewAction(rsMultiFilTagEditor, rsVisFanebladetMultiFilTag, ShortCut(VK_F4, [ssCtrl]), icoMultiEdit, @ActTabMultiExecute);
+  aTabF2T := NewAction(rsTagsFraFilnavn, rsVisFanebladetTagsFraFilnavn, ShortCut(VK_F4, [ssShift]), icoFileToTag, @ActTabFileToTagExecute);
+  aRenameDlg := NewAction(rsOmdoebFilerMedForhaandsvisning, '', 0, icoPreview, @ActRenameDialogExecute);
+  aF2TDlg := NewAction(rsTagsFraFilnavnMedForhaandsvisning, '', 0, icoPreview, @ActFileToTagDialogExecute);
+  aTracks := NewAction('Spornumre...', rsFormaterEllerNummererSpornumre, ShortCut(VK_T, [ssCtrl]), icoTracks, @ActTracksExecute);
+  aWeb := NewAction(rsWebOpslagMusicbrainzDiscogs, rsHentTitlerSpornumreOgCover,
     ShortCut(VK_W, [ssCtrl]), icoWeb, @ActWebExecute);
-  FActUndo := NewAction('Fortryd omdøbning', 'Giv de senest omdøbte filer/mapper deres gamle navne igen',
+  FActUndo := NewAction(rsFortrydOmdoebning, rsGivDeSenestOmdoebteFiler,
     ShortCut(VK_Z, [ssCtrl]), icoUndo, @ActUndoExecute);
   FActUndo.Enabled := False;
-  FActKeepDate := NewAction('Bevar filernes dato ved gem', '', 0, -1, @ActKeepDateExecute);
+  FActKeepDate := NewAction(rsBevarFilernesDatoVedGem, '', 0, -1, @ActKeepDateExecute);
   aToken := NewAction('Discogs-token...', '', 0, icoSettings, @ActDiscogsTokenExecute);
-  aKeys := NewAction('Tastaturgenveje', '', ShortCut(VK_F1, []), icoHelp, @ActShortcutsExecute);
-  aAbout := NewAction('Om TagKlon...', '', 0, icoInfo, @ActAboutExecute);
-  aUp := NewAction('Op', 'Gå en mappe op', ShortCut(VK_BACK, [ssAlt]), icoFolderUp, @ActFolderUpExecute);
-  aFav := NewAction('Favoritter', 'Favoritmapper', 0, icoFavorites, @ActFavoritesExecute);
-  aNewFolder := NewAction('Ny mappe...', 'Opret en undermappe i den åbne mappe', 0, icoNewFolder, @ActNewFolderExecute);
-  aTreeRefresh := NewAction('Opdater mappetræet', '', 0, icoRefresh, @ActRefreshTreeExecute);
-  aCloseFolders := NewAction('Skjul mappepanelet', '', 0, icoClose, @ActFoldersExecute);
+  aKeys := NewAction(rsTastaturgenveje, '', ShortCut(VK_F1, []), icoHelp, @ActShortcutsExecute);
+  aAbout := NewAction(rsOmTagklon, '', 0, icoInfo, @ActAboutExecute);
+  aUp := NewAction('Op', rsGaaEnMappeOp, ShortCut(VK_BACK, [ssAlt]), icoFolderUp, @ActFolderUpExecute);
+  aFav := NewAction(rsFavoritter, rsFavoritmapper, 0, icoFavorites, @ActFavoritesExecute);
+  aNewFolder := NewAction(rsNyMappe2, rsOpretEnUndermappeIDen, 0, icoNewFolder, @ActNewFolderExecute);
+  aTreeRefresh := NewAction(rsOpdaterMappetraeet, '', 0, icoRefresh, @ActRefreshTreeExecute);
+  aCloseFolders := NewAction(rsSkjulMappepanelet, '', 0, icoClose, @ActFoldersExecute);
   FActToolsPanel.AutoCheck := True;
   FActFolders.AutoCheck := True;
   FActAddress.AutoCheck := True;
@@ -674,28 +873,29 @@ begin
   FActKeepDate.AutoCheck := True;
 
   // ---- main menu
-  TopMenu := Menu('&Filer');
+  TopMenu := Menu(rsFiler);
   Add(TopMenu, aOpen); Add(TopMenu, aRefresh); Add(TopMenu, nil);
   Add(TopMenu, aEdit); Add(TopMenu, aMulti); Add(TopMenu, aRenameFolder); Add(TopMenu, nil);
   Add(TopMenu, aPlay); Add(TopMenu, aExplorer); Add(TopMenu, nil); Add(TopMenu, aExit);
-  TopMenu := Menu('&Rediger');
+  TopMenu := Menu(rsRediger);
   Add(TopMenu, aSelAll); Add(TopMenu, aSelNone); Add(TopMenu, nil);
   Add(TopMenu, aChkSel); Add(TopMenu, aUnchkSel); Add(TopMenu, aChkAll); Add(TopMenu, aUnchkAll); Add(TopMenu, aInvert);
   Add(TopMenu, nil); Add(TopMenu, aCopy); Add(TopMenu, FActPaste);
   Add(TopMenu, nil); Add(TopMenu, aMoveUp); Add(TopMenu, aMoveDown); Add(TopMenu, nil); Add(TopMenu, aFind);
-  TopMenu := Menu('&Vis');
+  TopMenu := Menu(rsVis);
   Add(TopMenu, FActToolsPanel); Add(TopMenu, FActFolders); Add(TopMenu, FActAddress); Add(TopMenu, FActFilter);
   Add(TopMenu, nil); Add(TopMenu, FActSubfolders); Add(TopMenu, nil); Add(TopMenu, aRefresh);
-  TopMenu := Menu('&Playliste');
+  TopMenu := Menu(rsPlayliste);
   Add(TopMenu, aPlChecked); Add(TopMenu, aPlAll);
-  TopMenu := Menu('Vær&ktøjer');
+  TopMenu := Menu(rsVaerKtoejer);
   Add(TopMenu, aTabRename); Add(TopMenu, aTabMulti); Add(TopMenu, aTabF2T); Add(TopMenu, nil);
   Add(TopMenu, aRenameDlg); Add(TopMenu, aF2TDlg); Add(TopMenu, aRenameFolder); Add(TopMenu, aTracks); Add(TopMenu, aWeb);
   Add(TopMenu, aExport);
   Add(TopMenu, nil); Add(TopMenu, FActUndo);
-  TopMenu := Menu('&Indstillinger');
-  Add(TopMenu, FActKeepDate); Add(TopMenu, aToken);
-  TopMenu := Menu('&Hjælp');
+  TopMenu := Menu(rsIndstillinger);
+  Add(TopMenu, FActKeepDate); Add(TopMenu, aToken); Add(TopMenu, nil);
+  AddLanguageMenu(TopMenu);
+  TopMenu := Menu(rsHjaelp);
   Add(TopMenu, aKeys); Add(TopMenu, aAbout);
 
   // ---- file list popup
@@ -807,10 +1007,10 @@ begin
     ckSampleRate: if Info.SampleRate > 0 then Result := IntToStr(Info.SampleRate) else Result := '';
     ckCodec: Result := Info.Codec;
     ckTagTypes:
-      if Info.Error <> '' then Result := 'Fejl: ' + Info.Error
-      else if not Info.Supported then Result := '(ikke understøttet endnu)'
+      if Info.Error <> '' then Result := rsFejl + Info.Error
+      else if not Info.Supported then Result := rsIkkeUnderstoettetEndnu
       else Result := Info.TagTypes;
-    ckCover: if Info.HasCover then Result := 'Ja' else Result := '';
+    ckCover: if Info.HasCover then Result := rsJa else Result := '';
     ckSize: Result := FormatSize(Info.FileSize);
     ckFolder: Result := ExtractFileDir(Info.FileName);
   else
@@ -889,7 +1089,7 @@ begin
   FileList.Items[Sel[0] + Delta].Focused := True;
   FileList.Items[Sel[0] + Delta].MakeVisible(False);
   FileList.Invalidate;
-  SetMessage('Manuel rækkefølge - klik på en kolonneoverskrift for at sortere igen');
+  SetMessage(rsManuelRaekkefoelgeKlikPaaEn);
 end;
 
 procedure TFormMain.ActExportImportExecute(Sender: TObject);
@@ -996,7 +1196,7 @@ function TFormMain.CanStartBatch: Boolean;
 begin
   Result := FScanner = nil;
   if not Result then
-    MessageDlg('Vent venligst, til alle tags er læst.', mtInformation, [mbOK], 0);
+    MessageDlg(rsVentVenligstTilAlleTags, mtInformation, [mbOK], 0);
 end;
 
 function TFormMain.AllItems: TAudioInfoArray;
@@ -1046,13 +1246,13 @@ begin
   Result := CheckedItems;
   if Length(Result) > 0 then
   begin
-    ScopeCaption := Format('Afkrydsede filer (%d)', [Length(Result)]);
+    ScopeCaption := Format(rsAfkrydsedeFilerD, [Length(Result)]);
     Prefer := True;
   end
   else
   begin
     Result := SelectedItems;
-    ScopeCaption := Format('Markerede filer (%d)', [Length(Result)]);
+    ScopeCaption := Format(rsMarkeredeFilerD, [Length(Result)]);
     Prefer := Length(Result) > 1;
   end;
 end;
@@ -1068,7 +1268,7 @@ begin
   Items := TargetItems(ScopeCaption, Prefer);
   Result := Length(Items) > 0;
   if not Result then
-    MessageDlg('Afkryds (☑) eller markér de filer, det skal gælde.', mtInformation, [mbOK], 0);
+    MessageDlg(rsAfkrydsEllerMarkerDeFiler, mtInformation, [mbOK], 0);
 end;
 
 { TFormMain - folders, scanning }
@@ -1105,7 +1305,7 @@ begin
   D := ExcludeTrailingPathDelimiter(Trim(Dir));
   if (D = '') or not DirectoryExists(D) then
   begin
-    MessageDlg('Mappen findes ikke:' + LineEnding + Dir, mtWarning, [mbOK], 0);
+    MessageDlg(rsMappenFindesIkke + LineEnding + Dir, mtWarning, [mbOK], 0);
     Exit;
   end;
   FFolder := D;
@@ -1215,11 +1415,11 @@ begin
   if FScanner <> nil then
   begin
     if FScanner.Progress(Done, Total) then
-      SetMessage(Format('Læser tags: %d af %d filer...', [Done, Total]))
+      SetMessage(Format(rsLaeserTagsDAfD, [Done, Total]))
     else
-      SetMessage('Søger efter filer...');
+      SetMessage(rsSoegerEfterFiler);
   end
-  else if Pos('Læser tags', StatusBar.Panels[5].Text) + Pos('Søger efter', StatusBar.Panels[5].Text) > 0 then
+  else if Pos(rsLaeserTags, StatusBar.Panels[5].Text) + Pos(rsSoegerEfter, StatusBar.Panels[5].Text) > 0 then
     SetMessage('');
   TotalSec := 0;
   Checked := 0;
@@ -1233,13 +1433,13 @@ begin
   SelSec := 0;
   for I := 0 to High(Sel) do SelSec := SelSec + Sel[I].Duration;
   if Hidden > 0 then
-    StatusBar.Panels[0].Text := Format('Filer: %d (+%d skjult)', [FView.Count, Hidden])
+    StatusBar.Panels[0].Text := Format(rsFilerDDSkjult, [FView.Count, Hidden])
   else
-    StatusBar.Panels[0].Text := Format('Filer i alt: %d', [FView.Count]);
-  StatusBar.Panels[1].Text := Format('Markerede: %d', [Length(Sel)]);
-  StatusBar.Panels[2].Text := 'Samlet tid: ' + IfThen(TotalSec > 0, FormatDuration(TotalSec), '0:00');
-  StatusBar.Panels[3].Text := 'Markeret tid: ' + IfThen(SelSec > 0, FormatDuration(SelSec), '0:00');
-  StatusBar.Panels[4].Text := Format('Afkrydset: %d', [Checked]);
+    StatusBar.Panels[0].Text := Format(rsFilerIAltD, [FView.Count]);
+  StatusBar.Panels[1].Text := Format(rsMarkeredeD, [Length(Sel)]);
+  StatusBar.Panels[2].Text := rsSamletTid + IfThen(TotalSec > 0, FormatDuration(TotalSec), '0:00');
+  StatusBar.Panels[3].Text := rsMarkeretTid + IfThen(SelSec > 0, FormatDuration(SelSec), '0:00');
+  StatusBar.Panels[4].Text := Format(rsAfkrydsetD, [Checked]);
 end;
 
 { TFormMain - rename log / undo }
@@ -1249,7 +1449,7 @@ begin
   FUndoLog := Log;
   FActUndo.Enabled := True;
   ButtonRenameUndo.Enabled := True;
-  FActUndo.Hint := Format('Fortryd omdøbning af %d %s', [Length(Log), What]);
+  FActUndo.Hint := Format(rsFortrydOmdoebningAfDS, [Length(Log), What]);
 end;
 
 procedure TFormMain.ApplyRenameLog(const Log: TRenameLog; Reverse: Boolean);
@@ -1286,7 +1486,7 @@ var
   Restored: Integer;
 begin
   if Length(FUndoLog) = 0 then Exit;
-  if MessageDlg('Fortryd omdøbning', Format('Giv %d filer/mapper deres tidligere navn igen?',
+  if MessageDlg(rsFortrydOmdoebning, Format(rsGivDFilerMapperDeres,
     [Length(FUndoLog)]), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
   Errors := TStringList.Create;
   try
@@ -1295,10 +1495,10 @@ begin
     FUndoLog := nil;
     FActUndo.Enabled := False;
     ButtonRenameUndo.Enabled := False;
-    SetMessage(Format('%d filer/mapper fik deres gamle navn igen', [Restored]));
+    SetMessage(Format(rsDFilerMapperFikDeres, [Restored]));
     SelectionChanged;
     if Errors.Count > 0 then
-      MessageDlg('Fortryd omdøbning', Format('%d filer/mapper fik deres gamle navn igen. Problemer:',
+      MessageDlg(rsFortrydOmdoebning, Format(rsDFilerMapperFikDeres2,
         [Restored]) + LineEnding + Errors.Text, mtWarning, [mbOK], 0);
   finally
     Errors.Free;
@@ -1473,9 +1673,9 @@ begin
   // Rename: the new name of the focused file
   NewName := ExpandRenameMask(ComboRenameMask.Text, Info, 1, 2, RenameOptions, Missing);
   if Missing <> '' then
-    LabelRenamePreview.Caption := 'Mangler: ' + Missing
+    LabelRenamePreview.Caption := rsMangler + Missing
   else if NewName = '' then
-    LabelRenamePreview.Caption := '(ugyldig maske)'
+    LabelRenamePreview.Caption := rsUgyldigMaske
   else if SameFileName(ExtractFileDir(NewName), ExtractFileDir(Info.FileName)) then
     LabelRenamePreview.Caption := ExtractFileName(NewName)
   else
@@ -1483,7 +1683,7 @@ begin
   // Tags from file name: what is read out of the focused file's name
   M := MatchFileName(ComboF2TMask.Text, Info.FileName, CheckF2TUnderscores.Checked, F2TCaseMode);
   if not M.Ok then
-    LabelF2TPreview.Caption := '(filnavnet passer ikke til masken)'
+    LabelF2TPreview.Caption := rsFilnavnetPasserIkkeTilMasken
   else
   begin
     S := '';
@@ -1544,7 +1744,7 @@ begin
   if FVarsTarget = ComboRenameMask then Code := RenameVars[Idx] else Code := F2TVars[Idx];
   Code := Copy(Code, 1, Pos('|', Code) - 1);
   // Complete examples replace the mask; single codes are inserted at the cursor.
-  if Pos('Eksempel', (Sender as TMenuItem).Caption) > 0 then
+  if Pos(rsEksempel, (Sender as TMenuItem).Caption) > 0 then
     FVarsTarget.Text := Code
   else
     FVarsTarget.SelText := Code;
@@ -1577,16 +1777,16 @@ begin
       if (Plan[I].Status <> rsUnchanged) and (Length(Problems) < 600) then
         Problems := Problems + ExtractFileName(Plan[I].OldName) + ': ' + RenameStatusText[Plan[I].Status] +
           IfThen(Plan[I].Detail <> '', ' (' + Plan[I].Detail + ')', '') + LineEnding;
-    if Problems = '' then Problems := 'Alle filer har allerede det navn, masken giver.';
-    MessageDlg('Intet at omdøbe', Problems, mtInformation, [mbOK], 0);
+    if Problems = '' then Problems := rsAlleFilerHarAlleredeDet;
+    MessageDlg(rsIntetAtOmdoebe, Problems, mtInformation, [mbOK], 0);
     Exit;
   end;
   Examples := '';
   for I := 0 to High(Plan) do
     if (Plan[I].Status = rsOk) and (Length(Examples) < 400) then
       Examples := Examples + ExtractFileName(Plan[I].OldName) + '  →  ' + ExtractFileName(Plan[I].NewName) + LineEnding;
-  if MessageDlg('Omdøb filer', Format('Omdøb %d filer?%s', [OkCount,
-    IfThen(Skipped > 0, Format(' (%d springes over - brug "Forhåndsvis..." for at se hvorfor)', [Skipped]), '')]) +
+  if MessageDlg(rsOmdoebFiler, Format(rsOmdoebDFilerS, [OkCount,
+    IfThen(Skipped > 0, Format(rsDSpringesOverBrugForhaandsvis, [Skipped]), '')]) +
     LineEnding + LineEnding + Examples, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
   AddComboMaskToHistory('RenameMasks', ComboRenameMask);
   SaveInlineOptions;
@@ -1596,15 +1796,15 @@ begin
   finally
     Screen.Cursor := crDefault;
   end;
-  if Length(Log) > 0 then SetUndoLog(Log, 'filer');
-  SetMessage(Format('%d filer omdøbt, %d fejl', [Length(Log), CountStatus(Plan, rsFailed)]));
+  if Length(Log) > 0 then SetUndoLog(Log, rsFilerFlertal);
+  SetMessage(Format(rsDFilerOmdoebtDFejl, [Length(Log), CountStatus(Plan, rsFailed)]));
   if CountStatus(Plan, rsFailed) > 0 then
   begin
     Problems := '';
     for I := 0 to High(Plan) do
       if Plan[I].Status = rsFailed then
         Problems := Problems + ExtractFileName(Plan[I].OldName) + ': ' + Plan[I].Detail + LineEnding;
-    MessageDlg('Nogle filer blev ikke omdøbt', Problems, mtWarning, [mbOK], 0);
+    MessageDlg(rsNogleFilerBlevIkkeOmdoebt, Problems, mtWarning, [mbOK], 0);
   end;
   FileList.Invalidate;
   SelectionChanged;
@@ -1658,7 +1858,7 @@ begin
     for I := 0 to High(Items) do
     begin
       if (PerItemFields[I] = []) and (Cover = nil) then Continue;
-      SetMessage(Format('%s: %d af %d...', [What, I + 1, Length(Items)]));
+      SetMessage(Format(rsSDAfD, [What, I + 1, Length(Items)]));
       Application.ProcessMessages;
       if UpdateFileTags(Items[I], PerItem[I], PerItemFields[I], Cover, FKeepTimestamp, Err, Skip) then
         Inc(Saved)
@@ -1673,10 +1873,10 @@ begin
   finally
     Screen.Cursor := crDefault;
   end;
-  SetMessage(Format('%s: gemt i %d filer, %d fejl%s', [What, Saved, Failed,
-    IfThen(Skipped > 0, Format(', %d sprunget over (filtype)', [Skipped]), '')]));
+  SetMessage(Format(rsSGemtIDFiler, [What, Saved, Failed,
+    IfThen(Skipped > 0, Format(rsDSprungetOverFiltype, [Skipped]), '')]));
   if Errors.Count > 0 then
-    MessageDlg('Nogle filer blev ikke gemt', Errors.Text, mtWarning, [mbOK], 0);
+    MessageDlg(rsNogleFilerBlevIkkeGemt, Errors.Text, mtWarning, [mbOK], 0);
   Errors.Free;
   FCoverFile := '';
   FileList.Invalidate;
@@ -1704,7 +1904,7 @@ begin
   if CheckMultiComment.Checked then begin Include(Fields, tfComment); Values[tfComment] := Trim(EditMultiComment.Text); end;
   if Fields = [] then
   begin
-    MessageDlg('Sæt flueben ved de felter, der skal gemmes.', mtInformation, [mbOK], 0);
+    MessageDlg(rsSaetFluebenVedDeFelter, mtInformation, [mbOK], 0);
     Exit;
   end;
   if not RequireTargets(Items) then Exit;
@@ -1715,8 +1915,8 @@ begin
       if Cleared <> '' then Cleared := Cleared + ', ';
       Cleared := Cleared + TagFieldCaptions[F];
     end;
-  if MessageDlg('Gem tags', Format('Gem i %d filer?', [Length(Items)]) +
-    IfThen(Cleared <> '', LineEnding + 'Disse felter bliver ryddet: ' + Cleared, ''),
+  if MessageDlg(rsGemTags, Format(rsGemIDFiler, [Length(Items)]) +
+    IfThen(Cleared <> '', LineEnding + rsDisseFelterBliverRyddet + Cleared, ''),
     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
   SetLength(PerItem, Length(Items));
   SetLength(PerFields, Length(Items));
@@ -1725,7 +1925,7 @@ begin
     PerItem[I] := Values;
     PerFields[I] := Fields;
   end;
-  WriteFieldsBatch(Items, PerItem, PerFields, nil, 'Multi-fil-tag-editor');
+  WriteFieldsBatch(Items, PerItem, PerFields, nil, rsMultiFilTagEditor);
 end;
 
 procedure TFormMain.ButtonF2TPreviewClick(Sender: TObject);
@@ -1772,16 +1972,15 @@ begin
   end;
   if Ready = 0 then
   begin
-    MessageDlg('Intet at skrive', Format('Ingen filer ændres (%d passer ikke til masken). ' +
-      'Brug "Forhåndsvis..." for at se detaljer.', [NoMatch]), mtInformation, [mbOK], 0);
+    MessageDlg(rsIntetAtSkrive, Format(rsIngenFilerAendresDPasser, [NoMatch]), mtInformation, [mbOK], 0);
     Exit;
   end;
-  if MessageDlg('Skriv tags', Format('Skriv tags fra filnavnet i %d filer?%s', [Ready,
-    IfThen(NoMatch > 0, Format(' (%d passer ikke til masken og springes over)', [NoMatch]), '')]),
+  if MessageDlg(rsSkrivTags, Format(rsSkrivTagsFraFilnavnetI, [Ready,
+    IfThen(NoMatch > 0, Format(rsDPasserIkkeTilMasken, [NoMatch]), '')]),
     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
   AddComboMaskToHistory('FileToTagMasks', ComboF2TMask);
   SaveInlineOptions;
-  WriteFieldsBatch(Items, PerItem, PerFields, nil, 'Tags fra filnavn');
+  WriteFieldsBatch(Items, PerItem, PerFields, nil, rsTagsFraFilnavn);
 end;
 
 { TFormMain - covers }
@@ -1838,7 +2037,7 @@ begin
     if CoverPath = '' then
     begin
       ImageFolderCover.Picture.Clear;
-      LabelFolderCoverInfo.Caption := 'Intet billede. Træk et billede hertil.';
+      LabelFolderCoverInfo.Caption := rsIntetBilledeTraekEtBillede;
     end
     else
     begin
@@ -1849,7 +2048,7 @@ begin
       end;
       ShowImageBytes(ImageFolderCover, Data);
       ImageDimensions(Data, W, H);
-      LabelFolderCoverInfo.Caption := Format('%s  %dx%d', [ExtractFileName(CoverPath), W, H]);
+      LabelFolderCoverInfo.Caption := Format(rsSDxD, [ExtractFileName(CoverPath), W, H]);
     end;
   end;
   // embedded cover of the focused file
@@ -1865,7 +2064,7 @@ begin
   ImageFileCover.Picture.Clear;
   if not Info.HasCover then
   begin
-    LabelFileCoverInfo.Caption := 'Intet cover. Træk et billede hertil.';
+    LabelFileCoverInfo.Caption := rsIntetCoverTraekEtBillede;
     Exit;
   end;
   Full := ReadAudioInfo(Info.FileName, True);
@@ -1874,8 +2073,8 @@ begin
     begin
       ShowImageBytes(ImageFileCover, Full.Pictures[0].Data);
       ImageDimensions(Full.Pictures[0].Data, W, H);
-      LabelFileCoverInfo.Caption := Format('%s  %dx%d  (%d billede%s)', [PictureTypeName(Full.Pictures[0].PicType),
-        W, H, Length(Full.Pictures), IfThen(Length(Full.Pictures) = 1, '', 'r')]);
+      LabelFileCoverInfo.Caption := Format(IfThen(Length(Full.Pictures) = 1, rsSDxDDBillede,
+        rsSDxDDBilleder), [PictureTypeName(Full.Pictures[0].PicType), W, H, Length(Full.Pictures)]);
     end;
   finally
     Full.Free;
@@ -1931,7 +2130,7 @@ begin
   end;
   if (DetectImageMime(Data, '') <> 'image/jpeg') and (DetectImageMime(Data, '') <> 'image/png') then
   begin
-    MessageDlg('Kun JPEG- og PNG-billeder kan bruges som cover.', mtWarning, [mbOK], 0);
+    MessageDlg(rsKunJpegOgPngBilleder, mtWarning, [mbOK], 0);
     Exit;
   end;
 
@@ -1941,7 +2140,7 @@ begin
     if Info <> nil then Dir := ExtractFileDir(Info.FileName) else Dir := FFolder;
     if DetectImageMime(Data) = 'image/png' then Target := 'folder.png' else Target := 'folder.jpg';
     Target := IncludeTrailingPathDelimiter(Dir) + Target;
-    if FileExists(Target) and (MessageDlg('Mappens cover', Format('%s findes allerede. Erstat det?',
+    if FileExists(Target) and (MessageDlg(rsMappensCover, Format(rsSFindesAlleredeErstatDet,
       [ExtractFileName(Target)]), mtConfirmation, [mbYes, mbNo], 0) <> mrYes) then Exit;
     try
       CoverStream := TFileStream.Create(Target, fmCreate);
@@ -1953,18 +2152,18 @@ begin
     except
       on E: Exception do
       begin
-        MessageDlg('Billedet kunne ikke gemmes:' + LineEnding + E.Message, mtError, [mbOK], 0);
+        MessageDlg(rsBilledetKunneIkkeGemmes + LineEnding + E.Message, mtError, [mbOK], 0);
         Exit;
       end;
     end;
     FFolderCoverDir := '';
     UpdateCovers;
-    SetMessage('Mappens cover gemt som ' + ExtractFileName(Target));
+    SetMessage(rsMappensCoverGemtSom + ExtractFileName(Target));
   end
   else if Over(PanelFileCover) then
   begin
     if not RequireTargets(Items) then Exit;
-    if MessageDlg('Filens cover', Format('Sæt billedet som forside-cover i %d filer?', [Length(Items)]),
+    if MessageDlg(rsFilensCover, Format(rsSaetBilledetSomForsideCover, [Length(Items)]),
       mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
     SetLength(PerItem, Length(Items));
     SetLength(PerFields, Length(Items));
@@ -1973,7 +2172,7 @@ begin
       PerItem[I] := FieldValuesOf(Items[I]);
       PerFields[I] := [];
     end;
-    WriteFieldsBatch(Items, PerItem, PerFields, Data, 'Cover');
+    WriteFieldsBatch(Items, PerItem, PerFields, Data, rsCover);
   end;
 end;
 
@@ -2030,7 +2229,7 @@ var
   Dir: string;
 begin
   Dir := FFolder;
-  if SelectDirectory('Vælg mappe', FFolder, Dir) then Navigate(Dir);
+  if SelectDirectory(rsVaelgMappe, FFolder, Dir) then Navigate(Dir);
 end;
 
 procedure TFormMain.ActRefreshExecute(Sender: TObject);
@@ -2069,7 +2268,7 @@ begin
   SaveInlineOptions;
   Subset := TargetItems(SubsetCaption, Prefer);
   Log := TFormRename.Execute(AllItems, Subset, SubsetCaption, Prefer);
-  if Length(Log) > 0 then SetUndoLog(Log, 'filer');
+  if Length(Log) > 0 then SetUndoLog(Log, rsFilerFlertal);
   FLoading := True;
   try
     LoadInlineOptions; // the dialog may have changed mask/options
@@ -2093,7 +2292,7 @@ begin
   if Length(Log) > 0 then
   begin
     ApplyRenameLog(Log, False);
-    SetUndoLog(Log, 'mapper');
+    SetUndoLog(Log, rsMapperFlertal);
   end;
   SelectionChanged;
 end;
@@ -2152,7 +2351,7 @@ begin
         OneFolder := False;
     if not OneFolder then
     begin
-      MessageDlg('Afkryds (☑) eller markér filerne fra ét album, og prøv igen.', mtInformation, [mbOK], 0);
+      MessageDlg(rsAfkrydsEllerMarkerFilerneFra, mtInformation, [mbOK], 0);
       Exit;
     end;
   end;
@@ -2241,7 +2440,7 @@ begin
   FClip := FieldValuesOf(Info);
   FHasClip := True;
   FActPaste.Enabled := True;
-  SetMessage('Tag kopieret fra ' + ExtractFileName(Info.FileName));
+  SetMessage(rsTagKopieretFra + ExtractFileName(Info.FileName));
 end;
 
 procedure TFormMain.ActPasteTagExecute(Sender: TObject);
@@ -2254,8 +2453,7 @@ var
 begin
   if not FHasClip or not RequireTargets(Items) then Exit;
   Fields := [Low(TTagField)..High(TTagField)] - [tfTitle, tfTrack];
-  if MessageDlg('Indsæt tag', Format('Indsæt det kopierede tag i %d filer?' + LineEnding +
-    'Alle felter undtagen titel og spornummer overskrives.', [Length(Items)]),
+  if MessageDlg(rsIndsaetTag, Format(rsIndsaetDetKopieredeTagI, [Length(Items)]),
     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
   SetLength(PerItem, Length(Items));
   SetLength(PerFields, Length(Items));
@@ -2264,7 +2462,7 @@ begin
     PerItem[I] := FClip;
     PerFields[I] := Fields;
   end;
-  WriteFieldsBatch(Items, PerItem, PerFields, nil, 'Indsæt tag');
+  WriteFieldsBatch(Items, PerItem, PerFields, nil, rsIndsaetTag);
 end;
 
 procedure TFormMain.ActFindExecute(Sender: TObject);
@@ -2362,13 +2560,13 @@ var
 begin
   if Length(Items) = 0 then
   begin
-    MessageDlg('Der er ingen filer at gemme.', mtInformation, [mbOK], 0);
+    MessageDlg(rsDerErIngenFilerAt, mtInformation, [mbOK], 0);
     Exit;
   end;
   D := TSaveDialog.Create(Owner);
   try
-    D.Title := 'Gem playliste';
-    D.Filter := 'Playliste (UTF-8) (*.m3u8)|*.m3u8|Playliste (*.m3u)|*.m3u';
+    D.Title := rsGemPlayliste;
+    D.Filter := rsPlaylisteUtfMUM;
     D.DefaultExt := 'm3u8';
     D.InitialDir := ExtractFileDir(Items[0].FileName);
     D.FileName := ExtractFileName(ExtractFileDir(Items[0].FileName)) + '.m3u8';
@@ -2376,7 +2574,7 @@ begin
     if D.Execute then
     begin
       WritePlaylist(D.FileName, Items);
-      Owner.SetMessage(Format('Playliste med %d filer gemt: %s', [Length(Items), ExtractFileName(D.FileName)]));
+      Owner.SetMessage(Format(rsPlaylisteMedDFilerGemt, [Length(Items), ExtractFileName(D.FileName)]));
     end;
   finally
     D.Free;
@@ -2405,45 +2603,84 @@ begin
   try
     Value := Ini.ReadString('Discogs', 'Token', '');
     if not InputQuery('Discogs-token',
-      'Lav et personligt token på discogs.com: Settings > Developers > Generate new token.' + LineEnding +
-      'Indsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):', True, Value) then Exit;
+      rsLavEtPersonligtTokenPaa, True, Value) then Exit;
     Ini.WriteString('Discogs', 'Token', Trim(Value));
   finally
     Ini.Free;
   end;
-  SetMessage(IfThen(Trim(Value) = '', 'Discogs-token fjernet', 'Discogs-token gemt'));
+  SetMessage(IfThen(Trim(Value) = '', rsDiscogsTokenFjernet, rsDiscogsTokenGemt));
 end;
 
 procedure TFormMain.ActShortcutsExecute(Sender: TObject);
 begin
-  MessageDlg('Tastaturgenveje',
-    'Enter / dobbeltklik'#9'Rediger tag for den markerede fil' + LineEnding +
-    'Mellemrum'#9#9'Afkryds/fjern afkrydsning på markerede filer' + LineEnding +
-    'F4'#9#9#9'Omdøb filer' + LineEnding +
-    'Ctrl+F4'#9#9'Multi-fil-tag-editor' + LineEnding +
-    'Shift+F4'#9#9'Tags fra filnavn' + LineEnding +
-    'F8'#9#9#9'Vis/skjul værktøjspanelet' + LineEnding +
-    'F5'#9#9#9'Opdater fillisten' + LineEnding +
-    'Ctrl+E'#9#9'Rediger flere filer' + LineEnding +
-    'Ctrl+T'#9#9'Spornumre' + LineEnding +
-    'Ctrl+W'#9#9'Web-opslag' + LineEnding +
-    'Ctrl+Z'#9#9'Fortryd omdøbning' + LineEnding +
-    'Ctrl+Shift+C / V'#9'Kopiér / indsæt tag' + LineEnding +
-    'Ctrl+Op / Ned'#9'Flyt markerede filer op / ned' + LineEnding +
-    'Ctrl+Shift+X'#9'Eksportér / importér tags' + LineEnding +
-    'Ctrl+F'#9#9'Filtrér listen (Esc rydder filteret)' + LineEnding +
-    'Ctrl+O'#9#9'Åbn mappe' + LineEnding +
-    'Alt+Backspace'#9'Mappe op', mtInformation, [mbOK], 0);
+  MessageDlg(rsTastaturgenveje,
+    rsEnterDobbeltklikRedigerTagFor, mtInformation, [mbOK], 0);
+end;
+
+procedure TFormMain.AddLanguageMenu(ParentItem: TMenuItem);
+var
+  Sub, M: TMenuItem;
+  I: Integer;
+  Cur: string;
+begin
+  Cur := LanguageSetting;
+  Sub := TMenuItem.Create(ParentItem);
+  Sub.Caption := rsSprogLanguage;
+  ParentItem.Add(Sub);
+  for I := -1 to High(LanguageCodes) do
+  begin
+    M := TMenuItem.Create(Sub);
+    M.Tag := I;
+    if I < 0 then
+    begin
+      M.Caption := rsAutomatiskWindowsSprog;
+      M.Checked := Cur = '';
+    end
+    else
+    begin
+      M.Caption := LanguageNames[I];
+      M.Checked := Cur = LanguageCodes[I];
+    end;
+    M.RadioItem := True;
+    M.GroupIndex := 1;
+    M.OnClick := @LanguageClick;
+    Sub.Add(M);
+  end;
+end;
+
+{ The language is applied at start-up, so a change restarts the program in the same folder. }
+procedure TFormMain.LanguageClick(Sender: TObject);
+var
+  M: TMenuItem;
+  Code, Old: string;
+  P: TProcess;
+begin
+  M := Sender as TMenuItem;
+  if M.Tag < 0 then Code := '' else Code := LanguageCodes[M.Tag];
+  Old := EffectiveLanguage;
+  SetLanguageSetting(Code);
+  M.Checked := True;
+  if EffectiveLanguage = Old then Exit;
+  if MessageDlg(rsSprog, rsSprogetSkiftesNaarTagklonGenstartes, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+    Exit;
+  SaveSettings;
+  P := TProcess.Create(nil);
+  try
+    P.Executable := ParamStr(0);
+    if FFolder <> '' then P.Parameters.Add(FFolder);
+    P.Execute;
+  finally
+    P.Free;
+  end;
+  Close;
 end;
 
 procedure TFormMain.ActAboutExecute(Sender: TObject);
 begin
-  MessageDlg('Om TagKlon',
-    'TagKlon - tag-editor og musikorganisator' + LineEnding +
-    'Lavet i Lazarus / Free Pascal.' + LineEnding + LineEnding +
-    'Web-data: MusicBrainz (musicbrainz.org), Cover Art Archive og Discogs.' + LineEnding +
-    'Ikoner: Lazarus "general_purpose" af Roland Hahn (CC0).' + LineEnding + LineEnding +
-    'Indstillinger: ' + SettingsFileName, mtInformation, [mbOK], 0);
+  MessageDlg(rsOmTagklon2,
+    rsTagklonTagEditorOgMusikorganisator + LineEnding + LineEnding +
+    rsWebDataMusicbrainzMusicbrainzOrg + LineEnding + LineEnding +
+    rsIndstillinger2 + SettingsFileName, mtInformation, [mbOK], 0);
 end;
 
 procedure TFormMain.ActFolderUpExecute(Sender: TObject);
@@ -2462,13 +2699,13 @@ var
 begin
   PopupFavorites.Items.Clear;
   M := TMenuItem.Create(PopupFavorites);
-  M.Caption := 'Tilføj den åbne mappe';
+  M.Caption := rsTilfoejDenAabneMappe;
   M.ImageIndex := icoFavorites;
   M.OnClick := @FavoriteAddClick;
   M.Enabled := (FFolder <> '') and (FFavorites.IndexOf(FFolder) < 0);
   PopupFavorites.Items.Add(M);
   M := TMenuItem.Create(PopupFavorites);
-  M.Caption := 'Fjern den åbne mappe';
+  M.Caption := rsFjernDenAabneMappe;
   M.OnClick := @FavoriteRemoveClick;
   M.Enabled := FFavorites.IndexOf(FFolder) >= 0;
   PopupFavorites.Items.Add(M);
@@ -2514,20 +2751,20 @@ var
 begin
   if FFolder = '' then Exit;
   NewName := '';
-  if not InputQuery('Ny mappe', 'Navn på den nye mappe i ' + FFolder + ':', NewName) then Exit;
+  if not InputQuery(rsNyMappe3, rsNavnPaaDenNyeMappe + FFolder + ':', NewName) then Exit;
   NewName := SanitizeNamePart(NewName);
   if NewName = '' then Exit;
   Dir := IncludeTrailingPathDelimiter(FFolder) + NewName;
   if DirectoryExists(Dir) or not CreateDir(Dir) then
   begin
-    MessageDlg('Mappen kunne ikke oprettes:' + LineEnding + Dir, mtWarning, [mbOK], 0);
+    MessageDlg(rsMappenKunneIkkeOprettes + LineEnding + Dir, mtWarning, [mbOK], 0);
     Exit;
   end;
   try
     ShellTree.UpdateView(FFolder);
   except
   end;
-  SetMessage('Mappe oprettet: ' + NewName);
+  SetMessage(rsMappeOprettet + NewName);
 end;
 
 procedure TFormMain.ActRefreshTreeExecute(Sender: TObject);

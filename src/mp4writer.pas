@@ -21,6 +21,17 @@ implementation
 uses
   Contnrs, TagUtils;
 
+resourcestring
+  rsMetadataAtomErForStor = 'Metadata-atom er for stor';
+  rsUgyldigAtomStrukturIMoov = 'Ugyldig atom-struktur i moov';
+  rsUgyldigStcoTabel = 'Ugyldig stco-tabel';
+  rsFilenBliverForStorTil = 'Filen bliver for stor til 32-bit chunk-offsets';
+  rsUgyldigCoTabel = 'Ugyldig co64-tabel';
+  rsUgyldigMpStruktur = 'Ugyldig MP4-struktur';
+  rsFragmenteredeMpFilerUnderstoettesIkke = 'Fragmenterede MP4-filer understøttes ikke';
+  rsIngenMoovAtomIkkeEn = 'Ingen moov-atom - ikke en gyldig MP4-fil';
+
+
 const
   NewFreeSpace = 2048;
 
@@ -110,7 +121,7 @@ var
 begin
   Size := TotalSize;
   if Size > $FFFFFFFF then
-    raise Exception.Create('Metadata-atom er for stor');
+    raise Exception.Create(rsMetadataAtomErForStor);
   WriteBE32(S, Size);
   WriteBE32(S, Name);
   WriteBytes(S, Prefix);
@@ -140,7 +151,7 @@ begin
     else if Size = 0 then
       Size := Limit - P;
     if (Size < Hdr) or (P + Size > Limit) then
-      raise Exception.Create('Ugyldig atom-struktur i moov');
+      raise Exception.Create(rsUgyldigAtomStrukturIMoov);
     A := Parent.Add(TAtom.Create(BE32(B, P + 4)));
     Body := P + Hdr;
     if A.IsContainer then
@@ -419,19 +430,19 @@ begin
     else if C.Name = FourCC('stco') then
     begin
       N := BE32(C.Data, 4);
-      if 8 + Int64(N) * 4 > Length(C.Data) then raise Exception.Create('Ugyldig stco-tabel');
+      if 8 + Int64(N) * 4 > Length(C.Data) then raise Exception.Create(rsUgyldigStcoTabel);
       for J := 0 to N - 1 do
       begin
         if BE32(C.Data, 8 + J * 4) < Threshold then Continue;
         if Int64(BE32(C.Data, 8 + J * 4)) + Delta > $FFFFFFFF then
-          raise Exception.Create('Filen bliver for stor til 32-bit chunk-offsets');
+          raise Exception.Create(rsFilenBliverForStorTil);
         PutBE32(C.Data, 8 + J * 4, Int64(BE32(C.Data, 8 + J * 4)) + Delta);
       end;
     end
     else if C.Name = FourCC('co64') then
     begin
       N := BE32(C.Data, 4);
-      if 8 + Int64(N) * 8 > Length(C.Data) then raise Exception.Create('Ugyldig co64-tabel');
+      if 8 + Int64(N) * 8 > Length(C.Data) then raise Exception.Create(rsUgyldigCoTabel);
       for J := 0 to N - 1 do
         if Int64(BE64(C.Data, 8 + J * 8)) >= Threshold then
           PutBE64(C.Data, 8 + J * 8, Int64(BE64(C.Data, 8 + J * 8)) + Delta);
@@ -473,7 +484,7 @@ begin
       if Size = 1 then begin Size := Int64(BE64(H, 8)); Hdr := 16; end
       else if Size = 0 then Size := Src.Size - Pos;
       if (Size < Hdr) or (Pos + Size > Src.Size) then
-        raise Exception.Create('Ugyldig MP4-struktur');
+        raise Exception.Create(rsUgyldigMpStruktur);
       SetLength(Top, Length(Top) + 1);
       Top[High(Top)].Name := BE32(H, 4);
       Top[High(Top)].Pos := Pos;
@@ -486,9 +497,9 @@ begin
     begin
       if (Top[I].Name = FourCC('moov')) and (MoovIdx < 0) then MoovIdx := I;
       if Top[I].Name = FourCC('moof') then
-        raise Exception.Create('Fragmenterede MP4-filer understøttes ikke');
+        raise Exception.Create(rsFragmenteredeMpFilerUnderstoettesIkke);
     end;
-    if MoovIdx < 0 then raise Exception.Create('Ingen moov-atom - ikke en gyldig MP4-fil');
+    if MoovIdx < 0 then raise Exception.Create(rsIngenMoovAtomIkkeEn);
 
     Src.Position := Top[MoovIdx].Pos;
     H := ReadStreamBytes(Src, 16);

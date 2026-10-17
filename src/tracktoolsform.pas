@@ -55,9 +55,25 @@ implementation
 uses
   IniFiles, AppSettings, AudioTags, TagWriter;
 
+resourcestring
+  rsFormaterEksisterendeSpornumre = 'Formatér eksisterende spornumre';
+  rsNummererIListensRaekkefoelge = 'Nummerér i listens rækkefølge';
+  rsAendres = 'Ændres';
+  rsUaendret = 'Uændret';
+  rsFiltypenKanIkkeGemmesEndnu = 'Filtypen kan ikke gemmes endnu';
+  rsGemt = 'Gemt';
+  rsFejl = 'Fejl';
+  rsAlleFilerIListenD = 'Alle filer i listen (%d)';
+  rsDFilerGemtDFejl = '%d filer gemt   ·   %d fejl';
+  rsDAendresDUaendretD = '%d ændres   ·   %d uændret   ·   %d kan ikke gemmes';
+  rsGemSpornumre = 'Gem spornumre';
+  rsGemNyeSpornumreID = 'Gem nye spornumre i %d filer?';
+  rsGemmerDAfDS = 'Gemmer %d af %d: %s';
+
+
 const
-  StatusText: array[TTrackRowStatus] of string = ('Ændres', 'Uændret',
-    'Filtypen kan ikke gemmes endnu', 'Gemt', 'Fejl');
+  StatusText: array[TTrackRowStatus] of string = (rsAendres, rsUaendret,
+    rsFiltypenKanIkkeGemmesEndnu, rsGemt, rsFejl);
 
 class procedure TFormTrackTools.Execute(const All, Subset: TAudioInfoArray;
   const SubsetCaption: string; Prefer: Boolean; var KeepTimestamp: Boolean);
@@ -70,8 +86,10 @@ begin
     F.FSubset := Subset;
     F.CheckKeepTimestamp.Checked := KeepTimestamp;
     F.FLoading := True;
+    F.RadioMode.Items[0] := rsFormaterEksisterendeSpornumre;
+    F.RadioMode.Items[1] := rsNummererIListensRaekkefoelge;
     F.RadioScope.Items[0] := SubsetCaption;
-    F.RadioScope.Items[1] := Format('Alle filer i listen (%d)', [Length(All)]);
+    F.RadioScope.Items[1] := Format(rsAlleFilerIListenD, [Length(All)]);
     if Prefer and (Length(Subset) > 0) then F.RadioScope.ItemIndex := 0 else F.RadioScope.ItemIndex := 1;
     F.FLoading := False;
     F.UpdatePreview;
@@ -176,9 +194,9 @@ begin
     ListPreview.Items.EndUpdate;
   end;
   if Count(trSaved) + Count(trFailed) > 0 then
-    LabelSummary.Caption := Format('%d filer gemt   ·   %d fejl', [Count(trSaved), Count(trFailed)])
+    LabelSummary.Caption := Format(rsDFilerGemtDFejl, [Count(trSaved), Count(trFailed)])
   else
-    LabelSummary.Caption := Format('%d ændres   ·   %d uændret   ·   %d kan ikke gemmes',
+    LabelSummary.Caption := Format(rsDAendresDUaendretD,
       [Count(trChange), Count(trUnchanged), Count(trNotWritable)]);
   ButtonWrite.Enabled := Count(trChange) > 0;
 end;
@@ -197,7 +215,7 @@ var
   I: Integer;
   Full: TAudioInfo;
 begin
-  if MessageDlg('Gem spornumre', Format('Gem nye spornumre i %d filer?', [Count(trChange)]),
+  if MessageDlg(rsGemSpornumre, Format(rsGemNyeSpornumreID, [Count(trChange)]),
     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
   SaveOptions;
   ButtonWrite.Enabled := False;
@@ -206,7 +224,7 @@ begin
     for I := 0 to High(FItems) do
     begin
       if FStatus[I] <> trChange then Continue;
-      LabelSummary.Caption := Format('Gemmer %d af %d: %s', [I + 1, Length(FItems),
+      LabelSummary.Caption := Format(rsGemmerDAfDS, [I + 1, Length(FItems),
         ExtractFileName(FItems[I].FileName)]);
       Application.ProcessMessages;
       // Re-read with pictures so only the track number changes.

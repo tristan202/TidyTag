@@ -208,16 +208,16 @@ object FormTagEdit: TFormTagEdit
       end
       object PanelCover: TPanel
         Left = 526
-        Height = 250
+        Height = 226
         Top = 10
         Width = 258
         BevelOuter = bvLowered
-        ClientHeight = 250
+        ClientHeight = 226
         ClientWidth = 258
         TabOrder = 11
         object ImageCover: TImage
           Left = 1
-          Height = 248
+          Height = 224
           Top = 1
           Width = 256
           Align = alClient
@@ -228,8 +228,8 @@ object FormTagEdit: TFormTagEdit
       end
       object LabelCoverInfo: TLabel
         Left = 526
-        Height = 30
-        Top = 264
+        Height = 28
+        Top = 240
         Width = 258
         AutoSize = False
         Caption = 'Intet billede'
@@ -238,7 +238,7 @@ object FormTagEdit: TFormTagEdit
       object ButtonPrevPicture: TButton
         Left = 526
         Height = 25
-        Top = 298
+        Top = 300
         Width = 30
         Caption = '<'
         TabOrder = 12
@@ -247,35 +247,35 @@ object FormTagEdit: TFormTagEdit
       object ButtonNextPicture: TButton
         Left = 560
         Height = 25
-        Top = 298
+        Top = 300
         Width = 30
         Caption = '>'
         TabOrder = 13
         OnClick = ButtonNextPictureClick
       end
       object ButtonAddPicture: TButton
-        Left = 596
+        Left = 526
         Height = 25
-        Top = 298
-        Width = 60
+        Top = 270
+        Width = 80
         Caption = 'Tilf'#248'j...'
         TabOrder = 14
         OnClick = ButtonAddPictureClick
       end
       object ButtonRemovePicture: TButton
-        Left = 660
+        Left = 610
         Height = 25
-        Top = 298
-        Width = 52
+        Top = 270
+        Width = 80
         Caption = 'Fjern'
         TabOrder = 15
         OnClick = ButtonRemovePictureClick
       end
       object ButtonSavePicture: TButton
-        Left = 716
+        Left = 694
         Height = 25
-        Top = 298
-        Width = 68
+        Top = 270
+        Width = 90
         Caption = 'Gem som...'
         TabOrder = 16
         OnClick = ButtonSavePictureClick

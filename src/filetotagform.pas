@@ -66,12 +66,29 @@ implementation
 uses
   IniFiles, AppSettings, AudioTags, TagWriter;
 
+resourcestring
+  rsKlar = 'Klar';
+  rsUaendret = 'Uændret';
+  rsPasserIkkeTilMasken = 'Passer ikke til masken';
+  rsFiltypenKanIkkeGemmesEndnu = 'Filtypen kan ikke gemmes endnu';
+  rsGemt = 'Gemt';
+  rsFejl = 'Fejl';
+  rsAlleFilerIListenD = 'Alle filer i listen (%d)';
+  rsFil = 'Fil';
+  rsStatus = 'Status';
+  rsDFilerGemtDFejl = '%d filer gemt   ·   %d fejl';
+  rsDKlarDUaendretD = '%d klar   ·   %d uændret   ·   %d passer ikke   ·   %d kan ikke gemmes';
+  rsSkrivTags = 'Skriv tags';
+  rsSkrivTagsIDFiler = 'Skriv tags i %d filer?';
+  rsSkriverDAfDS = 'Skriver %d af %d: %s';
+
+
 const
   HistorySection = 'FileToTagMasks';
   DefaultMasks: array[0..6] of string = ('%1 - %2', '%6 - %2', '%6 - %1 - %2', '%6. %2',
     '%6 %1 - %2', '%1\%3\%6 - %2', '%1\%4 - %3\%6 - %2');
-  RowStatusText: array[TRowStatus] of string = ('Klar', 'Uændret', 'Passer ikke til masken',
-    'Filtypen kan ikke gemmes endnu', 'Gemt', 'Fejl');
+  RowStatusText: array[TRowStatus] of string = (rsKlar, rsUaendret, rsPasserIkkeTilMasken,
+    rsFiltypenKanIkkeGemmesEndnu, rsGemt, rsFejl);
 
 class function TFormFileToTag.Execute(const All, Subset: TAudioInfoArray; const SubsetCaption: string;
   Prefer: Boolean; var KeepTimestamp: Boolean): Boolean;
@@ -84,7 +101,7 @@ begin
     F.FSelected := Subset;
     F.CheckKeepTimestamp.Checked := KeepTimestamp;
     F.RadioScope.Items[0] := SubsetCaption;
-    F.RadioScope.Items[1] := Format('Alle filer i listen (%d)', [Length(All)]);
+    F.RadioScope.Items[1] := Format(rsAlleFilerIListenD, [Length(All)]);
     if Prefer and (Length(Subset) > 0) then F.RadioScope.ItemIndex := 0 else F.RadioScope.ItemIndex := 1;
     F.UpdatePreview;
     F.ShowModal;
@@ -193,7 +210,7 @@ begin
     try
       ListPreview.Columns.Clear;
       Col := ListPreview.Columns.Add;
-      Col.Caption := 'Fil';
+      Col.Caption := rsFil;
       Col.Width := 280;
       for F := Low(TTagField) to High(TTagField) do
         if F in FFields then
@@ -203,7 +220,7 @@ begin
           if F in [tfTrack, tfDisc, tfYear, tfBpm] then Col.Width := 60 else Col.Width := 170;
         end;
       Col := ListPreview.Columns.Add;
-      Col.Caption := 'Status';
+      Col.Caption := rsStatus;
       Col.Width := 200;
     finally
       ListPreview.Columns.EndUpdate;
@@ -223,9 +240,9 @@ begin
     ListPreview.Items.EndUpdate;
   end;
   if CountRows(fsSaved) + CountRows(fsFailed) > 0 then
-    LabelSummary.Caption := Format('%d filer gemt   ·   %d fejl', [CountRows(fsSaved), CountRows(fsFailed)])
+    LabelSummary.Caption := Format(rsDFilerGemtDFejl, [CountRows(fsSaved), CountRows(fsFailed)])
   else
-    LabelSummary.Caption := Format('%d klar   ·   %d uændret   ·   %d passer ikke   ·   %d kan ikke gemmes',
+    LabelSummary.Caption := Format(rsDKlarDUaendretD,
       [CountRows(fsReady), CountRows(fsUnchanged), CountRows(fsNoMatch), CountRows(fsNotWritable)]);
   ButtonWrite.Enabled := CountRows(fsReady) > 0;
 end;
@@ -245,7 +262,7 @@ var
   F: TTagField;
   Full: TAudioInfo;
 begin
-  if MessageDlg('Skriv tags', Format('Skriv tags i %d filer?', [CountRows(fsReady)]),
+  if MessageDlg(rsSkrivTags, Format(rsSkrivTagsIDFiler, [CountRows(fsReady)]),
     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
   AddComboMaskToHistory(HistorySection, ComboMask);
   SaveOptions;
@@ -255,7 +272,7 @@ begin
     for I := 0 to High(FRows) do
     begin
       if FRows[I].Status <> fsReady then Continue;
-      LabelSummary.Caption := Format('Skriver %d af %d: %s', [I + 1, Length(FRows),
+      LabelSummary.Caption := Format(rsSkriverDAfDS, [I + 1, Length(FRows),
         ExtractFileName(FRows[I].Info.FileName)]);
       Application.ProcessMessages;
       // Re-read with pictures so nothing but the chosen fields changes.

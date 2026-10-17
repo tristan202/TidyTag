@@ -19,6 +19,12 @@ implementation
 uses
   base64, TagUtils, Mp3Reader;
 
+resourcestring
+  rsIkkeEnGyldigFlacFil = 'Ikke en gyldig FLAC-fil';
+  rsIkkeEnGyldigOggFil = 'Ikke en gyldig Ogg-fil';
+  rsUkendtOggCodec = 'Ukendt Ogg-codec';
+
+
 type
   TPacketArray = array of TBytes;
 
@@ -159,7 +165,7 @@ begin
   S.Position := Skip;
   H := ReadStreamBytes(S, 4);
   if not BytesAre(H, 0, 'fLaC') then
-    raise Exception.Create('Ikke en gyldig FLAC-fil');
+    raise Exception.Create(rsIkkeEnGyldigFlacFil);
   repeat
     H := ReadStreamBytes(S, 4);
     if Length(H) < 4 then Break;
@@ -270,7 +276,7 @@ begin
   Info.Supported := True;
   Pk := ReadOggPackets(S, 2);
   if Length(Pk) < 1 then
-    raise Exception.Create('Ikke en gyldig Ogg-fil');
+    raise Exception.Create(rsIkkeEnGyldigOggFil);
   RateForDuration := 0;
   PreSkip := 0;
   if (Length(Pk[0]) >= 30) and (Pk[0][0] = 1) and BytesAre(Pk[0], 1, 'vorbis') then
@@ -302,7 +308,7 @@ begin
       ParseVorbisComment(Pk[1], 4, Info);
   end
   else
-    raise Exception.Create('Ukendt Ogg-codec');
+    raise Exception.Create(rsUkendtOggCodec);
 
   if RateForDuration > 0 then
   begin

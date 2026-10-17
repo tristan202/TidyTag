@@ -22,6 +22,20 @@ implementation
 uses
   TagUtils, FlacWriter;
 
+resourcestring
+  rsUgyldigOggSideFilenEr = 'Ugyldig Ogg-side (filen er beskadiget eller ikke Ogg)';
+  rsOggFilenErAfkortet = 'Ogg-filen er afkortet';
+  rsUgyldigOggFil = 'Ugyldig Ogg-fil';
+  rsUventetOggStrukturIdentifikationspakkenFylder = 'Uventet Ogg-struktur (identifikationspakken fylder mere end én side)';
+  rsKunOggVorbisOgOgg = 'Kun Ogg Vorbis og Ogg Opus kan gemmes';
+  rsUventetOggStrukturFoersteSide = 'Uventet Ogg-struktur (første side)';
+  rsOggFilenSlutterFoerHeader = 'Ogg-filen slutter før header-pakkerne';
+  rsOggFilerMedFlereStroemme = 'Ogg-filer med flere strømme kan ikke gemmes endnu';
+  rsUventetOggStrukturLydPaa = 'Uventet Ogg-struktur (lyd på samme side som header)';
+  rsManglerOpustags = 'Mangler OpusTags';
+  rsManglerVorbisKommentarpakken = 'Mangler Vorbis-kommentarpakken';
+
+
 var
   CrcTable: array[0..255] of Cardinal;
 
@@ -67,14 +81,14 @@ begin
   H := ReadStreamBytes(S, 27);
   if Length(H) = 0 then Exit;
   if (Length(H) < 27) or not BytesAre(H, 0, 'OggS') then
-    raise Exception.Create('Ugyldig Ogg-side (filen er beskadiget eller ikke Ogg)');
+    raise Exception.Create(rsUgyldigOggSideFilenEr);
   N := H[26];
   Segs := ReadStreamBytes(S, N);
   DataLen := 0;
   for I := 0 to N - 1 do Inc(DataLen, Segs[I]);
   Data := ReadStreamBytes(S, DataLen);
   if (Length(Segs) < N) or (Length(Data) < DataLen) then
-    raise Exception.Create('Ogg-filen er afkortet');
+    raise Exception.Create(rsOggFilenErAfkortet);
   SetLength(Pg.Raw, 27 + N + DataLen);
   Move(H[0], Pg.Raw[0], 27);
   if N > 0 then Move(Segs[0], Pg.Raw[27], N);
@@ -193,11 +207,11 @@ begin
   try
     // ---- read the header packets
     if not ReadPage(Src, Pg) or (Pg.HeaderType and 2 = 0) then
-      raise Exception.Create('Ugyldig Ogg-fil');
+      raise Exception.Create(rsUgyldigOggFil);
     Serial := Pg.Serial;
     FirstPage := Pg.Raw;
     if (Length(Pg.Segs) = 0) or (Pg.Segs[High(Pg.Segs)] = 255) then
-      raise Exception.Create('Uventet Ogg-struktur (identifikationspakken fylder mere end én side)');
+      raise Exception.Create(rsUventetOggStrukturIdentifikationspakkenFylder);
     Body := Copy(Pg.Raw, Pg.DataOfs, Length(Pg.Raw) - Pg.DataOfs);
     if (Length(Body) >= 7) and (Body[0] = 1) and BytesAre(Body, 1, 'vorbis') then
     begin
@@ -210,13 +224,13 @@ begin
       Needed := 1; // tags
     end
     else
-      raise Exception.Create('Kun Ogg Vorbis og Ogg Opus kan gemmes');
+      raise Exception.Create(rsKunOggVorbisOgOgg);
     if Length(Pg.Segs) > 1 then
     begin
       // the first page must hold the identification packet only
       I := 0;
       while (I < Length(Pg.Segs)) and (Pg.Segs[I] = 255) do Inc(I);
-      if I <> High(Pg.Segs) then raise Exception.Create('Uventet Ogg-struktur (første side)');
+      if I <> High(Pg.Segs) then raise Exception.Create(rsUventetOggStrukturFoersteSide);
     end;
 
     Packets := nil;
@@ -225,9 +239,9 @@ begin
     Done := False;
     while not Done do
     begin
-      if not ReadPage(Src, Pg) then raise Exception.Create('Ogg-filen slutter før header-pakkerne');
+      if not ReadPage(Src, Pg) then raise Exception.Create(rsOggFilenSlutterFoerHeader);
       if Pg.Serial <> Serial then
-        raise Exception.Create('Ogg-filer med flere strømme kan ikke gemmes endnu');
+        raise Exception.Create(rsOggFilerMedFlereStroemme);
       Inc(HeaderPages);
       I := 0;
       Off := 0;
@@ -246,7 +260,7 @@ begin
           if Length(Packets) = Needed then
           begin
             if I <> High(Pg.Segs) then
-              raise Exception.Create('Uventet Ogg-struktur (lyd på samme side som header)');
+              raise Exception.Create(rsUventetOggStrukturLydPaa);
             Done := True;
             Break;
           end;
@@ -260,14 +274,14 @@ begin
     try
       if IsOpus then
       begin
-        if not BytesAre(Packets[0], 0, 'OpusTags') then raise Exception.Create('Mangler OpusTags');
+        if not BytesAre(Packets[0], 0, 'OpusTags') then raise Exception.Create(rsManglerOpustags);
         WriteAscii(B, 'OpusTags');
         WriteBytes(B, BuildVorbisComment(Packets[0], 8, Info, True));
       end
       else
       begin
         if (Packets[0][0] <> 3) or not BytesAre(Packets[0], 1, 'vorbis') then
-          raise Exception.Create('Mangler Vorbis-kommentarpakken');
+          raise Exception.Create(rsManglerVorbisKommentarpakken);
         B.WriteByte(3);
         WriteAscii(B, 'vorbis');
         WriteBytes(B, BuildVorbisComment(Packets[0], 7, Info, True));
@@ -290,7 +304,7 @@ begin
         while ReadPage(Src, Pg) do
         begin
           if Pg.Serial <> Serial then
-            raise Exception.Create('Ogg-filer med flere strømme kan ikke gemmes endnu');
+            raise Exception.Create(rsOggFilerMedFlereStroemme);
           SetSeqAndCrc(Pg.Raw, Cardinal(Int64(Pg.Seq) + Delta));
           WriteBytes(Dst, Pg.Raw);
         end;

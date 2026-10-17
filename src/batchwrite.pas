@@ -29,6 +29,10 @@ implementation
 uses
   AudioTags, TagWriter;
 
+resourcestring
+  rsFiltypenKanIkkeGemmesEndnu = 'filtypen kan ikke gemmes endnu';
+
+
 procedure SetFrontCover(Info: TAudioInfo; const Data: TBytes);
 var
   Keep: TTagPictures;
@@ -69,7 +73,7 @@ begin
   Skipped := not CanWriteTags(Info.FileName);
   if Skipped then
   begin
-    Err := 'filtypen kan ikke gemmes endnu';
+    Err := rsFiltypenKanIkkeGemmesEndnu;
     Exit;
   end;
   Full := ReadAudioInfo(Info.FileName, True);

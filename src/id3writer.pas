@@ -24,6 +24,10 @@ implementation
 uses
   TagUtils, Mp3Reader;
 
+resourcestring
+  rsIdVDUnderstoettesIkke = 'ID3v2.%d understøttes ikke';
+
+
 const
   NewTagPadding = 4096;
 
@@ -435,7 +439,7 @@ begin
     if not ParseID3v2(Src, OldVersion, Old, OldTagSize) then
     begin
       if OldTagSize > 0 then
-        raise Exception.CreateFmt('ID3v2.%d understøttes ikke', [OldVersion]);
+        raise Exception.CreateFmt(rsIdVDUnderstoettesIkke, [OldVersion]);
       OldVersion := 0;
     end;
     if OldVersion in [3, 4] then Version := OldVersion else Version := 3;

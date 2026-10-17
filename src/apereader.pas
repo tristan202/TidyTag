@@ -18,6 +18,11 @@ implementation
 uses
   TagUtils, Mp3Reader, ApeTag;
 
+resourcestring
+  rsFilenErForKort = 'Filen er for kort';
+  rsUkendtLydformat = 'Ukendt lydformat';
+
+
 procedure SetLength_(Info: TAudioInfo; Samples: Double; AudioBytes: Int64);
 begin
   if Info.SampleRate <= 0 then Exit;
@@ -196,7 +201,7 @@ begin
   if TagSize < 0 then TagSize := 0;
   S.Position := TagSize;
   B := ReadStreamBytes(S, 4096);
-  if Length(B) < 32 then raise Exception.Create('Filen er for kort');
+  if Length(B) < 32 then raise Exception.Create(rsFilenErForKort);
   Ext := LowerCase(ExtractFileExt(Info.FileName));
   if BytesAre(B, 0, 'MAC ') then
     ReadMonkeys(B, Info, AudioEnd - TagSize)
@@ -209,7 +214,7 @@ begin
   else if Ext = '.mpc' then
     Info.Codec := 'Musepack'
   else
-    raise Exception.Create('Ukendt lydformat');
+    raise Exception.Create(rsUkendtLydformat);
 end;
 
 end.
