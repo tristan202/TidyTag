@@ -120,7 +120,7 @@ C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe -Mobjfpc -Sh -Fusrc -FUlib\tools -
 bin\renametest.exe C:\Temp\renametest
 ```
 
-Øvrige værktøjer i `tools\`: `tooltest.lpr` (felt-værktøjer, ID3-synkronisering, papirkurv: `bin	ooltest.exe C:\Temp	t fil.mp3` - lægger én lille testfil i papirkurven), `addtranslations.py` (flet oversættelser ind), `webtest.lpr` (offline-test af MusicBrainz-svar og parring),
+Øvrige værktøjer i `tools\`: `tooltest.lpr` (felt-værktøjer, ID3-synkronisering, papirkurv: `bin\tooltest.exe C:\Temp\tt fil.mp3` - lægger én lille testfil i papirkurven), `addtranslations.py` (flet oversættelser ind), `webtest.lpr` (offline-test af MusicBrainz-svar og parring),
 `dgtest.lpr` (live Discogs: `bin\dgtest.exe 249504`), `mbtest.lpr` (live-søgning: `bin\mbtest.exe "Gasolin'" "Gas 5"`), `exporttest.lpr` (eksport/import), `tagset.lpr` (sæt felter:
 `bin\tagset.exe fil.mp3 artist=X album=Y track=1`).
 
