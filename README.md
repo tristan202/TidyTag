@@ -198,6 +198,7 @@ Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret
 | `src/exportimportform.pas/.lfm` | Dialog: Eksportér/importér tags |
 | `src/batchwrite.pas` | Gem udvalgte felter/cover i én fil (bruges af faner, indsæt tag, træk-og-slip) |
 | `res/icons/`, `res/icons.rc` | Ikoner (Lazarus general_purpose af Roland Hahn, CC0) |
+| `TidyTag.ico`, `res/logo/tidytag.png` | Programikonet (lavet med `tools/icon_cut.py`) |
 | `reference/forms/` | Formularer fra originalen (kun som reference – må ikke kopieres) |
 
 ## Næste skridt

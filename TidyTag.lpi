@@ -5,6 +5,7 @@
     <General>
       <SessionStorage Value="InProjectDir"/>
       <Title Value="TidyTag"/>
+      <Icon Value="0"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
@@ -32,7 +33,7 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="src\mainform.pas"/>
+        <Filename Value="src/mainform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormMain"/>
         <HasResources Value="True"/>
@@ -40,62 +41,62 @@
         <UnitName Value="MainForm"/>
       </Unit>
       <Unit>
-        <Filename Value="src\audiotypes.pas"/>
+        <Filename Value="src/audiotypes.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="AudioTypes"/>
       </Unit>
       <Unit>
-        <Filename Value="src\audiotags.pas"/>
+        <Filename Value="src/audiotags.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="AudioTags"/>
       </Unit>
       <Unit>
-        <Filename Value="src\tagutils.pas"/>
+        <Filename Value="src/tagutils.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="TagUtils"/>
       </Unit>
       <Unit>
-        <Filename Value="src\mp3reader.pas"/>
+        <Filename Value="src/mp3reader.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Mp3Reader"/>
       </Unit>
       <Unit>
-        <Filename Value="src\vorbisreader.pas"/>
+        <Filename Value="src/vorbisreader.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="VorbisReader"/>
       </Unit>
       <Unit>
-        <Filename Value="src\mp4reader.pas"/>
+        <Filename Value="src/mp4reader.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Mp4Reader"/>
       </Unit>
       <Unit>
-        <Filename Value="src\scanthread.pas"/>
+        <Filename Value="src/scanthread.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ScanThread"/>
       </Unit>
       <Unit>
-        <Filename Value="src\id3writer.pas"/>
+        <Filename Value="src/id3writer.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ID3Writer"/>
       </Unit>
       <Unit>
-        <Filename Value="src\flacwriter.pas"/>
+        <Filename Value="src/flacwriter.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="FlacWriter"/>
       </Unit>
       <Unit>
-        <Filename Value="src\mp4writer.pas"/>
+        <Filename Value="src/mp4writer.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Mp4Writer"/>
       </Unit>
       <Unit>
-        <Filename Value="src\tagwriter.pas"/>
+        <Filename Value="src/tagwriter.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="TagWriter"/>
       </Unit>
       <Unit>
-        <Filename Value="src\tageditform.pas"/>
+        <Filename Value="src/tageditform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormTagEdit"/>
         <HasResources Value="True"/>
@@ -103,22 +104,22 @@
         <UnitName Value="TagEditForm"/>
       </Unit>
       <Unit>
-        <Filename Value="src\appsettings.pas"/>
+        <Filename Value="src/appsettings.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="AppSettings"/>
       </Unit>
       <Unit>
-        <Filename Value="src\renamecore.pas"/>
+        <Filename Value="src/renamecore.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="RenameCore"/>
       </Unit>
       <Unit>
-        <Filename Value="src\filenametags.pas"/>
+        <Filename Value="src/filenametags.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="FileNameTags"/>
       </Unit>
       <Unit>
-        <Filename Value="src\renameform.pas"/>
+        <Filename Value="src/renameform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormRename"/>
         <HasResources Value="True"/>
@@ -126,7 +127,7 @@
         <UnitName Value="RenameForm"/>
       </Unit>
       <Unit>
-        <Filename Value="src\filetotagform.pas"/>
+        <Filename Value="src/filetotagform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormFileToTag"/>
         <HasResources Value="True"/>
@@ -134,7 +135,7 @@
         <UnitName Value="FileToTagForm"/>
       </Unit>
       <Unit>
-        <Filename Value="src\multieditform.pas"/>
+        <Filename Value="src/multieditform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormMultiEdit"/>
         <HasResources Value="True"/>
@@ -142,12 +143,12 @@
         <UnitName Value="MultiEditForm"/>
       </Unit>
       <Unit>
-        <Filename Value="src\trackcore.pas"/>
+        <Filename Value="src/trackcore.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="TrackCore"/>
       </Unit>
       <Unit>
-        <Filename Value="src\tracktoolsform.pas"/>
+        <Filename Value="src/tracktoolsform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormTrackTools"/>
         <HasResources Value="True"/>
@@ -155,17 +156,17 @@
         <UnitName Value="TrackToolsForm"/>
       </Unit>
       <Unit>
-        <Filename Value="src\musicbrainz.pas"/>
+        <Filename Value="src/musicbrainz.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="MusicBrainz"/>
       </Unit>
       <Unit>
-        <Filename Value="src\trackmatch.pas"/>
+        <Filename Value="src/trackmatch.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="TrackMatch"/>
       </Unit>
       <Unit>
-        <Filename Value="src\weblookupform.pas"/>
+        <Filename Value="src/weblookupform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormWebLookup"/>
         <HasResources Value="True"/>
@@ -173,22 +174,22 @@
         <UnitName Value="WebLookupForm"/>
       </Unit>
       <Unit>
-        <Filename Value="src\discogs.pas"/>
+        <Filename Value="src/discogs.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Discogs"/>
       </Unit>
       <Unit>
-        <Filename Value="src\batchwrite.pas"/>
+        <Filename Value="src/batchwrite.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="BatchWrite"/>
       </Unit>
       <Unit>
-        <Filename Value="src\exportimport.pas"/>
+        <Filename Value="src/exportimport.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ExportImport"/>
       </Unit>
       <Unit>
-        <Filename Value="src\exportimportform.pas"/>
+        <Filename Value="src/exportimportform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormExportImport"/>
         <HasResources Value="True"/>
@@ -196,117 +197,87 @@
         <UnitName Value="ExportImportForm"/>
       </Unit>
       <Unit>
-        <Filename Value="src\unit.pas"/>
+        <Filename Value="src/unit.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="OggWriter"/>
       </Unit>
       <Unit>
-        <Filename Value="src\unit.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="WavReader"/>
-      </Unit>
-      <Unit>
-        <Filename Value="src\unit.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="WavWriter"/>
-      </Unit>
-      <Unit>
-        <Filename Value="src\unit.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="ApeTag"/>
-      </Unit>
-      <Unit>
-        <Filename Value="src\unit.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="ApeReader"/>
-      </Unit>
-      <Unit>
-        <Filename Value="src\unit.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="AsfReader"/>
-      </Unit>
-      <Unit>
-        <Filename Value="src\unit.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="AsfWriter"/>
-      </Unit>
-      <Unit>
-        <Filename Value="src\oggwriter.pas"/>
+        <Filename Value="src/oggwriter.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="OggWriter"/>
       </Unit>
       <Unit>
-        <Filename Value="src\wavreader.pas"/>
+        <Filename Value="src/wavreader.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WavReader"/>
       </Unit>
       <Unit>
-        <Filename Value="src\wavwriter.pas"/>
+        <Filename Value="src/wavwriter.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WavWriter"/>
       </Unit>
       <Unit>
-        <Filename Value="src\apetag.pas"/>
+        <Filename Value="src/apetag.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ApeTag"/>
       </Unit>
       <Unit>
-        <Filename Value="src\apereader.pas"/>
+        <Filename Value="src/apereader.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ApeReader"/>
       </Unit>
       <Unit>
-        <Filename Value="src\asfreader.pas"/>
+        <Filename Value="src/asfreader.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="AsfReader"/>
       </Unit>
       <Unit>
-        <Filename Value="src\asfwriter.pas"/>
+        <Filename Value="src/asfwriter.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="AsfWriter"/>
       </Unit>
       <Unit>
-        <Filename Value="src\language.pas"/>
+        <Filename Value="src/language.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Language"/>
       </Unit>
       <Unit>
-        <Filename Value="src\layoutfit.pas"/>
+        <Filename Value="src/layoutfit.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="LayoutFit"/>
       </Unit>
       <Unit>
-        <Filename Value="src\layoutcheck.pas"/>
+        <Filename Value="src/layoutcheck.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="LayoutCheck"/>
       </Unit>
       <Unit>
-        <Filename Value="src\fieldtools.pas"/>
+        <Filename Value="src/fieldtools.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="FieldTools"/>
       </Unit>
       <Unit>
-        <Filename Value="src\tagremove.pas"/>
+        <Filename Value="src/tagremove.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="TagRemove"/>
       </Unit>
       <Unit>
-        <Filename Value="src\tooldialogs.pas"/>
+        <Filename Value="src/tooldialogs.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ToolDialogs"/>
       </Unit>
       <Unit>
-        <Filename Value="src\id3sync.pas"/>
+        <Filename Value="src/id3sync.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ID3Sync"/>
       </Unit>
       <Unit>
-        <Filename Value="src\fileops.pas"/>
+        <Filename Value="src/fileops.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="FileOps"/>
       </Unit>
       <Unit>
-        <Filename Value="src\coverimage.pas"/>
+        <Filename Value="src/coverimage.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="CoverImage"/>
       </Unit>
@@ -315,14 +286,17 @@
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="bin\TidyTag"/>
+      <Filename Value="bin/TidyTag"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
       <OtherUnitFiles Value="src"/>
-      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
+      <Debugging>
+        <DebugInfoType Value="dsDwarf3"/>
+      </Debugging>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>
