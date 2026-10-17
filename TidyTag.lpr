@@ -1,4 +1,4 @@
-program TagKlon;
+program TidyTag;
 
 {$mode objfpc}{$H+}
 
@@ -14,7 +14,7 @@ uses
 
 begin
   RequireDerivedFormResource := True;
-  Application.Title := 'TagKlon';
+  Application.Title := 'TidyTag';
   Application.Scaled := True;
   Application.Initialize;
   ApplyLanguage;

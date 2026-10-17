@@ -1,4 +1,4 @@
-# Tag&Rename-funktioner, som TagKlon ikke har endnu
+# Tag&Rename-funktioner, som TidyTag ikke har endnu
 
 Udarbejdet ud fra originalens formularer og handlinger (IDR-udtræk i `reference/idr`, kun som
 reference). Kun *hvad* funktionerne gør er brugt – ingen kode. Prioritet: **A** = stor værdi i

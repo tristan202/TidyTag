@@ -393,7 +393,7 @@ end;
 
 function TempFileFor(const Target: string): string;
 begin
-  Result := Target + '.tagklon-tmp';
+  Result := Target + '.tidytag-tmp';
 end;
 
 procedure ReplaceFileWith(const TempName, Target: string);

@@ -1,8 +1,8 @@
 unit Language;
 
 { User interface language: setting, detection and loading of the .po translations.
-  The sources are written in Danish; languages\TagKlon.<code>.po holds the other
-  languages (TagKlon.da.po is empty, so switching back to Danish works too) and
+  The sources are written in Danish; languages\TidyTag.<code>.po holds the other
+  languages (TidyTag.da.po is empty, so switching back to Danish works too) and
   languages\lclstrconsts.<code>.po the texts of the LCL itself (dialog buttons etc.).
   The language is applied once at program start, before the forms are created. }
 
@@ -86,7 +86,7 @@ end;
 
 procedure ApplyLanguage;
 begin
-  SetDefaultLang(EffectiveLanguage, LanguageDir, 'TagKlon', False);
+  SetDefaultLang(EffectiveLanguage, LanguageDir, 'TidyTag', False);
 end;
 
 end.

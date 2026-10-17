@@ -282,7 +282,7 @@ type
     function AskYes(const Title, Msg: string; DlgType: TMsgDlgType = mtConfirmation): Boolean;
     procedure Inform(const Title, Msg: string; DlgType: TMsgDlgType = mtInformation);
   public
-    { Developer check: "TagKlon.exe --selftest <folder> <report.txt>" runs the tag, cover
+    { Developer check: "TidyTag.exe --selftest <folder> <report.txt>" runs the tag, cover
       and rename tools on the files of <folder> (use copies!) without dialogs. }
     procedure RunSelfTest(const ReportFile: string);
     procedure ActSettingsExecute(Sender: TObject);
@@ -496,7 +496,7 @@ resourcestring
   rsSprogLanguage = 'Sprog (Language)';
   rsSprog = 'Sprog';
   rsAutomatiskWindowsSprog = 'Automatisk (Windows-sprog)';
-  rsSprogetSkiftesNaarTagklonGenstartes = 'Sproget skiftes, når TagKlon startes igen. Genstart nu?';
+  rsSprogetSkiftesNaarTidytagGenstartes = 'Sproget skiftes, når TidyTag startes igen. Genstart nu?';
   rsMultiFilTagEditor = 'Multi-fil-tag-editor';
   rsFilerFlertal = 'filer';
   rsMapperFlertal = 'mapper';
@@ -604,7 +604,7 @@ resourcestring
   rsGivDeSenestOmdoebteFiler = 'Giv de senest omdøbte filer/mapper deres gamle navne igen';
   rsBevarFilernesDatoVedGem = 'Bevar filernes dato ved gem';
   rsTastaturgenveje = 'Tastaturgenveje';
-  rsOmTagklon = 'Om TagKlon...';
+  rsOmTidytag = 'Om TidyTag...';
   rsGaaEnMappeOp = 'Gå en mappe op';
   rsFavoritter = 'Favoritter';
   rsFavoritmapper = 'Favoritmapper';
@@ -685,12 +685,12 @@ resourcestring
   rsGemPlayliste = 'Gem playliste';
   rsPlaylisteUtfMUM = 'Playliste (UTF-8) (*.m3u8)|*.m3u8|Playliste (*.m3u)|*.m3u';
   rsPlaylisteMedDFilerGemt = 'Playliste med %d filer gemt: %s';
-  rsLavEtPersonligtTokenPaa = 'Lav et personligt token på discogs.com: Settings > Developers > Generate new token.'#13#10'Indsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):';
+  rsLavEtPersonligtTokenPaa = 'Lav et personligt token på discogs.com: Settings > Developers > Generate new token.'#13#10'Indsæt det her (det gemmes kun på denne computer, i TidyTags indstillingsfil):';
   rsDiscogsTokenFjernet = 'Discogs-token fjernet';
   rsDiscogsTokenGemt = 'Discogs-token gemt';
   rsEnterDobbeltklikRedigerTagFor = 'Enter / dobbeltklik	Rediger tag for den markerede fil'#13#10'Mellemrum		Afkryds/fjern afkrydsning på markerede filer'#13#10'F4			Omdøb filer'#13#10'Ctrl+F4		Multi-fil-tag-editor'#13#10'Shift+F4		Tags fra filnavn'#13#10'F8			Vis/skjul værktøjspanelet'#13#10'F5			Opdater fillisten'#13#10'Ctrl+E		Rediger flere filer'#13#10'Ctrl+T		Spornumre'#13#10'Ctrl+W		Web-opslag'#13#10'Ctrl+Z		Fortryd omdøbning'#13#10'Ctrl+Shift+C / V	Kopiér / indsæt tag'#13#10'Ctrl+Op / Ned	Flyt markerede filer op / ned'#13#10'Ctrl+Shift+X	Eksportér / importér tags'#13#10'Ctrl+F		Filtrér listen (Esc rydder filteret)'#13#10'Ctrl+O		Åbn mappe'#13#10'Alt+Backspace	Mappe op';
-  rsOmTagklon2 = 'Om TagKlon';
-  rsTagklonTagEditorOgMusikorganisator = 'TagKlon - tag-editor og musikorganisator'#13#10'Lavet i Lazarus / Free Pascal.';
+  rsOmTidytag2 = 'Om TidyTag';
+  rsTidytagTagEditorOgMusikorganisator = 'TidyTag - tag-editor og musikorganisator'#13#10'Lavet i Lazarus / Free Pascal.';
   rsWebDataMusicbrainzMusicbrainzOrg = 'Web-data: MusicBrainz (musicbrainz.org), Cover Art Archive og Discogs.'#13#10'Ikoner: Lazarus "general_purpose" af Roland Hahn (CC0).';
   rsIndstillinger2 = 'Indstillinger: ';
   rsTilfoejDenAabneMappe = 'Tilføj den åbne mappe';
@@ -1113,7 +1113,7 @@ begin
   FActKeepDate := NewAction(rsBevarFilernesDatoVedGem, '', 0, -1, @ActKeepDateExecute);
   aToken := NewAction(rsDiscogsTokenMenu, '', 0, icoSettings, @ActDiscogsTokenExecute);
   aKeys := NewAction(rsTastaturgenveje, '', ShortCut(VK_F1, []), icoHelp, @ActShortcutsExecute);
-  aAbout := NewAction(rsOmTagklon, '', 0, icoInfo, @ActAboutExecute);
+  aAbout := NewAction(rsOmTidytag, '', 0, icoInfo, @ActAboutExecute);
   aUp := NewAction(rsOpMenu, rsGaaEnMappeOp, ShortCut(VK_BACK, [ssAlt]), icoFolderUp, @ActFolderUpExecute);
   aFav := NewAction(rsFavoritter, rsFavoritmapper, 0, icoFavorites, @ActFavoritesExecute);
   aNewFolder := NewAction(rsNyMappe2, rsOpretEnUndermappeIDen, 0, icoNewFolder, @ActNewFolderExecute);
@@ -1727,7 +1727,7 @@ begin
   FileList.Items.Count := 0;
   ClearItems;
   ComboAddress.Text := FFolder;
-  Caption := 'TagKlon - ' + FFolder;
+  Caption := 'TidyTag - ' + FFolder;
   FCoverFile := '';
   FFolderCoverDir := '';
   if FSortColumn < 0 then FSortColumn := 1; // a fresh scan starts sorted by file name
@@ -1829,7 +1829,7 @@ begin
   begin
     FFolder := NewFolder;
     ComboAddress.Text := FFolder;
-    Caption := 'TagKlon - ' + FFolder;
+    Caption := 'TidyTag - ' + FFolder;
   end;
   try
     ShellTree.UpdateView(FFolder); // show the new folder names, keep the open folder selected
@@ -3999,6 +3999,10 @@ begin
     ForceDirectories(ExtractFileDir(FTestTargetDir) + PathDelim + 'flyttet');
     CopyOrMoveTo(True, ExtractFileDir(FTestTargetDir) + PathDelim + 'flyttet');
     FAutoLog.Add(Format('  efter flyt: %d i listen', [FItems.Count]));
+  except
+    on E: Exception do FAutoLog.Add('!! undtagelse: ' + E.ClassName + ': ' + E.Message);
+  end;
+  try
     FAutoLog.SaveToFile(ReportFile);
   finally
     FAutoYes := False;
@@ -4475,7 +4479,7 @@ begin
   SetLanguageSetting(Code);
   SyncSettingsMenus;
   if EffectiveLanguage = Old then Exit;
-  if MessageDlg(rsSprog, rsSprogetSkiftesNaarTagklonGenstartes, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+  if MessageDlg(rsSprog, rsSprogetSkiftesNaarTidytagGenstartes, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     Exit;
   SaveSettings;
   P := TProcess.Create(nil);
@@ -4491,8 +4495,8 @@ end;
 
 procedure TFormMain.ActAboutExecute(Sender: TObject);
 begin
-  MessageDlg(rsOmTagklon2,
-    rsTagklonTagEditorOgMusikorganisator + LineEnding + LineEnding +
+  MessageDlg(rsOmTidytag2,
+    rsTidytagTagEditorOgMusikorganisator + LineEnding + LineEnding +
     rsWebDataMusicbrainzMusicbrainzOrg + LineEnding + LineEnding +
     rsIndstillinger2 + SettingsFileName, mtInformation, [mbOK], 0);
 end;

@@ -45,7 +45,7 @@ function GuidBytes(const G: string): TBytes;
 function IsGuid(const B: TBytes; P: SizeInt; const G: string): Boolean;
 { UTF-16LE with a terminating zero character. }
 function Utf16z(const S: string): TBytes;
-{ Attribute names written by TagKlon (and their old variants), compared case-insensitively. }
+{ Attribute names written by TidyTag (and their old variants), compared case-insensitively. }
 function IsManagedAttr(const Name: string): Boolean;
 procedure ReadAsf(S: TStream; Info: TAudioInfo);
 

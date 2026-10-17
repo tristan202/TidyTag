@@ -113,7 +113,7 @@ resourcestring
   rsSkrivKunstnerOgAlbumOg = 'Skriv kunstner og album, og tryk Søg.';
   rsDiscogsKraeverEtPersonligtToken = 'Discogs kræver et personligt token til søgning - tryk "Discogs-token...".';
   rsTrykSoeg = 'Tryk Søg.';
-  rsLavEtPersonligtTokenPaa = 'Lav et personligt token på discogs.com: Settings > Developers > Generate new token.'#13#10'Indsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):';
+  rsLavEtPersonligtTokenPaa = 'Lav et personligt token på discogs.com: Settings > Developers > Generate new token.'#13#10'Indsæt det her (det gemmes kun på denne computer, i TidyTags indstillingsfil):';
   rsDiscogsTokenFjernet = 'Discogs-token fjernet.';
   rsDiscogsTokenGemtTrykSoeg = 'Discogs-token gemt. Tryk Søg.';
   rsFejl = 'Fejl: ';

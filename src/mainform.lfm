@@ -4,7 +4,7 @@ object FormMain: TFormMain
   Top = 60
   Width = 1320
   AllowDropFiles = True
-  Caption = 'TagKlon'
+  Caption = 'TidyTag'
   ClientHeight = 820
   ClientWidth = 1320
   KeyPreview = True

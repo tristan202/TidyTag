@@ -159,7 +159,7 @@ var
   Errors: TStringList;
 begin
   WriteLn('-- papirkurv');
-  F := Dir + 'TagKlon-papirkurvstest.tmp'; // one tiny file ends up in the recycle bin
+  F := Dir + 'TidyTag-papirkurvstest.tmp'; // one tiny file ends up in the recycle bin
   S := TFileStream.Create(F, fmCreate);
   S.WriteByte(0);
   S.Free;

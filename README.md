@@ -1,8 +1,7 @@
-# TagKlon
+# TidyTag
 
 Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne i Tag&Rename 3.9.15
-(se [docs/Funktionsoversigt.md](docs/Funktionsoversigt.md)). Arbejdstitel – navnet kan ændres.
-
+(se [docs/Funktionsoversigt.md](docs/Funktionsoversigt.md)).
 ## Status (MVP, trin 13)
 - **B-listen** (se `docs/mangler.md`):
   - *Tag-værktøjer:* kunstnerværktøjer ("The Beatles" ↔ "Beatles, The", "Carl Nielsen" ↔
@@ -51,7 +50,7 @@ Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne
   kolonner; **importér** fra CSV/XLSX med forhåndsvisning (matcher på "Sti" eller "Filnavn").
 - Mappetræ og virtuel filliste med 21 kolonner; klik på en kolonneoverskrift for at sortere.
 - "Søg i undermapper"; tags læses i en baggrundstråd, så vinduet ikke fryser.
-- Husker sidste mappe, undermappe-valg og træets bredde (`%LOCALAPPDATA%\TagKlon\tagklon.ini`).
+- Husker sidste mappe, undermappe-valg og træets bredde (`%LOCALAPPDATA%\TidyTag\tidytag.ini`; indstillinger fra det tidligere navn TagKlon flyttes med automatisk første gang).
 - Læser tags:
   - MP3: ID3v2.2/2.3/2.4 + ID3v1, varighed/bitrate inkl. VBR (Xing/Info/VBRI)
   - FLAC: Vorbis comments, STREAMINFO, billeder
@@ -98,9 +97,9 @@ Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne
 
 ## Byg
 ```
-C:\lazarus\lazbuild.exe TagKlon.lpi
+C:\lazarus\lazbuild.exe TidyTag.lpi
 ```
-Resultat: `bin\TagKlon.exe`. Projektet kan også åbnes i Lazarus-IDE'en (`TagKlon.lpi`).
+Resultat: `bin\TidyTag.exe`. Projektet kan også åbnes i Lazarus-IDE'en (`TidyTag.lpi`).
 
 Testværktøj, der skriver tags ud i konsollen:
 ```
@@ -129,23 +128,23 @@ Kildesproget er dansk. Tekster i koden er `resourcestring`s, formularernes tekst
 `languages\src	ranslations.json` er kilden til oversættelserne (`{dansk tekst: {sprog: tekst}}`).
 Efter ændringer i tekster eller oversættelser:
 ```
-C:\lazarus\lazbuild.exe TagKlon.lpi
+C:\lazarus\lazbuild.exe TidyTag.lpi
 python tools\mkpot.py
 ```
-`mkpot.py` laver `languages\TagKlon.pot` ud fra compilerens `.rsj`-filer og formularerne og skriver
-`languages\TagKlon.<sprog>.po` (formatkoder som `%d`/`%s` kontrolleres). Programmet finder `languages\`
+`mkpot.py` laver `languages\TidyTag.pot` ud fra compilerens `.rsj`-filer og formularerne og skriver
+`languages\TidyTag.<sprog>.po` (formatkoder som `%d`/`%s` kontrolleres). Programmet finder `languages\`
 ved siden af exe-filen eller i `..\languages`. Nyt sprog: tilføj koden i `src\language.pas` og
 oversættelser i JSON-filen (samt `lclstrconsts.<sprog>.po` fra `C:\lazarus\lcl\languages`).
 
 Layout-kontrol for et sprog (sæt `Language=xx` under `[Main]` i indstillingsfilen først):
 ```
-bin\TagKlon.exe --layoutcheck C:\Temp\layout.txt
+bin\TidyTag.exe --layoutcheck C:\Temp\layout.txt
 ```
 opretter alle vinduer og dialoger og skriver tekster, der ikke kan være der, overlapper eller stikker ud.
 
 Selvtest af værktøjerne i hovedvinduet (brug en mappe med **kopier**):
 ```
-bin\TagKlon.exe --selftest C:\Temp\kopierlbum C:\Temp\selftest.txt
+bin\TidyTag.exe --selftest C:\Temp\kopierlbum C:\Temp\selftest.txt
 ```
 kører kopiér/byt/ryd felter, cover ind/ud, en omdøbningshandling med fortryd og fjern tags uden
 dialoger og skriver felterne efter hvert trin i rapporten.
@@ -179,7 +178,7 @@ Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret
 | `src/language.pas` | Sprogvalg og indlæsning af `.po`-filer (LCLTranslator) |
 | `src/layoutfit.pas` | Giver plads til længere oversatte tekster, når et vindue vises |
 | `src/layoutcheck.pas` | Udviklerkontrol `--layoutcheck` af alle vinduer |
-| `languages/` | `TagKlon.pot`, `TagKlon.<sprog>.po`, `lclstrconsts.<sprog>.po`, `src/translations.json` |
+| `languages/` | `TidyTag.pot`, `TidyTag.<sprog>.po`, `lclstrconsts.<sprog>.po`, `src/translations.json` |
 | `tools/mkpot.py` | Laver `.pot` og `.po`-filer |
 | `src/tageditform.pas/.lfm` | Tag-editor for én fil |
 | `src/renamecore.pas` | Maske → fil-/mappenavn, rensning, plan/udfør/fortryd |

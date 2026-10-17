@@ -280,7 +280,7 @@ begin
            Info.Fields[tfCatalogNo] := 'CAT 123';
            Info.Fields[tfIsrc] := 'DKABC2400001';
            Info.Fields[tfCopyright] := '© 2001 Nogen';
-           Info.Fields[tfEncodedBy] := 'TagKlon';
+           Info.Fields[tfEncodedBy] := 'TidyTag';
            Info.Fields[tfUrl] := 'https://example.com/a?b=1';
            Info.Fields[tfGrouping] := 'Gruppe';
            Info.Fields[tfSubtitle] := 'Undertitel';

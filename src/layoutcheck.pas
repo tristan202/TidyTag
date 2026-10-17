@@ -1,6 +1,6 @@
 unit LayoutCheck;
 
-{ Developer check for translations: "TagKlon.exe --layoutcheck <report.txt>" creates every
+{ Developer check for translations: "TidyTag.exe --layoutcheck <report.txt>" creates every
   window in the current language and lists texts that do not fit their control or that
   overlap a neighbouring control. }
 
@@ -59,8 +59,8 @@ begin
     Exit;
   end;
   CheckTree(F, Report, 'Dialog "' + F.Caption + '"');
-  // TAGKLON_LAYOUT_PAUSE=<ms>: keep the dialog open, e.g. for a screenshot
-  for I := 1 to StrToIntDef(GetEnvironmentVariable('TAGKLON_LAYOUT_PAUSE'), 0) div 50 do
+  // TIDYTAG_LAYOUT_PAUSE=<ms>: keep the dialog open, e.g. for a screenshot
+  for I := 1 to StrToIntDef(GetEnvironmentVariable('TIDYTAG_LAYOUT_PAUSE'), 0) div 50 do
   begin
     Application.ProcessMessages;
     Sleep(50);

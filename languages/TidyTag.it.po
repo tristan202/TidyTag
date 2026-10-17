@@ -2,2854 +2,2854 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: TagKlon\n"
-"Language: da\n"
+"Project-Id-Version: TidyTag\n"
+"Language: it\n"
 
 #: apereader.rsfilenerforkort
 msgid "Filen er for kort"
-msgstr ""
+msgstr "File troppo corto"
 
 #: apereader.rsukendtlydformat
 msgid "Ukendt lydformat"
-msgstr ""
+msgstr "Formato audio sconosciuto"
 
 #: asfreader.rsikkeenwmaasffil
 msgctxt "asfreader.rsikkeenwmaasffil"
 msgid "Ikke en WMA/ASF-fil"
-msgstr ""
+msgstr "Non è un file WMA/ASF"
 
 #: asfreader.rsugyldigasfheader
 msgctxt "asfreader.rsugyldigasfheader"
 msgid "Ugyldig ASF-header"
-msgstr ""
+msgstr "Intestazione ASF non valida"
 
 #: asfwriter.rsikkeenwmaasffil
 msgctxt "asfwriter.rsikkeenwmaasffil"
 msgid "Ikke en WMA/ASF-fil"
-msgstr ""
+msgstr "Non è un file WMA/ASF"
 
 #: asfwriter.rsugyldigasfheader
 msgctxt "asfwriter.rsugyldigasfheader"
 msgid "Ugyldig ASF-header"
-msgstr ""
+msgstr "Intestazione ASF non valida"
 
 #: asfwriter.rsugyldigtasfobjekt
 msgid "Ugyldigt ASF-objekt"
-msgstr ""
+msgstr "Oggetto ASF non valido"
 
 #: asfwriter.rsasffilenmanglerfileproperties
 msgid "ASF-filen mangler File Properties"
-msgstr ""
+msgstr "Il file ASF non ha File Properties"
 
 #: audiotypes.rsalbumfelt
 msgctxt "audiotypes.rsalbumfelt"
 msgid "Album"
-msgstr ""
+msgstr "Album"
 
 #: audiotypes.rsdiscfelt
 msgctxt "audiotypes.rsdiscfelt"
 msgid "Disc"
-msgstr ""
+msgstr "Disco"
 
 #: audiotypes.rsgenrefelt
 msgctxt "audiotypes.rsgenrefelt"
 msgid "Genre"
-msgstr ""
+msgstr "Genere"
 
 #: audiotypes.rskatalognrfelt
 msgctxt "audiotypes.rskatalognrfelt"
 msgid "Katalognr."
-msgstr ""
+msgstr "N. catalogo"
 
 #: audiotypes.rsdelafopsamling
 msgid "Del af opsamling"
-msgstr ""
+msgstr "Parte di una compilation"
 
 #: audiotypes.rspodcast
 msgid "Podcast"
-msgstr ""
+msgstr "Podcast"
 
 #: audiotypes.rstitel
 msgctxt "audiotypes.rstitel"
 msgid "Titel"
-msgstr ""
+msgstr "Titolo"
 
 #: audiotypes.rskunstner
 msgctxt "audiotypes.rskunstner"
 msgid "Kunstner"
-msgstr ""
+msgstr "Artista"
 
 #: audiotypes.rsaar
 msgctxt "audiotypes.rsaar"
 msgid "År"
-msgstr ""
+msgstr "Anno"
 
 #: audiotypes.rsspor
 msgctxt "audiotypes.rsspor"
 msgid "Spor"
-msgstr ""
+msgstr "Traccia"
 
 #: audiotypes.rskommentar
 msgctxt "audiotypes.rskommentar"
 msgid "Kommentar"
-msgstr ""
+msgstr "Commento"
 
 #: audiotypes.rsalbumkunstner
 msgctxt "audiotypes.rsalbumkunstner"
 msgid "Albumkunstner"
-msgstr ""
+msgstr "Artista album"
 
 #: audiotypes.rskomponist
 msgctxt "audiotypes.rskomponist"
 msgid "Komponist"
-msgstr ""
+msgstr "Compositore"
 
 #: audiotypes.rssangtekst
 msgctxt "audiotypes.rssangtekst"
 msgid "Sangtekst"
-msgstr ""
+msgstr "Testo"
 
 #: audiotypes.rsdirigent
 msgid "Dirigent"
-msgstr ""
+msgstr "Direttore"
 
 #: audiotypes.rstekstforfatter
 msgid "Tekstforfatter"
-msgstr ""
+msgstr "Paroliere"
 
 #: audiotypes.rsoprindeligkunstner
 msgid "Oprindelig kunstner"
-msgstr ""
+msgstr "Artista originale"
 
 #: audiotypes.rsremixetaf
 msgid "Remixet af"
-msgstr ""
+msgstr "Remix di"
 
 #: audiotypes.rspladeselskab
 msgctxt "audiotypes.rspladeselskab"
 msgid "Pladeselskab"
-msgstr ""
+msgstr "Etichetta"
 
 #: audiotypes.rscopyright
 msgid "Copyright"
-msgstr ""
+msgstr "Copyright"
 
 #: audiotypes.rskodetaf
 msgid "Kodet af"
-msgstr ""
+msgstr "Codificato da"
 
 #: audiotypes.rsgruppering
 msgid "Gruppering"
-msgstr ""
+msgstr "Raggruppamento"
 
 #: audiotypes.rsundertitel
 msgid "Undertitel"
-msgstr ""
+msgstr "Sottotitolo"
 
 #: audiotypes.rsstemning
 msgid "Stemning"
-msgstr ""
+msgstr "Atmosfera"
 
 #: audiotypes.rstoneart
 msgid "Toneart"
-msgstr ""
+msgstr "Tonalità"
 
 #: audiotypes.rssortertitel
 msgid "Sortér titel"
-msgstr ""
+msgstr "Titolo (ordinamento)"
 
 #: audiotypes.rssorterkunstner
 msgid "Sortér kunstner"
-msgstr ""
+msgstr "Artista (ordinamento)"
 
 #: audiotypes.rssorteralbumkunstner
 msgid "Sortér albumkunstner"
-msgstr ""
+msgstr "Artista album (ordinamento)"
 
 #: audiotypes.rssorteralbum
 msgid "Sortér album"
-msgstr ""
+msgstr "Album (ordinamento)"
 
 #: audiotypes.rssorterkomponist
 msgid "Sortér komponist"
-msgstr ""
+msgstr "Compositore (ordinamento)"
 
 #: audiotypes.rsandet
 msgid "Andet"
-msgstr ""
+msgstr "Altro"
 
 #: audiotypes.rsforside
 msgid "Forside"
-msgstr ""
+msgstr "Fronte"
 
 #: audiotypes.rsbagside
 msgid "Bagside"
-msgstr ""
+msgstr "Retro"
 
 #: audiotypes.rsindlaegsseddel
 msgid "Indlægsseddel"
-msgstr ""
+msgstr "Libretto"
 
 #: audiotypes.rsmediecd
 msgid "Medie (CD)"
-msgstr ""
+msgstr "Supporto (CD)"
 
 #: audiotypes.rssolist
 msgid "Solist"
-msgstr ""
+msgstr "Solista"
 
 #: audiotypes.rsorkester
 msgid "Orkester"
-msgstr ""
+msgstr "Gruppo/orchestra"
 
 #: audiotypes.rsoptagested
 msgid "Optagested"
-msgstr ""
+msgstr "Luogo di registrazione"
 
 #: audiotypes.rsunderoptagelse
 msgid "Under optagelse"
-msgstr ""
+msgstr "Durante la registrazione"
 
 #: audiotypes.rsillustration
 msgid "Illustration"
-msgstr ""
+msgstr "Illustrazione"
 
 #: audiotypes.rskunstnerlogo
 msgid "Kunstnerlogo"
-msgstr ""
+msgstr "Logo dell'artista"
 
 #: audiotypes.rsudgiverlogo
 msgid "Udgiverlogo"
-msgstr ""
+msgstr "Logo dell'editore"
 
 #: audiotypes.rsbillede
 msgid "Billede"
-msgstr ""
+msgstr "Immagine"
 
 #: batchwrite.rsfiltypenkanikkegemmesendnu
 msgid "filtypen kan ikke gemmes endnu"
-msgstr ""
+msgstr "questo tipo di file non può ancora essere salvato"
 
 #: discogs.rsdiscogsformangeforespoergslervent
 msgid "Discogs: for mange forespørgsler - vent et minut og prøv igen."
-msgstr ""
+msgstr "Discogs: troppe richieste - attendi un minuto e riprova."
 
 #: discogs.rsdiscogsafvistedittokentjek
 msgid "Discogs afviste dit token. Tjek det under \"Discogs-token...\"."
-msgstr ""
+msgstr "Discogs ha rifiutato il tuo token. Controllalo in \"Token Discogs...\"."
 
 #: discogs.rsdiscogskenderikkedenneudgivelse
 msgid "Discogs kender ikke denne udgivelse"
-msgstr ""
+msgstr "Discogs non conosce questa pubblicazione"
 
 #: discogs.rsdiscogssvaredemedfejld
 msgid "Discogs svarede med fejl %d"
-msgstr ""
+msgstr "Discogs ha risposto con l'errore %d"
 
 #: discogs.rsuventetsvarfradiscogs
 msgid "Uventet svar fra Discogs"
-msgstr ""
+msgstr "Risposta inattesa da Discogs"
 
 #: discogs.rssoegningpaadiscogskraeveret
 msgid "Søgning på Discogs kræver et personligt token. Tryk \"Discogs-token...\" og indsæt det token, du kan lave på discogs.com under Settings > Developers."
-msgstr ""
+msgstr "La ricerca su Discogs richiede un token personale. Premi \"Token Discogs...\" e incolla il token che puoi creare su discogs.com in Settings > Developers."
 
 #: exportimport.rscsvtilexcelsemikolon
 msgid "CSV til Excel (semikolon)"
-msgstr ""
+msgstr "CSV per Excel (punto e virgola)"
 
 #: exportimport.rscsvkomma
 msgid "CSV (komma)"
-msgstr ""
+msgstr "CSV (virgola)"
 
 #: exportimport.rsteksttabulator
 msgid "Tekst (tabulator)"
-msgstr ""
+msgstr "Testo (tabulazione)"
 
 #: exportimport.rsaendres
 msgctxt "exportimport.rsaendres"
 msgid "Ændres"
-msgstr ""
+msgstr "Da modificare"
 
 #: exportimport.rsuaendret
 msgctxt "exportimport.rsuaendret"
 msgid "Uændret"
-msgstr ""
+msgstr "Invariato"
 
 #: exportimport.rsingenfilpasser
 msgid "Ingen fil passer"
-msgstr ""
+msgstr "Nessun file corrispondente"
 
 #: exportimport.rsflerefilerpasser
 msgid "Flere filer passer"
-msgstr ""
+msgstr "Più file corrispondono"
 
 #: exportimport.rsfiltypenkanikkegemmes
 msgid "Filtypen kan ikke gemmes"
-msgstr ""
+msgstr "Il tipo di file non può essere salvato"
 
 #: exportimport.rsgemt
 msgctxt "exportimport.rsgemt"
 msgid "Gemt"
-msgstr ""
+msgstr "Salvato"
 
 #: exportimport.rsfejl
 msgctxt "exportimport.rsfejl"
 msgid "Fejl"
-msgstr ""
+msgstr "Errore"
 
 #: exportimport.rsfilnavn
 msgctxt "exportimport.rsfilnavn"
 msgid "Filnavn"
-msgstr ""
+msgstr "Nome file"
 
 #: exportimport.rssti
 msgid "Sti"
-msgstr ""
+msgstr "Percorso"
 
 #: exportimport.rsmappe
 msgctxt "exportimport.rsmappe"
 msgid "Mappe"
-msgstr ""
+msgstr "Cartella"
 
 #: exportimport.rsvarighed
 msgid "Varighed"
-msgstr ""
+msgstr "Durata"
 
 #: exportimport.rsbitrate
 msgctxt "exportimport.rsbitrate"
 msgid "Bitrate"
-msgstr ""
+msgstr "Bitrate"
 
 #: exportimport.rssamplerate
 msgctxt "exportimport.rssamplerate"
 msgid "Samplerate"
-msgstr ""
+msgstr "Frequenza di campionamento"
 
 #: exportimport.rscodec
 msgctxt "exportimport.rscodec"
 msgid "Codec"
-msgstr ""
+msgstr "Codec"
 
 #: exportimport.rsstoerrelsebyte
 msgid "Størrelse (byte)"
-msgstr ""
+msgstr "Dimensione (byte)"
 
 #: exportimport.rscover
 msgctxt "exportimport.rscover"
 msgid "Cover"
-msgstr ""
+msgstr "Copertina"
 
 #: exportimport.rsja
 msgctxt "exportimport.rsja"
 msgid "Ja"
-msgstr ""
+msgstr "Sì"
 
 #: exportimport.rsnej
 msgid "Nej"
-msgstr ""
+msgstr "No"
 
 #: exportimport.rsregnearketharintetfoersteark
 msgid "Regnearket har intet første ark (xl/worksheets/sheet1.xml)"
-msgstr ""
+msgstr "La cartella di lavoro non ha un primo foglio (xl/worksheets/sheet1.xml)"
 
 #: exportimport.rsdetgamlexlsformatunderstoettes
 msgid "Det gamle .xls-format understøttes ikke. Gem regnearket som .xlsx eller .csv."
-msgstr ""
+msgstr "Il vecchio formato .xls non è supportato. Salva il foglio come .xlsx o .csv."
 
 #: exportimport.rsfilenharingendataraekker
 msgid "Filen har ingen datarækker."
-msgstr ""
+msgstr "Il file non contiene righe di dati."
 
 #: exportimport.rsdermanglerenkolonnesti
 msgid "Der mangler en kolonne \"Sti\" eller \"Filnavn\" til at finde filerne."
-msgstr ""
+msgstr "Manca una colonna \"Percorso\" o \"Nome file\" per trovare i file."
 
 #: exportimport.rsingenkolonneoverskriftersvarertiltag
 msgid "Ingen kolonneoverskrifter svarer til tag-felter (fx \"Titel\", \"Kunstner\", \"Album\")."
-msgstr ""
+msgstr "Nessuna intestazione di colonna corrisponde a un campo tag (es. \"Titolo\", \"Artista\", \"Album\")."
 
 #: exportimport.rsfelter
 msgid "Felter: "
-msgstr ""
+msgstr "Campi: "
 
 #: exportimport.rsfilerfindesviasti
 msgid ".  Filer findes via \"Sti\"."
-msgstr ""
+msgstr ".  I file vengono trovati tramite \"Percorso\"."
 
 #: exportimport.rsfilerfindesviafilnavn
 msgid ".  Filer findes via \"Filnavn\"."
-msgstr ""
+msgstr ".  I file vengono trovati tramite \"Nome file\"."
 
 #: exportimportform.rsallefilerilistend
 msgctxt "exportimportform.rsallefilerilistend"
 msgid "Alle filer i listen (%d)"
-msgstr ""
+msgstr "Tutti i file nell'elenco (%d)"
 
 #: exportimportform.rsvaelgmindstenkolonne
 msgid "Vælg mindst én kolonne."
-msgstr ""
+msgstr "Seleziona almeno una colonna."
 
 #: exportimportform.rseksportenmislykkedes
 msgid "Eksporten mislykkedes:"
-msgstr ""
+msgstr "L'esportazione non è riuscita:"
 
 #: exportimportform.rsdfilereksporterettils
 msgid "%d filer eksporteret til\n%s"
-msgstr ""
+msgstr "%d file esportati in\n%s"
 
 #: exportimportform.rsfilenkunneikkelaeses
 msgid "Filen kunne ikke læses: "
-msgstr ""
+msgstr "Impossibile leggere il file: "
 
 #: exportimportform.rstom
 msgid "(tom)"
-msgstr ""
+msgstr "(vuoto)"
 
 #: exportimportform.rsdfilergemtdfejl
 msgctxt "exportimportform.rsdfilergemtdfejl"
 msgid "%d filer gemt   ·   %d fejl"
-msgstr ""
+msgstr "%d file salvati   ·   %d errori"
 
 #: exportimportform.rsdaendresduaendretd
 msgid "%d ændres   ·   %d uændret   ·   %d uden fil   ·   %d tvetydige   ·   %d kan ikke gemmes"
-msgstr ""
+msgstr "%d da modificare   ·   %d invariati   ·   %d senza file   ·   %d ambigui   ·   %d non salvabili"
 
 #: exportimportform.rsimportertags
 msgctxt "exportimportform.rsimportertags"
 msgid "Importér tags"
-msgstr ""
+msgstr "Importa tag"
 
 #: exportimportform.rsskrivdeimporteredevaerdieri
 msgid "Skriv de importerede værdier i %d filer?"
-msgstr ""
+msgstr "Scrivere i valori importati in %d file?"
 
 #: exportimportform.rsskrivers
 msgid "Skriver %s..."
-msgstr ""
+msgstr "Scrittura di %s..."
 
 #: filenametags.filetotagvariableshelp
 msgid "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc\n%9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab\n%d Spring over\nFiltypen fjernes automatisk. Brug \\ for mappenavne, fx  %1\\%3\\%6 - %2"
-msgstr ""
+msgstr "%1 Artista   %2 Titolo   %3 Album   %4 Anno   %5 Genere   %6 Traccia   %# Disco\n%9 Commento   %b BPM   %aa Artista album   %cp Compositore   %co Direttore   %lb Etichetta\n%d Salta\nL'estensione viene rimossa automaticamente. Usa \\ per i nomi delle cartelle, es.  %1\\%3\\%6 - %2"
 
 #: fileops.rsfindesalleredeimaalmappen
 msgid "findes allerede i målmappen"
-msgstr ""
+msgstr "esiste già nella cartella di destinazione"
 
 #: fileops.rskunneikkelaeggesipapirkurven
 msgid "kunne ikke lægges i papirkurven"
-msgstr ""
+msgstr "impossibile spostarlo nel cestino"
 
 #: filetotagform.rsklar
 msgid "Klar"
-msgstr ""
+msgstr "Pronto"
 
 #: filetotagform.rsuaendret
 msgctxt "filetotagform.rsuaendret"
 msgid "Uændret"
-msgstr ""
+msgstr "Invariato"
 
 #: filetotagform.rspasserikketilmasken
 msgid "Passer ikke til masken"
-msgstr ""
+msgstr "Non corrisponde alla maschera"
 
 #: filetotagform.rsfiltypenkanikkegemmesendnu
 msgctxt "filetotagform.rsfiltypenkanikkegemmesendnu"
 msgid "Filtypen kan ikke gemmes endnu"
-msgstr ""
+msgstr "Questo tipo di file non può ancora essere salvato"
 
 #: filetotagform.rsgemt
 msgctxt "filetotagform.rsgemt"
 msgid "Gemt"
-msgstr ""
+msgstr "Salvato"
 
 #: filetotagform.rsfejl
 msgctxt "filetotagform.rsfejl"
 msgid "Fejl"
-msgstr ""
+msgstr "Errore"
 
 #: filetotagform.rsallefilerilistend
 msgctxt "filetotagform.rsallefilerilistend"
 msgid "Alle filer i listen (%d)"
-msgstr ""
+msgstr "Tutti i file nell'elenco (%d)"
 
 #: filetotagform.rsfil
 msgctxt "filetotagform.rsfil"
 msgid "Fil"
-msgstr ""
+msgstr "File"
 
 #: filetotagform.rsstatus
 msgctxt "filetotagform.rsstatus"
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #: filetotagform.rsdfilergemtdfejl
 msgctxt "filetotagform.rsdfilergemtdfejl"
 msgid "%d filer gemt   ·   %d fejl"
-msgstr ""
+msgstr "%d file salvati   ·   %d errori"
 
 #: filetotagform.rsdklarduaendretd
 msgid "%d klar   ·   %d uændret   ·   %d passer ikke   ·   %d kan ikke gemmes"
-msgstr ""
+msgstr "%d pronti   ·   %d invariati   ·   %d non corrispondono   ·   %d non salvabili"
 
 #: filetotagform.rsskrivtags
 msgctxt "filetotagform.rsskrivtags"
 msgid "Skriv tags"
-msgstr ""
+msgstr "Scrivi tag"
 
 #: filetotagform.rsskrivtagsidfiler
 msgid "Skriv tags i %d filer?"
-msgstr ""
+msgstr "Scrivere i tag in %d file?"
 
 #: filetotagform.rsskriverdafds
 msgid "Skriver %d af %d: %s"
-msgstr ""
+msgstr "Scrittura %d di %d: %s"
 
 #: flacwriter.rsmetadatablokkenerforstor
 msgid "Metadata-blokken er for stor (billedet er over 16 MB)"
-msgstr ""
+msgstr "Il blocco di metadati è troppo grande (l'immagine supera 16 MB)"
 
 #: flacwriter.rsikkeengyldigflacfil
 msgctxt "flacwriter.rsikkeengyldigflacfil"
 msgid "Ikke en gyldig FLAC-fil"
-msgstr ""
+msgstr "File FLAC non valido"
 
 #: flacwriter.rsflacmetadataerafkortet
 msgid "FLAC-metadata er afkortet"
-msgstr ""
+msgstr "I metadati FLAC sono troncati"
 
 #: flacwriter.rsugyldigflacmetadatablok
 msgid "Ugyldig FLAC-metadatablok"
-msgstr ""
+msgstr "Blocco di metadati FLAC non valido"
 
 #: flacwriter.rsflacfilenmanglerstreaminfo
 msgid "FLAC-filen mangler STREAMINFO"
-msgstr ""
+msgstr "Il file FLAC non ha STREAMINFO"
 
 #: id3writer.rsidvdunderstoettesikke
 msgid "ID3v2.%d understøttes ikke"
-msgstr ""
+msgstr "ID3v2.%d non è supportato"
 
 #: layoutcheck.rskopierfelt
 msgctxt "layoutcheck.rskopierfelt"
 msgid "Kopiér felt"
-msgstr ""
+msgstr "Copia campo"
 
 #: layoutcheck.rsfrafelt
 msgctxt "layoutcheck.rsfrafelt"
 msgid "Fra felt:"
-msgstr ""
+msgstr "Dal campo:"
 
 #: layoutcheck.rstilfelt
 msgctxt "layoutcheck.rstilfelt"
 msgid "Til felt:"
-msgstr ""
+msgstr "Al campo:"
 
 #: layoutcheck.rskunhvisfeltetertomt
 msgctxt "layoutcheck.rskunhvisfeltetertomt"
 msgid "Kun hvis målfeltet er tomt"
-msgstr ""
+msgstr "Solo se il campo di destinazione è vuoto"
 
 #: layoutcheck.rsindsaettag
 msgctxt "layoutcheck.rsindsaettag"
 msgid "Indsæt tag"
-msgstr ""
+msgstr "Incolla tag"
 
 #: layoutcheck.rsskalercoverifilerne
 msgctxt "layoutcheck.rsskalercoverifilerne"
 msgid "Skalér cover i filerne..."
-msgstr ""
+msgstr "Ridimensiona le copertine nei file..."
 
 #: layoutcheck.rsmaskeeditor
 msgctxt "layoutcheck.rsmaskeeditor"
 msgid "Maske-editor"
-msgstr ""
+msgstr "Editor maschera"
 
 #: layoutcheck.rsvaelgfelterderindsaettes
 msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
-msgstr ""
+msgstr "Scegli i campi da incollare in %d file:"
 
 #: mainform.rsindstillingermenu
 msgid "Indstillinger..."
-msgstr ""
+msgstr "Impostazioni..."
 
 #: mainform.rsindstillingermenuhint
 msgid "Alle indstillinger samlet ét sted"
-msgstr ""
+msgstr "Tutte le impostazioni in un unico posto"
 
 #: mainform.rsindstillingertitel
 msgid "Indstillinger"
-msgstr ""
+msgstr "Impostazioni"
 
 #: mainform.rsgenerelt
 msgctxt "mainform.rsgenerelt"
 msgid "Generelt"
-msgstr ""
+msgstr "Generale"
 
 #: mainform.rscoverfane
 msgctxt "mainform.rscoverfane"
 msgid "Cover"
-msgstr ""
+msgstr "Copertina"
 
 #: mainform.rsfillistefane
 msgid "Fillisten"
-msgstr ""
+msgstr "Elenco file"
 
 #: mainform.rsomdoebningogweb
 msgid "Omdøbning og web"
-msgstr ""
+msgstr "Rinomina e web"
 
 #: mainform.rsskalerstorecoverautomatisk
 msgid "Skalér store cover automatisk, når tags gemmes"
-msgstr ""
+msgstr "Ridimensiona automaticamente le copertine grandi al salvataggio dei tag"
 
 #: mainform.rsstoerstesidesetting
 msgctxt "mainform.rsstoerstesidesetting"
 msgid "Største side (pixel):"
-msgstr ""
+msgstr "Lato maggiore (pixel):"
 
 #: mainform.rsjpegkvalitetsetting
 msgctxt "mainform.rsjpegkvalitetsetting"
 msgid "JPEG-kvalitet (1-100):"
-msgstr ""
+msgstr "Qualità JPEG (1-100):"
 
 #: mainform.rskonverterpngtiljpegsetting
 msgctxt "mainform.rskonverterpngtiljpegsetting"
 msgid "Konvertér PNG til JPEG"
-msgstr ""
+msgstr "Converti PNG in JPEG"
 
 #: mainform.rsrtudgivelsesdato
 msgid "%rt|Udgivelsesdato (hele datoen)"
-msgstr ""
+msgstr "%rt|Data di pubblicazione (data completa)"
 
 #: mainform.rsdbitbitdybde
 msgid "%dbit|Bitdybde"
-msgstr ""
+msgstr "%dbit|Profondità di bit"
 
 #: mainform.rsenckodetaf
 msgid "%enc|Kodet af"
-msgstr ""
+msgstr "%enc|Codificato da"
 
 #: mainform.rsrndtilfaeldigttal
 msgid "%rnd|Tilfældigt tal (4 cifre)"
-msgstr ""
+msgstr "%rnd|Numero casuale (4 cifre)"
 
 #: mainform.rsmaskeeditormenu
 msgid "Maske-editor..."
-msgstr ""
+msgstr "Editor maschera..."
 
 #: mainform.rsmaskeeditortitel
 msgctxt "mainform.rsmaskeeditortitel"
 msgid "Maske-editor"
-msgstr ""
+msgstr "Editor maschera"
 
 #: mainform.rssletmappecover
 msgid "Slet mappe-cover i de valgte mapper..."
-msgstr ""
+msgstr "Elimina le copertine delle cartelle selezionate..."
 
 #: mainform.rssletmappecoverhint
 msgid "Læg folder.jpg/cover.jpg/front.jpg (og .png) i papirkurven"
-msgstr ""
+msgstr "Sposta folder.jpg/cover.jpg/front.jpg (e .png) nel cestino"
 
 #: mainform.rsskalercoverifilerne
 msgctxt "mainform.rsskalercoverifilerne"
 msgid "Skalér cover i filerne..."
-msgstr ""
+msgstr "Ridimensiona le copertine nei file..."
 
 #: mainform.rsskalercoverifilernehint
 msgid "Gør store billeder i filernes tag mindre (og evt. til JPEG)"
-msgstr ""
+msgstr "Riduci le immagini grandi nei tag dei file (ed eventualmente in JPEG)"
 
 #: mainform.rsskalermappecover
 msgid "Skalér mappe-cover..."
-msgstr ""
+msgstr "Ridimensiona le copertine delle cartelle..."
 
 #: mainform.rsskalermappecoverhint
 msgid "Gør store folder.jpg/cover.jpg-billeder mindre (og evt. til JPEG)"
-msgstr ""
+msgstr "Riduci le immagini folder.jpg/cover.jpg grandi (ed eventualmente in JPEG)"
 
 #: mainform.rsbrugfilenscoversommappecover
 msgid "Brug filens cover som mappe-cover"
-msgstr ""
+msgstr "Usa la copertina del file come copertina della cartella"
 
 #: mainform.rsskalerstorecovervedgem
 msgid "Skalér store cover ved gem..."
-msgstr ""
+msgstr "Ridimensiona le copertine grandi al salvataggio..."
 
 #: mainform.rsskalerstorecovervedgemhint
 msgid "Billeder større end den valgte størrelse gøres mindre, når tags gemmes"
-msgstr ""
+msgstr "Le immagini più grandi della dimensione scelta vengono ridotte al salvataggio dei tag"
 
 #: mainform.rsskalercover
 msgid "Skalér cover"
-msgstr ""
+msgstr "Ridimensiona copertine"
 
 #: mainform.rsskalercoveridfiler
 msgid "Skalér billeder i %d filer til højst %d pixel?"
-msgstr ""
+msgstr "Ridimensionare le immagini in %d file a massimo %d pixel?"
 
 #: mainform.rsskalercoveridmapper
 msgid "Skalér mappe-cover i %d mapper til højst %d pixel?"
-msgstr ""
+msgstr "Ridimensionare le copertine di %d cartelle a massimo %d pixel?"
 
 #: mainform.rslaegdmappecoveripapirkurven
 msgid "Læg %d cover-billeder fra %d mapper i papirkurven?"
-msgstr ""
+msgstr "Spostare %d immagini di copertina da %d cartelle nel cestino?"
 
 #: mainform.rsdenmarkeredefilharintetcover
 msgid "Den markerede fil har intet cover."
-msgstr ""
+msgstr "Il file selezionato non ha copertina."
 
 #: mainform.rskopiertilmappe
 msgid "Kopiér til mappe..."
-msgstr ""
+msgstr "Copia nella cartella..."
 
 #: mainform.rskopiertilmappehint
 msgid "Kopiér de afkrydsede/markerede filer til en anden mappe"
-msgstr ""
+msgstr "Copia i file spuntati/selezionati in un'altra cartella"
 
 #: mainform.rsflyttilmappe
 msgid "Flyt til mappe..."
-msgstr ""
+msgstr "Sposta nella cartella..."
 
 #: mainform.rsflyttilmappehint
 msgid "Flyt de afkrydsede/markerede filer til en anden mappe"
-msgstr ""
+msgstr "Sposta i file spuntati/selezionati in un'altra cartella"
 
 #: mainform.rssletfilermenu
 msgid "Slet filer..."
-msgstr ""
+msgstr "Elimina file..."
 
 #: mainform.rssletfilerhint
 msgid "Læg de afkrydsede/markerede filer i papirkurven (Delete i fillisten)"
-msgstr ""
+msgstr "Sposta i file spuntati/selezionati nel cestino (Canc nell'elenco)"
 
 #: mainform.rssletfiler
 msgid "Slet filer"
-msgstr ""
+msgstr "Elimina file"
 
 #: mainform.rslaegdfileripapirkurven
 msgid "Læg %d filer i papirkurven?"
-msgstr ""
+msgstr "Spostare %d file nel cestino?"
 
 #: mainform.rsdfilerlagtipapirkurven
 msgid "%d filer lagt i papirkurven"
-msgstr ""
+msgstr "%d file spostati nel cestino"
 
 #: mainform.rskopierdfilertils
 msgid "Kopiér %d filer til %s?"
-msgstr ""
+msgstr "Copiare %d file in %s?"
 
 #: mainform.rsflytdfilertils
 msgid "Flyt %d filer til %s?"
-msgstr ""
+msgstr "Spostare %d file in %s?"
 
 #: mainform.rsdfilerkopierettils
 msgid "%d filer kopieret til %s"
-msgstr ""
+msgstr "%d file copiati in %s"
 
 #: mainform.rsdfilerflyttettils
 msgid "%d filer flyttet til %s"
-msgstr ""
+msgstr "%d file spostati in %s"
 
 #: mainform.rsheleord
 msgid "Hele ord"
-msgstr ""
+msgstr "Parole intere"
 
 #: mainform.rsstoresmaabogstaver
 msgid "Store/små bogstaver"
-msgstr ""
+msgstr "Maiuscole/minuscole"
 
 #: mainform.rstagtype
 msgid "Tagtype:"
-msgstr ""
+msgstr "Tipo di tag:"
 
 #: mainform.rsalletagtyper
 msgctxt "mainform.rsalletagtyper"
 msgid "Alle"
-msgstr ""
+msgstr "Tutti"
 
 #: mainform.rsingentagsfilter
 msgid "Ingen tags"
-msgstr ""
+msgstr "Nessun tag"
 
 #: mainform.rstilpaskolonnebredder
 msgid "Tilpas kolonnebredder"
-msgstr ""
+msgstr "Adatta larghezza colonne"
 
 #: mainform.rstilpaskolonnebredderhint
 msgid "Gør kolonnerne lige så brede som deres indhold"
-msgstr ""
+msgstr "Rendi le colonne larghe quanto il loro contenuto"
 
 #: mainform.rstilpaskolonnereftermappeskift
 msgid "Tilpas kolonner efter mappeskift"
-msgstr ""
+msgstr "Adatta le colonne dopo il cambio cartella"
 
 #: mainform.rstilfaeldigraekkefoelge
 msgid "Tilfældig rækkefølge"
-msgstr ""
+msgstr "Ordine casuale"
 
 #: mainform.rstilfaeldigraekkefoelgehint
 msgid "Bland filerne i listen (fx før nummerering eller en playliste)"
-msgstr ""
+msgstr "Mescola i file dell'elenco (es. prima della numerazione o di una playlist)"
 
 #: mainform.rskunstnervaerktoejer
 msgid "Kunstner-værktøjer"
-msgstr ""
+msgstr "Strumenti artista"
 
 #: mainform.rsfjerntheforrest
 msgid "Fjern \"The\" forrest i Kunstner"
-msgstr ""
+msgstr "Rimuovi \"The\" iniziale da Artista"
 
 #: mainform.rstheartisttilartistthe
 msgid "\"The Artist\" → \"Artist, The\""
-msgstr ""
+msgstr "\"The Artist\" → \"Artist, The\""
 
 #: mainform.rsartistthetiltheartist
 msgid "\"Artist, The\" → \"The Artist\""
-msgstr ""
+msgstr "\"Artist, The\" → \"The Artist\""
 
 #: mainform.rsfornavnefternavntil
 msgid "\"Fornavn Efternavn\" → \"Efternavn, Fornavn\""
-msgstr ""
+msgstr "\"Nome Cognome\" → \"Cognome, Nome\""
 
 #: mainform.rsefternavnfornavntil
 msgid "\"Efternavn, Fornavn\" → \"Fornavn Efternavn\""
-msgstr ""
+msgstr "\"Cognome, Nome\" → \"Nome Cognome\""
 
 #: mainform.rsmptagsynkroniseringmenu
 msgid "Mp3-tag-synkronisering..."
-msgstr ""
+msgstr "Sincronizzazione tag MP3..."
 
 #: mainform.rsmptagsynkroniseringhint
 msgid "Kopiér felterne mellem ID3v1 og ID3v2 i mp3-filer"
-msgstr ""
+msgstr "Copia i campi tra ID3v1 e ID3v2 nei file MP3"
 
 #: mainform.rsmptagsynkronisering
 msgctxt "mainform.rsmptagsynkronisering"
 msgid "Mp3-tag-synkronisering"
-msgstr ""
+msgstr "Sincronizzazione tag MP3"
 
 #: mainform.rsingenmpfiler
 msgid "Ingen af de afkrydsede/markerede filer er mp3-filer."
-msgstr ""
+msgstr "Nessuno dei file spuntati/selezionati è un file MP3."
 
 #: mainform.rssynkronisertagsidmpfiler
 msgid "Synkronisér tags i %d mp3-filer?"
-msgstr ""
+msgstr "Sincronizzare i tag in %d file MP3?"
 
 #: mainform.rsvaelgfelterderindsaettesid
 msgctxt "mainform.rsvaelgfelterderindsaettesid"
 msgid "Vælg de felter, der indsættes i %d filer:"
-msgstr ""
+msgstr "Scegli i campi da incollare in %d file:"
 
 #: mainform.rsalbumkunstnervedgem
 msgid "Albumkunstner ved gem"
-msgstr ""
+msgstr "Artista album al salvataggio"
 
 #: mainform.rsalbumkunstneringen
 msgid "Ingen automatik"
-msgstr ""
+msgstr "Nessun automatismo"
 
 #: mainform.rsalbumkunstnerhvistom
 msgid "Kopiér Kunstner, hvis Albumkunstner er tom"
-msgstr ""
+msgstr "Copia Artista se Artista album è vuoto"
 
 #: mainform.rsalbumkunstneraltid
 msgid "Kopiér altid Kunstner til Albumkunstner"
-msgstr ""
+msgstr "Copia sempre Artista in Artista album"
 
 #: mainform.rsspornumremenu
 msgid "Spornumre..."
-msgstr ""
+msgstr "Numeri di traccia..."
 
 #: mainform.rsdiscogstokenmenu
 msgctxt "mainform.rsdiscogstokenmenu"
 msgid "Discogs-token..."
-msgstr ""
+msgstr "Token Discogs..."
 
 #: mainform.rsopmenu
 msgctxt "mainform.rsopmenu"
 msgid "Op"
-msgstr ""
+msgstr "Su"
 
 #: mainform.rstagvaerktoejer
 msgid "Tag-værktøjer"
-msgstr ""
+msgstr "Strumenti tag"
 
 #: mainform.rscovervaerktoejer
 msgid "Cover-værktøjer"
-msgstr ""
+msgstr "Strumenti copertina"
 
 #: mainform.rsomdoebningshandlingermenu
 msgctxt "mainform.rsomdoebningshandlingermenu"
 msgid "Omdøbningshandlinger"
-msgstr ""
+msgstr "Azioni di rinomina"
 
 #: mainform.rskunstnertitelmenu
 msgid "Byt Kunstner ↔ Titel"
-msgstr ""
+msgstr "Scambia Artista ↔ Titolo"
 
 #: mainform.rskunstneralbummenu
 msgid "Byt Kunstner ↔ Album"
-msgstr ""
+msgstr "Scambia Artista ↔ Album"
 
 #: mainform.rsalbumtitelmenu
 msgid "Byt Album ↔ Titel"
-msgstr ""
+msgstr "Scambia Album ↔ Titolo"
 
 #: mainform.rsbyttofelter
 msgid "Byt to felter..."
-msgstr ""
+msgstr "Scambia due campi..."
 
 #: mainform.rsbyttovilkaarligefelter
 msgid "Byt indholdet af to vilkårlige felter i de afkrydsede/markerede filer"
-msgstr ""
+msgstr "Scambia il contenuto di due campi qualsiasi nei file spuntati/selezionati"
 
 #: mainform.rskopierfelttilfelt
 msgid "Kopiér felt til felt..."
-msgstr ""
+msgstr "Copia campo in campo..."
 
 #: mainform.rskopiertekstfraetfelt
 msgid "Kopiér teksten fra ét felt til et andet, fx Kunstner til Albumkunstner"
-msgstr ""
+msgstr "Copia il testo da un campo a un altro, es. Artista in Artista album"
 
 #: mainform.rsrydmellemrumifelter
 msgid "Ryd mellemrum i felter"
-msgstr ""
+msgstr "Pulisci gli spazi nei campi"
 
 #: mainform.rsrydmellemrumhint
 msgid "Fjern mellemrum foran og bagved og dobbelte mellemrum i alle felter"
-msgstr ""
+msgstr "Rimuovi spazi iniziali, finali e doppi in tutti i campi"
 
 #: mainform.rsfjerntagsmenu
 msgid "Fjern tags..."
-msgstr ""
+msgstr "Rimuovi tag..."
 
 #: mainform.rsfjerntagshint
 msgid "Fjern alle tags fra de afkrydsede/markerede filer"
-msgstr ""
+msgstr "Rimuovi tutti i tag dai file spuntati/selezionati"
 
 #: mainform.rslaegmappenscoverindifilerne
 msgid "Læg mappens cover ind i filerne"
-msgstr ""
+msgstr "Inserisci la copertina della cartella nei file"
 
 #: mainform.rslaegmappenscoverhint
 msgid "Gem folder.jpg/cover.jpg fra hver mappe som forside-cover i mappens filer"
-msgstr ""
+msgstr "Salva folder.jpg/cover.jpg di ogni cartella come copertina frontale nei suoi file"
 
 #: mainform.rsgemfilernescoversomfolderjpg
 msgid "Gem filernes cover som folder.jpg"
-msgstr ""
+msgstr "Salva la copertina dei file come folder.jpg"
 
 #: mainform.rsgemfilernescoverhint
 msgid "Gem coveret fra filernes tag som folder.jpg i mapper, der ikke har et"
-msgstr ""
+msgstr "Salva la copertina dal tag dei file come folder.jpg nelle cartelle che non ne hanno"
 
 #: mainform.rsadministrerhandlinger
 msgid "Administrer handlinger..."
-msgstr ""
+msgstr "Gestisci azioni..."
 
 #: mainform.rsadministrerhandlingerhint
 msgid "Opret og ret navngivne omdøbninger (filmaske og/eller mappemaske)"
-msgstr ""
+msgstr "Crea e modifica rinomine con nome (maschera file e/o cartella)"
 
 #: mainform.rsordudskiftningermenu
 msgid "Ordudskiftninger ved omdøbning..."
-msgstr ""
+msgstr "Sostituzioni di parole nella rinomina..."
 
 #: mainform.rsordudskiftningerhint
 msgid "Tekst der erstattes, og ord der altid staves ens, når filer og mapper omdøbes"
-msgstr ""
+msgstr "Testo da sostituire e parole scritte sempre allo stesso modo quando si rinominano file e cartelle"
 
 #: mainform.rsingenfileraendres
 msgid "Ingen af filerne ændres."
-msgstr ""
+msgstr "Nessun file viene modificato."
 
 #: mainform.rsaendredfiler
 msgid "Ændre %d filer?"
-msgstr ""
+msgstr "Modificare %d file?"
 
 #: mainform.rsbytss
 msgid "Byt %s og %s"
-msgstr ""
+msgstr "Scambia %s e %s"
 
 #: mainform.rsbytfelter
 msgid "Byt felter"
-msgstr ""
+msgstr "Scambia campi"
 
 #: mainform.rsfelt1
 msgid "Felt 1:"
-msgstr ""
+msgstr "Campo 1:"
 
 #: mainform.rsfelt2
 msgid "Felt 2:"
-msgstr ""
+msgstr "Campo 2:"
 
 #: mainform.rskopierfelt
 msgctxt "mainform.rskopierfelt"
 msgid "Kopiér felt"
-msgstr ""
+msgstr "Copia campo"
 
 #: mainform.rsfrafelt
 msgctxt "mainform.rsfrafelt"
 msgid "Fra felt:"
-msgstr ""
+msgstr "Dal campo:"
 
 #: mainform.rstilfelt
 msgctxt "mainform.rstilfelt"
 msgid "Til felt:"
-msgstr ""
+msgstr "Al campo:"
 
 #: mainform.rskunhvisfeltetertomt
 msgctxt "mainform.rskunhvisfeltetertomt"
 msgid "Kun hvis målfeltet er tomt"
-msgstr ""
+msgstr "Solo se il campo di destinazione è vuoto"
 
 #: mainform.rskopierstils
 msgid "Kopiér %s til %s"
-msgstr ""
+msgstr "Copia %s in %s"
 
 #: mainform.rsrydmellemrum
 msgid "Ryd mellemrum"
-msgstr ""
+msgstr "Pulisci spazi"
 
 #: mainform.rsfjerntags
 msgid "Fjern tags"
-msgstr ""
+msgstr "Rimuovi tag"
 
 #: mainform.rsfjernalletagsidfiler
 msgid "Fjern alle tags fra %d filer?"
-msgstr ""
+msgstr "Rimuovere tutti i tag da %d file?"
 
 #: mainform.rsfjerntagsforklaring
 msgid "MP3, WAV/AIFF, APE, WavPack, Musepack og OptimFROG: tags fjernes helt. FLAC, Ogg, MP4 og WMA: alle felter og billeder ryddes; tekniske felter som ReplayGain bevares. Lyddata ændres ikke. Det kan ikke fortrydes."
-msgstr ""
+msgstr "MP3, WAV/AIFF, APE, WavPack, Musepack e OptimFROG: i tag vengono rimossi completamente. FLAC, Ogg, MP4 e WMA: tutti i campi e le immagini vengono svuotati; i campi tecnici come ReplayGain vengono mantenuti. I dati audio non vengono modificati. L'operazione non può essere annullata."
 
 #: mainform.rsmappecoverifiler
 msgid "Mappens cover i filerne"
-msgstr ""
+msgstr "Copertina della cartella nei file"
 
 #: mainform.rsingenafmapperneharetcover
 msgid "Ingen af mapperne har et folder.jpg/cover.jpg (JPEG eller PNG)."
-msgstr ""
+msgstr "Nessuna cartella ha un folder.jpg/cover.jpg (JPEG o PNG)."
 
 #: mainform.rslaegmappenscoverindidfiler
 msgid "Læg mappens cover ind som forside-cover i %d filer?"
-msgstr ""
+msgstr "Inserire la copertina della cartella come copertina frontale in %d file?"
 
 #: mainform.rsdfilerliggerimapperudencover
 msgid "%d filer ligger i mapper uden cover og springes over."
-msgstr ""
+msgstr "%d file si trovano in cartelle senza copertina e vengono saltati."
 
 #: mainform.rscovertilmappe
 msgid "Cover til mappe"
-msgstr ""
+msgstr "Copertina nella cartella"
 
 #: mainform.rsingenmapperatgemme
 msgid "Intet at gemme: %d mapper har allerede et cover, og i %d mapper har ingen af filerne et cover."
-msgstr ""
+msgstr "Niente da salvare: %d cartelle hanno già una copertina e in %d cartelle nessun file ne ha una."
 
 #: mainform.rsgemfilernescoveridmapper
 msgid "Gem filernes cover som folder.jpg i %d mapper?\n(%d mapper har allerede et cover og %d mapper har ingen filer med cover - de springes over.)"
-msgstr ""
+msgstr "Salvare la copertina dei file come folder.jpg in %d cartelle?\n(%d cartelle hanno già una copertina e %d cartelle non hanno file con copertina - vengono saltate.)"
 
 #: mainform.rscovergemtidmapper
 msgid "Cover gemt i %d mapper"
-msgstr ""
+msgstr "Copertina salvata in %d cartelle"
 
 #: mainform.rsomdoebningshandling
 msgid "Omdøbningshandling"
-msgstr ""
+msgstr "Azione di rinomina"
 
 #: mainform.rskoerhandlingens
 msgid "Kør handlingen \"%s\"?"
-msgstr ""
+msgstr "Eseguire l'azione \"%s\"?"
 
 #: mainform.rsfilerdomdoebesmeds
 msgid "Filer: %d omdøbes med %s"
-msgstr ""
+msgstr "File: %d vengono rinominati con %s"
 
 #: mainform.rsmapperneomdoebesmeds
 msgid "Mapper: omdøbes bagefter med %s"
-msgstr ""
+msgstr "Cartelle: rinominate dopo con %s"
 
 #: mainform.rsfilermapper
 msgid "filer/mapper"
-msgstr ""
+msgstr "file/cartelle"
 
 #: mainform.rshandlingdfilerdmapperdfejl
 msgid "%s: %d filer og %d mapper omdøbt, %d fejl"
-msgstr ""
+msgstr "%s: %d file e %d cartelle rinominati, %d errori"
 
 #: mainform.rssproglanguage
 msgid "Sprog (Language)"
-msgstr ""
+msgstr "Lingua (Language)"
 
 #: mainform.rssprog
 msgid "Sprog"
-msgstr ""
+msgstr "Lingua"
 
 #: mainform.rsautomatiskwindowssprog
 msgid "Automatisk (Windows-sprog)"
-msgstr ""
+msgstr "Automatica (lingua di Windows)"
 
-#: mainform.rssprogetskiftesnaartagklongenstartes
-msgid "Sproget skiftes, når TagKlon startes igen. Genstart nu?"
-msgstr ""
+#: mainform.rssprogetskiftesnaartidytaggenstartes
+msgid "Sproget skiftes, når TidyTag startes igen. Genstart nu?"
+msgstr "La lingua cambia al prossimo avvio di TidyTag. Riavviare ora?"
 
 #: mainform.rsmultifiltageditor
 msgid "Multi-fil-tag-editor"
-msgstr ""
+msgstr "Editor tag multi-file"
 
 #: mainform.rsfilerflertal
 msgid "filer"
-msgstr ""
+msgstr "file"
 
 #: mainform.rsmapperflertal
 msgid "mapper"
-msgstr ""
+msgstr "cartelle"
 
 #: mainform.rskunstner
 msgid "%1|Kunstner"
-msgstr ""
+msgstr "%1|Artista"
 
 #: mainform.rstitel
 msgid "%2|Titel"
-msgstr ""
+msgstr "%2|Titolo"
 
 #: mainform.rsalbum
 msgid "%3|Album"
-msgstr ""
+msgstr "%3|Album"
 
 #: mainform.rsaar
 msgid "%4|År"
-msgstr ""
+msgstr "%4|Anno"
 
 #: mainform.rsgenre
 msgid "%5|Genre"
-msgstr ""
+msgstr "%5|Genere"
 
 #: mainform.rsspor
 msgid "%6|Spor"
-msgstr ""
+msgstr "%6|Traccia"
 
 #: mainform.rsdisc
 msgid "%#|Disc"
-msgstr ""
+msgstr "%#|Disco"
 
 #: mainform.rsfilnavn
 msgid "%7|Filnavn"
-msgstr ""
+msgstr "%7|Nome file"
 
 #: mainform.rsfilnummer
 msgid "%8|Filnummer"
-msgstr ""
+msgstr "%8|Numero file"
 
 #: mainform.rskommentar
 msgid "%9|Kommentar"
-msgstr ""
+msgstr "%9|Commento"
 
 #: mainform.rsbitrate
 msgid "%0|Bitrate"
-msgstr ""
+msgstr "%0|Bitrate"
 
 #: mainform.rsbbpm
 msgid "%b|BPM"
-msgstr ""
+msgstr "%b|BPM"
 
 #: mainform.rstspilletid
 msgid "%t|Spilletid"
-msgstr ""
+msgstr "%t|Durata"
 
 #: mainform.rsaaalbumkunstner
 msgid "%aa|Albumkunstner"
-msgstr ""
+msgstr "%aa|Artista album"
 
 #: mainform.rscpkomponist
 msgid "%cp|Komponist"
-msgstr ""
+msgstr "%cp|Compositore"
 
 #: mainform.rscodirigent
 msgid "%co|Dirigent"
-msgstr ""
+msgstr "%co|Direttore"
 
 #: mainform.rslbpladeselskab
 msgid "%lb|Pladeselskab"
-msgstr ""
+msgstr "%lb|Etichetta"
 
 #: mainform.rscatkatalognr
 msgid "%cat|Katalognr."
-msgstr ""
+msgstr "%cat|N. catalogo"
 
 #: mainform.rsgrpgruppering
 msgid "%grp|Gruppering"
-msgstr ""
+msgstr "%grp|Raggruppamento"
 
 #: mainform.rsrbremixetaf
 msgid "%rb|Remixet af"
-msgstr ""
+msgstr "%rb|Remix di"
 
 #: mainform.rsmdstemning
 msgid "%md|Stemning"
-msgstr ""
+msgstr "%md|Atmosfera"
 
 #: mainform.rskeytoneart
 msgid "%key|Toneart"
-msgstr ""
+msgstr "%key|Tonalità"
 
 #: mainform.rsextfiltype
 msgid "%ext|Filtype"
-msgstr ""
+msgstr "%ext|Tipo di file"
 
 #: mainform.rskhzsamplerate
 msgid "%khz|Samplerate"
-msgstr ""
+msgstr "%khz|Frequenza di campionamento"
 
 #: mainform.rsbindestreg
 msgid " - |\" - \" (bindestreg)"
-msgstr ""
+msgstr " - |\" - \" (trattino)"
 
 #: mainform.rsnymappe
 msgid "\\|\\ (ny mappe)"
-msgstr ""
+msgstr "\\|\\ (nuova cartella)"
 
 #: mainform.rseksempelsporkunstnertitel
 msgid "%6 - %1 - %2|Eksempel: spor - kunstner - titel"
-msgstr ""
+msgstr "%6 - %1 - %2|Esempio: traccia - artista - titolo"
 
 #: mainform.rseksempelmapperprkunstnerog
 msgid "%1\\%3\\%6 - %2|Eksempel: mapper pr. kunstner og album"
-msgstr ""
+msgstr "%1\\%3\\%6 - %2|Esempio: cartelle per artista e album"
 
 #: mainform.rsdspringover
 msgid "%d|Spring over"
-msgstr ""
+msgstr "%d|Salta"
 
 #: mainform.rsmappeniveau
 msgid "\\|\\ (mappeniveau)"
-msgstr ""
+msgstr "\\|\\ (livello cartella)"
 
 #: mainform.rsfilnavn2
 msgctxt "mainform.rsfilnavn2"
 msgid "Filnavn"
-msgstr ""
+msgstr "Nome file"
 
 #: mainform.rstitel2
 msgctxt "mainform.rstitel2"
 msgid "Titel"
-msgstr ""
+msgstr "Titolo"
 
 #: mainform.rskunstner2
 msgctxt "mainform.rskunstner2"
 msgid "Kunstner"
-msgstr ""
+msgstr "Artista"
 
 #: mainform.rsaar2
 msgctxt "mainform.rsaar2"
 msgid "År"
-msgstr ""
+msgstr "Anno"
 
 #: mainform.rskommentar2
 msgctxt "mainform.rskommentar2"
 msgid "Kommentar"
-msgstr ""
+msgstr "Commento"
 
 #: mainform.rsallefelter
 msgid "Alle felter"
-msgstr ""
+msgstr "Tutti i campi"
 
 #: mainform.rsbitrate2
 msgctxt "mainform.rsbitrate2"
 msgid "Bitrate"
-msgstr ""
+msgstr "Bitrate"
 
 #: mainform.rstid
 msgid "Tid"
-msgstr ""
+msgstr "Durata"
 
 #: mainform.rscover
 msgctxt "mainform.rscover"
 msgid "Cover"
-msgstr ""
+msgstr "Copertina"
 
 #: mainform.rssamplerate
 msgctxt "mainform.rssamplerate"
 msgid "Samplerate"
-msgstr ""
+msgstr "Frequenza di campionamento"
 
 #: mainform.rscodec
 msgctxt "mainform.rscodec"
 msgid "Codec"
-msgstr ""
+msgstr "Codec"
 
 #: mainform.rsstoerrelse
 msgid "Størrelse"
-msgstr ""
+msgstr "Dimensione"
 
 #: mainform.rsmappe
 msgctxt "mainform.rsmappe"
 msgid "Mappe"
-msgstr ""
+msgstr "Cartella"
 
 #: mainform.rskunstnertitelalbumaargenre
 msgid "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor\n%# Disc   %7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate\n%b BPM   %t Spilletid   %aa Albumkunstner   %cp Komponist\n%co Dirigent   %lb Pladeselskab   %grp Gruppering   ... (se \"Variabler\")\n\\ laver mapper, fx  %1\\%3\\%6 - %2\nGælder de afkrydsede filer (ellers de markerede)."
-msgstr ""
+msgstr "%1 Artista   %2 Titolo   %3 Album   %4 Anno   %5 Genere   %6 Traccia\n%# Disco   %7 Nome file   %8 Numero file   %9 Commento   %0 Bitrate\n%b BPM   %t Durata   %aa Artista album   %cp Compositore\n%co Direttore   %lb Etichetta   %grp Raggruppamento   ... (vedi \"Variabili\")\n\\ crea cartelle, es.  %1\\%3\\%6 - %2\nVale per i file spuntati (altrimenti quelli selezionati)."
 
 #: mainform.rskunfeltermedfluebenbliver
 msgid "1. Kun felter med flueben bliver ændret (et felt får flueben, når du skriver i det).\n2. Tags gemmes i de afkrydsede filer (ellers de markerede).\n3. Et tomt felt med flueben bliver ryddet.\n4. \"Alle felter...\" redigerer flere felter og cover på én gang."
-msgstr ""
+msgstr "1. Vengono modificati solo i campi spuntati (un campo viene spuntato quando ci scrivi).\n2. I tag vengono salvati nei file spuntati (altrimenti in quelli selezionati).\n3. Un campo vuoto spuntato viene svuotato.\n4. \"Tutti i campi...\" modifica altri campi e la copertina in una volta."
 
 #: mainform.rskunstnertitelalbumaargenre2
 msgid "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor\n%# Disc   %9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist\n%d Spring en del over.   Filtypen fjernes automatisk.\n\\ bruger mappenavne, fx  %1\\%3\\%6 - %2\nGælder de afkrydsede filer (ellers de markerede)."
-msgstr ""
+msgstr "%1 Artista   %2 Titolo   %3 Album   %4 Anno   %5 Genere   %6 Traccia\n%# Disco   %9 Commento   %b BPM   %aa Artista album   %cp Compositore\n%d Salta una parte.   L'estensione viene rimossa automaticamente.\n\\ usa i nomi delle cartelle, es.  %1\\%3\\%6 - %2\nVale per i file spuntati (altrimenti quelli selezionati)."
 
 #: mainform.rsaabnmappe
 msgid "Åbn mappe..."
-msgstr ""
+msgstr "Apri cartella..."
 
 #: mainform.rsaabnenmappe
 msgid "Åbn en mappe"
-msgstr ""
+msgstr "Apri una cartella"
 
 #: mainform.rsopdaterfillisten
 msgid "Opdater fillisten"
-msgstr ""
+msgstr "Aggiorna elenco file"
 
 #: mainform.rslaesmappenigenf
 msgid "Læs mappen igen (F5)"
-msgstr ""
+msgstr "Rileggi la cartella (F5)"
 
 #: mainform.rsredigertag
 msgid "Rediger tag..."
-msgstr ""
+msgstr "Modifica tag..."
 
 #: mainform.rsredigertagfordenmarkerede
 msgid "Rediger tag for den markerede fil (Enter)"
-msgstr ""
+msgstr "Modifica il tag del file selezionato (Invio)"
 
 #: mainform.rsredigerflerefiler
 msgid "Rediger flere filer..."
-msgstr ""
+msgstr "Modifica più file..."
 
 #: mainform.rsretfelterogcoveri
 msgid "Ret felter og cover i alle afkrydsede (eller markerede) filer"
-msgstr ""
+msgstr "Modifica campi e copertina in tutti i file spuntati (o selezionati)"
 
 #: mainform.rsomdoebmapper
 msgid "Omdøb mapper..."
-msgstr ""
+msgstr "Rinomina cartelle..."
 
 #: mainform.rsomdoebmapperneudfrafilernes
 msgid "Omdøb mapperne ud fra filernes tags"
-msgstr ""
+msgstr "Rinomina le cartelle in base ai tag dei file"
 
 #: mainform.rsafspilfil
 msgid "Afspil fil"
-msgstr ""
+msgstr "Riproduci file"
 
 #: mainform.rsafspildenmarkeredefil
 msgid "Afspil den markerede fil"
-msgstr ""
+msgstr "Riproduci il file selezionato"
 
 #: mainform.rsvisistifinder
 msgid "Vis i Stifinder"
-msgstr ""
+msgstr "Mostra in Esplora file"
 
 #: mainform.rsafslut
 msgid "Afslut"
-msgstr ""
+msgstr "Esci"
 
 #: mainform.rsmarkeralle
 msgid "Markér alle"
-msgstr ""
+msgstr "Seleziona tutto"
 
 #: mainform.rsfjernmarkering
 msgid "Fjern markering"
-msgstr ""
+msgstr "Deseleziona"
 
 #: mainform.rsafkrydsmarkeredefilermellemrum
 msgid "Afkryds markerede filer\tMellemrum"
-msgstr ""
+msgstr "Spunta i file selezionati\tSpazio"
 
 #: mainform.rsafkrydsdemarkeredefiler
 msgid "Afkryds de markerede filer"
-msgstr ""
+msgstr "Spunta i file selezionati"
 
 #: mainform.rsfjernafkrydsningframarkeredefiler
 msgid "Fjern afkrydsning fra markerede filer"
-msgstr ""
+msgstr "Togli la spunta ai file selezionati"
 
 #: mainform.rsafkrydsallefiler
 msgid "Afkryds alle filer"
-msgstr ""
+msgstr "Spunta tutti i file"
 
 #: mainform.rsafkrydsallefilerilisten
 msgid "Afkryds alle filer i listen"
-msgstr ""
+msgstr "Spunta tutti i file dell'elenco"
 
 #: mainform.rsfjernalleafkrydsninger
 msgid "Fjern alle afkrydsninger"
-msgstr ""
+msgstr "Togli tutte le spunte"
 
 #: mainform.rsinverterafkrydsning
 msgid "Inverter afkrydsning"
-msgstr ""
+msgstr "Inverti spunte"
 
 #: mainform.rskopiertag
 msgid "Kopiér tag"
-msgstr ""
+msgstr "Copia tag"
 
 #: mainform.rskopiertagfradenmarkerede
 msgid "Kopiér tag fra den markerede fil"
-msgstr ""
+msgstr "Copia il tag del file selezionato"
 
 #: mainform.rsindsaettag
 msgctxt "mainform.rsindsaettag"
 msgid "Indsæt tag"
-msgstr ""
+msgstr "Incolla tag"
 
 #: mainform.rsindsaetdetkopieredetagundtagen
 msgid "Indsæt det kopierede tag (undtagen titel og spor) i de afkrydsede/markerede filer"
-msgstr ""
+msgstr "Incolla il tag copiato (tranne titolo e traccia) nei file spuntati/selezionati"
 
 #: mainform.rsflytfilop
 msgid "Flyt fil op"
-msgstr ""
+msgstr "Sposta file su"
 
 #: mainform.rsflytdemarkeredefileret
 msgid "Flyt de markerede filer et trin op (manuel rækkefølge)"
-msgstr ""
+msgstr "Sposta i file selezionati di una posizione in su (ordine manuale)"
 
 #: mainform.rsflytfilned
 msgid "Flyt fil ned"
-msgstr ""
+msgstr "Sposta file giù"
 
 #: mainform.rsflytdemarkeredefileret2
 msgid "Flyt de markerede filer et trin ned (manuel rækkefølge)"
-msgstr ""
+msgstr "Sposta i file selezionati di una posizione in giù (ordine manuale)"
 
 #: mainform.rseksporterimportertags
 msgid "Eksportér/importér tags..."
-msgstr ""
+msgstr "Esporta/importa tag..."
 
 #: mainform.rseksportertilcsvtxthtml
 msgid "Eksportér til CSV/TXT/HTML/XML eller importér fra CSV/XLSX"
-msgstr ""
+msgstr "Esporta in CSV/TXT/HTML/XML o importa da CSV/XLSX"
 
 #: mainform.rsfindfiltrer
 msgid "Find / filtrér..."
-msgstr ""
+msgstr "Trova / filtra..."
 
 #: mainform.rsfiltrerfillisten
 msgid "Filtrér fillisten"
-msgstr ""
+msgstr "Filtra l'elenco file"
 
 #: mainform.rsvaerktoejspanel
 msgid "Værktøjspanel"
-msgstr ""
+msgstr "Pannello strumenti"
 
 #: mainform.rsvisskjulvaerktoejspaneletf
 msgid "Vis/skjul værktøjspanelet (F8)"
-msgstr ""
+msgstr "Mostra/nascondi il pannello strumenti (F8)"
 
 #: mainform.rsmappepanel
 msgid "Mappepanel"
-msgstr ""
+msgstr "Pannello cartelle"
 
 #: mainform.rsadresselinje
 msgid "Adresselinje"
-msgstr ""
+msgstr "Barra degli indirizzi"
 
 #: mainform.rsfilterlinje
 msgid "Filterlinje"
-msgstr ""
+msgstr "Barra dei filtri"
 
 #: mainform.rssoegiundermapper
 msgid "Søg i undermapper"
-msgstr ""
+msgstr "Cerca nelle sottocartelle"
 
 #: mainform.rsmedtagfileriundermapper
 msgid "Medtag filer i undermapper"
-msgstr ""
+msgstr "Includi i file nelle sottocartelle"
 
 #: mainform.rsgemafkrydsedemarkeredefilersom
 msgid "Gem afkrydsede/markerede filer som playliste..."
-msgstr ""
+msgstr "Salva i file spuntati/selezionati come playlist..."
 
 #: mainform.rsgemallefilersomplayliste
 msgid "Gem alle filer som playliste..."
-msgstr ""
+msgstr "Salva tutti i file come playlist..."
 
 #: mainform.rsomdoebfiler
 msgctxt "mainform.rsomdoebfiler"
 msgid "Omdøb filer"
-msgstr ""
+msgstr "Rinomina file"
 
 #: mainform.rsvisfanebladetomdoebfiler
 msgid "Vis fanebladet Omdøb filer"
-msgstr ""
+msgstr "Mostra la scheda Rinomina file"
 
 #: mainform.rsvisfanebladetmultifiltag
 msgid "Vis fanebladet Multi-fil-tag-editor"
-msgstr ""
+msgstr "Mostra la scheda Editor tag multi-file"
 
 #: mainform.rstagsfrafilnavn
 msgctxt "mainform.rstagsfrafilnavn"
 msgid "Tags fra filnavn"
-msgstr ""
+msgstr "Tag dal nome file"
 
 #: mainform.rsvisfanebladettagsfrafilnavn
 msgid "Vis fanebladet Tags fra filnavn"
-msgstr ""
+msgstr "Mostra la scheda Tag dal nome file"
 
 #: mainform.rsomdoebfilermedforhaandsvisning
 msgid "Omdøb filer med forhåndsvisning..."
-msgstr ""
+msgstr "Rinomina file con anteprima..."
 
 #: mainform.rstagsfrafilnavnmedforhaandsvisning
 msgid "Tags fra filnavn med forhåndsvisning..."
-msgstr ""
+msgstr "Tag dal nome file con anteprima..."
 
 #: mainform.rsformaterellernummererspornumre
 msgid "Formatér eller nummerér spornumre"
-msgstr ""
+msgstr "Formatta o numera le tracce"
 
 #: mainform.rswebopslagmusicbrainzdiscogs
 msgid "Web-opslag (MusicBrainz/Discogs)..."
-msgstr ""
+msgstr "Ricerca web (MusicBrainz/Discogs)..."
 
 #: mainform.rshenttitlerspornumreogcover
 msgid "Hent titler, spornumre og cover fra MusicBrainz eller Discogs"
-msgstr ""
+msgstr "Recupera titoli, numeri di traccia e copertina da MusicBrainz o Discogs"
 
 #: mainform.rsfortrydomdoebning
 msgid "Fortryd omdøbning"
-msgstr ""
+msgstr "Annulla rinomina"
 
 #: mainform.rsgivdesenestomdoebtefiler
 msgid "Giv de senest omdøbte filer/mapper deres gamle navne igen"
-msgstr ""
+msgstr "Ripristina i vecchi nomi degli ultimi file/cartelle rinominati"
 
 #: mainform.rsbevarfilernesdatovedgem
 msgid "Bevar filernes dato ved gem"
-msgstr ""
+msgstr "Mantieni la data dei file al salvataggio"
 
 #: mainform.rstastaturgenveje
 msgid "Tastaturgenveje"
-msgstr ""
+msgstr "Scorciatoie da tastiera"
 
-#: mainform.rsomtagklon
-msgid "Om TagKlon..."
-msgstr ""
+#: mainform.rsomtidytag
+msgid "Om TidyTag..."
+msgstr "Informazioni su TidyTag..."
 
 #: mainform.rsgaaenmappeop
 msgid "Gå en mappe op"
-msgstr ""
+msgstr "Sali di una cartella"
 
 #: mainform.rsfavoritter
 msgid "Favoritter"
-msgstr ""
+msgstr "Preferiti"
 
 #: mainform.rsfavoritmapper
 msgid "Favoritmapper"
-msgstr ""
+msgstr "Cartelle preferite"
 
 #: mainform.rsnymappe2
 msgid "Ny mappe..."
-msgstr ""
+msgstr "Nuova cartella..."
 
 #: mainform.rsopretenundermappeiden
 msgid "Opret en undermappe i den åbne mappe"
-msgstr ""
+msgstr "Crea una sottocartella nella cartella aperta"
 
 #: mainform.rsopdatermappetraeet
 msgid "Opdater mappetræet"
-msgstr ""
+msgstr "Aggiorna l'albero delle cartelle"
 
 #: mainform.rsskjulmappepanelet
 msgid "Skjul mappepanelet"
-msgstr ""
+msgstr "Nascondi il pannello cartelle"
 
 #: mainform.rsfiler
 msgid "&Filer"
-msgstr ""
+msgstr "&File"
 
 #: mainform.rsrediger
 msgid "&Rediger"
-msgstr ""
+msgstr "&Modifica"
 
 #: mainform.rsvis
 msgid "&Vis"
-msgstr ""
+msgstr "&Visualizza"
 
 #: mainform.rsplayliste
 msgid "&Playliste"
-msgstr ""
+msgstr "&Playlist"
 
 #: mainform.rsvaerktoejer
 msgid "Vær&ktøjer"
-msgstr ""
+msgstr "&Strumenti"
 
 #: mainform.rsindstillinger
 msgid "&Indstillinger"
-msgstr ""
+msgstr "&Impostazioni"
 
 #: mainform.rshjaelp
 msgid "&Hjælp"
-msgstr ""
+msgstr "&Guida"
 
 #: mainform.rsfejl
 msgctxt "mainform.rsfejl"
 msgid "Fejl: "
-msgstr ""
+msgstr "Errore: "
 
 #: mainform.rsikkeunderstoettetendnu
 msgid "(ikke understøttet endnu)"
-msgstr ""
+msgstr "(non ancora supportato)"
 
 #: mainform.rsja
 msgctxt "mainform.rsja"
 msgid "Ja"
-msgstr ""
+msgstr "Sì"
 
 #: mainform.rsmanuelraekkefoelgeklikpaaen
 msgid "Manuel rækkefølge - klik på en kolonneoverskrift for at sortere igen"
-msgstr ""
+msgstr "Ordine manuale - fai clic su un'intestazione di colonna per riordinare"
 
 #: mainform.rsventvenligsttilalletags
 msgid "Vent venligst, til alle tags er læst."
-msgstr ""
+msgstr "Attendi che tutti i tag siano stati letti."
 
 #: mainform.rsafkrydsedefilerd
 msgid "Afkrydsede filer (%d)"
-msgstr ""
+msgstr "File spuntati (%d)"
 
 #: mainform.rsmarkeredefilerd
 msgid "Markerede filer (%d)"
-msgstr ""
+msgstr "File selezionati (%d)"
 
 #: mainform.rsafkrydsellermarkerdefiler
 msgid "Afkryds (☑) eller markér de filer, det skal gælde."
-msgstr ""
+msgstr "Spunta (☑) o seleziona i file a cui applicarlo."
 
 #: mainform.rsmappenfindesikke
 msgid "Mappen findes ikke:"
-msgstr ""
+msgstr "La cartella non esiste:"
 
 #: mainform.rslaesertagsdafd
 msgid "Læser tags: %d af %d filer..."
-msgstr ""
+msgstr "Lettura tag: %d di %d file..."
 
 #: mainform.rssoegerefterfiler
 msgid "Søger efter filer..."
-msgstr ""
+msgstr "Ricerca dei file..."
 
 #: mainform.rslaesertags
 msgid "Læser tags"
-msgstr ""
+msgstr "Lettura tag"
 
 #: mainform.rssoegerefter
 msgid "Søger efter"
-msgstr ""
+msgstr "Ricerca"
 
 #: mainform.rsfilerddskjult
 msgid "Filer: %d (+%d skjult)"
-msgstr ""
+msgstr "File: %d (+%d nascosti)"
 
 #: mainform.rsfilerialtd
 msgid "Filer i alt: %d"
-msgstr ""
+msgstr "File totali: %d"
 
 #: mainform.rsmarkereded
 msgid "Markerede: %d"
-msgstr ""
+msgstr "Selezionati: %d"
 
 #: mainform.rssamlettid
 msgid "Samlet tid: "
-msgstr ""
+msgstr "Durata totale: "
 
 #: mainform.rsmarkerettid
 msgid "Markeret tid: "
-msgstr ""
+msgstr "Durata selezionata: "
 
 #: mainform.rsafkrydsetd
 msgid "Afkrydset: %d"
-msgstr ""
+msgstr "Spuntati: %d"
 
 #: mainform.rsfortrydomdoebningafds
 msgid "Fortryd omdøbning af %d %s"
-msgstr ""
+msgstr "Annulla rinomina di %d %s"
 
 #: mainform.rsgivdfilermapperderes
 msgid "Giv %d filer/mapper deres tidligere navn igen?"
-msgstr ""
+msgstr "Ripristinare i nomi precedenti di %d file/cartelle?"
 
 #: mainform.rsdfilermapperfikderes
 msgid "%d filer/mapper fik deres gamle navn igen"
-msgstr ""
+msgstr "%d file/cartelle hanno ripreso il vecchio nome"
 
 #: mainform.rsdfilermapperfikderes2
 msgid "%d filer/mapper fik deres gamle navn igen. Problemer:"
-msgstr ""
+msgstr "%d file/cartelle hanno ripreso il vecchio nome. Problemi:"
 
 #: mainform.rsmangler
 msgid "Mangler: "
-msgstr ""
+msgstr "Mancante: "
 
 #: mainform.rsugyldigmaske
 msgid "(ugyldig maske)"
-msgstr ""
+msgstr "(maschera non valida)"
 
 #: mainform.rsfilnavnetpasserikketilmasken
 msgid "(filnavnet passer ikke til masken)"
-msgstr ""
+msgstr "(il nome file non corrisponde alla maschera)"
 
 #: mainform.rseksempel
 msgid "Eksempel"
-msgstr ""
+msgstr "Esempio"
 
 #: mainform.rsallefilerharallerededet
 msgid "Alle filer har allerede det navn, masken giver."
-msgstr ""
+msgstr "Tutti i file hanno già il nome prodotto dalla maschera."
 
 #: mainform.rsintetatomdoebe
 msgid "Intet at omdøbe"
-msgstr ""
+msgstr "Niente da rinominare"
 
 #: mainform.rsomdoebdfilers
 msgid "Omdøb %d filer?%s"
-msgstr ""
+msgstr "Rinominare %d file?%s"
 
 #: mainform.rsdspringesoverbrugforhaandsvis
 msgid " (%d springes over - brug \"Forhåndsvis...\" for at se hvorfor)"
-msgstr ""
+msgstr " (%d vengono saltati - usa \"Anteprima...\" per vedere perché)"
 
 #: mainform.rsdfileromdoebtdfejl
 msgid "%d filer omdøbt, %d fejl"
-msgstr ""
+msgstr "%d file rinominati, %d errori"
 
 #: mainform.rsnoglefilerblevikkeomdoebt
 msgid "Nogle filer blev ikke omdøbt"
-msgstr ""
+msgstr "Alcuni file non sono stati rinominati"
 
 #: mainform.rssdafd
 msgid "%s: %d af %d..."
-msgstr ""
+msgstr "%s: %d di %d..."
 
 #: mainform.rssgemtidfiler
 msgid "%s: gemt i %d filer, %d fejl%s"
-msgstr ""
+msgstr "%s: salvato in %d file, %d errori%s"
 
 #: mainform.rsdsprungetoverfiltype
 msgid ", %d sprunget over (filtype)"
-msgstr ""
+msgstr ", %d saltati (tipo di file)"
 
 #: mainform.rsnoglefilerblevikkegemt
 msgctxt "mainform.rsnoglefilerblevikkegemt"
 msgid "Nogle filer blev ikke gemt"
-msgstr ""
+msgstr "Alcuni file non sono stati salvati"
 
 #: mainform.rssaetfluebenveddefelter
 msgctxt "mainform.rssaetfluebenveddefelter"
 msgid "Sæt flueben ved de felter, der skal gemmes."
-msgstr ""
+msgstr "Spunta i campi da salvare."
 
 #: mainform.rsgemtags
 msgctxt "mainform.rsgemtags"
 msgid "Gem tags"
-msgstr ""
+msgstr "Salva tag"
 
 #: mainform.rsgemidfiler
 msgid "Gem i %d filer?"
-msgstr ""
+msgstr "Salvare in %d file?"
 
 #: mainform.rsdissefelterbliverryddet
 msgid "Disse felter bliver ryddet: "
-msgstr ""
+msgstr "Questi campi verranno svuotati: "
 
 #: mainform.rsintetatskrive
 msgid "Intet at skrive"
-msgstr ""
+msgstr "Niente da scrivere"
 
 #: mainform.rsingenfileraendresdpasser
 msgid "Ingen filer ændres (%d passer ikke til masken). Brug \"Forhåndsvis...\" for at se detaljer."
-msgstr ""
+msgstr "Nessun file viene modificato (%d non corrispondono alla maschera). Usa \"Anteprima...\" per i dettagli."
 
 #: mainform.rsskrivtags
 msgctxt "mainform.rsskrivtags"
 msgid "Skriv tags"
-msgstr ""
+msgstr "Scrivi tag"
 
 #: mainform.rsskrivtagsfrafilnavneti
 msgid "Skriv tags fra filnavnet i %d filer?%s"
-msgstr ""
+msgstr "Scrivere i tag dal nome file in %d file?%s"
 
 #: mainform.rsdpasserikketilmasken
 msgid " (%d passer ikke til masken og springes over)"
-msgstr ""
+msgstr " (%d non corrispondono alla maschera e vengono saltati)"
 
 #: mainform.rsintetbilledetraeketbillede
 msgid "Intet billede. Træk et billede hertil."
-msgstr ""
+msgstr "Nessuna immagine. Trascina qui un'immagine."
 
 #: mainform.rssdxd
 msgid "%s  %dx%d"
-msgstr ""
+msgstr "%s  %dx%d"
 
 #: mainform.rsintetcovertraeketbillede
 msgid "Intet cover. Træk et billede hertil."
-msgstr ""
+msgstr "Nessuna copertina. Trascina qui un'immagine."
 
 #: mainform.rssdxddbillede
 msgid "%s  %dx%d  (%d billede)"
-msgstr ""
+msgstr "%s  %dx%d  (%d immagine)"
 
 #: mainform.rssdxddbilleder
 msgid "%s  %dx%d  (%d billeder)"
-msgstr ""
+msgstr "%s  %dx%d  (%d immagini)"
 
 #: mainform.rskunjpegogpngbilleder
 msgctxt "mainform.rskunjpegogpngbilleder"
 msgid "Kun JPEG- og PNG-billeder kan bruges som cover."
-msgstr ""
+msgstr "Solo le immagini JPEG e PNG possono essere usate come copertina."
 
 #: mainform.rsmappenscover
 msgctxt "mainform.rsmappenscover"
 msgid "Mappens cover"
-msgstr ""
+msgstr "Copertina della cartella"
 
 #: mainform.rssfindesalleredeerstatdet
 msgid "%s findes allerede. Erstat det?"
-msgstr ""
+msgstr "%s esiste già. Sostituirlo?"
 
 #: mainform.rsbilledetkunneikkegemmes
 msgid "Billedet kunne ikke gemmes:"
-msgstr ""
+msgstr "Impossibile salvare l'immagine:"
 
 #: mainform.rsmappenscovergemtsom
 msgid "Mappens cover gemt som "
-msgstr ""
+msgstr "Copertina della cartella salvata come "
 
 #: mainform.rsfilenscover
 msgctxt "mainform.rsfilenscover"
 msgid "Filens cover"
-msgstr ""
+msgstr "Copertina del file"
 
 #: mainform.rssaetbilledetsomforsidecover
 msgid "Sæt billedet som forside-cover i %d filer?"
-msgstr ""
+msgstr "Impostare l'immagine come copertina frontale in %d file?"
 
 #: mainform.rsvaelgmappe
 msgid "Vælg mappe"
-msgstr ""
+msgstr "Scegli cartella"
 
 #: mainform.rsafkrydsellermarkerfilernefra
 msgid "Afkryds (☑) eller markér filerne fra ét album, og prøv igen."
-msgstr ""
+msgstr "Spunta (☑) o seleziona i file di un album e riprova."
 
 #: mainform.rstagkopieretfra
 msgid "Tag kopieret fra "
-msgstr ""
+msgstr "Tag copiato da "
 
 #: mainform.rsindsaetdetkopieredetagi
 msgid "Indsæt det kopierede tag i %d filer?\nAlle felter undtagen titel og spornummer overskrives."
-msgstr ""
+msgstr "Incollare il tag copiato in %d file?\nTutti i campi tranne titolo e numero di traccia vengono sovrascritti."
 
 #: mainform.rsdereringenfilerat
 msgid "Der er ingen filer at gemme."
-msgstr ""
+msgstr "Non ci sono file da salvare."
 
 #: mainform.rsgemplayliste
 msgid "Gem playliste"
-msgstr ""
+msgstr "Salva playlist"
 
 #: mainform.rsplaylisteutfmum
 msgid "Playliste (UTF-8) (*.m3u8)|*.m3u8|Playliste (*.m3u)|*.m3u"
-msgstr ""
+msgstr "Playlist (UTF-8) (*.m3u8)|*.m3u8|Playlist (*.m3u)|*.m3u"
 
 #: mainform.rsplaylistemeddfilergemt
 msgid "Playliste med %d filer gemt: %s"
-msgstr ""
+msgstr "Playlist con %d file salvata: %s"
 
 #: mainform.rslavetpersonligttokenpaa
 msgctxt "mainform.rslavetpersonligttokenpaa"
-msgid "Lav et personligt token på discogs.com: Settings > Developers > Generate new token.\nIndsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):"
-msgstr ""
+msgid "Lav et personligt token på discogs.com: Settings > Developers > Generate new token.\nIndsæt det her (det gemmes kun på denne computer, i TidyTags indstillingsfil):"
+msgstr "Crea un token personale su discogs.com: Settings > Developers > Generate new token.\nIncollalo qui (viene salvato solo su questo computer, nel file di impostazioni di TidyTag):"
 
 #: mainform.rsdiscogstokenfjernet
 msgid "Discogs-token fjernet"
-msgstr ""
+msgstr "Token Discogs rimosso"
 
 #: mainform.rsdiscogstokengemt
 msgid "Discogs-token gemt"
-msgstr ""
+msgstr "Token Discogs salvato"
 
 #: mainform.rsenterdobbeltklikredigertagfor
 msgid "Enter / dobbeltklik\tRediger tag for den markerede fil\nMellemrum\t\tAfkryds/fjern afkrydsning på markerede filer\nF4\t\t\tOmdøb filer\nCtrl+F4\t\tMulti-fil-tag-editor\nShift+F4\t\tTags fra filnavn\nF8\t\t\tVis/skjul værktøjspanelet\nF5\t\t\tOpdater fillisten\nCtrl+E\t\tRediger flere filer\nCtrl+T\t\tSpornumre\nCtrl+W\t\tWeb-opslag\nCtrl+Z\t\tFortryd omdøbning\nCtrl+Shift+C / V\tKopiér / indsæt tag\nCtrl+Op / Ned\tFlyt markerede filer op / ned\nCtrl+Shift+X\tEksportér / importér tags\nCtrl+F\t\tFiltrér listen (Esc rydder filteret)\nCtrl+O\t\tÅbn mappe\nAlt+Backspace\tMappe op"
-msgstr ""
+msgstr "Invio / doppio clic\tModifica il tag del file selezionato\nSpazio\t\tSpunta/togli spunta ai file selezionati\nF4\t\t\tRinomina file\nCtrl+F4\t\tEditor tag multi-file\nMaiusc+F4\t\tTag dal nome file\nF8\t\t\tMostra/nascondi il pannello strumenti\nF5\t\t\tAggiorna elenco file\nCtrl+E\t\tModifica più file\nCtrl+T\t\tNumeri di traccia\nCtrl+W\t\tRicerca web\nCtrl+Z\t\tAnnulla rinomina\nCtrl+Maiusc+C / V\tCopia / incolla tag\nCtrl+Su / Giù\tSposta su / giù i file selezionati\nCtrl+Maiusc+X\tEsporta / importa tag\nCtrl+F\t\tFiltra l'elenco (Esc cancella il filtro)\nCtrl+O\t\tApri cartella\nAlt+Backspace\tCartella superiore"
 
-#: mainform.rsomtagklon2
-msgid "Om TagKlon"
-msgstr ""
+#: mainform.rsomtidytag2
+msgid "Om TidyTag"
+msgstr "Informazioni su TidyTag"
 
-#: mainform.rstagklontageditorogmusikorganisator
-msgid "TagKlon - tag-editor og musikorganisator\nLavet i Lazarus / Free Pascal."
-msgstr ""
+#: mainform.rstidytagtageditorogmusikorganisator
+msgid "TidyTag - tag-editor og musikorganisator\nLavet i Lazarus / Free Pascal."
+msgstr "TidyTag - editor di tag e organizzatore musicale\nRealizzato con Lazarus / Free Pascal."
 
 #: mainform.rswebdatamusicbrainzmusicbrainzorg
 msgid "Web-data: MusicBrainz (musicbrainz.org), Cover Art Archive og Discogs.\nIkoner: Lazarus \"general_purpose\" af Roland Hahn (CC0)."
-msgstr ""
+msgstr "Dati web: MusicBrainz (musicbrainz.org), Cover Art Archive e Discogs.\nIcone: Lazarus \"general_purpose\" di Roland Hahn (CC0)."
 
 #: mainform.rsindstillinger2
 msgid "Indstillinger: "
-msgstr ""
+msgstr "Impostazioni: "
 
 #: mainform.rstilfoejdenaabnemappe
 msgid "Tilføj den åbne mappe"
-msgstr ""
+msgstr "Aggiungi la cartella aperta"
 
 #: mainform.rsfjerndenaabnemappe
 msgid "Fjern den åbne mappe"
-msgstr ""
+msgstr "Rimuovi la cartella aperta"
 
 #: mainform.rsnymappe3
 msgctxt "mainform.rsnymappe3"
 msgid "Ny mappe"
-msgstr ""
+msgstr "Nuova cartella"
 
 #: mainform.rsnavnpaadennyemappe
 msgid "Navn på den nye mappe i "
-msgstr ""
+msgstr "Nome della nuova cartella in "
 
 #: mainform.rsmappenkunneikkeoprettes
 msgid "Mappen kunne ikke oprettes:"
-msgstr ""
+msgstr "Impossibile creare la cartella:"
 
 #: mainform.rsmappeoprettet
 msgid "Mappe oprettet: "
-msgstr ""
+msgstr "Cartella creata: "
 
 #: mp4reader.rsmoovatomerforstor
 msgid "moov-atom er for stor"
-msgstr ""
+msgstr "L'atomo moov è troppo grande"
 
 #: mp4reader.rsingenmoovatomikkeen
 msgctxt "mp4reader.rsingenmoovatomikkeen"
 msgid "Ingen moov-atom - ikke en gyldig MP4-fil"
-msgstr ""
+msgstr "Nessun atomo moov - file MP4 non valido"
 
 #: mp4writer.rsmetadataatomerforstor
 msgid "Metadata-atom er for stor"
-msgstr ""
+msgstr "L'atomo dei metadati è troppo grande"
 
 #: mp4writer.rsugyldigatomstrukturimoov
 msgid "Ugyldig atom-struktur i moov"
-msgstr ""
+msgstr "Struttura degli atomi non valida in moov"
 
 #: mp4writer.rsugyldigstcotabel
 msgid "Ugyldig stco-tabel"
-msgstr ""
+msgstr "Tabella stco non valida"
 
 #: mp4writer.rsfilenbliverforstortil
 msgid "Filen bliver for stor til 32-bit chunk-offsets"
-msgstr ""
+msgstr "Il file diventa troppo grande per offset di chunk a 32 bit"
 
 #: mp4writer.rsugyldigcotabel
 msgid "Ugyldig co64-tabel"
-msgstr ""
+msgstr "Tabella co64 non valida"
 
 #: mp4writer.rsugyldigmpstruktur
 msgid "Ugyldig MP4-struktur"
-msgstr ""
+msgstr "Struttura MP4 non valida"
 
 #: mp4writer.rsfragmenteredempfilerunderstoettesikke
 msgid "Fragmenterede MP4-filer understøttes ikke"
-msgstr ""
+msgstr "I file MP4 frammentati non sono supportati"
 
 #: mp4writer.rsingenmoovatomikkeen
 msgctxt "mp4writer.rsingenmoovatomikkeen"
 msgid "Ingen moov-atom - ikke en gyldig MP4-fil"
-msgstr ""
+msgstr "Nessun atomo moov - file MP4 non valido"
 
 #: multieditform.rsforskelligevaerdier
 msgid "(forskellige værdier)"
-msgstr ""
+msgstr "(valori diversi)"
 
 #: multieditform.rsredigerflerefiler
 msgid "Rediger flere filer - "
-msgstr ""
+msgstr "Modifica più file - "
 
 #: multieditform.rsaendringernegemmesidfiler
 msgid "Ændringerne gemmes i %d filer. Kun felter med flueben ændres; et tomt felt med flueben bliver ryddet."
-msgstr ""
+msgstr "Le modifiche vengono salvate in %d file. Solo i campi spuntati vengono modificati; un campo vuoto spuntato viene svuotato."
 
 #: multieditform.rsgemidfiler
 msgid "Gem i %d filer"
-msgstr ""
+msgstr "Salva in %d file"
 
 #: multieditform.rssaetfluebenforatgemme
 msgid "Sæt flueben for at gemme dette felt"
-msgstr ""
+msgstr "Spunta per salvare questo campo"
 
 #: multieditform.rskunjpegogpngbilleder
 msgctxt "multieditform.rskunjpegogpngbilleder"
 msgid "Kun JPEG- og PNG-billeder kan bruges som cover."
-msgstr ""
+msgstr "Solo le immagini JPEG e PNG possono essere usate come copertina."
 
 #: multieditform.rsdkb
 msgid "  (%d KB)"
-msgstr ""
+msgstr "  (%d KB)"
 
 #: multieditform.rssaetfluebenveddefelter
 msgctxt "multieditform.rssaetfluebenveddefelter"
 msgid "Sæt flueben ved de felter, der skal gemmes."
-msgstr ""
+msgstr "Spunta i campi da salvare."
 
 #: multieditform.rsrydfelter
 msgid "Ryd felter"
-msgstr ""
+msgstr "Svuota campi"
 
 #: multieditform.rsfelternesertommeog
 msgid "Felterne %s er tomme og bliver ryddet i %d filer. Fortsæt?"
-msgstr ""
+msgstr "I campi %s sono vuoti e verranno svuotati in %d file. Continuare?"
 
 #: multieditform.rsgem
 msgctxt "multieditform.rsgem"
 msgid "Gem"
-msgstr ""
+msgstr "Salva"
 
 #: multieditform.rsgemaendringerneidfiler
 msgid "Gem ændringerne i %d filer?"
-msgstr ""
+msgstr "Salvare le modifiche in %d file?"
 
 #: multieditform.rsannuller
 msgid "Annuller"
-msgstr ""
+msgstr "Annulla"
 
 #: multieditform.rsgemmerdafds
 msgctxt "multieditform.rsgemmerdafds"
 msgid "Gemmer %d af %d: %s"
-msgstr ""
+msgstr "Salvataggio %d di %d: %s"
 
 #: multieditform.rsgemtidfilerd
 msgid "Gemt i %d filer   ·   %d sprunget over (filtypen kan ikke gemmes endnu)   ·   %d fejl"
-msgstr ""
+msgstr "Salvato in %d file   ·   %d saltati (tipo di file non ancora salvabile)   ·   %d errori"
 
 #: multieditform.rsafbrudt
 msgid "Afbrudt.  "
-msgstr ""
+msgstr "Annullato.  "
 
 #: multieditform.rsnoglefilerblevikkegemt
 msgctxt "multieditform.rsnoglefilerblevikkegemt"
 msgid "Nogle filer blev ikke gemt"
-msgstr ""
+msgstr "Alcuni file non sono stati salvati"
 
 #: multieditform.rsluk
 msgctxt "multieditform.rsluk"
 msgid "Luk"
-msgstr ""
+msgstr "Chiudi"
 
 #: musicbrainz.rskunneikkestartenetvaerksforbindelsenfejl
 msgid "Kunne ikke starte netværksforbindelsen (fejl %d)"
-msgstr ""
+msgstr "Impossibile avviare la connessione di rete (errore %d)"
 
 #: musicbrainz.rsingenforbindelsetilsfejl
 msgid "Ingen forbindelse til %s (fejl %d). Tjek internetforbindelsen."
-msgstr ""
+msgstr "Nessuna connessione a %s (errore %d). Controlla la connessione a Internet."
 
 #: musicbrainz.rsforbindelsenblevafbrudtfejld
 msgid "Forbindelsen blev afbrudt (fejl %d)"
-msgstr ""
+msgstr "La connessione è stata interrotta (errore %d)"
 
 #: musicbrainz.rswebopslagunderstoetteskunpaa
 msgid "Web-opslag understøttes kun på Windows i denne version"
-msgstr ""
+msgstr "La ricerca web è supportata solo su Windows in questa versione"
 
 #: musicbrainz.rsmusicbrainzhartravltligenu
 msgid "MusicBrainz har travlt lige nu (503). Prøv igen om et øjeblik."
-msgstr ""
+msgstr "MusicBrainz è occupato al momento (503). Riprova tra poco."
 
 #: musicbrainz.rsmusicbrainzkenderikkedenneudgivelse
 msgid "MusicBrainz kender ikke denne udgivelse"
-msgstr ""
+msgstr "MusicBrainz non conosce questa pubblicazione"
 
 #: musicbrainz.rsmusicbrainzsvaredemedfejld
 msgid "MusicBrainz svarede med fejl %d"
-msgstr ""
+msgstr "MusicBrainz ha risposto con l'errore %d"
 
 #: musicbrainz.rsblandet
 msgid "Blandet"
-msgstr ""
+msgstr "Misto"
 
 #: musicbrainz.rsuventetsvarframusicbrainz
 msgid "Uventet svar fra MusicBrainz"
-msgstr ""
+msgstr "Risposta inattesa da MusicBrainz"
 
 #: musicbrainz.rsskrivkunstnerogelleralbum
 msgid "Skriv kunstner og/eller album"
-msgstr ""
+msgstr "Inserisci artista e/o album"
 
 #: oggwriter.rsugyldigoggsidefilener
 msgid "Ugyldig Ogg-side (filen er beskadiget eller ikke Ogg)"
-msgstr ""
+msgstr "Pagina Ogg non valida (file danneggiato o non Ogg)"
 
 #: oggwriter.rsoggfilenerafkortet
 msgid "Ogg-filen er afkortet"
-msgstr ""
+msgstr "Il file Ogg è troncato"
 
 #: oggwriter.rsugyldigoggfil
 msgid "Ugyldig Ogg-fil"
-msgstr ""
+msgstr "File Ogg non valido"
 
 #: oggwriter.rsuventetoggstrukturidentifikationspakkenfylder
 msgid "Uventet Ogg-struktur (identifikationspakken fylder mere end én side)"
-msgstr ""
+msgstr "Struttura Ogg inattesa (il pacchetto di identificazione occupa più di una pagina)"
 
 #: oggwriter.rskunoggvorbisogogg
 msgid "Kun Ogg Vorbis og Ogg Opus kan gemmes"
-msgstr ""
+msgstr "Solo Ogg Vorbis e Ogg Opus possono essere salvati"
 
 #: oggwriter.rsuventetoggstrukturfoersteside
 msgid "Uventet Ogg-struktur (første side)"
-msgstr ""
+msgstr "Struttura Ogg inattesa (prima pagina)"
 
 #: oggwriter.rsoggfilenslutterfoerheader
 msgid "Ogg-filen slutter før header-pakkerne"
-msgstr ""
+msgstr "Il file Ogg termina prima dei pacchetti di intestazione"
 
 #: oggwriter.rsoggfilermedflerestroemme
 msgid "Ogg-filer med flere strømme kan ikke gemmes endnu"
-msgstr ""
+msgstr "I file Ogg con più flussi non possono ancora essere salvati"
 
 #: oggwriter.rsuventetoggstrukturlydpaa
 msgid "Uventet Ogg-struktur (lyd på samme side som header)"
-msgstr ""
+msgstr "Struttura Ogg inattesa (audio sulla stessa pagina dell'intestazione)"
 
 #: oggwriter.rsmangleropustags
 msgid "Mangler OpusTags"
-msgstr ""
+msgstr "OpusTags mancante"
 
 #: oggwriter.rsmanglervorbiskommentarpakken
 msgid "Mangler Vorbis-kommentarpakken"
-msgstr ""
+msgstr "Pacchetto commenti Vorbis mancante"
 
 #: renamecore.rsuaendret
 msgctxt "renamecore.rsuaendret"
 msgid "Uændret"
-msgstr ""
+msgstr "Invariato"
 
 #: renamecore.rshvertordmedstort
 msgctxt "renamecore.rshvertordmedstort"
 msgid "Hvert Ord Med Stort"
-msgstr ""
+msgstr "Ogni Parola Maiuscola"
 
 #: renamecore.rsfoerstebogstavstort
 msgctxt "renamecore.rsfoerstebogstavstort"
 msgid "Første bogstav stort"
-msgstr ""
+msgstr "Prima lettera maiuscola"
 
 #: renamecore.rssmaabogstaver
 msgctxt "renamecore.rssmaabogstaver"
 msgid "små bogstaver"
-msgstr ""
+msgstr "minuscolo"
 
 #: renamecore.rsstorebogstaver
 msgctxt "renamecore.rsstorebogstaver"
 msgid "STORE BOGSTAVER"
-msgstr ""
+msgstr "MAIUSCOLO"
 
 #: renamecore.rsomdoebes
 msgid "Omdøbes"
-msgstr ""
+msgstr "Da rinominare"
 
 #: renamecore.rsmanglerfelt
 msgid "Mangler felt"
-msgstr ""
+msgstr "Campo mancante"
 
 #: renamecore.rsfindesallerede
 msgid "Findes allerede"
-msgstr ""
+msgstr "Esiste già"
 
 #: renamecore.rssammenavnsomenanden
 msgid "Samme navn som en anden fil"
-msgstr ""
+msgstr "Stesso nome di un altro file"
 
 #: renamecore.rsugyldigtnavn
 msgid "Ugyldigt navn"
-msgstr ""
+msgstr "Nome non valido"
 
 #: renamecore.rsomdoebt
 msgid "Omdøbt"
-msgstr ""
+msgstr "Rinominato"
 
 #: renamecore.rsfejl
 msgctxt "renamecore.rsfejl"
 msgid "Fejl"
-msgstr ""
+msgstr "Errore"
 
 #: renamecore.foldervariableshelp
 msgid "%1 Kunstner   %3 Album   %4 År   %5 Genre   %# Disc   %aa Albumkunstner   %cp Komponist\n%f Nuværende mappenavn.  Kun værdier, der er ens for alle filer i mappen, kan bruges\n(er kunstnerne forskellige, bruges albumkunstneren).\nBrug \\ for undermapper, fx  %1\\%4 - %3"
-msgstr ""
+msgstr "%1 Artista   %3 Album   %4 Anno   %5 Genere   %# Disco   %aa Artista album   %cp Compositore\n%f Nome attuale della cartella.  Si possono usare solo valori uguali per tutti i file della cartella\n(se gli artisti sono diversi, si usa l'artista dell'album).\nUsa \\ per le sottocartelle, es.  %1\\%4 - %3"
 
 #: renamecore.renamevariableshelp
 msgid "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc\n%7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate   %b BPM   %t Spilletid\n%aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab   %cat Katalognr.\n%grp Gruppering   %rb Remixet af   %md Stemning   %key Toneart   %ext Filtype   %khz Samplerate\nBrug \\ for at lave mapper, fx  %1\\%3\\%6 - %2"
-msgstr ""
+msgstr "%1 Artista   %2 Titolo   %3 Album   %4 Anno   %5 Genere   %6 Traccia   %# Disco\n%7 Nome file   %8 Numero file   %9 Commento   %0 Bitrate   %b BPM   %t Durata\n%aa Artista album   %cp Compositore   %co Direttore   %lb Etichetta   %cat N. catalogo\n%grp Raggruppamento   %rb Remix di   %md Atmosfera   %key Tonalità   %ext Tipo di file   %khz Campionamento\nUsa \\ per creare cartelle, es.  %1\\%3\\%6 - %2"
 
 #: renamecore.rsforskellige
 msgid " (forskellige)"
-msgstr ""
+msgstr " (diversi)"
 
 #: renamecore.rsindeholderenandenvalgtmappe
 msgid "indeholder en anden valgt mappe"
-msgstr ""
+msgstr "contiene un'altra cartella selezionata"
 
 #: renamecore.rskanikkeflyttesindi
 msgid "kan ikke flyttes ind i sig selv"
-msgstr ""
+msgstr "non può essere spostata in se stessa"
 
 #: renamecore.rsstienerforlang
 msgid "stien er for lang"
-msgstr ""
+msgstr "il percorso è troppo lungo"
 
 #: renamecore.rskunneikkeoprettemappen
 msgid "kunne ikke oprette mappen "
-msgstr ""
+msgstr "impossibile creare la cartella "
 
 #: renamecore.rsfindesikkelaengere
 msgid ": findes ikke længere"
-msgstr ""
+msgstr ": non esiste più"
 
 #: renamecore.rsderliggeralleredeenfil
 msgid ": der ligger allerede en fil med det navn"
-msgstr ""
+msgstr ": esiste già un file con quel nome"
 
 #: renameform.rsomdoebmapperudfratags
 msgid "Omdøb mapper ud fra tags"
-msgstr ""
+msgstr "Rinomina cartelle dai tag"
 
 #: renameform.rsnuvaerendemappe
 msgid "Nuværende mappe"
-msgstr ""
+msgstr "Cartella attuale"
 
 #: renameform.rsnymappe
 msgctxt "renameform.rsnymappe"
 msgid "Ny mappe"
-msgstr ""
+msgstr "Nuova cartella"
 
 #: renameform.rsomdoebmapper
 msgid "Omdøb mapper"
-msgstr ""
+msgstr "Rinomina cartelle"
 
 #: renameform.rssdmapper
 msgid "%s - %d mapper"
-msgstr ""
+msgstr "%s - %d cartelle"
 
 #: renameform.rsallefilerilistend
 msgid "Alle filer i listen - %d mapper"
-msgstr ""
+msgstr "Tutti i file dell'elenco - %d cartelle"
 
 #: renameform.rsallefilerilistend2
 msgctxt "renameform.rsallefilerilistend2"
 msgid "Alle filer i listen (%d)"
-msgstr ""
+msgstr "Tutti i file nell'elenco (%d)"
 
 #: renameform.rsdomdoebesduaendretd
 msgid "%d omdøbes   ·   %d uændret   ·   %d springes over"
-msgstr ""
+msgstr "%d da rinominare   ·   %d invariati   ·   %d saltati"
 
 #: renameform.rsdomdoebtdfejlkan
 msgid "%d omdøbt   ·   %d fejl   ·   kan fortrydes fra hovedvinduet"
-msgstr ""
+msgstr "%d rinominati   ·   %d errori   ·   annullabile dalla finestra principale"
 
 #: renameform.rsomdoebdmapper
 msgid "Omdøb %d mapper?"
-msgstr ""
+msgstr "Rinominare %d cartelle?"
 
 #: renameform.rsomdoebfiler
 msgctxt "renameform.rsomdoebfiler"
 msgid "Omdøb filer"
-msgstr ""
+msgstr "Rinomina file"
 
 #: renameform.rsomdoebdfiler
 msgid "Omdøb %d filer?"
-msgstr ""
+msgstr "Rinominare %d file?"
 
 #: tageditform.rsingentags
 msgid "ingen"
-msgstr ""
+msgstr "nessuno"
 
 #: tageditform.rssorteringsfelterbestemmerhvordanafspilleresorterer
 msgid "Sorteringsfelter bestemmer, hvordan afspillere sorterer, fx \"Beatles, The\" eller \"Nielsen, Carl\", uden at ændre det viste navn."
-msgstr ""
+msgstr "I campi di ordinamento stabiliscono come i lettori ordinano, es. \"Beatles, The\" o \"Nielsen, Carl\", senza cambiare il nome mostrato."
 
 #: tageditform.rsredigertagdafd
 msgid "Rediger tag (%d af %d) - %s"
-msgstr ""
+msgstr "Modifica tag (%d di %d) - %s"
 
 #: tageditform.rsfejlvedlaesning
 msgid "Fejl ved læsning: "
-msgstr ""
+msgstr "Errore di lettura: "
 
 #: tageditform.rsssdkbits
 msgid "%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d kanaler  ·  Tags: %s"
-msgstr ""
+msgstr "%s  ·  %s  ·  %d kbit/s  ·  %d Hz  ·  %d canali  ·  Tag: %s"
 
 #: tageditform.rskanikkegemmedennefiltype
 msgid "   (kan ikke gemme denne filtype endnu)"
-msgstr ""
+msgstr "   (questo tipo di file non può ancora essere salvato)"
 
 #: tageditform.rsintetbillede
 msgctxt "tageditform.rsintetbillede"
 msgid "Intet billede"
-msgstr ""
+msgstr "Nessuna immagine"
 
 #: tageditform.rsbillededafds
 msgid "Billede %d af %d  ·  %s  ·  %s"
-msgstr ""
+msgstr "Immagine %d di %d  ·  %s  ·  %s"
 
 #: tageditform.rsdxd
 msgid "  ·  %dx%d"
-msgstr ""
+msgstr "  ·  %dx%d"
 
 #: tageditform.rsdkb
 msgid "  ·  %d KB"
-msgstr ""
+msgstr "  ·  %d KB"
 
 #: tageditform.rsgem
 msgid "Gem *"
-msgstr ""
+msgstr "Salva *"
 
 #: tageditform.rsgem2
 msgctxt "tageditform.rsgem2"
 msgid "Gem"
-msgstr ""
+msgstr "Salva"
 
 #: tageditform.rskunneikkegemme
 msgid "Kunne ikke gemme"
-msgstr ""
+msgstr "Impossibile salvare"
 
 #: tageditform.rstagsblevikkegemti
 msgid "Tags blev ikke gemt i"
-msgstr ""
+msgstr "I tag non sono stati salvati in"
 
 #: tageditform.rsgemaendringer
 msgid "Gem ændringer?"
-msgstr ""
+msgstr "Salvare le modifiche?"
 
 #: tageditform.rsdereraendringersomikke
 msgid "Der er ændringer, som ikke er gemt. Vil du gemme dem?"
-msgstr ""
+msgstr "Ci sono modifiche non salvate. Vuoi salvarle?"
 
 #: tageditform.rskunjpegogpngbilleder
 msgctxt "tageditform.rskunjpegogpngbilleder"
 msgid "Kun JPEG- og PNG-billeder kan bruges som cover."
-msgstr ""
+msgstr "Solo le immagini JPEG e PNG possono essere usate come copertina."
 
 #: tageditform.rspngbilledepng
 msgid "PNG-billede|*.png"
-msgstr ""
+msgstr "Immagine PNG|*.png"
 
 #: tageditform.rsjpegbilledejpg
 msgid "JPEG-billede|*.jpg"
-msgstr ""
+msgstr "Immagine JPEG|*.jpg"
 
 #: tagremove.rsuventettagstruktur
 msgid "Uventet tag-struktur"
-msgstr ""
+msgstr "Struttura dei tag inattesa"
 
 #: tagremove.rsfiltypenkanikkegemmes
 msgctxt "tagremove.rsfiltypenkanikkegemmes"
 msgid "Skrivning af denne filtype understøttes ikke endnu"
-msgstr ""
+msgstr "La scrittura di questo tipo di file non è ancora supportata"
 
 #: tagwriter.rsinternfejlfilenerlaest
 msgid "Intern fejl: filen er læst uden billeder"
-msgstr ""
+msgstr "Errore interno: il file è stato letto senza immagini"
 
 #: tagwriter.rsskrivningafdennefiltypeunderstoettes
 msgctxt "tagwriter.rsskrivningafdennefiltypeunderstoettes"
 msgid "Skrivning af denne filtype understøttes ikke endnu"
-msgstr ""
+msgstr "La scrittura di questo tipo di file non è ancora supportata"
 
 #: tooldialogs.rsfra
 msgid "Fra:"
-msgstr ""
+msgstr "Da:"
 
 #: tooldialogs.rstil
 msgid "Til:"
-msgstr ""
+msgstr "A:"
 
 #: tooldialogs.rsordudskiftninger
 msgid "Ordudskiftninger ved omdøbning"
-msgstr ""
+msgstr "Sostituzioni di parole nella rinomina"
 
 #: tooldialogs.rserstattekst
 msgid "Erstat tekst (skelner mellem store og små bogstaver; mellemrum tæller med):"
-msgstr ""
+msgstr "Sostituisci testo (distingue maiuscole/minuscole; gli spazi contano):"
 
 #: tooldialogs.rserstat
 msgid "Erstat"
-msgstr ""
+msgstr "Sostituisci"
 
 #: tooldialogs.rsmed
 msgid "Med"
-msgstr ""
+msgstr "Con"
 
 #: tooldialogs.rsfasteord
 msgid "Ord der altid skrives sådan (hele ord, et pr. linje, fx AC/DC eller ABBA):"
-msgstr ""
+msgstr "Parole scritte sempre così (parole intere, una per riga, es. AC/DC o ABBA):"
 
 #: tooldialogs.rsordhjaelp
 msgid "Bruges af alle omdøbninger efter versalskift. Faste ord først, så udskiftninger."
-msgstr ""
+msgstr "Usato da tutte le rinomine dopo il cambio di maiuscole. Prima le parole fisse, poi le sostituzioni."
 
 #: tooldialogs.rsomdoebningshandlinger
 msgctxt "tooldialogs.rsomdoebningshandlinger"
 msgid "Omdøbningshandlinger"
-msgstr ""
+msgstr "Azioni di rinomina"
 
 #: tooldialogs.rshandlinger
 msgid "Handlinger:"
-msgstr ""
+msgstr "Azioni:"
 
 #: tooldialogs.rsnavn
 msgid "Navn:"
-msgstr ""
+msgstr "Nome:"
 
 #: tooldialogs.rsfilnavnsmaske
 msgctxt "tooldialogs.rsfilnavnsmaske"
 msgid "Filnavnsmaske:"
-msgstr ""
+msgstr "Maschera nome file:"
 
 #: tooldialogs.rsmappemaske
 msgid "Mappemaske (omdøber mapperne bagefter):"
-msgstr ""
+msgstr "Maschera cartella (rinomina le cartelle dopo):"
 
 #: tooldialogs.rstilfoej
 msgid "Tilføj"
-msgstr ""
+msgstr "Aggiungi"
 
 #: tooldialogs.rsfjern
 msgctxt "tooldialogs.rsfjern"
 msgid "Fjern"
-msgstr ""
+msgstr "Rimuovi"
 
 #: tooldialogs.rsnyhandling
 msgid "Ny handling"
-msgstr ""
+msgstr "Nuova azione"
 
 #: tooldialogs.rshandlinghjaelp
 msgid "En handling omdøber de afkrydsede (eller markerede) filer med filnavnsmasken og derefter deres mapper med mappemasken. Versaler og ordudskiftninger følger indstillingerne i fanebladet Omdøb filer. Handlingerne findes i menuen Værktøjer."
-msgstr ""
+msgstr "Un'azione rinomina i file spuntati (o selezionati) con la maschera nome file e poi le loro cartelle con la maschera cartella. Maiuscole e sostituzioni seguono le impostazioni della scheda Rinomina file. Le azioni si trovano nel menu Strumenti."
 
 #: tooldialogs.rsgivhandlingenetnavn
 msgid "Giv handlingen et navn og mindst én maske."
-msgstr ""
+msgstr "Dai un nome all'azione e almeno una maschera."
 
 #: tooldialogs.rsmptagsynkronisering
 msgctxt "tooldialogs.rsmptagsynkronisering"
 msgid "Mp3-tag-synkronisering"
-msgstr ""
+msgstr "Sincronizzazione tag MP3"
 
 #: tooldialogs.rsretning
 msgid "Retning"
-msgstr ""
+msgstr "Direzione"
 
 #: tooldialogs.rsidv1tilidv2
 msgid "Kopiér fra ID3v1 til ID3v2"
-msgstr ""
+msgstr "Copia da ID3v1 a ID3v2"
 
 #: tooldialogs.rsidv2tilidv1
 msgid "Kopiér fra ID3v2 til ID3v1 (opretter ID3v1 om nødvendigt)"
-msgstr ""
+msgstr "Copia da ID3v2 a ID3v1 (crea ID3v1 se necessario)"
 
 #: tooldialogs.rshvistagfindes
 msgid "Hvis måltagget allerede findes"
-msgstr ""
+msgstr "Se il tag di destinazione esiste già"
 
 #: tooldialogs.rsskrivikke
 msgid "Skriv ikke tagget"
-msgstr ""
+msgstr "Non scrivere il tag"
 
 #: tooldialogs.rskuntommefelter
 msgid "Udfyld kun tomme felter"
-msgstr ""
+msgstr "Compila solo i campi vuoti"
 
 #: tooldialogs.rsoverskrivfelter
 msgid "Overskriv felterne"
-msgstr ""
+msgstr "Sovrascrivi i campi"
 
 #: tooldialogs.rssynchjaelp
 msgid "Felter: titel, kunstner, album, år, kommentar, spor og genre. ID3v1 kan kun rumme 30 tegn pr. felt og kun vesteuropæiske bogstaver."
-msgstr ""
+msgstr "Campi: titolo, artista, album, anno, commento, traccia e genere. ID3v1 contiene solo 30 caratteri per campo e solo lettere dell'Europa occidentale."
 
 #: tooldialogs.rsalle
 msgctxt "tooldialogs.rsalle"
 msgid "Alle"
-msgstr ""
+msgstr "Tutti"
 
 #: tooldialogs.rsmaskeeditor
 msgctxt "tooldialogs.rsmaskeeditor"
 msgid "Maske-editor"
-msgstr ""
+msgstr "Editor maschera"
 
 #: tooldialogs.rsmaske
 msgid "Maske:"
-msgstr ""
+msgstr "Maschera:"
 
 #: tooldialogs.rseksempelcolon
 msgid "Eksempel:"
-msgstr ""
+msgstr "Esempio:"
 
 #: tooldialogs.rsvariabler
 msgid "Variabler (klik for at indsætte)"
-msgstr ""
+msgstr "Variabili (clic per inserire)"
 
 #: tooldialogs.rsgemtemasker
 msgid "Gemte masker (dobbeltklik for at bruge)"
-msgstr ""
+msgstr "Maschere salvate (doppio clic per usarle)"
 
 #: tooldialogs.rsgemmasken
 msgid "Gem masken"
-msgstr ""
+msgstr "Salva maschera"
 
 #: tooldialogs.rsstoersteside
 msgctxt "tooldialogs.rsstoersteside"
 msgid "Største side (pixel):"
-msgstr ""
+msgstr "Lato maggiore (pixel):"
 
 #: tooldialogs.rsjpegkvalitet
 msgctxt "tooldialogs.rsjpegkvalitet"
 msgid "JPEG-kvalitet (1-100):"
-msgstr ""
+msgstr "Qualità JPEG (1-100):"
 
 #: tooldialogs.rskonverterpngtiljpeg
 msgctxt "tooldialogs.rskonverterpngtiljpeg"
 msgid "Konvertér PNG til JPEG"
-msgstr ""
+msgstr "Converti PNG in JPEG"
 
 #: tooldialogs.rsskaleringhjaelp
 msgid "Billeder, der allerede er mindre, ændres ikke (undtagen ved konvertering til JPEG)."
-msgstr ""
+msgstr "Le immagini già più piccole non vengono modificate (tranne nella conversione in JPEG)."
 
 #: tooldialogs.rsingen
 msgctxt "tooldialogs.rsingen"
 msgid "Ingen"
-msgstr ""
+msgstr "Nessuno"
 
 #: tracktoolsform.rsformatereksisterendespornumre
 msgid "Formatér eksisterende spornumre"
-msgstr ""
+msgstr "Formatta i numeri di traccia esistenti"
 
 #: tracktoolsform.rsnummererilistensraekkefoelge
 msgid "Nummerér i listens rækkefølge"
-msgstr ""
+msgstr "Numera nell'ordine dell'elenco"
 
 #: tracktoolsform.rsaendres
 msgctxt "tracktoolsform.rsaendres"
 msgid "Ændres"
-msgstr ""
+msgstr "Da modificare"
 
 #: tracktoolsform.rsuaendret
 msgctxt "tracktoolsform.rsuaendret"
 msgid "Uændret"
-msgstr ""
+msgstr "Invariato"
 
 #: tracktoolsform.rsfiltypenkanikkegemmesendnu
 msgctxt "tracktoolsform.rsfiltypenkanikkegemmesendnu"
 msgid "Filtypen kan ikke gemmes endnu"
-msgstr ""
+msgstr "Questo tipo di file non può ancora essere salvato"
 
 #: tracktoolsform.rsgemt
 msgctxt "tracktoolsform.rsgemt"
 msgid "Gemt"
-msgstr ""
+msgstr "Salvato"
 
 #: tracktoolsform.rsfejl
 msgctxt "tracktoolsform.rsfejl"
 msgid "Fejl"
-msgstr ""
+msgstr "Errore"
 
 #: tracktoolsform.rsallefilerilistend
 msgctxt "tracktoolsform.rsallefilerilistend"
 msgid "Alle filer i listen (%d)"
-msgstr ""
+msgstr "Tutti i file nell'elenco (%d)"
 
 #: tracktoolsform.rsdfilergemtdfejl
 msgctxt "tracktoolsform.rsdfilergemtdfejl"
 msgid "%d filer gemt   ·   %d fejl"
-msgstr ""
+msgstr "%d file salvati   ·   %d errori"
 
 #: tracktoolsform.rsdaendresduaendretd
 msgid "%d ændres   ·   %d uændret   ·   %d kan ikke gemmes"
-msgstr ""
+msgstr "%d da modificare   ·   %d invariati   ·   %d non salvabili"
 
 #: tracktoolsform.rsgemspornumre
 msgctxt "tracktoolsform.rsgemspornumre"
 msgid "Gem spornumre"
-msgstr ""
+msgstr "Salva numeri di traccia"
 
 #: tracktoolsform.rsgemnyespornumreid
 msgid "Gem nye spornumre i %d filer?"
-msgstr ""
+msgstr "Salvare i nuovi numeri di traccia in %d file?"
 
 #: tracktoolsform.rsgemmerdafds
 msgctxt "tracktoolsform.rsgemmerdafds"
 msgid "Gemmer %d af %d: %s"
-msgstr ""
+msgstr "Salvataggio %d di %d: %s"
 
 #: vorbisreader.rsikkeengyldigflacfil
 msgctxt "vorbisreader.rsikkeengyldigflacfil"
 msgid "Ikke en gyldig FLAC-fil"
-msgstr ""
+msgstr "File FLAC non valido"
 
 #: vorbisreader.rsikkeengyldigoggfil
 msgid "Ikke en gyldig Ogg-fil"
-msgstr ""
+msgstr "File Ogg non valido"
 
 #: vorbisreader.rsukendtoggcodec
 msgid "Ukendt Ogg-codec"
-msgstr ""
+msgstr "Codec Ogg sconosciuto"
 
 #: wavreader.rsrffilerwavovergb
 msgid "RF64-filer (WAV over 4 GB) understøttes ikke"
-msgstr ""
+msgstr "I file RF64 (WAV oltre 4 GB) non sono supportati"
 
 #: wavreader.rsikkeenwavelleraiff
 msgid "Ikke en WAV- eller AIFF-fil"
-msgstr ""
+msgstr "Non è un file WAV o AIFF"
 
 #: wavwriter.rsfilenbliverstoerreendgb
 msgid "Filen bliver større end 4 GB, hvilket WAV/AIFF ikke tillader"
-msgstr ""
+msgstr "Il file supererebbe 4 GB, cosa che WAV/AIFF non consente"
 
 #: wavwriter.rsfilenindeholderingenlyd
 msgid "Filen indeholder ingen lyd"
-msgstr ""
+msgstr "Il file non contiene audio"
 
 #: weblookupform.rswebopslagdfiler
 msgid "Web-opslag - %d filer"
-msgstr ""
+msgstr "Ricerca web - %d file"
 
 #: weblookupform.rsskrivkunstnerogalbumog
 msgid "Skriv kunstner og album, og tryk Søg."
-msgstr ""
+msgstr "Inserisci artista e album e premi Cerca."
 
 #: weblookupform.rsdiscogskraeveretpersonligttoken
 msgid "Discogs kræver et personligt token til søgning - tryk \"Discogs-token...\"."
-msgstr ""
+msgstr "Discogs richiede un token personale per la ricerca - premi \"Token Discogs...\"."
 
 #: weblookupform.rstryksoeg
 msgid "Tryk Søg."
-msgstr ""
+msgstr "Premi Cerca."
 
 #: weblookupform.rslavetpersonligttokenpaa
 msgctxt "weblookupform.rslavetpersonligttokenpaa"
-msgid "Lav et personligt token på discogs.com: Settings > Developers > Generate new token.\nIndsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):"
-msgstr ""
+msgid "Lav et personligt token på discogs.com: Settings > Developers > Generate new token.\nIndsæt det her (det gemmes kun på denne computer, i TidyTags indstillingsfil):"
+msgstr "Crea un token personale su discogs.com: Settings > Developers > Generate new token.\nIncollalo qui (viene salvato solo su questo computer, nel file di impostazioni di TidyTag):"
 
 #: weblookupform.rsdiscogstokenfjernet
 msgid "Discogs-token fjernet."
-msgstr ""
+msgstr "Token Discogs rimosso."
 
 #: weblookupform.rsdiscogstokengemttryksoeg
 msgid "Discogs-token gemt. Tryk Søg."
-msgstr ""
+msgstr "Token Discogs salvato. Premi Cerca."
 
 #: weblookupform.rsfejl
 msgctxt "weblookupform.rsfejl"
 msgid "Fejl: "
-msgstr ""
+msgstr "Errore: "
 
 #: weblookupform.rssoegerpaa
 msgid "Søger på "
-msgstr ""
+msgstr "Ricerca su "
 
 #: weblookupform.rsingenudgivelserfundetproevmed
 msgid "Ingen udgivelser fundet. Prøv med færre ord eller en anden stavemåde."
-msgstr ""
+msgstr "Nessuna pubblicazione trovata. Prova con meno parole o un'altra grafia."
 
 #: weblookupform.rsdudgivelserfundetpaas
 msgid "%d udgivelser fundet på %s. Vælg den rigtige (dato, format og katalognummer hjælper)."
-msgstr ""
+msgstr "%d pubblicazioni trovate su %s. Scegli quella giusta (data, formato e numero di catalogo aiutano)."
 
 #: weblookupform.rshentersporliste
 msgid "Henter sporliste..."
-msgstr ""
+msgstr "Recupero dell'elenco tracce..."
 
 #: weblookupform.rsfilerneerparretefterderes
 msgid "Filerne er parret efter deres spornumre. Henter cover..."
-msgstr ""
+msgstr "I file sono abbinati in base ai numeri di traccia. Recupero copertina..."
 
 #: weblookupform.rsfilerneerparretilistens
 msgid "Filerne er parret i listens rækkefølge - ret med Op/Ned. Henter cover..."
-msgstr ""
+msgstr "I file sono abbinati nell'ordine dell'elenco - correggi con Su/Giù. Recupero copertina..."
 
 #: weblookupform.rshentercover
 msgid " Henter cover..."
-msgstr ""
+msgstr " Recupero copertina..."
 
 #: weblookupform.rsintetcoverfundet
 msgid "Intet cover fundet"
-msgstr ""
+msgstr "Nessuna copertina trovata"
 
 #: weblookupform.rscoverdxddkb
 msgid "Cover: %dx%d, %d KB"
-msgstr ""
+msgstr "Copertina: %dx%d, %d KB"
 
 #: weblookupform.rsintetsporfilenaendresikke
 msgid "(intet spor - filen ændres ikke)"
-msgstr ""
+msgstr "(nessuna traccia - il file non viene modificato)"
 
 #: weblookupform.rsvaelghvadderskalskrives
 msgid "Vælg, hvad der skal skrives."
-msgstr ""
+msgstr "Scegli cosa scrivere."
 
 #: weblookupform.rsskrivtags
 msgctxt "weblookupform.rsskrivtags"
 msgid "Skriv tags"
-msgstr ""
+msgstr "Scrivi tag"
 
 #: weblookupform.rsskrivoplysningerfrasi
 msgid "Skriv oplysninger fra \"%s\" i %d filer?"
-msgstr ""
+msgstr "Scrivere le informazioni da \"%s\" in %d file?"
 
 #: weblookupform.rsskriver
 msgid "Skriver "
-msgstr ""
+msgstr "Scrittura di "
 
 #: weblookupform.rsfindesalleredeikkeoverskrevet
 msgid " findes allerede - ikke overskrevet"
-msgstr ""
+msgstr " esiste già - non sovrascritto"
 
 #: weblookupform.rsgemtidfilerd
 msgid "Gemt i %d filer   ·   %d fejl   ·   %d sprunget over (filtype)"
-msgstr ""
+msgstr "Salvato in %d file   ·   %d errori   ·   %d saltati (tipo di file)"
 
 #: weblookupform.rscovergemtidmapper
 msgid "   ·   cover gemt i %d mapper"
-msgstr ""
+msgstr "   ·   copertina salvata in %d cartelle"
 
 #: weblookupform.rsbemaerk
 msgid "Bemærk"
-msgstr ""
+msgstr "Nota"
 
 #: tformexportimport.caption
 msgid "Eksportér / importér tags"
-msgstr ""
+msgstr "Esporta / importa tag"
 
 #: tformexportimport.pagemain.tabexport.caption
 msgid "Eksport"
-msgstr ""
+msgstr "Esportazione"
 
 #: tformexportimport.pagemain.tabexport.radioformat.caption
 msgctxt "tformexportimport.pagemain.tabexport.radioformat.caption"
 msgid "Format"
-msgstr ""
+msgstr "Formato"
 
 #: tformexportimport.pagemain.tabexport.radioscope.caption
 msgctxt "tformexportimport.pagemain.tabexport.radioscope.caption"
 msgid "Filer"
-msgstr ""
+msgstr "File"
 
 #: tformexportimport.pagemain.tabexport.checkopenafter.caption
 msgid "Åbn filen bagefter"
-msgstr ""
+msgstr "Apri il file al termine"
 
 #: tformexportimport.pagemain.tabexport.labelcolumns.caption
 msgid "Kolonner:"
-msgstr ""
+msgstr "Colonne:"
 
 #: tformexportimport.pagemain.tabexport.buttoncolsall.caption
 msgctxt "tformexportimport.pagemain.tabexport.buttoncolsall.caption"
 msgid "Alle"
-msgstr ""
+msgstr "Tutti"
 
 #: tformexportimport.pagemain.tabexport.buttoncolsnone.caption
 msgctxt "tformexportimport.pagemain.tabexport.buttoncolsnone.caption"
 msgid "Ingen"
-msgstr ""
+msgstr "Nessuno"
 
 #: tformexportimport.pagemain.tabexport.buttoncolsdefault.caption
 msgid "Standard"
-msgstr ""
+msgstr "Predefinite"
 
 #: tformexportimport.pagemain.tabexport.buttonexport.caption
 msgid "Eksportér..."
-msgstr ""
+msgstr "Esporta..."
 
 #: tformexportimport.pagemain.tabimport.caption
 msgid "Import (CSV / XLSX)"
-msgstr ""
+msgstr "Importazione (CSV / XLSX)"
 
 #: tformexportimport.pagemain.tabimport.labelimportfile.caption
 msgid "Fil:"
-msgstr ""
+msgstr "File:"
 
 #: tformexportimport.pagemain.tabimport.buttonbrowse.caption
 msgid "Vælg fil..."
-msgstr ""
+msgstr "Scegli file..."
 
 #: tformexportimport.pagemain.tabimport.checkemptyclears.caption
 msgid "Tomme celler rydder felterne"
-msgstr ""
+msgstr "Le celle vuote svuotano i campi"
 
 #: tformexportimport.pagemain.tabimport.labelimportinfo.caption
 msgid "Vælg en CSV- eller XLSX-fil med en kolonne \"Sti\" eller \"Filnavn\" og kolonner med feltnavne (fx en eksport, du har rettet i Excel)."
-msgstr ""
+msgstr "Scegli un file CSV o XLSX con una colonna \"Percorso\" o \"Nome file\" e colonne con i nomi dei campi (es. un'esportazione modificata in Excel)."
 
 #: tformexportimport.pagemain.tabimport.listimport.item0.caption
 msgid "Række"
-msgstr ""
+msgstr "Riga"
 
 #: tformexportimport.pagemain.tabimport.listimport.item1.caption
 msgctxt "tformexportimport.pagemain.tabimport.listimport.item1.caption"
 msgid "Fil"
-msgstr ""
+msgstr "File"
 
 #: tformexportimport.pagemain.tabimport.listimport.item2.caption
 msgid "Ændringer"
-msgstr ""
+msgstr "Modifiche"
 
 #: tformexportimport.pagemain.tabimport.listimport.item3.caption
 msgctxt "tformexportimport.pagemain.tabimport.listimport.item3.caption"
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #: tformexportimport.pagemain.tabimport.buttonimportwrite.caption
 msgctxt "tformexportimport.pagemain.tabimport.buttonimportwrite.caption"
 msgid "Skriv tags"
-msgstr ""
+msgstr "Scrivi tag"
 
 #: tformexportimport.buttonclose.caption
 msgctxt "tformexportimport.buttonclose.caption"
 msgid "Luk"
-msgstr ""
+msgstr "Chiudi"
 
 #: tformexportimport.saveexportdialog.title
 msgid "Eksportér"
-msgstr ""
+msgstr "Esporta"
 
 #: tformexportimport.opentabledialog.title
 msgctxt "tformexportimport.opentabledialog.title"
 msgid "Importér tags"
-msgstr ""
+msgstr "Importa tag"
 
 #: tformexportimport.opentabledialog.filter
 msgid "Regneark og CSV (*.xlsx;*.csv;*.txt)|*.xlsx;*.csv;*.txt|Alle filer (*.*)|*.*"
-msgstr ""
+msgstr "Fogli di calcolo e CSV (*.xlsx;*.csv;*.txt)|*.xlsx;*.csv;*.txt|Tutti i file (*.*)|*.*"
 
 #: tformfiletotag.caption
 msgctxt "tformfiletotag.caption"
 msgid "Tags fra filnavn"
-msgstr ""
+msgstr "Tag dal nome file"
 
 #: tformfiletotag.labelmask.caption
 msgctxt "tformfiletotag.labelmask.caption"
 msgid "Filnavnsmaske:"
-msgstr ""
+msgstr "Maschera nome file:"
 
 #: tformfiletotag.labelvars.caption
 msgctxt "tformfiletotag.labelvars.caption"
@@ -2859,21 +2859,21 @@ msgstr ""
 #: tformfiletotag.radioscope.caption
 msgctxt "tformfiletotag.radioscope.caption"
 msgid "Filer"
-msgstr ""
+msgstr "File"
 
 #: tformfiletotag.labelcase.caption
 msgctxt "tformfiletotag.labelcase.caption"
 msgid "Versaler:"
-msgstr ""
+msgstr "Maiuscole:"
 
 #: tformfiletotag.checkunderscores.caption
 msgctxt "tformfiletotag.checkunderscores.caption"
 msgid "Erstat _ med mellemrum"
-msgstr ""
+msgstr "Sostituisci _ con spazio"
 
 #: tformfiletotag.checkkeeptimestamp.caption
 msgid "Bevar filens dato"
-msgstr ""
+msgstr "Mantieni la data del file"
 
 #: tformfiletotag.labelsummary.caption
 msgctxt "tformfiletotag.labelsummary.caption"
@@ -2883,70 +2883,70 @@ msgstr ""
 #: tformfiletotag.buttonwrite.caption
 msgctxt "tformfiletotag.buttonwrite.caption"
 msgid "Skriv tags"
-msgstr ""
+msgstr "Scrivi tag"
 
 #: tformfiletotag.buttonclose.caption
 msgctxt "tformfiletotag.buttonclose.caption"
 msgid "Luk"
-msgstr ""
+msgstr "Chiudi"
 
 #: tformmain.caption
-msgid "TagKlon"
+msgid "TidyTag"
 msgstr ""
 
 #: tformmain.paneltools.pagetools.tabrename.caption
 msgid "Omdøb filer (F4)"
-msgstr ""
+msgstr "Rinomina file (F4)"
 
 #: tformmain.paneltools.pagetools.tabrename.labelrenamemask.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.labelrenamemask.caption"
 msgid "Filnavnsmaske:"
-msgstr ""
+msgstr "Maschera nome file:"
 
 #: tformmain.paneltools.pagetools.tabrename.buttonrenamevars.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.buttonrenamevars.caption"
 msgid "Variabler ▾"
-msgstr ""
+msgstr "Variabili ▾"
 
 #: tformmain.paneltools.pagetools.tabrename.labelrenameresult.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.labelrenameresult.caption"
 msgid "Resultat:"
-msgstr ""
+msgstr "Risultato:"
 
 #: tformmain.paneltools.pagetools.tabrename.checkrenameunderscores.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.checkrenameunderscores.caption"
 msgid "Erstat mellemrum med _"
-msgstr ""
+msgstr "Sostituisci gli spazi con _"
 
 #: tformmain.paneltools.pagetools.tabrename.checkrenamepadtrack.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.checkrenamepadtrack.caption"
 msgid "Spornummer med 2 cifre (%6)"
-msgstr ""
+msgstr "Numero di traccia a 2 cifre (%6)"
 
 #: tformmain.paneltools.pagetools.tabrename.checkrenamecase.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.checkrenamecase.caption"
 msgid "Skift versaler:"
-msgstr ""
+msgstr "Cambia maiuscole:"
 
 #: tformmain.paneltools.pagetools.tabrename.panelrenamecase.radiorenamelower.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.panelrenamecase.radiorenamelower.caption"
 msgid "små bogstaver"
-msgstr ""
+msgstr "minuscolo"
 
 #: tformmain.paneltools.pagetools.tabrename.panelrenamecase.radiorenameupper.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.panelrenamecase.radiorenameupper.caption"
 msgid "STORE BOGSTAVER"
-msgstr ""
+msgstr "MAIUSCOLO"
 
 #: tformmain.paneltools.pagetools.tabrename.panelrenamecase.radiorenametitle.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.panelrenamecase.radiorenametitle.caption"
 msgid "Hvert Ord Med Stort"
-msgstr ""
+msgstr "Ogni Parola Maiuscola"
 
 #: tformmain.paneltools.pagetools.tabrename.panelrenamecase.radiorenamesentence.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.panelrenamecase.radiorenamesentence.caption"
 msgid "Første bogstav stort"
-msgstr ""
+msgstr "Prima lettera maiuscola"
 
 #: tformmain.paneltools.pagetools.tabrename.labelrenamehelp.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.labelrenamehelp.caption"
@@ -2956,50 +2956,50 @@ msgstr ""
 #: tformmain.paneltools.pagetools.tabrename.buttonrenamepreview.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.buttonrenamepreview.caption"
 msgid "Forhåndsvis..."
-msgstr ""
+msgstr "Anteprima..."
 
 #: tformmain.paneltools.pagetools.tabrename.buttonrenamedo.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.buttonrenamedo.caption"
 msgid "Omdøb"
-msgstr ""
+msgstr "Rinomina"
 
 #: tformmain.paneltools.pagetools.tabrename.buttonrenameundo.caption
 msgid "Fortryd"
-msgstr ""
+msgstr "Annulla"
 
 #: tformmain.paneltools.pagetools.tabmulti.caption
 msgid "Multi-fil-tag-editor (Ctrl+F4)"
-msgstr ""
+msgstr "Editor tag multi-file (Ctrl+F4)"
 
 #: tformmain.paneltools.pagetools.tabmulti.checkmultiartist.caption
 msgctxt "tformmain.paneltools.pagetools.tabmulti.checkmultiartist.caption"
 msgid "Kunstner"
-msgstr ""
+msgstr "Artista"
 
 #: tformmain.paneltools.pagetools.tabmulti.checkmultialbum.caption
 msgctxt "tformmain.paneltools.pagetools.tabmulti.checkmultialbum.caption"
 msgid "Album"
-msgstr ""
+msgstr "Album"
 
 #: tformmain.paneltools.pagetools.tabmulti.checkmultialbumartist.caption
 msgctxt "tformmain.paneltools.pagetools.tabmulti.checkmultialbumartist.caption"
 msgid "Albumkunstner"
-msgstr ""
+msgstr "Artista album"
 
 #: tformmain.paneltools.pagetools.tabmulti.checkmultiyear.caption
 msgctxt "tformmain.paneltools.pagetools.tabmulti.checkmultiyear.caption"
 msgid "År"
-msgstr ""
+msgstr "Anno"
 
 #: tformmain.paneltools.pagetools.tabmulti.checkmultigenre.caption
 msgctxt "tformmain.paneltools.pagetools.tabmulti.checkmultigenre.caption"
 msgid "Genre"
-msgstr ""
+msgstr "Genere"
 
 #: tformmain.paneltools.pagetools.tabmulti.checkmulticomment.caption
 msgctxt "tformmain.paneltools.pagetools.tabmulti.checkmulticomment.caption"
 msgid "Kommentar"
-msgstr ""
+msgstr "Commento"
 
 #: tformmain.paneltools.pagetools.tabmulti.labelmultihelp.caption
 msgctxt "tformmain.paneltools.pagetools.tabmulti.labelmultihelp.caption"
@@ -3009,72 +3009,72 @@ msgstr ""
 #: tformmain.paneltools.pagetools.tabmulti.buttonmultisave.caption
 msgctxt "tformmain.paneltools.pagetools.tabmulti.buttonmultisave.caption"
 msgid "Gem tags"
-msgstr ""
+msgstr "Salva tag"
 
 #: tformmain.paneltools.pagetools.tabmulti.buttonmulticopy.caption
 msgid "Kopiér fra fil"
-msgstr ""
+msgstr "Copia dal file"
 
 #: tformmain.paneltools.pagetools.tabmulti.buttonmulticopy.hint
 msgid "Udfyld felterne med værdierne fra den fokuserede fil"
-msgstr ""
+msgstr "Compila i campi con i valori del file attivo"
 
 #: tformmain.paneltools.pagetools.tabmulti.buttonmultiall.caption
 msgid "Alle felter..."
-msgstr ""
+msgstr "Tutti i campi..."
 
 #: tformmain.paneltools.pagetools.tabmulti.buttonmultiall.hint
 msgid "Rediger flere felter (og cover) i alle afkrydsede/markerede filer"
-msgstr ""
+msgstr "Modifica altri campi (e la copertina) in tutti i file spuntati/selezionati"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.caption
 msgid "Tags fra filnavn (Shift+F4)"
-msgstr ""
+msgstr "Tag dal nome file (Maiusc+F4)"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.labelf2tmask.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.labelf2tmask.caption"
 msgid "Filnavnsmaske:"
-msgstr ""
+msgstr "Maschera nome file:"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.buttonf2tvars.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.buttonf2tvars.caption"
 msgid "Variabler ▾"
-msgstr ""
+msgstr "Variabili ▾"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.labelf2tresult.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.labelf2tresult.caption"
 msgid "Resultat:"
-msgstr ""
+msgstr "Risultato:"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.checkf2tunderscores.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.checkf2tunderscores.caption"
 msgid "Erstat _ med mellemrum"
-msgstr ""
+msgstr "Sostituisci _ con spazio"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.checkf2tcase.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.checkf2tcase.caption"
 msgid "Skift versaler:"
-msgstr ""
+msgstr "Cambia maiuscole:"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.panelf2tcase.radiof2tlower.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.panelf2tcase.radiof2tlower.caption"
 msgid "små bogstaver"
-msgstr ""
+msgstr "minuscolo"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.panelf2tcase.radiof2tupper.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.panelf2tcase.radiof2tupper.caption"
 msgid "STORE BOGSTAVER"
-msgstr ""
+msgstr "MAIUSCOLO"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.panelf2tcase.radiof2ttitle.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.panelf2tcase.radiof2ttitle.caption"
 msgid "Hvert Ord Med Stort"
-msgstr ""
+msgstr "Ogni Parola Maiuscola"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.panelf2tcase.radiof2tsentence.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.panelf2tcase.radiof2tsentence.caption"
 msgid "Første bogstav stort"
-msgstr ""
+msgstr "Prima lettera maiuscola"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.labelf2thelp.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.labelf2thelp.caption"
@@ -3084,60 +3084,60 @@ msgstr ""
 #: tformmain.paneltools.pagetools.tabfiletotag.buttonf2tpreview.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.buttonf2tpreview.caption"
 msgid "Forhåndsvis..."
-msgstr ""
+msgstr "Anteprima..."
 
 #: tformmain.paneltools.pagetools.tabfiletotag.buttonf2twrite.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.buttonf2twrite.caption"
 msgid "Skriv tags"
-msgstr ""
+msgstr "Scrivi tag"
 
 #: tformmain.paneltools.panelfoldercover.labelfoldercover.caption
 msgctxt "tformmain.paneltools.panelfoldercover.labelfoldercover.caption"
 msgid "Mappens cover"
-msgstr ""
+msgstr "Copertina della cartella"
 
 #: tformmain.paneltools.panelfoldercover.labelfoldercoverinfo.caption
 msgctxt "tformmain.paneltools.panelfoldercover.labelfoldercoverinfo.caption"
 msgid "Træk et billede hertil"
-msgstr ""
+msgstr "Trascina qui un'immagine"
 
 #: tformmain.paneltools.panelfilecover.labelfilecover.caption
 msgctxt "tformmain.paneltools.panelfilecover.labelfilecover.caption"
 msgid "Filens cover"
-msgstr ""
+msgstr "Copertina del file"
 
 #: tformmain.paneltools.panelfilecover.labelfilecoverinfo.caption
 msgctxt "tformmain.paneltools.panelfilecover.labelfilecoverinfo.caption"
 msgid "Træk et billede hertil"
-msgstr ""
+msgstr "Trascina qui un'immagine"
 
 #: tformmain.paneladdress.labeladdress.caption
 msgid "Adresse:"
-msgstr ""
+msgstr "Indirizzo:"
 
 #: tformmain.panelfilter.labelfilter.caption
 msgid "Filtrer efter"
-msgstr ""
+msgstr "Filtra per"
 
 #: tformmain.panelfilter.buttonfilterapply.caption
 msgid "Filtrer!"
-msgstr ""
+msgstr "Filtra!"
 
 #: tformmain.panelfilter.buttonhideselected.caption
 msgid "Skjul valgte filer"
-msgstr ""
+msgstr "Nascondi i file selezionati"
 
 #: tformmain.panelfilter.buttonshowall.caption
 msgid "Vis alle"
-msgstr ""
+msgstr "Mostra tutti"
 
 #: tformmain.panelfolders.panelfoldersheader.labelfolders.caption
 msgid "Mapper:"
-msgstr ""
+msgstr "Cartelle:"
 
 #: tformmultiedit.caption
 msgid "Rediger flere filer"
-msgstr ""
+msgstr "Modifica più file"
 
 #: tformmultiedit.labelinfo.caption
 msgctxt "tformmultiedit.labelinfo.caption"
@@ -3147,56 +3147,56 @@ msgstr ""
 #: tformmultiedit.groupcover.caption
 msgctxt "tformmultiedit.groupcover.caption"
 msgid "Cover"
-msgstr ""
+msgstr "Copertina"
 
 #: tformmultiedit.groupcover.checkreplacecover.caption
 msgid "Erstat alle covers med:"
-msgstr ""
+msgstr "Sostituisci tutte le copertine con:"
 
 #: tformmultiedit.groupcover.buttonchoosecover.caption
 msgid "Vælg billede..."
-msgstr ""
+msgstr "Scegli immagine..."
 
 #: tformmultiedit.groupcover.labelcoverfile.caption
 msgid "(intet billede valgt)"
-msgstr ""
+msgstr "(nessuna immagine scelta)"
 
 #: tformmultiedit.groupcover.checkremovecovers.caption
 msgid "Fjern alle cover-billeder"
-msgstr ""
+msgstr "Rimuovi tutte le copertine"
 
 #: tformmultiedit.checkkeeptimestamp.caption
 msgid "Bevar filernes dato (tidsstempel)"
-msgstr ""
+msgstr "Mantieni la data dei file (timestamp)"
 
 #: tformmultiedit.buttonapply.caption
 msgctxt "tformmultiedit.buttonapply.caption"
 msgid "Gem"
-msgstr ""
+msgstr "Salva"
 
 #: tformmultiedit.buttonclose.caption
 msgctxt "tformmultiedit.buttonclose.caption"
 msgid "Luk"
-msgstr ""
+msgstr "Chiudi"
 
 #: tformmultiedit.openpicturedialog.title
 msgctxt "tformmultiedit.openpicturedialog.title"
 msgid "Vælg cover-billede"
-msgstr ""
+msgstr "Scegli l'immagine di copertina"
 
 #: tformmultiedit.openpicturedialog.filter
 msgctxt "tformmultiedit.openpicturedialog.filter"
 msgid "Billeder (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png"
-msgstr ""
+msgstr "Immagini (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png"
 
 #: tformrename.caption
 msgid "Omdøb filer ud fra tags"
-msgstr ""
+msgstr "Rinomina file dai tag"
 
 #: tformrename.labelmask.caption
 msgctxt "tformrename.labelmask.caption"
 msgid "Filnavnsmaske:"
-msgstr ""
+msgstr "Maschera nome file:"
 
 #: tformrename.labelvars.caption
 msgctxt "tformrename.labelvars.caption"
@@ -3206,35 +3206,35 @@ msgstr ""
 #: tformrename.radioscope.caption
 msgctxt "tformrename.radioscope.caption"
 msgid "Filer"
-msgstr ""
+msgstr "File"
 
 #: tformrename.labelcase.caption
 msgctxt "tformrename.labelcase.caption"
 msgid "Versaler:"
-msgstr ""
+msgstr "Maiuscole:"
 
 #: tformrename.checkunderscores.caption
 msgctxt "tformrename.checkunderscores.caption"
 msgid "Erstat mellemrum med _"
-msgstr ""
+msgstr "Sostituisci gli spazi con _"
 
 #: tformrename.checkpadtrack.caption
 msgctxt "tformrename.checkpadtrack.caption"
 msgid "Spornummer med 2 cifre (%6)"
-msgstr ""
+msgstr "Numero di traccia a 2 cifre (%6)"
 
 #: tformrename.listpreview.item0.caption
 msgid "Nuværende navn"
-msgstr ""
+msgstr "Nome attuale"
 
 #: tformrename.listpreview.item1.caption
 msgid "Nyt navn"
-msgstr ""
+msgstr "Nuovo nome"
 
 #: tformrename.listpreview.item2.caption
 msgctxt "tformrename.listpreview.item2.caption"
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #: tformrename.labelsummary.caption
 msgctxt "tformrename.labelsummary.caption"
@@ -3244,16 +3244,16 @@ msgstr ""
 #: tformrename.buttonrename.caption
 msgctxt "tformrename.buttonrename.caption"
 msgid "Omdøb"
-msgstr ""
+msgstr "Rinomina"
 
 #: tformrename.buttonclose.caption
 msgctxt "tformrename.buttonclose.caption"
 msgid "Luk"
-msgstr ""
+msgstr "Chiudi"
 
 #: tformtagedit.caption
 msgid "Rediger tag"
-msgstr ""
+msgstr "Modifica tag"
 
 #: tformtagedit.labelfile.caption
 msgid "fil"
@@ -3262,104 +3262,104 @@ msgstr ""
 #: tformtagedit.pagefields.tabgeneral.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.caption"
 msgid "Generelt"
-msgstr ""
+msgstr "Generale"
 
 #: tformtagedit.pagefields.tabgeneral.labeltitle.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.labeltitle.caption"
 msgid "Titel"
-msgstr ""
+msgstr "Titolo"
 
 #: tformtagedit.pagefields.tabgeneral.labelartist.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.labelartist.caption"
 msgid "Kunstner"
-msgstr ""
+msgstr "Artista"
 
 #: tformtagedit.pagefields.tabgeneral.labelalbum.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.labelalbum.caption"
 msgid "Album"
-msgstr ""
+msgstr "Album"
 
 #: tformtagedit.pagefields.tabgeneral.labelalbumartist.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.labelalbumartist.caption"
 msgid "Albumkunstner"
-msgstr ""
+msgstr "Artista album"
 
 #: tformtagedit.pagefields.tabgeneral.labelcomposer.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.labelcomposer.caption"
 msgid "Komponist"
-msgstr ""
+msgstr "Compositore"
 
 #: tformtagedit.pagefields.tabgeneral.labelyear.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.labelyear.caption"
 msgid "År"
-msgstr ""
+msgstr "Anno"
 
 #: tformtagedit.pagefields.tabgeneral.labeltrack.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.labeltrack.caption"
 msgid "Spor"
-msgstr ""
+msgstr "Traccia"
 
 #: tformtagedit.pagefields.tabgeneral.labeldisc.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.labeldisc.caption"
 msgid "Disc"
-msgstr ""
+msgstr "Disco"
 
 #: tformtagedit.pagefields.tabgeneral.labelgenre.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.labelgenre.caption"
 msgid "Genre"
-msgstr ""
+msgstr "Genere"
 
 #: tformtagedit.pagefields.tabgeneral.labelbpm.caption
 msgid "BPM"
-msgstr ""
+msgstr "BPM"
 
 #: tformtagedit.pagefields.tabgeneral.labelcomment.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.labelcomment.caption"
 msgid "Kommentar"
-msgstr ""
+msgstr "Commento"
 
 #: tformtagedit.pagefields.tabgeneral.labelcoverinfo.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.labelcoverinfo.caption"
 msgid "Intet billede"
-msgstr ""
+msgstr "Nessuna immagine"
 
 #: tformtagedit.pagefields.tabgeneral.buttonaddpicture.caption
 msgid "Tilføj..."
-msgstr ""
+msgstr "Aggiungi..."
 
 #: tformtagedit.pagefields.tabgeneral.buttonremovepicture.caption
 msgctxt "tformtagedit.pagefields.tabgeneral.buttonremovepicture.caption"
 msgid "Fjern"
-msgstr ""
+msgstr "Rimuovi"
 
 #: tformtagedit.pagefields.tabgeneral.buttonsavepicture.caption
 msgid "Gem som..."
-msgstr ""
+msgstr "Salva..."
 
 #: tformtagedit.pagefields.tabmore.caption
 msgid "Flere felter"
-msgstr ""
+msgstr "Altri campi"
 
 #: tformtagedit.pagefields.tabsort.caption
 msgid "Sortering"
-msgstr ""
+msgstr "Ordinamento"
 
 #: tformtagedit.pagefields.tablyrics.caption
 msgctxt "tformtagedit.pagefields.tablyrics.caption"
 msgid "Sangtekst"
-msgstr ""
+msgstr "Testo"
 
 #: tformtagedit.pagefields.tablyrics.buttonlyricsload.caption
 msgid "Indlæs fra tekstfil..."
-msgstr ""
+msgstr "Carica da file di testo..."
 
 #: tformtagedit.pagefields.tablyrics.buttonlyricssave.caption
 msgid "Gem som tekstfil..."
-msgstr ""
+msgstr "Salva come file di testo..."
 
 #: tformtagedit.pagefields.tablyrics.buttonlyricsclear.caption
 msgid "Ryd"
-msgstr ""
+msgstr "Svuota"
 
 #: tformtagedit.labelfileinfo.caption
 msgctxt "tformtagedit.labelfileinfo.caption"
@@ -3368,109 +3368,109 @@ msgstr ""
 
 #: tformtagedit.checkkeeptimestamp.caption
 msgid "Bevar filens dato (tidsstempel) ved gem"
-msgstr ""
+msgstr "Mantieni la data del file (timestamp) al salvataggio"
 
 #: tformtagedit.buttonsaveprev.caption
 msgid "Gem og forrige"
-msgstr ""
+msgstr "Salva e precedente"
 
 #: tformtagedit.buttonsave.caption
 msgctxt "tformtagedit.buttonsave.caption"
 msgid "Gem"
-msgstr ""
+msgstr "Salva"
 
 #: tformtagedit.buttonsavenext.caption
 msgid "Gem og næste"
-msgstr ""
+msgstr "Salva e successivo"
 
 #: tformtagedit.buttonclose.caption
 msgctxt "tformtagedit.buttonclose.caption"
 msgid "Luk"
-msgstr ""
+msgstr "Chiudi"
 
 #: tformtagedit.openpicturedialog.title
 msgctxt "tformtagedit.openpicturedialog.title"
 msgid "Vælg cover-billede"
-msgstr ""
+msgstr "Scegli l'immagine di copertina"
 
 #: tformtagedit.openpicturedialog.filter
 msgctxt "tformtagedit.openpicturedialog.filter"
 msgid "Billeder (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png"
-msgstr ""
+msgstr "Immagini (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png"
 
 #: tformtagedit.savepicturedialog.title
 msgid "Gem billede"
-msgstr ""
+msgstr "Salva immagine"
 
 #: tformtagedit.opentextdialog.title
 msgid "Indlæs sangtekst"
-msgstr ""
+msgstr "Carica testo"
 
 #: tformtagedit.opentextdialog.filter
 msgid "Tekstfiler (*.txt;*.lrc)|*.txt;*.lrc|Alle filer (*.*)|*.*"
-msgstr ""
+msgstr "File di testo (*.txt;*.lrc)|*.txt;*.lrc|Tutti i file (*.*)|*.*"
 
 #: tformtagedit.savetextdialog.title
 msgid "Gem sangtekst"
-msgstr ""
+msgstr "Salva testo"
 
 #: tformtagedit.savetextdialog.filter
 msgid "Tekstfil (*.txt)|*.txt"
-msgstr ""
+msgstr "File di testo (*.txt)|*.txt"
 
 #: tformtracktools.caption
 msgctxt "tformtracktools.caption"
 msgid "Spornumre"
-msgstr ""
+msgstr "Numeri di traccia"
 
 #: tformtracktools.radiomode.caption
 msgid "Handling"
-msgstr ""
+msgstr "Azione"
 
 #: tformtracktools.labelformat.caption
 msgid "Format:"
-msgstr ""
+msgstr "Formato:"
 
 #: tformtracktools.labelstart.caption
 msgid "Start ved:"
-msgstr ""
+msgstr "Inizia da:"
 
 #: tformtracktools.checkperfolder.caption
 msgid "Start forfra i hver mappe"
-msgstr ""
+msgstr "Ricomincia in ogni cartella"
 
 #: tformtracktools.radioscope.caption
 msgctxt "tformtracktools.radioscope.caption"
 msgid "Filer"
-msgstr ""
+msgstr "File"
 
 #: tformtracktools.listpreview.item0.caption
 msgctxt "tformtracktools.listpreview.item0.caption"
 msgid "Fil"
-msgstr ""
+msgstr "File"
 
 #: tformtracktools.listpreview.item1.caption
 msgid "Spor nu"
-msgstr ""
+msgstr "Traccia attuale"
 
 #: tformtracktools.listpreview.item2.caption
 msgid "Nyt spor"
-msgstr ""
+msgstr "Nuova traccia"
 
 #: tformtracktools.listpreview.item3.caption
 msgctxt "tformtracktools.listpreview.item3.caption"
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #: tformtracktools.listpreview.item4.caption
 msgctxt "tformtracktools.listpreview.item4.caption"
 msgid "Mappe"
-msgstr ""
+msgstr "Cartella"
 
 #: tformtracktools.checkkeeptimestamp.caption
 msgctxt "tformtracktools.checkkeeptimestamp.caption"
 msgid "Bevar filernes dato"
-msgstr ""
+msgstr "Mantieni la data dei file"
 
 #: tformtracktools.labelsummary.caption
 msgctxt "tformtracktools.labelsummary.caption"
@@ -3480,187 +3480,187 @@ msgstr ""
 #: tformtracktools.buttonwrite.caption
 msgctxt "tformtracktools.buttonwrite.caption"
 msgid "Gem spornumre"
-msgstr ""
+msgstr "Salva numeri di traccia"
 
 #: tformtracktools.buttonclose.caption
 msgctxt "tformtracktools.buttonclose.caption"
 msgid "Luk"
-msgstr ""
+msgstr "Chiudi"
 
 #: tformweblookup.caption
 msgid "Web-opslag"
-msgstr ""
+msgstr "Ricerca web"
 
 #: tformweblookup.buttontoken.caption
 msgctxt "tformweblookup.buttontoken.caption"
 msgid "Discogs-token..."
-msgstr ""
+msgstr "Token Discogs..."
 
 #: tformweblookup.labelartist.caption
 msgid "Kunstner:"
-msgstr ""
+msgstr "Artista:"
 
 #: tformweblookup.labelalbum.caption
 msgid "Album:"
-msgstr ""
+msgstr "Album:"
 
 #: tformweblookup.buttonsearch.caption
 msgid "Søg"
-msgstr ""
+msgstr "Cerca"
 
 #: tformweblookup.listreleases.item0.caption
 msgctxt "tformweblookup.listreleases.item0.caption"
 msgid "Kunstner"
-msgstr ""
+msgstr "Artista"
 
 #: tformweblookup.listreleases.item1.caption
 msgctxt "tformweblookup.listreleases.item1.caption"
 msgid "Album"
-msgstr ""
+msgstr "Album"
 
 #: tformweblookup.listreleases.item2.caption
 msgid "Dato"
-msgstr ""
+msgstr "Data"
 
 #: tformweblookup.listreleases.item3.caption
 msgid "Land"
-msgstr ""
+msgstr "Paese"
 
 #: tformweblookup.listreleases.item4.caption
 msgctxt "tformweblookup.listreleases.item4.caption"
 msgid "Spor"
-msgstr ""
+msgstr "Traccia"
 
 #: tformweblookup.listreleases.item5.caption
 msgctxt "tformweblookup.listreleases.item5.caption"
 msgid "Format"
-msgstr ""
+msgstr "Formato"
 
 #: tformweblookup.listreleases.item6.caption
 msgctxt "tformweblookup.listreleases.item6.caption"
 msgid "Pladeselskab"
-msgstr ""
+msgstr "Etichetta"
 
 #: tformweblookup.listreleases.item7.caption
 msgctxt "tformweblookup.listreleases.item7.caption"
 msgid "Katalognr."
-msgstr ""
+msgstr "N. catalogo"
 
 #: tformweblookup.labeltracks.caption
 msgid "Spor på den valgte udgivelse og de filer, der får dem (flyt filer med Op/Ned):"
-msgstr ""
+msgstr "Tracce della pubblicazione scelta e i file che le ricevono (sposta i file con Su/Giù):"
 
 #: tformweblookup.listtracks.item0.caption
 msgid "Nr."
-msgstr ""
+msgstr "N."
 
 #: tformweblookup.listtracks.item1.caption
 msgid "Titel (fra kilden)"
-msgstr ""
+msgstr "Titolo (dalla fonte)"
 
 #: tformweblookup.listtracks.item2.caption
 msgctxt "tformweblookup.listtracks.item2.caption"
 msgid "Kunstner"
-msgstr ""
+msgstr "Artista"
 
 #: tformweblookup.listtracks.item3.caption
 msgctxt "tformweblookup.listtracks.item3.caption"
 msgid "Længde"
-msgstr ""
+msgstr "Durata"
 
 #: tformweblookup.listtracks.item4.caption
 msgctxt "tformweblookup.listtracks.item4.caption"
 msgid "Fil"
-msgstr ""
+msgstr "File"
 
 #: tformweblookup.listtracks.item5.caption
 msgctxt "tformweblookup.listtracks.item5.caption"
 msgid "Længde"
-msgstr ""
+msgstr "Durata"
 
 #: tformweblookup.buttonup.caption
 msgctxt "tformweblookup.buttonup.caption"
 msgid "Op"
-msgstr ""
+msgstr "Su"
 
 #: tformweblookup.buttondown.caption
 msgid "Ned"
-msgstr ""
+msgstr "Giù"
 
 #: tformweblookup.groupoptions.caption
 msgid "Skriv"
-msgstr ""
+msgstr "Scrivi"
 
 #: tformweblookup.groupoptions.checktitle.caption
 msgid "Titler"
-msgstr ""
+msgstr "Titoli"
 
 #: tformweblookup.groupoptions.checkartist.caption
 msgctxt "tformweblookup.groupoptions.checkartist.caption"
 msgid "Kunstner"
-msgstr ""
+msgstr "Artista"
 
 #: tformweblookup.groupoptions.checkalbum.caption
 msgctxt "tformweblookup.groupoptions.checkalbum.caption"
 msgid "Album"
-msgstr ""
+msgstr "Album"
 
 #: tformweblookup.groupoptions.checkalbumartist.caption
 msgctxt "tformweblookup.groupoptions.checkalbumartist.caption"
 msgid "Albumkunstner"
-msgstr ""
+msgstr "Artista album"
 
 #: tformweblookup.groupoptions.checkyear.caption
 msgctxt "tformweblookup.groupoptions.checkyear.caption"
 msgid "År"
-msgstr ""
+msgstr "Anno"
 
 #: tformweblookup.groupoptions.checkyearonly.caption
 msgid "(kun årstal)"
-msgstr ""
+msgstr "(solo anno)"
 
 #: tformweblookup.groupoptions.checktrack.caption
 msgctxt "tformweblookup.groupoptions.checktrack.caption"
 msgid "Spornumre"
-msgstr ""
+msgstr "Numeri di traccia"
 
 #: tformweblookup.groupoptions.checktracktotal.caption
 msgid "(som 07/12)"
-msgstr ""
+msgstr "(come 07/12)"
 
 #: tformweblookup.groupoptions.checklabel.caption
 msgid "Pladeselskab, katalognr."
-msgstr ""
+msgstr "Etichetta, n. catalogo"
 
 #: tformweblookup.groupoptions.checkdisc.caption
 msgid "Disc-nr."
-msgstr ""
+msgstr "N. disco"
 
 #: tformweblookup.groupoptions.checkgenre.caption
 msgctxt "tformweblookup.groupoptions.checkgenre.caption"
 msgid "Genre"
-msgstr ""
+msgstr "Genere"
 
 #: tformweblookup.groupoptions.checkcovertags.caption
 msgid "Cover i filerne"
-msgstr ""
+msgstr "Copertina nei file"
 
 #: tformweblookup.groupoptions.checkcoverfolder.caption
 msgid "Cover som folder.jpg i mappen"
-msgstr ""
+msgstr "Copertina come folder.jpg nella cartella"
 
 #: tformweblookup.groupoptions.checkkeeptimestamp.caption
 msgctxt "tformweblookup.groupoptions.checkkeeptimestamp.caption"
 msgid "Bevar filernes dato"
-msgstr ""
+msgstr "Mantieni la data dei file"
 
 #: tformweblookup.buttonwrite.caption
 msgctxt "tformweblookup.buttonwrite.caption"
 msgid "Skriv tags"
-msgstr ""
+msgstr "Scrivi tag"
 
 #: tformweblookup.buttonclose.caption
 msgctxt "tformweblookup.buttonclose.caption"
 msgid "Luk"
-msgstr ""
+msgstr "Chiudi"
 

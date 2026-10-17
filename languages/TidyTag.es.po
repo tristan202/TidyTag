@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: TagKlon\n"
+"Project-Id-Version: TidyTag\n"
 "Language: es\n"
 
 #: apereader.rsfilenerforkort
@@ -1095,9 +1095,9 @@ msgstr "Idioma"
 msgid "Automatisk (Windows-sprog)"
 msgstr "Automático (idioma de Windows)"
 
-#: mainform.rssprogetskiftesnaartagklongenstartes
-msgid "Sproget skiftes, når TagKlon startes igen. Genstart nu?"
-msgstr "El idioma cambia cuando TagKlon se vuelve a iniciar. ¿Reiniciar ahora?"
+#: mainform.rssprogetskiftesnaartidytaggenstartes
+msgid "Sproget skiftes, når TidyTag startes igen. Genstart nu?"
+msgstr "El idioma cambia cuando TidyTag se vuelve a iniciar. ¿Reiniciar ahora?"
 
 #: mainform.rsmultifiltageditor
 msgid "Multi-fil-tag-editor"
@@ -1540,9 +1540,9 @@ msgstr "Conservar la fecha de los archivos al guardar"
 msgid "Tastaturgenveje"
 msgstr "Atajos de teclado"
 
-#: mainform.rsomtagklon
-msgid "Om TagKlon..."
-msgstr "Acerca de TagKlon..."
+#: mainform.rsomtidytag
+msgid "Om TidyTag..."
+msgstr "Acerca de TidyTag..."
 
 #: mainform.rsgaaenmappeop
 msgid "Gå en mappe op"
@@ -1875,8 +1875,8 @@ msgstr "Lista de reproducción con %d archivos guardada: %s"
 
 #: mainform.rslavetpersonligttokenpaa
 msgctxt "mainform.rslavetpersonligttokenpaa"
-msgid "Lav et personligt token på discogs.com: Settings > Developers > Generate new token.\nIndsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):"
-msgstr "Crea un token personal en discogs.com: Settings > Developers > Generate new token.\nPégalo aquí (solo se guarda en este equipo, en el archivo de configuración de TagKlon):"
+msgid "Lav et personligt token på discogs.com: Settings > Developers > Generate new token.\nIndsæt det her (det gemmes kun på denne computer, i TidyTags indstillingsfil):"
+msgstr "Crea un token personal en discogs.com: Settings > Developers > Generate new token.\nPégalo aquí (solo se guarda en este equipo, en el archivo de configuración de TidyTag):"
 
 #: mainform.rsdiscogstokenfjernet
 msgid "Discogs-token fjernet"
@@ -1890,13 +1890,13 @@ msgstr "Token de Discogs guardado"
 msgid "Enter / dobbeltklik\tRediger tag for den markerede fil\nMellemrum\t\tAfkryds/fjern afkrydsning på markerede filer\nF4\t\t\tOmdøb filer\nCtrl+F4\t\tMulti-fil-tag-editor\nShift+F4\t\tTags fra filnavn\nF8\t\t\tVis/skjul værktøjspanelet\nF5\t\t\tOpdater fillisten\nCtrl+E\t\tRediger flere filer\nCtrl+T\t\tSpornumre\nCtrl+W\t\tWeb-opslag\nCtrl+Z\t\tFortryd omdøbning\nCtrl+Shift+C / V\tKopiér / indsæt tag\nCtrl+Op / Ned\tFlyt markerede filer op / ned\nCtrl+Shift+X\tEksportér / importér tags\nCtrl+F\t\tFiltrér listen (Esc rydder filteret)\nCtrl+O\t\tÅbn mappe\nAlt+Backspace\tMappe op"
 msgstr "Intro / doble clic\tEditar la etiqueta del archivo seleccionado\nEspacio\t\tMarcar/desmarcar archivos seleccionados\nF4\t\t\tRenombrar archivos\nCtrl+F4\t\tEditor de etiquetas múltiple\nMayús+F4\t\tEtiquetas desde el nombre\nF8\t\t\tMostrar/ocultar el panel de herramientas\nF5\t\t\tActualizar lista de archivos\nCtrl+E\t\tEditar varios archivos\nCtrl+T\t\tNúmeros de pista\nCtrl+W\t\tBúsqueda web\nCtrl+Z\t\tDeshacer cambio de nombre\nCtrl+Mayús+C / V\tCopiar / pegar etiqueta\nCtrl+Arriba / Abajo\tSubir / bajar archivos seleccionados\nCtrl+Mayús+X\tExportar / importar etiquetas\nCtrl+F\t\tFiltrar la lista (Esc borra el filtro)\nCtrl+O\t\tAbrir carpeta\nAlt+Retroceso\tCarpeta superior"
 
-#: mainform.rsomtagklon2
-msgid "Om TagKlon"
-msgstr "Acerca de TagKlon"
+#: mainform.rsomtidytag2
+msgid "Om TidyTag"
+msgstr "Acerca de TidyTag"
 
-#: mainform.rstagklontageditorogmusikorganisator
-msgid "TagKlon - tag-editor og musikorganisator\nLavet i Lazarus / Free Pascal."
-msgstr "TagKlon - editor de etiquetas y organizador de música\nHecho con Lazarus / Free Pascal."
+#: mainform.rstidytagtageditorogmusikorganisator
+msgid "TidyTag - tag-editor og musikorganisator\nLavet i Lazarus / Free Pascal."
+msgstr "TidyTag - editor de etiquetas y organizador de música\nHecho con Lazarus / Free Pascal."
 
 #: mainform.rswebdatamusicbrainzmusicbrainzorg
 msgid "Web-data: MusicBrainz (musicbrainz.org), Cover Art Archive og Discogs.\nIkoner: Lazarus \"general_purpose\" af Roland Hahn (CC0)."
@@ -2647,8 +2647,8 @@ msgstr "Pulsa Buscar."
 
 #: weblookupform.rslavetpersonligttokenpaa
 msgctxt "weblookupform.rslavetpersonligttokenpaa"
-msgid "Lav et personligt token på discogs.com: Settings > Developers > Generate new token.\nIndsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):"
-msgstr "Crea un token personal en discogs.com: Settings > Developers > Generate new token.\nPégalo aquí (solo se guarda en este equipo, en el archivo de configuración de TagKlon):"
+msgid "Lav et personligt token på discogs.com: Settings > Developers > Generate new token.\nIndsæt det her (det gemmes kun på denne computer, i TidyTags indstillingsfil):"
+msgstr "Crea un token personal en discogs.com: Settings > Developers > Generate new token.\nPégalo aquí (solo se guarda en este equipo, en el archivo de configuración de TidyTag):"
 
 #: weblookupform.rsdiscogstokenfjernet
 msgid "Discogs-token fjernet."
@@ -2891,7 +2891,7 @@ msgid "Luk"
 msgstr "Cerrar"
 
 #: tformmain.caption
-msgid "TagKlon"
+msgid "TidyTag"
 msgstr ""
 
 #: tformmain.paneltools.pagetools.tabrename.caption

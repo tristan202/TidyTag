@@ -42,7 +42,7 @@ type
   EWebError = class(Exception);
 
 const
-  UserAgent = 'TagKlon/0.1 ( personal music tag editor )';
+  UserAgent = 'TidyTag/0.1 ( personal music tag editor )';
 
 { Plain HTTP GET. Returns the status code (200, 404, ...); raises EWebError on network errors.
   ExtraHeaders: e.g. 'Authorization: ...'#13#10. }

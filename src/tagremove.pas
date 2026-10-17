@@ -4,7 +4,7 @@ unit TagRemove;
   their whole ID3v2, APE and ID3v1 tags; WAV/AIFF lose their ID3 and LIST/INFO chunks
   (AIFF also its NAME/AUTH/ANNO/(c) text chunks).
   The other formats keep their tag structure (it holds stream data too), but every field
-  TagKlon knows and every picture is cleared; technical fields such as ReplayGain stay.
+  TidyTag knows and every picture is cleared; technical fields such as ReplayGain stay.
   The audio data is never changed. }
 
 {$mode objfpc}{$H+}

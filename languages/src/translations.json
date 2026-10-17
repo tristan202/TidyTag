@@ -871,13 +871,13 @@
   "sv": "Automatiskt (Windows-språk)",
   "es": "Automático (idioma de Windows)"
  },
- "Sproget skiftes, når TagKlon startes igen. Genstart nu?": {
-  "en": "The language changes when TagKlon is started again. Restart now?",
-  "de": "Die Sprache wird beim nächsten Start von TagKlon gewechselt. Jetzt neu starten?",
-  "fr": "La langue change au prochain démarrage de TagKlon. Redémarrer maintenant ?",
-  "it": "La lingua cambia al prossimo avvio di TagKlon. Riavviare ora?",
-  "sv": "Språket byts när TagKlon startas igen. Starta om nu?",
-  "es": "El idioma cambia cuando TagKlon se vuelve a iniciar. ¿Reiniciar ahora?"
+ "Sproget skiftes, når TidyTag startes igen. Genstart nu?": {
+  "en": "The language changes when TidyTag is started again. Restart now?",
+  "de": "Die Sprache wird beim nächsten Start von TidyTag gewechselt. Jetzt neu starten?",
+  "fr": "La langue change au prochain démarrage de TidyTag. Redémarrer maintenant ?",
+  "it": "La lingua cambia al prossimo avvio di TidyTag. Riavviare ora?",
+  "sv": "Språket byts när TidyTag startas igen. Starta om nu?",
+  "es": "El idioma cambia cuando TidyTag se vuelve a iniciar. ¿Reiniciar ahora?"
  },
  "Multi-fil-tag-editor": {
   "en": "Multi-file tag editor",
@@ -1655,13 +1655,13 @@
   "sv": "Kortkommandon",
   "es": "Atajos de teclado"
  },
- "Om TagKlon...": {
-  "en": "About TagKlon...",
-  "de": "Über TagKlon...",
-  "fr": "À propos de TagKlon...",
-  "it": "Informazioni su TagKlon...",
-  "sv": "Om TagKlon...",
-  "es": "Acerca de TagKlon..."
+ "Om TidyTag...": {
+  "en": "About TidyTag...",
+  "de": "Über TidyTag...",
+  "fr": "À propos de TidyTag...",
+  "it": "Informazioni su TidyTag...",
+  "sv": "Om TidyTag...",
+  "es": "Acerca de TidyTag..."
  },
  "Gå en mappe op": {
   "en": "Go up one folder",
@@ -2271,13 +2271,13 @@
   "sv": "Spellista med %d filer sparad: %s",
   "es": "Lista de reproducción con %d archivos guardada: %s"
  },
- "Lav et personligt token på discogs.com: Settings > Developers > Generate new token.\nIndsæt det her (det gemmes kun på denne computer, i TagKlons indstillingsfil):": {
-  "en": "Create a personal token on discogs.com: Settings > Developers > Generate new token.\nPaste it here (it is only stored on this computer, in TagKlon's settings file):",
-  "de": "Erstelle ein persönliches Token auf discogs.com: Settings > Developers > Generate new token.\nFüge es hier ein (es wird nur auf diesem Computer in der Einstellungsdatei von TagKlon gespeichert):",
-  "fr": "Créez un jeton personnel sur discogs.com : Settings > Developers > Generate new token.\nCollez-le ici (il est enregistré uniquement sur cet ordinateur, dans le fichier de paramètres de TagKlon) :",
-  "it": "Crea un token personale su discogs.com: Settings > Developers > Generate new token.\nIncollalo qui (viene salvato solo su questo computer, nel file di impostazioni di TagKlon):",
-  "sv": "Skapa en personlig token på discogs.com: Settings > Developers > Generate new token.\nKlistra in den här (den sparas bara på den här datorn, i TagKlons inställningsfil):",
-  "es": "Crea un token personal en discogs.com: Settings > Developers > Generate new token.\nPégalo aquí (solo se guarda en este equipo, en el archivo de configuración de TagKlon):"
+ "Lav et personligt token på discogs.com: Settings > Developers > Generate new token.\nIndsæt det her (det gemmes kun på denne computer, i TidyTags indstillingsfil):": {
+  "en": "Create a personal token on discogs.com: Settings > Developers > Generate new token.\nPaste it here (it is only stored on this computer, in TidyTag's settings file):",
+  "de": "Erstelle ein persönliches Token auf discogs.com: Settings > Developers > Generate new token.\nFüge es hier ein (es wird nur auf diesem Computer in der Einstellungsdatei von TidyTag gespeichert):",
+  "fr": "Créez un jeton personnel sur discogs.com : Settings > Developers > Generate new token.\nCollez-le ici (il est enregistré uniquement sur cet ordinateur, dans le fichier de paramètres de TidyTag) :",
+  "it": "Crea un token personale su discogs.com: Settings > Developers > Generate new token.\nIncollalo qui (viene salvato solo su questo computer, nel file di impostazioni di TidyTag):",
+  "sv": "Skapa en personlig token på discogs.com: Settings > Developers > Generate new token.\nKlistra in den här (den sparas bara på den här datorn, i TidyTags inställningsfil):",
+  "es": "Crea un token personal en discogs.com: Settings > Developers > Generate new token.\nPégalo aquí (solo se guarda en este equipo, en el archivo de configuración de TidyTag):"
  },
  "Discogs-token fjernet": {
   "en": "Discogs token removed",
@@ -2303,21 +2303,21 @@
   "sv": "Enter / dubbelklick\tRedigera taggen för den markerade filen\nMellanslag\t\tBocka för/avbocka markerade filer\nF4\t\t\tByt namn på filer\nCtrl+F4\t\tTaggredigerare för flera filer\nSkift+F4\t\tTaggar från filnamn\nF8\t\t\tVisa/dölj verktygspanelen\nF5\t\t\tUppdatera fillistan\nCtrl+E\t\tRedigera flera filer\nCtrl+T\t\tSpårnummer\nCtrl+W\t\tWebbsökning\nCtrl+Z\t\tÅngra namnbyte\nCtrl+Skift+C / V\tKopiera / klistra in tagg\nCtrl+Upp / Ned\tFlytta markerade filer upp / ned\nCtrl+Skift+X\tExportera / importera taggar\nCtrl+F\t\tFiltrera listan (Esc rensar filtret)\nCtrl+O\t\tÖppna mapp\nAlt+Backsteg\tMapp upp",
   "es": "Intro / doble clic\tEditar la etiqueta del archivo seleccionado\nEspacio\t\tMarcar/desmarcar archivos seleccionados\nF4\t\t\tRenombrar archivos\nCtrl+F4\t\tEditor de etiquetas múltiple\nMayús+F4\t\tEtiquetas desde el nombre\nF8\t\t\tMostrar/ocultar el panel de herramientas\nF5\t\t\tActualizar lista de archivos\nCtrl+E\t\tEditar varios archivos\nCtrl+T\t\tNúmeros de pista\nCtrl+W\t\tBúsqueda web\nCtrl+Z\t\tDeshacer cambio de nombre\nCtrl+Mayús+C / V\tCopiar / pegar etiqueta\nCtrl+Arriba / Abajo\tSubir / bajar archivos seleccionados\nCtrl+Mayús+X\tExportar / importar etiquetas\nCtrl+F\t\tFiltrar la lista (Esc borra el filtro)\nCtrl+O\t\tAbrir carpeta\nAlt+Retroceso\tCarpeta superior"
  },
- "Om TagKlon": {
-  "en": "About TagKlon",
-  "de": "Über TagKlon",
-  "fr": "À propos de TagKlon",
-  "it": "Informazioni su TagKlon",
-  "sv": "Om TagKlon",
-  "es": "Acerca de TagKlon"
+ "Om TidyTag": {
+  "en": "About TidyTag",
+  "de": "Über TidyTag",
+  "fr": "À propos de TidyTag",
+  "it": "Informazioni su TidyTag",
+  "sv": "Om TidyTag",
+  "es": "Acerca de TidyTag"
  },
- "TagKlon - tag-editor og musikorganisator\nLavet i Lazarus / Free Pascal.": {
-  "en": "TagKlon - tag editor and music organizer\nMade with Lazarus / Free Pascal.",
-  "de": "TagKlon - Tag-Editor und Musikorganisator\nErstellt mit Lazarus / Free Pascal.",
-  "fr": "TagKlon - éditeur de tags et organiseur de musique\nRéalisé avec Lazarus / Free Pascal.",
-  "it": "TagKlon - editor di tag e organizzatore musicale\nRealizzato con Lazarus / Free Pascal.",
-  "sv": "TagKlon - taggredigerare och musikorganiserare\nGjord med Lazarus / Free Pascal.",
-  "es": "TagKlon - editor de etiquetas y organizador de música\nHecho con Lazarus / Free Pascal."
+ "TidyTag - tag-editor og musikorganisator\nLavet i Lazarus / Free Pascal.": {
+  "en": "TidyTag - tag editor and music organizer\nMade with Lazarus / Free Pascal.",
+  "de": "TidyTag - Tag-Editor und Musikorganisator\nErstellt mit Lazarus / Free Pascal.",
+  "fr": "TidyTag - éditeur de tags et organiseur de musique\nRéalisé avec Lazarus / Free Pascal.",
+  "it": "TidyTag - editor di tag e organizzatore musicale\nRealizzato con Lazarus / Free Pascal.",
+  "sv": "TidyTag - taggredigerare och musikorganiserare\nGjord med Lazarus / Free Pascal.",
+  "es": "TidyTag - editor de etiquetas y organizador de música\nHecho con Lazarus / Free Pascal."
  },
  "Web-data: MusicBrainz (musicbrainz.org), Cover Art Archive og Discogs.\nIkoner: Lazarus \"general_purpose\" af Roland Hahn (CC0).": {
   "en": "Web data: MusicBrainz (musicbrainz.org), Cover Art Archive and Discogs.\nIcons: Lazarus \"general_purpose\" by Roland Hahn (CC0).",

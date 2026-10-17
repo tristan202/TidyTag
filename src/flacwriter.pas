@@ -136,7 +136,7 @@ begin
   Entries := TStringList.Create;
   Dest := TBytesStream.Create;
   try
-    Vendor := 'TagKlon';
+    Vendor := 'TidyTag';
     if OldBody <> nil then
     begin
       P := OldStart;

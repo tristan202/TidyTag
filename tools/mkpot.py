@@ -1,4 +1,4 @@
-"""Builds languages/TagKlon.pot and updates languages/TagKlon.<lang>.po.
+"""Builds languages/TidyTag.pot and updates languages/TidyTag.<lang>.po.
 
 Sources: the .rsj files the compiler writes for every unit with resourcestrings
 (run lazbuild first) and the string properties of the forms (.lfm).
@@ -114,7 +114,7 @@ def read_po(path):
 
 def header(lang):
     h = ('msgid ""\nmsgstr ""\n"Content-Type: text/plain; charset=UTF-8\\n"\n'
-         '"Content-Transfer-Encoding: 8bit\\n"\n"Project-Id-Version: TagKlon\\n"\n')
+         '"Content-Transfer-Encoding: 8bit\\n"\n"Project-Id-Version: TidyTag\\n"\n')
     if lang:
         h += f'"Language: {lang}\\n"\n'
     return h + '\n'
@@ -149,17 +149,17 @@ def main():
             seen.add(ident)
             unique.append((ident, value))
     os.makedirs(OUT, exist_ok=True)
-    write(os.path.join(OUT, 'TagKlon.pot'), unique, '')
-    print(f'TagKlon.pot: {len(unique)} entries, {len(set(v for _, v in unique))} distinct texts')
+    write(os.path.join(OUT, 'TidyTag.pot'), unique, '')
+    print(f'TidyTag.pot: {len(unique)} entries, {len(set(v for _, v in unique))} distinct texts')
     # translations: languages/src/translations.json {danish text: {lang: text}} (line breaks
     # as \n); texts missing there keep what the po file already has
     tj = os.path.join(OUT, 'src', 'translations.json')
     table = json.load(open(tj, encoding='utf-8')) if os.path.exists(tj) else {}
     langs = sorted(set(['da'] + [l for d in table.values() for l in d] +
-                       [p.split('.')[-2] for p in glob.glob(os.path.join(OUT, 'TagKlon.*.po'))]))
+                       [p.split('.')[-2] for p in glob.glob(os.path.join(OUT, 'TidyTag.*.po'))]))
     fmt = re.compile(r'%[dsx]|%\.\d+x')
     for lang in langs:
-        path = os.path.join(OUT, f'TagKlon.{lang}.po')
+        path = os.path.join(OUT, f'TidyTag.{lang}.po')
         full, by_id = read_po(path)
         for _, value in unique:
             t = table.get(value.replace('\r\n', '\n'), {}).get(lang)
