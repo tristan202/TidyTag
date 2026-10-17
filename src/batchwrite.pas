@@ -96,6 +96,7 @@ begin
       end;
     end;
     for F in Fields do Info.Fields[F] := Values[F];
+    Info.Fields[tfAlbumArtist] := Full.Fields[tfAlbumArtist]; // the album artist rule may set it
     Info.HasCover := Length(Full.Pictures) > 0;
     Result := True;
   finally

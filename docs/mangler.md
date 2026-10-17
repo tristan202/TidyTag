@@ -10,9 +10,9 @@ dagligt brug, **B** = nyttigt, **C** = sjældent/nichepræget, **–** = droppes
 | Byt felter: Kunstner ↔ Titel, Kunstner ↔ Album, Album ↔ Titel, avanceret (vilkårlige felter) | **Færdig** | Klassiker efter forkert "tags fra filnavn" |
 | Kopiér tekst fra ét tag-felt til et andet | **Færdig** | Fx Kunstner → Albumkunstner |
 | Fjern mellemrum (efterstillede / foran og bagved) i alle felter | **Færdig** | |
-| Kunstner-værktøjer: fjern indledende "The", "The Artist" ↔ "Artist, The", "Fornavn Efternavn" ↔ "Efternavn, Fornavn" | B | Kan også skrive til sorteringsfelterne |
+| Kunstner-værktøjer: fjern indledende "The", "The Artist" ↔ "Artist, The", "Fornavn Efternavn" ↔ "Efternavn, Fornavn" | **Færdig** | Kan også skrive til sorteringsfelterne |
 | Fjern tags helt (Ctrl+Del) | **Færdig** | Pr. tagtype (ID3v1/ID3v2/APE ...) |
-| Mp3-tag-synkronisering: ID3v1 → ID3v2 eller omvendt (spring over / kun tomme felter / alle felter) | B | |
+| Mp3-tag-synkronisering: ID3v1 → ID3v2 eller omvendt (spring over / kun tomme felter / alle felter) | **Færdig** | |
 | Spornummer: "x/xx"-format, automatisk episodenummer | C | Formatering findes allerede |
 | Skift filtype .mp4 → .m4a og .mp4/.m4a → .m4b | C | |
 
@@ -62,14 +62,14 @@ dagligt brug, **B** = nyttigt, **C** = sjældent/nichepræget, **–** = droppes
 ## Indsæt tag
 | Funktion | Prioritet | Bemærkning |
 |---|---|---|
-| Vælg hvilke felter der *ikke* indsættes (titel, spor, BPM, kunstner, sangtekst) | B | Vi springer fast over titel og spor |
+| Vælg hvilke felter der *ikke* indsættes (titel, spor, BPM, kunstner, sangtekst) | **Færdig** | Vi springer fast over titel og spor |
 
 ## Indstillinger (dialog)
 | Funktion | Prioritet | Bemærkning |
 |---|---|---|
 | Samlet indstillingsdialog | B | Nu spredt i menuer |
 | ID3v2: gem altid i Unicode / ASCII hvis muligt | C | Vi gemmer UTF-16 ved behov |
-| Kopiér Kunstner → Albumkunstner (hvis tom / altid) | B | |
+| Kopiér Kunstner → Albumkunstner (hvis tom / altid) | **Færdig** | |
 | Afspiller pr. filtype | C | Vi bruger Windows' standardprogram |
 | Playliste: EXTINF, fulde stier, hurtig-gem uden dialog | C | |
 | Startmappe, skriftstørrelse | C | |

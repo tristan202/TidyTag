@@ -8,18 +8,22 @@ unit ToolDialogs;
 interface
 
 uses
-  Classes, SysUtils, AudioTypes, AppSettings;
+  Classes, SysUtils, AudioTypes, AppSettings, BatchWrite, ID3Sync;
 
 { Returns False when cancelled. ShowCheck adds a check box (Check = its state). }
 function AskFieldPair(const Title, FromCaption, ToCaption, CheckCaption: string;
   var A, B: TTagField; var Check: Boolean): Boolean;
 function EditRenameWords(var Words: TRenameWords): Boolean;
 function EditRenameActions(var Actions: TRenameActions; const CurrentFileMask: string): Boolean;
+function AskID3Sync(var Direction: TSyncDirection; var Existing: TSyncExisting): Boolean;
+{ Ticks the fields to paste; only fields with a value in Values are listed. }
+function AskFieldSet(const Title, Prompt: string; const Values: TFieldValues;
+  var Fields: TTagFieldSet): Boolean;
 
 implementation
 
 uses
-  Forms, Controls, Graphics, StdCtrls, ExtCtrls, Grids, Dialogs, ButtonPanel;
+  Forms, Controls, Graphics, StdCtrls, ExtCtrls, Grids, Dialogs, ButtonPanel, CheckLst;
 
 resourcestring
   rsFra = 'Fra:';
@@ -42,6 +46,18 @@ resourcestring
     'derefter deres mapper med mappemasken. Versaler og ordudskiftninger følger indstillingerne ' +
     'i fanebladet Omdøb filer. Handlingerne findes i menuen Værktøjer.';
   rsGivHandlingenEtNavn = 'Giv handlingen et navn og mindst én maske.';
+  rsMpTagSynkronisering = 'Mp3-tag-synkronisering';
+  rsRetning = 'Retning';
+  rsIdV1TilIdV2 = 'Kopiér fra ID3v1 til ID3v2';
+  rsIdV2TilIdV1 = 'Kopiér fra ID3v2 til ID3v1 (opretter ID3v1 om nødvendigt)';
+  rsHvisTagFindes = 'Hvis måltagget allerede findes';
+  rsSkrivIkke = 'Skriv ikke tagget';
+  rsKunTommeFelter = 'Udfyld kun tomme felter';
+  rsOverskrivFelter = 'Overskriv felterne';
+  rsSyncHjaelp = 'Felter: titel, kunstner, album, år, kommentar, spor og genre. ID3v1 kan kun rumme ' +
+    '30 tegn pr. felt og kun vesteuropæiske bogstaver.';
+  rsAlle = 'Alle';
+  rsIngen = 'Ingen';
 
 function NewDialog(const Title: string; W, H: Integer): TForm;
 begin
@@ -379,6 +395,118 @@ begin
     Actions := E.Items;
   finally
     E.Free;
+    F.Free;
+  end;
+end;
+
+function AskID3Sync(var Direction: TSyncDirection; var Existing: TSyncExisting): Boolean;
+var
+  F: TForm;
+  RD, RE: TRadioGroup;
+begin
+  F := NewDialog(rsMpTagSynkronisering, 440, 300);
+  try
+    RD := TRadioGroup.Create(F);
+    RD.Parent := F;
+    RD.Caption := rsRetning;
+    RD.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(10), F.Scale96ToForm(416), F.Scale96ToForm(70));
+    RD.Items.Add(rsIdV1TilIdV2);
+    RD.Items.Add(rsIdV2TilIdV1);
+    RD.ItemIndex := Ord(Direction);
+    RE := TRadioGroup.Create(F);
+    RE.Parent := F;
+    RE.Caption := rsHvisTagFindes;
+    RE.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(88), F.Scale96ToForm(416), F.Scale96ToForm(90));
+    RE.Items.Add(rsSkrivIkke);
+    RE.Items.Add(rsKunTommeFelter);
+    RE.Items.Add(rsOverskrivFelter);
+    RE.ItemIndex := Ord(Existing);
+    with AddLabel(F, rsSyncHjaelp, 12, 186) do
+    begin
+      WordWrap := True;
+      AutoSize := False;
+      Width := F.Scale96ToForm(416);
+      Height := F.Scale96ToForm(56);
+      Font.Color := clGrayText;
+    end;
+    AddButtons(F);
+    Result := F.ShowModal = mrOK;
+    if Result then
+    begin
+      Direction := TSyncDirection(RD.ItemIndex);
+      Existing := TSyncExisting(RE.ItemIndex);
+    end;
+  finally
+    F.Free;
+  end;
+end;
+
+type
+  TCheckAll = class
+    List: TCheckListBox;
+    procedure AllClick(Sender: TObject);
+    procedure NoneClick(Sender: TObject);
+  end;
+
+procedure TCheckAll.AllClick(Sender: TObject);
+begin
+  List.CheckAll(cbChecked);
+end;
+
+procedure TCheckAll.NoneClick(Sender: TObject);
+begin
+  List.CheckAll(cbUnchecked);
+end;
+
+function AskFieldSet(const Title, Prompt: string; const Values: TFieldValues;
+  var Fields: TTagFieldSet): Boolean;
+var
+  F: TForm;
+  H: TCheckAll;
+  B: TButton;
+  T: TTagField;
+  Map: array of TTagField;
+  I: Integer;
+  V: string;
+begin
+  F := NewDialog(Title, 460, 420);
+  H := TCheckAll.Create;
+  try
+    AddLabel(F, Prompt, 12, 10);
+    H.List := TCheckListBox.Create(F);
+    H.List.Parent := F;
+    H.List.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(30), F.Scale96ToForm(436), F.Scale96ToForm(300));
+    Map := nil;
+    for T := Low(TTagField) to High(TTagField) do
+      if Values[T] <> '' then
+      begin
+        V := StringReplace(Values[T], LineEnding, ' / ', [rfReplaceAll]);
+        if Length(V) > 60 then V := Copy(V, 1, 57) + '...';
+        H.List.Items.Add(TagFieldCaptions[T] + ':  ' + V);
+        H.List.Checked[H.List.Count - 1] := T in Fields;
+        SetLength(Map, Length(Map) + 1);
+        Map[High(Map)] := T;
+      end;
+    B := TButton.Create(F);
+    B.Parent := F;
+    B.Caption := rsAlle;
+    B.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(336), F.Scale96ToForm(90), F.Scale96ToForm(26));
+    B.OnClick := @H.AllClick;
+    B := TButton.Create(F);
+    B.Parent := F;
+    B.Caption := rsIngen;
+    B.SetBounds(F.Scale96ToForm(108), F.Scale96ToForm(336), F.Scale96ToForm(90), F.Scale96ToForm(26));
+    B.OnClick := @H.NoneClick;
+    AddButtons(F);
+    Result := F.ShowModal = mrOK;
+    if Result then
+    begin
+      // fields without a value keep their previous choice
+      for I := 0 to High(Map) do
+        if H.List.Checked[I] then Include(Fields, Map[I]) else Exclude(Fields, Map[I]);
+    end;
+  finally
+    H.Free;
     F.Free;
   end;
 end;

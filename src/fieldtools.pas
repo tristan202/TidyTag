@@ -26,6 +26,13 @@ function PlanCopy(Info: TAudioInfo; Src, Dst: TTagField; OnlyIfEmpty: Boolean): 
 function PlanCleanSpaces(Info: TAudioInfo): TFieldPlan;
 function CleanSpaces(const S: string; Collapse: Boolean): string;
 
+type
+  { Artist tools; several artists in one field ('A; B') are handled one by one. }
+  TNameTool = (ntRemoveThe, ntTheToEnd, ntTheToFront, ntNameToSurnameFirst, ntSurnameFirstToName);
+
+function ApplyNameTool(const S: string; Tool: TNameTool): string;
+function PlanNameTool(Info: TAudioInfo; F: TTagField; Tool: TNameTool): TFieldPlan;
+
 implementation
 
 procedure ClearPlan(out P: TFieldPlan);
@@ -77,6 +84,62 @@ begin
       Result.Values[F] := CleanSpaces(Info.Fields[F], not (F in [tfLyrics, tfComment]));
       Include(Result.Fields, F);
     end;
+end;
+
+function NameToolOne(const S: string; Tool: TNameTool): string;
+var
+  P: Integer;
+  T: string;
+begin
+  Result := S;
+  T := Trim(S);
+  case Tool of
+    ntRemoveThe:
+      if SameText(Copy(T, 1, 4), 'The ') then Result := Trim(Copy(T, 5, MaxInt));
+    ntTheToEnd:
+      if SameText(Copy(T, 1, 4), 'The ') then Result := Trim(Copy(T, 5, MaxInt)) + ', ' + Copy(T, 1, 3);
+    ntTheToFront:
+      if SameText(Copy(T, Length(T) - 4, 5), ', The') then
+        Result := Copy(T, Length(T) - 2, 3) + ' ' + Trim(Copy(T, 1, Length(T) - 5));
+    ntNameToSurnameFirst:
+      if Pos(',', T) = 0 then
+      begin
+        P := LastDelimiter(' ', T);
+        if P > 1 then Result := Copy(T, P + 1, MaxInt) + ', ' + Trim(Copy(T, 1, P - 1));
+      end;
+    ntSurnameFirstToName:
+      begin
+        P := Pos(', ', T);
+        if (P > 1) and (Pos(',', Copy(T, P + 2, MaxInt)) = 0) then
+          Result := Trim(Copy(T, P + 2, MaxInt)) + ' ' + Copy(T, 1, P - 1);
+      end;
+  end;
+end;
+
+function ApplyNameTool(const S: string; Tool: TNameTool): string;
+var
+  Parts: TStringArray;
+  I: Integer;
+begin
+  Parts := S.Split(['; ']);
+  Result := '';
+  for I := 0 to High(Parts) do
+  begin
+    if I > 0 then Result := Result + '; ';
+    Result := Result + NameToolOne(Parts[I], Tool);
+  end;
+end;
+
+function PlanNameTool(Info: TAudioInfo; F: TTagField; Tool: TNameTool): TFieldPlan;
+var
+  V: string;
+begin
+  ClearPlan(Result);
+  if Info.Fields[F] = '' then Exit;
+  V := ApplyNameTool(Info.Fields[F], Tool);
+  if V = Info.Fields[F] then Exit;
+  Result.Values[F] := V;
+  Result.Fields := [F];
 end;
 
 end.

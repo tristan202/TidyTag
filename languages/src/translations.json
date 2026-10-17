@@ -4814,5 +4814,197 @@
   "it": "Dai un nome all'azione e almeno una maschera.",
   "sv": "Ge åtgärden ett namn och minst en mask.",
   "es": "Dale un nombre a la acción y al menos una máscara."
+ },
+ "Vælg de felter, der indsættes i %d filer:": {
+  "en": "Choose the fields to paste into %d files:",
+  "de": "Felder wählen, die in %d Dateien eingefügt werden:",
+  "fr": "Choisissez les champs à coller dans %d fichiers :",
+  "it": "Scegli i campi da incollare in %d file:",
+  "sv": "Välj de fält som klistras in i %d filer:",
+  "es": "Elige los campos que se pegan en %d archivos:"
+ },
+ "Kunstner-værktøjer": {
+  "en": "Artist tools",
+  "de": "Interpret-Werkzeuge",
+  "fr": "Outils d'artiste",
+  "it": "Strumenti artista",
+  "sv": "Artistverktyg",
+  "es": "Herramientas de artista"
+ },
+ "Fjern \"The\" forrest i Kunstner": {
+  "en": "Remove leading \"The\" from Artist",
+  "de": "Führendes \"The\" aus Interpret entfernen",
+  "fr": "Supprimer « The » au début de l'artiste",
+  "it": "Rimuovi \"The\" iniziale da Artista",
+  "sv": "Ta bort inledande \"The\" i Artist",
+  "es": "Quitar \"The\" inicial del artista"
+ },
+ "\"The Artist\" → \"Artist, The\"": {
+  "en": "\"The Artist\" → \"Artist, The\"",
+  "de": "\"The Artist\" → \"Artist, The\"",
+  "fr": "« The Artist » → « Artist, The »",
+  "it": "\"The Artist\" → \"Artist, The\"",
+  "sv": "\"The Artist\" → \"Artist, The\"",
+  "es": "\"The Artist\" → \"Artist, The\""
+ },
+ "\"Artist, The\" → \"The Artist\"": {
+  "en": "\"Artist, The\" → \"The Artist\"",
+  "de": "\"Artist, The\" → \"The Artist\"",
+  "fr": "« Artist, The » → « The Artist »",
+  "it": "\"Artist, The\" → \"The Artist\"",
+  "sv": "\"Artist, The\" → \"The Artist\"",
+  "es": "\"Artist, The\" → \"The Artist\""
+ },
+ "\"Fornavn Efternavn\" → \"Efternavn, Fornavn\"": {
+  "en": "\"First Last\" → \"Last, First\"",
+  "de": "\"Vorname Nachname\" → \"Nachname, Vorname\"",
+  "fr": "« Prénom Nom » → « Nom, Prénom »",
+  "it": "\"Nome Cognome\" → \"Cognome, Nome\"",
+  "sv": "\"Förnamn Efternamn\" → \"Efternamn, Förnamn\"",
+  "es": "\"Nombre Apellido\" → \"Apellido, Nombre\""
+ },
+ "\"Efternavn, Fornavn\" → \"Fornavn Efternavn\"": {
+  "en": "\"Last, First\" → \"First Last\"",
+  "de": "\"Nachname, Vorname\" → \"Vorname Nachname\"",
+  "fr": "« Nom, Prénom » → « Prénom Nom »",
+  "it": "\"Cognome, Nome\" → \"Nome Cognome\"",
+  "sv": "\"Efternamn, Förnamn\" → \"Förnamn Efternamn\"",
+  "es": "\"Apellido, Nombre\" → \"Nombre Apellido\""
+ },
+ "Mp3-tag-synkronisering...": {
+  "en": "MP3 tag synchronization...",
+  "de": "MP3-Tag-Synchronisierung...",
+  "fr": "Synchronisation des tags MP3...",
+  "it": "Sincronizzazione tag MP3...",
+  "sv": "Synkronisering av mp3-taggar...",
+  "es": "Sincronización de etiquetas MP3..."
+ },
+ "Kopiér felterne mellem ID3v1 og ID3v2 i mp3-filer": {
+  "en": "Copy the fields between ID3v1 and ID3v2 in MP3 files",
+  "de": "Felder zwischen ID3v1 und ID3v2 in MP3-Dateien kopieren",
+  "fr": "Copier les champs entre ID3v1 et ID3v2 dans les fichiers MP3",
+  "it": "Copia i campi tra ID3v1 e ID3v2 nei file MP3",
+  "sv": "Kopiera fälten mellan ID3v1 och ID3v2 i mp3-filer",
+  "es": "Copiar los campos entre ID3v1 e ID3v2 en archivos MP3"
+ },
+ "Mp3-tag-synkronisering": {
+  "en": "MP3 tag synchronization",
+  "de": "MP3-Tag-Synchronisierung",
+  "fr": "Synchronisation des tags MP3",
+  "it": "Sincronizzazione tag MP3",
+  "sv": "Synkronisering av mp3-taggar",
+  "es": "Sincronización de etiquetas MP3"
+ },
+ "Ingen af de afkrydsede/markerede filer er mp3-filer.": {
+  "en": "None of the checked/selected files are MP3 files.",
+  "de": "Keine der abgehakten/markierten Dateien ist eine MP3-Datei.",
+  "fr": "Aucun des fichiers cochés/sélectionnés n'est un fichier MP3.",
+  "it": "Nessuno dei file spuntati/selezionati è un file MP3.",
+  "sv": "Ingen av de förbockade/markerade filerna är mp3-filer.",
+  "es": "Ninguno de los archivos marcados/seleccionados es MP3."
+ },
+ "Synkronisér tags i %d mp3-filer?": {
+  "en": "Synchronize tags in %d MP3 files?",
+  "de": "Tags in %d MP3-Dateien synchronisieren?",
+  "fr": "Synchroniser les tags de %d fichiers MP3 ?",
+  "it": "Sincronizzare i tag in %d file MP3?",
+  "sv": "Synkronisera taggar i %d mp3-filer?",
+  "es": "¿Sincronizar las etiquetas de %d archivos MP3?"
+ },
+ "Albumkunstner ved gem": {
+  "en": "Album artist when saving",
+  "de": "Album-Interpret beim Speichern",
+  "fr": "Artiste de l'album à l'enregistrement",
+  "it": "Artista album al salvataggio",
+  "sv": "Albumartist vid sparande",
+  "es": "Artista del álbum al guardar"
+ },
+ "Ingen automatik": {
+  "en": "Nothing automatic",
+  "de": "Keine Automatik",
+  "fr": "Aucun automatisme",
+  "it": "Nessun automatismo",
+  "sv": "Ingen automatik",
+  "es": "Nada automático"
+ },
+ "Kopiér Kunstner, hvis Albumkunstner er tom": {
+  "en": "Copy Artist if Album artist is empty",
+  "de": "Interpret kopieren, wenn Album-Interpret leer ist",
+  "fr": "Copier l'artiste si l'artiste de l'album est vide",
+  "it": "Copia Artista se Artista album è vuoto",
+  "sv": "Kopiera Artist om Albumartist är tom",
+  "es": "Copiar el artista si el artista del álbum está vacío"
+ },
+ "Kopiér altid Kunstner til Albumkunstner": {
+  "en": "Always copy Artist to Album artist",
+  "de": "Interpret immer in Album-Interpret kopieren",
+  "fr": "Toujours copier l'artiste vers l'artiste de l'album",
+  "it": "Copia sempre Artista in Artista album",
+  "sv": "Kopiera alltid Artist till Albumartist",
+  "es": "Copiar siempre el artista al artista del álbum"
+ },
+ "Retning": {
+  "en": "Direction",
+  "de": "Richtung",
+  "fr": "Sens",
+  "it": "Direzione",
+  "sv": "Riktning",
+  "es": "Dirección"
+ },
+ "Kopiér fra ID3v1 til ID3v2": {
+  "en": "Copy from ID3v1 to ID3v2",
+  "de": "Von ID3v1 nach ID3v2 kopieren",
+  "fr": "Copier de ID3v1 vers ID3v2",
+  "it": "Copia da ID3v1 a ID3v2",
+  "sv": "Kopiera från ID3v1 till ID3v2",
+  "es": "Copiar de ID3v1 a ID3v2"
+ },
+ "Kopiér fra ID3v2 til ID3v1 (opretter ID3v1 om nødvendigt)": {
+  "en": "Copy from ID3v2 to ID3v1 (creates ID3v1 if needed)",
+  "de": "Von ID3v2 nach ID3v1 kopieren (legt ID3v1 bei Bedarf an)",
+  "fr": "Copier de ID3v2 vers ID3v1 (crée ID3v1 si nécessaire)",
+  "it": "Copia da ID3v2 a ID3v1 (crea ID3v1 se necessario)",
+  "sv": "Kopiera från ID3v2 till ID3v1 (skapar ID3v1 vid behov)",
+  "es": "Copiar de ID3v2 a ID3v1 (crea ID3v1 si hace falta)"
+ },
+ "Hvis måltagget allerede findes": {
+  "en": "If the target tag already exists",
+  "de": "Wenn das Ziel-Tag bereits existiert",
+  "fr": "Si le tag cible existe déjà",
+  "it": "Se il tag di destinazione esiste già",
+  "sv": "Om måltaggen redan finns",
+  "es": "Si la etiqueta de destino ya existe"
+ },
+ "Skriv ikke tagget": {
+  "en": "Don't write the tag",
+  "de": "Tag nicht schreiben",
+  "fr": "Ne pas écrire le tag",
+  "it": "Non scrivere il tag",
+  "sv": "Skriv inte taggen",
+  "es": "No escribir la etiqueta"
+ },
+ "Udfyld kun tomme felter": {
+  "en": "Fill only empty fields",
+  "de": "Nur leere Felder füllen",
+  "fr": "Remplir uniquement les champs vides",
+  "it": "Compila solo i campi vuoti",
+  "sv": "Fyll bara i tomma fält",
+  "es": "Rellenar solo los campos vacíos"
+ },
+ "Overskriv felterne": {
+  "en": "Overwrite the fields",
+  "de": "Felder überschreiben",
+  "fr": "Remplacer les champs",
+  "it": "Sovrascrivi i campi",
+  "sv": "Skriv över fälten",
+  "es": "Sobrescribir los campos"
+ },
+ "Felter: titel, kunstner, album, år, kommentar, spor og genre. ID3v1 kan kun rumme 30 tegn pr. felt og kun vesteuropæiske bogstaver.": {
+  "en": "Fields: title, artist, album, year, comment, track and genre. ID3v1 holds only 30 characters per field and only Western European letters.",
+  "de": "Felder: Titel, Interpret, Album, Jahr, Kommentar, Track und Genre. ID3v1 fasst nur 30 Zeichen pro Feld und nur westeuropäische Buchstaben.",
+  "fr": "Champs : titre, artiste, album, année, commentaire, piste et genre. ID3v1 ne contient que 30 caractères par champ et seulement des lettres d'Europe occidentale.",
+  "it": "Campi: titolo, artista, album, anno, commento, traccia e genere. ID3v1 contiene solo 30 caratteri per campo e solo lettere dell'Europa occidentale.",
+  "sv": "Fält: titel, artist, album, år, kommentar, spår och genre. ID3v1 rymmer bara 30 tecken per fält och bara västeuropeiska bokstäver.",
+  "es": "Campos: título, artista, álbum, año, comentario, pista y género. ID3v1 solo admite 30 caracteres por campo y solo letras de Europa occidental."
  }
 }

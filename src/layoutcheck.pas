@@ -16,7 +16,7 @@ implementation
 uses
   Classes, SysUtils, Types, Forms, Controls, StdCtrls, ExtCtrls, ComCtrls, Buttons,
   Graphics, MainForm, TagEditForm, RenameForm, FileToTagForm, MultiEditForm,
-  TrackToolsForm, WebLookupForm, ExportImportForm, AudioTypes, AppSettings, ToolDialogs;
+  TrackToolsForm, WebLookupForm, ExportImportForm, AudioTypes, AppSettings, ToolDialogs, ID3Sync, BatchWrite;
 
 resourcestring
   // same texts as in the main window, so they get the same translations
@@ -24,6 +24,8 @@ resourcestring
   rsFraFelt = 'Fra felt:';
   rsTilFelt = 'Til felt:';
   rsKunHvisFeltetErTomt = 'Kun hvis målfeltet er tomt';
+  rsIndsaetTag = 'Indsæt tag';
+  rsVaelgFelterDerIndsaettes = 'Vælg de felter, der indsættes i %d filer:';
 
 type
   { Checks a modal dialog while it is shown, then closes it. Two rounds through the
@@ -161,6 +163,11 @@ var
   Check: Boolean;
   W: TRenameWords;
   Acts: TRenameActions;
+  Dir: TSyncDirection;
+  Ex: TSyncExisting;
+  Vals: TFieldValues;
+  Fs: TTagFieldSet;
+  T: TTagField;
 
   procedure Arm;
   begin
@@ -187,6 +194,14 @@ begin
     Acts[0].FolderMask := '%1';
     Arm;
     EditRenameActions(Acts, '%1 - %2');
+    Dir := sdV1ToV2;
+    Ex := seBlankOnly;
+    Arm;
+    AskID3Sync(Dir, Ex);
+    for T := Low(TTagField) to High(TTagField) do Vals[T] := TagFieldCaptions[T] + ' (eksempel)';
+    Fs := [tfArtist, tfAlbum];
+    Arm;
+    AskFieldSet(rsIndsaetTag, rsVaelgFelterDerIndsaettes, Vals, Fs);
   finally
     Insp.Free;
   end;

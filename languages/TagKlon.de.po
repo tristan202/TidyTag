@@ -514,6 +514,82 @@ msgctxt "layoutcheck.rskunhvisfeltetertomt"
 msgid "Kun hvis målfeltet er tomt"
 msgstr "Nur wenn das Zielfeld leer ist"
 
+#: layoutcheck.rsindsaettag
+msgctxt "layoutcheck.rsindsaettag"
+msgid "Indsæt tag"
+msgstr "Tag einfügen"
+
+#: layoutcheck.rsvaelgfelterderindsaettes
+msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
+msgid "Vælg de felter, der indsættes i %d filer:"
+msgstr "Felder wählen, die in %d Dateien eingefügt werden:"
+
+#: mainform.rskunstnervaerktoejer
+msgid "Kunstner-værktøjer"
+msgstr "Interpret-Werkzeuge"
+
+#: mainform.rsfjerntheforrest
+msgid "Fjern \"The\" forrest i Kunstner"
+msgstr "Führendes \"The\" aus Interpret entfernen"
+
+#: mainform.rstheartisttilartistthe
+msgid "\"The Artist\" → \"Artist, The\""
+msgstr "\"The Artist\" → \"Artist, The\""
+
+#: mainform.rsartistthetiltheartist
+msgid "\"Artist, The\" → \"The Artist\""
+msgstr "\"Artist, The\" → \"The Artist\""
+
+#: mainform.rsfornavnefternavntil
+msgid "\"Fornavn Efternavn\" → \"Efternavn, Fornavn\""
+msgstr "\"Vorname Nachname\" → \"Nachname, Vorname\""
+
+#: mainform.rsefternavnfornavntil
+msgid "\"Efternavn, Fornavn\" → \"Fornavn Efternavn\""
+msgstr "\"Nachname, Vorname\" → \"Vorname Nachname\""
+
+#: mainform.rsmptagsynkroniseringmenu
+msgid "Mp3-tag-synkronisering..."
+msgstr "MP3-Tag-Synchronisierung..."
+
+#: mainform.rsmptagsynkroniseringhint
+msgid "Kopiér felterne mellem ID3v1 og ID3v2 i mp3-filer"
+msgstr "Felder zwischen ID3v1 und ID3v2 in MP3-Dateien kopieren"
+
+#: mainform.rsmptagsynkronisering
+msgctxt "mainform.rsmptagsynkronisering"
+msgid "Mp3-tag-synkronisering"
+msgstr "MP3-Tag-Synchronisierung"
+
+#: mainform.rsingenmpfiler
+msgid "Ingen af de afkrydsede/markerede filer er mp3-filer."
+msgstr "Keine der abgehakten/markierten Dateien ist eine MP3-Datei."
+
+#: mainform.rssynkronisertagsidmpfiler
+msgid "Synkronisér tags i %d mp3-filer?"
+msgstr "Tags in %d MP3-Dateien synchronisieren?"
+
+#: mainform.rsvaelgfelterderindsaettesid
+msgctxt "mainform.rsvaelgfelterderindsaettesid"
+msgid "Vælg de felter, der indsættes i %d filer:"
+msgstr "Felder wählen, die in %d Dateien eingefügt werden:"
+
+#: mainform.rsalbumkunstnervedgem
+msgid "Albumkunstner ved gem"
+msgstr "Album-Interpret beim Speichern"
+
+#: mainform.rsalbumkunstneringen
+msgid "Ingen automatik"
+msgstr "Keine Automatik"
+
+#: mainform.rsalbumkunstnerhvistom
+msgid "Kopiér Kunstner, hvis Albumkunstner er tom"
+msgstr "Interpret kopieren, wenn Album-Interpret leer ist"
+
+#: mainform.rsalbumkunstneraltid
+msgid "Kopiér altid Kunstner til Albumkunstner"
+msgstr "Interpret immer in Album-Interpret kopieren"
+
 #: mainform.rsspornumremenu
 msgid "Spornumre..."
 msgstr "Tracknummern..."
@@ -1060,6 +1136,7 @@ msgid "Kopiér tag fra den markerede fil"
 msgstr "Tag der markierten Datei kopieren"
 
 #: mainform.rsindsaettag
+msgctxt "mainform.rsindsaettag"
 msgid "Indsæt tag"
 msgstr "Tag einfügen"
 
@@ -2101,6 +2178,53 @@ msgstr "Eine Aktion benennt die abgehakten (oder markierten) Dateien mit der Dat
 msgid "Giv handlingen et navn og mindst én maske."
 msgstr "Gib der Aktion einen Namen und mindestens eine Maske."
 
+#: tooldialogs.rsmptagsynkronisering
+msgctxt "tooldialogs.rsmptagsynkronisering"
+msgid "Mp3-tag-synkronisering"
+msgstr "MP3-Tag-Synchronisierung"
+
+#: tooldialogs.rsretning
+msgid "Retning"
+msgstr "Richtung"
+
+#: tooldialogs.rsidv1tilidv2
+msgid "Kopiér fra ID3v1 til ID3v2"
+msgstr "Von ID3v1 nach ID3v2 kopieren"
+
+#: tooldialogs.rsidv2tilidv1
+msgid "Kopiér fra ID3v2 til ID3v1 (opretter ID3v1 om nødvendigt)"
+msgstr "Von ID3v2 nach ID3v1 kopieren (legt ID3v1 bei Bedarf an)"
+
+#: tooldialogs.rshvistagfindes
+msgid "Hvis måltagget allerede findes"
+msgstr "Wenn das Ziel-Tag bereits existiert"
+
+#: tooldialogs.rsskrivikke
+msgid "Skriv ikke tagget"
+msgstr "Tag nicht schreiben"
+
+#: tooldialogs.rskuntommefelter
+msgid "Udfyld kun tomme felter"
+msgstr "Nur leere Felder füllen"
+
+#: tooldialogs.rsoverskrivfelter
+msgid "Overskriv felterne"
+msgstr "Felder überschreiben"
+
+#: tooldialogs.rssynchjaelp
+msgid "Felter: titel, kunstner, album, år, kommentar, spor og genre. ID3v1 kan kun rumme 30 tegn pr. felt og kun vesteuropæiske bogstaver."
+msgstr "Felder: Titel, Interpret, Album, Jahr, Kommentar, Track und Genre. ID3v1 fasst nur 30 Zeichen pro Feld und nur westeuropäische Buchstaben."
+
+#: tooldialogs.rsalle
+msgctxt "tooldialogs.rsalle"
+msgid "Alle"
+msgstr "Alle"
+
+#: tooldialogs.rsingen
+msgctxt "tooldialogs.rsingen"
+msgid "Ingen"
+msgstr "Keine"
+
 #: tracktoolsform.rsformatereksisterendespornumre
 msgid "Formatér eksisterende spornumre"
 msgstr "Vorhandene Tracknummern formatieren"
@@ -2325,10 +2449,12 @@ msgid "Kolonner:"
 msgstr "Spalten:"
 
 #: tformexportimport.pagemain.tabexport.buttoncolsall.caption
+msgctxt "tformexportimport.pagemain.tabexport.buttoncolsall.caption"
 msgid "Alle"
 msgstr "Alle"
 
 #: tformexportimport.pagemain.tabexport.buttoncolsnone.caption
+msgctxt "tformexportimport.pagemain.tabexport.buttoncolsnone.caption"
 msgid "Ingen"
 msgstr "Keine"
 

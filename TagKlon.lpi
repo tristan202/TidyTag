@@ -295,6 +295,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ToolDialogs"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\id3sync.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ID3Sync"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

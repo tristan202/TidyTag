@@ -11,7 +11,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
   StdCtrls, ShellCtrls, Menus, ActnList, IniFiles, AudioTypes, ScanThread, RenameCore,
-  BatchWrite, FieldTools, AppSettings;
+  BatchWrite, FieldTools, AppSettings, ID3Sync;
 
 type
   TColumnKind = (ckCheck, ckFileName, ckField, ckDuration, ckBitrate, ckSampleRate,
@@ -159,6 +159,8 @@ type
     FActionsMenu: TMenuItem;
     FActManageActions: TAction;
     FAutoYes: Boolean;
+    FSyncDir: TSyncDirection;
+    FSyncExisting: TSyncExisting;
     FAutoLog: TStringList;
     FSortColumn: Integer;
     FSortDescending: Boolean;
@@ -235,6 +237,14 @@ type
     procedure RebuildActionsMenu;
     procedure RenameActionClick(Sender: TObject);
     procedure DoCopyField(Src, Dst: TTagField; OnlyIfEmpty: Boolean);
+    procedure ActNameToolExecute(Sender: TObject);
+    procedure RunNameTool(Tool: TNameTool);
+    procedure ActID3SyncExecute(Sender: TObject);
+    procedure RunID3Sync(Direction: TSyncDirection; Existing: TSyncExisting);
+    procedure AddAlbumArtistMenu(ParentItem: TMenuItem);
+    procedure AlbumArtistClick(Sender: TObject);
+    function LoadPasteFields: TTagFieldSet;
+    procedure SavePasteFields(Fields: TTagFieldSet);
     procedure RunRenameAction(const Act: TRenameAction);
     // confirmations and messages that the self-test answers itself
     function AskYes(const Title, Msg: string; DlgType: TMsgDlgType = mtConfirmation): Boolean;
@@ -323,6 +333,22 @@ uses
   Language, Process, TagRemove, ToolDialogs;
 
 resourcestring
+  rsKunstnerVaerktoejer = 'Kunstner-værktøjer';
+  rsFjernTheForrest = 'Fjern "The" forrest i Kunstner';
+  rsTheArtistTilArtistThe = '"The Artist" → "Artist, The"';
+  rsArtistTheTilTheArtist = '"Artist, The" → "The Artist"';
+  rsFornavnEfternavnTil = '"Fornavn Efternavn" → "Efternavn, Fornavn"';
+  rsEfternavnFornavnTil = '"Efternavn, Fornavn" → "Fornavn Efternavn"';
+  rsMpTagSynkroniseringMenu = 'Mp3-tag-synkronisering...';
+  rsMpTagSynkroniseringHint = 'Kopiér felterne mellem ID3v1 og ID3v2 i mp3-filer';
+  rsMpTagSynkronisering = 'Mp3-tag-synkronisering';
+  rsIngenMpFiler = 'Ingen af de afkrydsede/markerede filer er mp3-filer.';
+  rsSynkroniserTagsIDMpFiler = 'Synkronisér tags i %d mp3-filer?';
+  rsVaelgFelterDerIndsaettesID = 'Vælg de felter, der indsættes i %d filer:';
+  rsAlbumkunstnerVedGem = 'Albumkunstner ved gem';
+  rsAlbumkunstnerIngen = 'Ingen automatik';
+  rsAlbumkunstnerHvisTom = 'Kopiér Kunstner, hvis Albumkunstner er tom';
+  rsAlbumkunstnerAltid = 'Kopiér altid Kunstner til Albumkunstner';
   rsSpornumreMenu = 'Spornumre...';
   rsDiscogsTokenMenu = 'Discogs-token...';
   rsOpMenu = 'Op';
@@ -854,7 +880,9 @@ var
     aPlChecked, aPlAll, aTabRename, aTabMulti, aTabF2T, aRenameDlg, aF2TDlg, aTracks, aWeb,
     aToken, aKeys, aAbout, aUp, aFav, aNewFolder, aTreeRefresh, aCloseFolders,
     aMoveUp, aMoveDown, aExport, aSwapAT, aSwapAA, aSwapLT, aSwap, aCopyField, aClean,
-    aRemoveTags, aCoverIn, aCoverOut, aWords: TAction;
+    aRemoveTags, aCoverIn, aCoverOut, aWords, aSync: TAction;
+  NameTools: array[TNameTool] of TAction;
+  NT: TNameTool;
   TopMenu, SubMenu: TMenuItem;
   X: Integer;
 
@@ -907,6 +935,8 @@ var
   end;
 
 begin
+  FSyncDir := sdV1ToV2;
+  FSyncExisting := seBlankOnly;
   FSwapA := tfArtist;
   FSwapB := tfAlbumArtist;
   FCopySrc := tfArtist;
@@ -980,6 +1010,13 @@ begin
   aCoverOut := NewAction(rsGemFilernesCoverSomFolderJpg, rsGemFilernesCoverHint, 0, icoSave, @ActCoverFromTagsExecute);
   FActManageActions := NewAction(rsAdministrerHandlinger, rsAdministrerHandlingerHint, 0, icoSettings, @ActManageActionsExecute);
   aWords := NewAction(rsOrdudskiftningerMenu, rsOrdudskiftningerHint, 0, icoSettings, @ActRenameWordsExecute);
+  NameTools[ntRemoveThe] := NewAction(rsFjernTheForrest, '', 0, -1, @ActNameToolExecute);
+  NameTools[ntTheToEnd] := NewAction(rsTheArtistTilArtistThe, '', 0, -1, @ActNameToolExecute);
+  NameTools[ntTheToFront] := NewAction(rsArtistTheTilTheArtist, '', 0, -1, @ActNameToolExecute);
+  NameTools[ntNameToSurnameFirst] := NewAction(rsFornavnEfternavnTil, '', 0, -1, @ActNameToolExecute);
+  NameTools[ntSurnameFirstToName] := NewAction(rsEfternavnFornavnTil, '', 0, -1, @ActNameToolExecute);
+  for NT := Low(TNameTool) to High(TNameTool) do NameTools[NT].Tag := Ord(NT);
+  aSync := NewAction(rsMpTagSynkroniseringMenu, rsMpTagSynkroniseringHint, 0, -1, @ActID3SyncExecute);
   FActToolsPanel.AutoCheck := True;
   FActFolders.AutoCheck := True;
   FActAddress.AutoCheck := True;
@@ -1009,14 +1046,19 @@ begin
   Add(TopMenu, nil);
   SubMenu := Sub(TopMenu, rsTagVaerktoejer);
   Add(SubMenu, aSwapAT); Add(SubMenu, aSwapAA); Add(SubMenu, aSwapLT); Add(SubMenu, aSwap);
-  Add(SubMenu, nil); Add(SubMenu, aCopyField); Add(SubMenu, aClean); Add(SubMenu, nil); Add(SubMenu, aRemoveTags);
+  Add(SubMenu, nil); Add(SubMenu, aCopyField); Add(SubMenu, aClean);
+  SubMenu := Sub(SubMenu, rsKunstnerVaerktoejer);
+  for NT := Low(TNameTool) to High(TNameTool) do Add(SubMenu, NameTools[NT]);
+  SubMenu := SubMenu.Parent;
+  Add(SubMenu, aSync); Add(SubMenu, nil); Add(SubMenu, aRemoveTags);
   SubMenu := Sub(TopMenu, rsCoverVaerktoejer);
   Add(SubMenu, aCoverIn); Add(SubMenu, aCoverOut);
   FActionsMenu := Sub(TopMenu, rsOmdoebningshandlingerMenu);
   RebuildActionsMenu;
   Add(TopMenu, nil); Add(TopMenu, FActUndo);
   TopMenu := Menu(rsIndstillinger);
-  Add(TopMenu, FActKeepDate); Add(TopMenu, aWords); Add(TopMenu, aToken); Add(TopMenu, nil);
+  Add(TopMenu, FActKeepDate); AddAlbumArtistMenu(TopMenu); Add(TopMenu, aWords); Add(TopMenu, aToken);
+  Add(TopMenu, nil);
   AddLanguageMenu(TopMenu);
   TopMenu := Menu(rsHjaelp);
   Add(TopMenu, aKeys); Add(TopMenu, aAbout);
@@ -2579,9 +2621,17 @@ var
   Fields: TTagFieldSet;
 begin
   if not FHasClip or not RequireTargets(Items) then Exit;
-  Fields := [Low(TTagField)..High(TTagField)] - [tfTitle, tfTrack];
-  if MessageDlg(rsIndsaetTag, Format(rsIndsaetDetKopieredeTagI, [Length(Items)]),
-    mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
+  Fields := LoadPasteFields;
+  if not FAutoYes then
+  begin
+    if not AskFieldSet(rsIndsaetTag, Format(rsVaelgFelterDerIndsaettesID, [Length(Items)]), FClip, Fields) then
+      Exit;
+    SavePasteFields(Fields);
+  end;
+  // fields that were empty in the copied file are not pasted (they would clear the targets)
+  for I := 0 to Ord(High(TTagField)) do
+    if FClip[TTagField(I)] = '' then Exclude(Fields, TTagField(I));
+  if Fields = [] then Exit;
   SetLength(PerItem, Length(Items));
   SetLength(PerFields, Length(Items));
   for I := 0 to High(Items) do
@@ -2744,6 +2794,169 @@ begin
     rsEnterDobbeltklikRedigerTagFor, mtInformation, [mbOK], 0);
 end;
 
+procedure TFormMain.ActNameToolExecute(Sender: TObject);
+begin
+  RunNameTool(TNameTool((Sender as TComponent).Tag));
+end;
+
+procedure TFormMain.RunNameTool(Tool: TNameTool);
+var
+  Items: TAudioInfoArray;
+  Plans: array of TFieldPlan;
+  I: Integer;
+begin
+  if not RequireTargets(Items) then Exit;
+  SetLength(Plans, Length(Items));
+  for I := 0 to High(Items) do Plans[I] := PlanNameTool(Items[I], tfArtist, Tool);
+  RunFieldPlans(Items, Plans, rsKunstnerVaerktoejer);
+end;
+
+procedure TFormMain.ActID3SyncExecute(Sender: TObject);
+begin
+  if AskID3Sync(FSyncDir, FSyncExisting) then RunID3Sync(FSyncDir, FSyncExisting);
+end;
+
+procedure TFormMain.RunID3Sync(Direction: TSyncDirection; Existing: TSyncExisting);
+var
+  Items, Mp3: TAudioInfoArray;
+  I, NChanged, Failed: Integer;
+  Errors: TStringList;
+begin
+  if not RequireTargets(Items) then Exit;
+  Mp3 := nil;
+  for I := 0 to High(Items) do
+    if SameText(ExtractFileExt(Items[I].FileName), '.mp3') then
+    begin
+      SetLength(Mp3, Length(Mp3) + 1);
+      Mp3[High(Mp3)] := Items[I];
+    end;
+  if Length(Mp3) = 0 then
+  begin
+    Inform(rsMpTagSynkronisering, rsIngenMpFiler);
+    Exit;
+  end;
+  if not AskYes(rsMpTagSynkronisering, Format(rsSynkroniserTagsIDMpFiler, [Length(Mp3)])) then Exit;
+  NChanged := 0;
+  Failed := 0;
+  Errors := TStringList.Create;
+  Screen.Cursor := crHourGlass;
+  try
+    for I := 0 to High(Mp3) do
+    begin
+      SetMessage(Format(rsSDAfD, [rsMpTagSynkronisering, I + 1, Length(Mp3)]));
+      Application.ProcessMessages;
+      try
+        if SyncID3(Mp3[I].FileName, Direction, Existing, FKeepTimestamp) then Inc(NChanged);
+      except
+        on E: Exception do
+        begin
+          Inc(Failed);
+          if Errors.Count < 20 then Errors.Add(ExtractFileName(Mp3[I].FileName) + ': ' + E.Message);
+        end;
+      end;
+      RefreshInfo(Mp3[I]);
+    end;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+  SetMessage(Format(rsSGemtIDFiler, [rsMpTagSynkronisering, NChanged, Failed, '']));
+  if Errors.Count > 0 then Inform(rsNogleFilerBlevIkkeGemt, Errors.Text, mtWarning);
+  Errors.Free;
+  FileList.Invalidate;
+  SelectionChanged;
+end;
+
+procedure TFormMain.AddAlbumArtistMenu(ParentItem: TMenuItem);
+const
+  Captions: array[TAlbumArtistRule] of string = (rsAlbumkunstnerIngen, rsAlbumkunstnerHvisTom,
+    rsAlbumkunstnerAltid);
+var
+  Sub, M: TMenuItem;
+  R: TAlbumArtistRule;
+  Ini: TIniFile;
+  N: Integer;
+begin
+  Ini := OpenSettings;
+  try
+    N := Ini.ReadInteger('Main', 'AlbumArtistRule', 0);
+    if (N >= Ord(Low(TAlbumArtistRule))) and (N <= Ord(High(TAlbumArtistRule))) then
+      AlbumArtistRule := TAlbumArtistRule(N);
+  finally
+    Ini.Free;
+  end;
+  Sub := TMenuItem.Create(ParentItem);
+  Sub.Caption := rsAlbumkunstnerVedGem;
+  ParentItem.Add(Sub);
+  for R := Low(TAlbumArtistRule) to High(TAlbumArtistRule) do
+  begin
+    M := TMenuItem.Create(Sub);
+    M.Caption := Captions[R];
+    M.Tag := Ord(R);
+    M.RadioItem := True;
+    M.GroupIndex := 2;
+    M.Checked := R = AlbumArtistRule;
+    M.OnClick := @AlbumArtistClick;
+    Sub.Add(M);
+  end;
+end;
+
+procedure TFormMain.AlbumArtistClick(Sender: TObject);
+var
+  Ini: TIniFile;
+begin
+  AlbumArtistRule := TAlbumArtistRule((Sender as TMenuItem).Tag);
+  (Sender as TMenuItem).Checked := True;
+  Ini := OpenSettings;
+  try
+    Ini.WriteInteger('Main', 'AlbumArtistRule', Ord(AlbumArtistRule));
+  finally
+    Ini.Free;
+  end;
+end;
+
+function TFormMain.LoadPasteFields: TTagFieldSet;
+var
+  Ini: TIniFile;
+  S: string;
+  Part: string;
+  N: Integer;
+begin
+  Ini := OpenSettings;
+  try
+    S := Ini.ReadString('Main', 'PasteFields', '');
+  finally
+    Ini.Free;
+  end;
+  if S = '' then Exit([Low(TTagField)..High(TTagField)] - [tfTitle, tfTrack]);
+  Result := [];
+  for Part in S.Split([',']) do
+  begin
+    N := StrToIntDef(Part, -1);
+    if (N >= Ord(Low(TTagField))) and (N <= Ord(High(TTagField))) then Include(Result, TTagField(N));
+  end;
+end;
+
+procedure TFormMain.SavePasteFields(Fields: TTagFieldSet);
+var
+  Ini: TIniFile;
+  F: TTagField;
+  S: string;
+begin
+  S := '';
+  for F in Fields do
+  begin
+    if S <> '' then S := S + ',';
+    S := S + IntToStr(Ord(F));
+  end;
+  if S = '' then S := '-1'; // nothing ticked (differs from 'not set yet')
+  Ini := OpenSettings;
+  try
+    Ini.WriteString('Main', 'PasteFields', S);
+  finally
+    Ini.Free;
+  end;
+end;
+
 function TFormMain.AskYes(const Title, Msg: string; DlgType: TMsgDlgType): Boolean;
 begin
   if FAutoYes then
@@ -2804,6 +3017,16 @@ begin
     Dump('byt album og titel');
     ActCleanSpacesExecute(nil);
     Dump('ryd mellemrum');
+    RunNameTool(ntNameToSurnameFirst);
+    Dump('kunstner: efternavn foerst');
+    RunNameTool(ntSurnameFirstToName);
+    Dump('kunstner: fornavn foerst igen');
+    RunID3Sync(sdV2ToV1, seOverwrite);
+    Dump('ID3v2 -> ID3v1');
+    FClip := FieldValuesOf(TAudioInfo(FItems[FItems.Count - 1]));
+    FHasClip := True;
+    ActPasteTagExecute(nil);
+    Dump('indsaet tag fra sidste fil (uden titel og spor)');
     ActCoverToTagsExecute(nil);
     Dump('mappens cover ind i filerne');
     DeleteFile(FindFolderCover(FFolder));

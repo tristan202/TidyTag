@@ -15,6 +15,16 @@ function CanWriteTags(const FileName: string): Boolean;
   the original file is never left half-written. }
 procedure WriteAudioTags(Info: TAudioInfo; KeepTimestamp: Boolean);
 
+type
+  { Settings > Album artist: copy Artist into Album artist when saving. }
+  TAlbumArtistRule = (aaNone, aaIfEmpty, aaAlways);
+
+var
+  AlbumArtistRule: TAlbumArtistRule = aaNone;
+
+{ Info's album artist as the rule wants it (unchanged for aaNone). }
+procedure ApplyAlbumArtistRule(Info: TAudioInfo);
+
 implementation
 
 uses
@@ -36,6 +46,15 @@ begin
   end;
 end;
 
+procedure ApplyAlbumArtistRule(Info: TAudioInfo);
+begin
+  if Info.Fields[tfArtist] = '' then Exit;
+  case AlbumArtistRule of
+    aaIfEmpty: if Info.Fields[tfAlbumArtist] = '' then Info.Fields[tfAlbumArtist] := Info.Fields[tfArtist];
+    aaAlways: Info.Fields[tfAlbumArtist] := Info.Fields[tfArtist];
+  end;
+end;
+
 procedure WriteAudioTags(Info: TAudioInfo; KeepTimestamp: Boolean);
 var
   Stamp: TFileStamp;
@@ -44,6 +63,7 @@ begin
     raise Exception.Create(rsInternFejlFilenErLaest);
   if not CanWriteTags(Info.FileName) then
     raise Exception.Create(rsSkrivningAfDenneFiltypeUnderstoettes);
+  ApplyAlbumArtistRule(Info);
   if KeepTimestamp then
     Stamp := GetFileStamp(Info.FileName);
   case LowerCase(ExtractFileExt(Info.FileName)) of

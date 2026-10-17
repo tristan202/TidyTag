@@ -18,6 +18,8 @@ procedure WriteMp3Tags(const FileName: string; Info: TAudioInfo);
 function BuildID3TagBytes(const OldTag: TBytes; Info: TAudioInfo; Padding: Integer): TBytes;
 { Updates an existing ID3v1 tag at the end of the file; does nothing if there is none. }
 procedure UpdateID3v1(const FileName: string; Info: TAudioInfo);
+{ Same, but CreateIfMissing appends a new ID3v1 tag when the file has none. }
+procedure WriteID3v1(const FileName: string; Info: TAudioInfo; CreateIfMissing: Boolean);
 
 implementation
 
@@ -388,17 +390,35 @@ begin
 end;
 
 procedure UpdateID3v1(const FileName: string; Info: TAudioInfo);
+begin
+  WriteID3v1(FileName, Info, False);
+end;
+
+procedure WriteID3v1(const FileName: string; Info: TAudioInfo; CreateIfMissing: Boolean);
 var
   S: TFileStream;
   B: TBytes;
   Track, Genre: Integer;
+  Exists: Boolean;
 begin
   S := TFileStream.Create(FileName, fmOpenReadWrite or fmShareDenyWrite);
   try
-    if S.Size < 128 then Exit;
-    S.Position := S.Size - 128;
-    B := ReadStreamBytes(S, 128);
-    if (Length(B) < 128) or not BytesAre(B, 0, 'TAG') then Exit;
+    Exists := False;
+    if S.Size >= 128 then
+    begin
+      S.Position := S.Size - 128;
+      B := ReadStreamBytes(S, 128);
+      Exists := (Length(B) = 128) and BytesAre(B, 0, 'TAG');
+    end;
+    if not Exists then
+    begin
+      if not CreateIfMissing then Exit;
+      SetLength(B, 128);
+      FillChar(B[0], 128, 0);
+      B[0] := Ord('T'); B[1] := Ord('A'); B[2] := Ord('G');
+      B[127] := 255;
+      S.Size := S.Size + 128; // the new tag is written at the very end below
+    end;
     PutLatin1(B, 3, 30, Info.Fields[tfTitle]);
     PutLatin1(B, 33, 30, Info.Fields[tfArtist]);
     PutLatin1(B, 63, 30, Info.Fields[tfAlbum]);
