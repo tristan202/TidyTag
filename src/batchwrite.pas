@@ -14,6 +14,7 @@ uses
 type
   TTagFieldSet = set of TTagField;
   TFieldValues = array[TTagField] of string;
+  TCoverArray = array of TBytes;
 
 { Writes Values[F] for every F in Fields (and Cover as front cover when not nil) into
   Info's file, then updates Info itself. Returns False with Err set on failure;

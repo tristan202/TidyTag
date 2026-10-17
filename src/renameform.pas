@@ -192,6 +192,7 @@ begin
     Result.CaseMode := TCaseMode(ComboCase.ItemIndex);
   Result.SpacesToUnderscores := CheckUnderscores.Checked;
   Result.PadTrack := CheckPadTrack.Checked;
+  ApplyRenameWords(Result);
 end;
 
 function TFormRename.ScopeItems: TAudioInfoArray;

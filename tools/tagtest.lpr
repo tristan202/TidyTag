@@ -12,7 +12,8 @@ program TagTest;
 
 uses
   {$IFDEF WINDOWS}Windows,{$ENDIF}
-  Classes, SysUtils, crc, AudioTypes, AudioTags, TagWriter, TagUtils, Mp3Reader, OggWriter, WavReader, ApeTag;
+  Classes, SysUtils, crc, AudioTypes, AudioTags, TagWriter, TagUtils, Mp3Reader, OggWriter, WavReader, ApeTag,
+  BatchWrite, FieldTools, TagRemove;
 
 var
   Failures: Integer = 0;
@@ -126,7 +127,7 @@ begin
   Result := 0;
   CF := ReadChunkFile(S);
   for C in CF.Chunks do
-    if not IsTagChunk(S, C) then
+    if not IsTagChunk(S, C) and not (CF.IsAiff and ((C.ID = 'NAME') or (C.ID = 'AUTH') or (C.ID = 'ANNO') or (C.ID = '(c) '))) then
     begin
       Id := C.ID;
       Result := crc32(Result, @Id[1], 4);
@@ -334,6 +335,84 @@ begin
   end;
 end;
 
+{ E: swap, copy and clean-spaces tools through BatchWrite. }
+procedure ToolScenario(const FileName: string; AudioCrc: Cardinal);
+var
+  Info: TAudioInfo;
+  P: TFieldPlan;
+  Err: string;
+  Skipped: Boolean;
+  Artist, Title: string;
+begin
+  WriteLn('  Scenarie E (felt-værktøjer)');
+  Info := ReadAudioInfo(FileName, False);
+  try
+    Info.Fields[tfArtist] := '';
+    Info.Fields[tfTitle] := '';
+    P.Fields := [tfArtist, tfTitle, tfComposer];
+    P.Values[tfArtist] := 'Kunstner  med   mellemrum';
+    P.Values[tfTitle] := 'Titel æøå';
+    P.Values[tfComposer] := '';
+    Check(UpdateFileTags(Info, P.Values, P.Fields, nil, False, Err, Skipped), 'forberedelse ' + Err);
+    Artist := Info.Fields[tfArtist];
+    Title := Info.Fields[tfTitle];
+    P := PlanSwap(Info, tfArtist, tfTitle);
+    Check(UpdateFileTags(Info, P.Values, P.Fields, nil, False, Err, Skipped), 'byt ' + Err);
+    P := PlanCopy(Info, tfTitle, tfComposer, True);
+    Check(UpdateFileTags(Info, P.Values, P.Fields, nil, False, Err, Skipped), 'kopiér ' + Err);
+    P := PlanCleanSpaces(Info);
+    Check(UpdateFileTags(Info, P.Values, P.Fields, nil, False, Err, Skipped), 'mellemrum ' + Err);
+  finally
+    Info.Free;
+  end;
+  Info := ReadAudioInfo(FileName, False);
+  try
+    Check(Info.Fields[tfArtist] = Title, 'kunstner = gammel titel: ' + Info.Fields[tfArtist]);
+    Check(Info.Fields[tfTitle] = 'Kunstner med mellemrum', 'titel = gammel kunstner, mellemrum ryddet: ' + Info.Fields[tfTitle]);
+    Check(Info.Fields[tfComposer] = 'Kunstner med mellemrum', 'komponist kopieret: ' + Info.Fields[tfComposer]);
+  finally
+    Info.Free;
+  end;
+  Check(AudioFingerprint(FileName) = AudioCrc, 'lyddata uændret');
+end;
+
+{ D: remove tags. }
+procedure RemoveScenario(const FileName: string; AudioCrc: Cardinal);
+var
+  Info: TAudioInfo;
+  F: TTagField;
+  Empty: Boolean;
+begin
+  WriteLn('  Scenarie D (fjern tags)');
+  try
+    RemoveAllTags(FileName, True);
+  except
+    on E: Exception do
+    begin
+      Check(False, 'fjern tags: ' + E.Message);
+      Exit;
+    end;
+  end;
+  Info := ReadAudioInfo(FileName, True);
+  try
+    Check(Info.Error = '', 'genlæsning ' + Info.Error);
+    Empty := True;
+    for F := Low(TTagField) to High(TTagField) do
+      if Info.Fields[F] <> '' then
+      begin
+        Empty := False;
+        WriteLn('     tilbage: ', TagFieldCaptions[F], ' = ', Info.Fields[F]);
+      end;
+    Check(Empty, 'alle felter tomme');
+    Check(Length(Info.Pictures) = 0, 'ingen billeder');
+    if RemovesWholeTag(FileName) then
+      Check(Info.TagTypes = '', 'ingen tags tilbage: ' + Info.TagTypes);
+  finally
+    Info.Free;
+  end;
+  Check(AudioFingerprint(FileName) = AudioCrc, 'lyddata uændret');
+end;
+
 var
   I: Integer;
   Dir, Src, Dst: string;
@@ -366,6 +445,8 @@ begin
     Scenario(Dst, 'A', 0, AudioCrc);
     Scenario(Dst, 'B', 1, AudioCrc);
     Scenario(Dst, 'C', 2, AudioCrc);
+    ToolScenario(Dst, AudioCrc);
+    RemoveScenario(Dst, AudioCrc);
   end;
   WriteLn;
   if Failures = 0 then WriteLn('ALLE TESTS OK') else WriteLn(Failures, ' FEJL');

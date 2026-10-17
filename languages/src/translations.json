@@ -4270,5 +4270,549 @@
   "it": "%s  %dx%d  (%d immagini)",
   "sv": "%s  %dx%d  (%d bilder)",
   "es": "%s  %dx%d  (%d imágenes)"
+ },
+ "Kopiér felt": {
+  "en": "Copy field",
+  "de": "Feld kopieren",
+  "fr": "Copier un champ",
+  "it": "Copia campo",
+  "sv": "Kopiera fält",
+  "es": "Copiar campo"
+ },
+ "Fra felt:": {
+  "en": "From field:",
+  "de": "Von Feld:",
+  "fr": "Du champ :",
+  "it": "Dal campo:",
+  "sv": "Från fält:",
+  "es": "Del campo:"
+ },
+ "Til felt:": {
+  "en": "To field:",
+  "de": "In Feld:",
+  "fr": "Vers le champ :",
+  "it": "Al campo:",
+  "sv": "Till fält:",
+  "es": "Al campo:"
+ },
+ "Kun hvis målfeltet er tomt": {
+  "en": "Only if the target field is empty",
+  "de": "Nur wenn das Zielfeld leer ist",
+  "fr": "Uniquement si le champ cible est vide",
+  "it": "Solo se il campo di destinazione è vuoto",
+  "sv": "Bara om målfältet är tomt",
+  "es": "Solo si el campo de destino está vacío"
+ },
+ "Spornumre...": {
+  "en": "Track numbers...",
+  "de": "Tracknummern...",
+  "fr": "Numéros de piste...",
+  "it": "Numeri di traccia...",
+  "sv": "Spårnummer...",
+  "es": "Números de pista..."
+ },
+ "Tag-værktøjer": {
+  "en": "Tag tools",
+  "de": "Tag-Werkzeuge",
+  "fr": "Outils de tags",
+  "it": "Strumenti tag",
+  "sv": "Taggverktyg",
+  "es": "Herramientas de etiquetas"
+ },
+ "Cover-værktøjer": {
+  "en": "Cover tools",
+  "de": "Cover-Werkzeuge",
+  "fr": "Outils de pochette",
+  "it": "Strumenti copertina",
+  "sv": "Omslagsverktyg",
+  "es": "Herramientas de portada"
+ },
+ "Omdøbningshandlinger": {
+  "en": "Rename actions",
+  "de": "Umbenennungsaktionen",
+  "fr": "Actions de renommage",
+  "it": "Azioni di rinomina",
+  "sv": "Namnbytesåtgärder",
+  "es": "Acciones de cambio de nombre"
+ },
+ "Byt Kunstner ↔ Titel": {
+  "en": "Swap Artist ↔ Title",
+  "de": "Interpret ↔ Titel tauschen",
+  "fr": "Échanger Artiste ↔ Titre",
+  "it": "Scambia Artista ↔ Titolo",
+  "sv": "Byt Artist ↔ Titel",
+  "es": "Intercambiar Artista ↔ Título"
+ },
+ "Byt Kunstner ↔ Album": {
+  "en": "Swap Artist ↔ Album",
+  "de": "Interpret ↔ Album tauschen",
+  "fr": "Échanger Artiste ↔ Album",
+  "it": "Scambia Artista ↔ Album",
+  "sv": "Byt Artist ↔ Album",
+  "es": "Intercambiar Artista ↔ Álbum"
+ },
+ "Byt Album ↔ Titel": {
+  "en": "Swap Album ↔ Title",
+  "de": "Album ↔ Titel tauschen",
+  "fr": "Échanger Album ↔ Titre",
+  "it": "Scambia Album ↔ Titolo",
+  "sv": "Byt Album ↔ Titel",
+  "es": "Intercambiar Álbum ↔ Título"
+ },
+ "Byt to felter...": {
+  "en": "Swap two fields...",
+  "de": "Zwei Felder tauschen...",
+  "fr": "Échanger deux champs...",
+  "it": "Scambia due campi...",
+  "sv": "Byt två fält...",
+  "es": "Intercambiar dos campos..."
+ },
+ "Byt indholdet af to vilkårlige felter i de afkrydsede/markerede filer": {
+  "en": "Swap the contents of any two fields in the checked/selected files",
+  "de": "Inhalt zweier beliebiger Felder in den abgehakten/markierten Dateien tauschen",
+  "fr": "Échanger le contenu de deux champs quelconques dans les fichiers cochés/sélectionnés",
+  "it": "Scambia il contenuto di due campi qualsiasi nei file spuntati/selezionati",
+  "sv": "Byt innehållet i två valfria fält i de förbockade/markerade filerna",
+  "es": "Intercambiar el contenido de dos campos cualesquiera en los archivos marcados/seleccionados"
+ },
+ "Kopiér felt til felt...": {
+  "en": "Copy field to field...",
+  "de": "Feld in Feld kopieren...",
+  "fr": "Copier un champ vers un autre...",
+  "it": "Copia campo in campo...",
+  "sv": "Kopiera fält till fält...",
+  "es": "Copiar campo a campo..."
+ },
+ "Kopiér teksten fra ét felt til et andet, fx Kunstner til Albumkunstner": {
+  "en": "Copy the text from one field to another, e.g. Artist to Album artist",
+  "de": "Text von einem Feld in ein anderes kopieren, z. B. Interpret in Album-Interpret",
+  "fr": "Copier le texte d'un champ vers un autre, p. ex. Artiste vers Artiste de l'album",
+  "it": "Copia il testo da un campo a un altro, es. Artista in Artista album",
+  "sv": "Kopiera texten från ett fält till ett annat, t.ex. Artist till Albumartist",
+  "es": "Copiar el texto de un campo a otro, p. ej. Artista a Artista del álbum"
+ },
+ "Ryd mellemrum i felter": {
+  "en": "Clean up spaces in fields",
+  "de": "Leerzeichen in Feldern bereinigen",
+  "fr": "Nettoyer les espaces des champs",
+  "it": "Pulisci gli spazi nei campi",
+  "sv": "Rensa mellanslag i fält",
+  "es": "Limpiar espacios en los campos"
+ },
+ "Fjern mellemrum foran og bagved og dobbelte mellemrum i alle felter": {
+  "en": "Remove leading, trailing and double spaces in all fields",
+  "de": "Führende, nachgestellte und doppelte Leerzeichen in allen Feldern entfernen",
+  "fr": "Supprimer les espaces en début et en fin et les espaces doubles dans tous les champs",
+  "it": "Rimuovi spazi iniziali, finali e doppi in tutti i campi",
+  "sv": "Ta bort inledande, avslutande och dubbla mellanslag i alla fält",
+  "es": "Quitar espacios iniciales, finales y dobles en todos los campos"
+ },
+ "Fjern tags...": {
+  "en": "Remove tags...",
+  "de": "Tags entfernen...",
+  "fr": "Supprimer les tags...",
+  "it": "Rimuovi tag...",
+  "sv": "Ta bort taggar...",
+  "es": "Quitar etiquetas..."
+ },
+ "Fjern alle tags fra de afkrydsede/markerede filer": {
+  "en": "Remove all tags from the checked/selected files",
+  "de": "Alle Tags aus den abgehakten/markierten Dateien entfernen",
+  "fr": "Supprimer tous les tags des fichiers cochés/sélectionnés",
+  "it": "Rimuovi tutti i tag dai file spuntati/selezionati",
+  "sv": "Ta bort alla taggar från de förbockade/markerade filerna",
+  "es": "Quitar todas las etiquetas de los archivos marcados/seleccionados"
+ },
+ "Læg mappens cover ind i filerne": {
+  "en": "Put the folder cover into the files",
+  "de": "Ordner-Cover in die Dateien übernehmen",
+  "fr": "Mettre la pochette du dossier dans les fichiers",
+  "it": "Inserisci la copertina della cartella nei file",
+  "sv": "Lägg in mappens omslag i filerna",
+  "es": "Poner la portada de la carpeta en los archivos"
+ },
+ "Gem folder.jpg/cover.jpg fra hver mappe som forside-cover i mappens filer": {
+  "en": "Save folder.jpg/cover.jpg of each folder as front cover in the folder's files",
+  "de": "folder.jpg/cover.jpg jedes Ordners als Vorderseiten-Cover in dessen Dateien speichern",
+  "fr": "Enregistrer folder.jpg/cover.jpg de chaque dossier comme pochette recto de ses fichiers",
+  "it": "Salva folder.jpg/cover.jpg di ogni cartella come copertina frontale nei suoi file",
+  "sv": "Spara folder.jpg/cover.jpg från varje mapp som framsidesomslag i mappens filer",
+  "es": "Guardar folder.jpg/cover.jpg de cada carpeta como portada en sus archivos"
+ },
+ "Gem filernes cover som folder.jpg": {
+  "en": "Save the files' cover as folder.jpg",
+  "de": "Cover der Dateien als folder.jpg speichern",
+  "fr": "Enregistrer la pochette des fichiers en folder.jpg",
+  "it": "Salva la copertina dei file come folder.jpg",
+  "sv": "Spara filernas omslag som folder.jpg",
+  "es": "Guardar la portada de los archivos como folder.jpg"
+ },
+ "Gem coveret fra filernes tag som folder.jpg i mapper, der ikke har et": {
+  "en": "Save the cover from the files' tag as folder.jpg in folders that have none",
+  "de": "Cover aus dem Tag der Dateien als folder.jpg in Ordnern ohne Cover speichern",
+  "fr": "Enregistrer la pochette du tag des fichiers en folder.jpg dans les dossiers qui n'en ont pas",
+  "it": "Salva la copertina dal tag dei file come folder.jpg nelle cartelle che non ne hanno",
+  "sv": "Spara omslaget från filernas tagg som folder.jpg i mappar som saknar ett",
+  "es": "Guardar la portada de la etiqueta de los archivos como folder.jpg en las carpetas que no tienen"
+ },
+ "Administrer handlinger...": {
+  "en": "Manage actions...",
+  "de": "Aktionen verwalten...",
+  "fr": "Gérer les actions...",
+  "it": "Gestisci azioni...",
+  "sv": "Hantera åtgärder...",
+  "es": "Administrar acciones..."
+ },
+ "Opret og ret navngivne omdøbninger (filmaske og/eller mappemaske)": {
+  "en": "Create and edit named renames (file mask and/or folder mask)",
+  "de": "Benannte Umbenennungen anlegen und bearbeiten (Datei- und/oder Ordnermaske)",
+  "fr": "Créer et modifier des renommages nommés (masque de fichier et/ou de dossier)",
+  "it": "Crea e modifica rinomine con nome (maschera file e/o cartella)",
+  "sv": "Skapa och redigera namngivna namnbyten (filmask och/eller mappmask)",
+  "es": "Crear y editar cambios de nombre con nombre (máscara de archivo y/o de carpeta)"
+ },
+ "Ordudskiftninger ved omdøbning...": {
+  "en": "Word replacements for renaming...",
+  "de": "Wortersetzungen beim Umbenennen...",
+  "fr": "Remplacements de mots au renommage...",
+  "it": "Sostituzioni di parole nella rinomina...",
+  "sv": "Ordersättningar vid namnbyte...",
+  "es": "Reemplazos de palabras al renombrar..."
+ },
+ "Tekst der erstattes, og ord der altid staves ens, når filer og mapper omdøbes": {
+  "en": "Text that is replaced and words that are always spelled the same when files and folders are renamed",
+  "de": "Text, der ersetzt wird, und Wörter mit fester Schreibweise beim Umbenennen von Dateien und Ordnern",
+  "fr": "Texte remplacé et mots toujours écrits de la même façon lors du renommage des fichiers et dossiers",
+  "it": "Testo da sostituire e parole scritte sempre allo stesso modo quando si rinominano file e cartelle",
+  "sv": "Text som ersätts och ord som alltid stavas likadant när filer och mappar byter namn",
+  "es": "Texto que se reemplaza y palabras que siempre se escriben igual al renombrar archivos y carpetas"
+ },
+ "Ingen af filerne ændres.": {
+  "en": "None of the files are changed.",
+  "de": "Keine der Dateien wird geändert.",
+  "fr": "Aucun fichier n'est modifié.",
+  "it": "Nessun file viene modificato.",
+  "sv": "Ingen av filerna ändras.",
+  "es": "No se modifica ningún archivo."
+ },
+ "Ændre %d filer?": {
+  "en": "Change %d files?",
+  "de": "%d Dateien ändern?",
+  "fr": "Modifier %d fichiers ?",
+  "it": "Modificare %d file?",
+  "sv": "Ändra %d filer?",
+  "es": "¿Modificar %d archivos?"
+ },
+ "Byt %s og %s": {
+  "en": "Swap %s and %s",
+  "de": "%s und %s tauschen",
+  "fr": "Échanger %s et %s",
+  "it": "Scambia %s e %s",
+  "sv": "Byt %s och %s",
+  "es": "Intercambiar %s y %s"
+ },
+ "Byt felter": {
+  "en": "Swap fields",
+  "de": "Felder tauschen",
+  "fr": "Échanger des champs",
+  "it": "Scambia campi",
+  "sv": "Byt fält",
+  "es": "Intercambiar campos"
+ },
+ "Felt 1:": {
+  "en": "Field 1:",
+  "de": "Feld 1:",
+  "fr": "Champ 1 :",
+  "it": "Campo 1:",
+  "sv": "Fält 1:",
+  "es": "Campo 1:"
+ },
+ "Felt 2:": {
+  "en": "Field 2:",
+  "de": "Feld 2:",
+  "fr": "Champ 2 :",
+  "it": "Campo 2:",
+  "sv": "Fält 2:",
+  "es": "Campo 2:"
+ },
+ "Kopiér %s til %s": {
+  "en": "Copy %s to %s",
+  "de": "%s nach %s kopieren",
+  "fr": "Copier %s vers %s",
+  "it": "Copia %s in %s",
+  "sv": "Kopiera %s till %s",
+  "es": "Copiar %s a %s"
+ },
+ "Ryd mellemrum": {
+  "en": "Clean up spaces",
+  "de": "Leerzeichen bereinigen",
+  "fr": "Nettoyer les espaces",
+  "it": "Pulisci spazi",
+  "sv": "Rensa mellanslag",
+  "es": "Limpiar espacios"
+ },
+ "Fjern tags": {
+  "en": "Remove tags",
+  "de": "Tags entfernen",
+  "fr": "Supprimer les tags",
+  "it": "Rimuovi tag",
+  "sv": "Ta bort taggar",
+  "es": "Quitar etiquetas"
+ },
+ "Fjern alle tags fra %d filer?": {
+  "en": "Remove all tags from %d files?",
+  "de": "Alle Tags aus %d Dateien entfernen?",
+  "fr": "Supprimer tous les tags de %d fichiers ?",
+  "it": "Rimuovere tutti i tag da %d file?",
+  "sv": "Ta bort alla taggar från %d filer?",
+  "es": "¿Quitar todas las etiquetas de %d archivos?"
+ },
+ "MP3, WAV/AIFF, APE, WavPack, Musepack og OptimFROG: tags fjernes helt. FLAC, Ogg, MP4 og WMA: alle felter og billeder ryddes; tekniske felter som ReplayGain bevares. Lyddata ændres ikke. Det kan ikke fortrydes.": {
+  "en": "MP3, WAV/AIFF, APE, WavPack, Musepack and OptimFROG: tags are removed completely. FLAC, Ogg, MP4 and WMA: all fields and pictures are cleared; technical fields such as ReplayGain are kept. Audio data is not changed. This cannot be undone.",
+  "de": "MP3, WAV/AIFF, APE, WavPack, Musepack und OptimFROG: Tags werden vollständig entfernt. FLAC, Ogg, MP4 und WMA: alle Felder und Bilder werden geleert; technische Felder wie ReplayGain bleiben erhalten. Audiodaten werden nicht verändert. Dies kann nicht rückgängig gemacht werden.",
+  "fr": "MP3, WAV/AIFF, APE, WavPack, Musepack et OptimFROG : les tags sont entièrement supprimés. FLAC, Ogg, MP4 et WMA : tous les champs et images sont effacés ; les champs techniques comme ReplayGain sont conservés. Les données audio ne sont pas modifiées. Cette opération est irréversible.",
+  "it": "MP3, WAV/AIFF, APE, WavPack, Musepack e OptimFROG: i tag vengono rimossi completamente. FLAC, Ogg, MP4 e WMA: tutti i campi e le immagini vengono svuotati; i campi tecnici come ReplayGain vengono mantenuti. I dati audio non vengono modificati. L'operazione non può essere annullata.",
+  "sv": "MP3, WAV/AIFF, APE, WavPack, Musepack och OptimFROG: taggarna tas bort helt. FLAC, Ogg, MP4 och WMA: alla fält och bilder töms; tekniska fält som ReplayGain behålls. Ljuddata ändras inte. Det går inte att ångra.",
+  "es": "MP3, WAV/AIFF, APE, WavPack, Musepack y OptimFROG: las etiquetas se quitan por completo. FLAC, Ogg, MP4 y WMA: se borran todos los campos e imágenes; se conservan campos técnicos como ReplayGain. Los datos de audio no cambian. No se puede deshacer."
+ },
+ "Mappens cover i filerne": {
+  "en": "Folder cover into the files",
+  "de": "Ordner-Cover in die Dateien",
+  "fr": "Pochette du dossier dans les fichiers",
+  "it": "Copertina della cartella nei file",
+  "sv": "Mappens omslag i filerna",
+  "es": "Portada de la carpeta en los archivos"
+ },
+ "Ingen af mapperne har et folder.jpg/cover.jpg (JPEG eller PNG).": {
+  "en": "None of the folders has a folder.jpg/cover.jpg (JPEG or PNG).",
+  "de": "Keiner der Ordner hat ein folder.jpg/cover.jpg (JPEG oder PNG).",
+  "fr": "Aucun des dossiers n'a de folder.jpg/cover.jpg (JPEG ou PNG).",
+  "it": "Nessuna cartella ha un folder.jpg/cover.jpg (JPEG o PNG).",
+  "sv": "Ingen av mapparna har en folder.jpg/cover.jpg (JPEG eller PNG).",
+  "es": "Ninguna carpeta tiene folder.jpg/cover.jpg (JPEG o PNG)."
+ },
+ "Læg mappens cover ind som forside-cover i %d filer?": {
+  "en": "Put the folder cover into %d files as front cover?",
+  "de": "Ordner-Cover als Vorderseiten-Cover in %d Dateien übernehmen?",
+  "fr": "Mettre la pochette du dossier comme pochette recto dans %d fichiers ?",
+  "it": "Inserire la copertina della cartella come copertina frontale in %d file?",
+  "sv": "Lägga in mappens omslag som framsidesomslag i %d filer?",
+  "es": "¿Poner la portada de la carpeta como portada en %d archivos?"
+ },
+ "%d filer ligger i mapper uden cover og springes over.": {
+  "en": "%d files are in folders without a cover and are skipped.",
+  "de": "%d Dateien liegen in Ordnern ohne Cover und werden übersprungen.",
+  "fr": "%d fichiers se trouvent dans des dossiers sans pochette et sont ignorés.",
+  "it": "%d file si trovano in cartelle senza copertina e vengono saltati.",
+  "sv": "%d filer ligger i mappar utan omslag och hoppas över.",
+  "es": "%d archivos están en carpetas sin portada y se omiten."
+ },
+ "Cover til mappe": {
+  "en": "Cover to folder",
+  "de": "Cover in den Ordner",
+  "fr": "Pochette vers le dossier",
+  "it": "Copertina nella cartella",
+  "sv": "Omslag till mapp",
+  "es": "Portada a la carpeta"
+ },
+ "Intet at gemme: %d mapper har allerede et cover, og i %d mapper har ingen af filerne et cover.": {
+  "en": "Nothing to save: %d folders already have a cover, and in %d folders none of the files has a cover.",
+  "de": "Nichts zu speichern: %d Ordner haben bereits ein Cover, und in %d Ordnern hat keine Datei ein Cover.",
+  "fr": "Rien à enregistrer : %d dossiers ont déjà une pochette et dans %d dossiers aucun fichier n'en a.",
+  "it": "Niente da salvare: %d cartelle hanno già una copertina e in %d cartelle nessun file ne ha una.",
+  "sv": "Inget att spara: %d mappar har redan ett omslag och i %d mappar har ingen av filerna något omslag.",
+  "es": "Nada que guardar: %d carpetas ya tienen portada y en %d carpetas ningún archivo tiene portada."
+ },
+ "Gem filernes cover som folder.jpg i %d mapper?\n(%d mapper har allerede et cover og %d mapper har ingen filer med cover - de springes over.)": {
+  "en": "Save the files' cover as folder.jpg in %d folders?\n(%d folders already have a cover and %d folders have no files with a cover - they are skipped.)",
+  "de": "Cover der Dateien als folder.jpg in %d Ordnern speichern?\n(%d Ordner haben bereits ein Cover und %d Ordner haben keine Dateien mit Cover - sie werden übersprungen.)",
+  "fr": "Enregistrer la pochette des fichiers en folder.jpg dans %d dossiers ?\n(%d dossiers ont déjà une pochette et %d dossiers n'ont aucun fichier avec pochette - ils sont ignorés.)",
+  "it": "Salvare la copertina dei file come folder.jpg in %d cartelle?\n(%d cartelle hanno già una copertina e %d cartelle non hanno file con copertina - vengono saltate.)",
+  "sv": "Spara filernas omslag som folder.jpg i %d mappar?\n(%d mappar har redan ett omslag och %d mappar har inga filer med omslag - de hoppas över.)",
+  "es": "¿Guardar la portada de los archivos como folder.jpg en %d carpetas?\n(%d carpetas ya tienen portada y %d carpetas no tienen archivos con portada; se omiten.)"
+ },
+ "Cover gemt i %d mapper": {
+  "en": "Cover saved in %d folders",
+  "de": "Cover in %d Ordnern gespeichert",
+  "fr": "Pochette enregistrée dans %d dossiers",
+  "it": "Copertina salvata in %d cartelle",
+  "sv": "Omslag sparat i %d mappar",
+  "es": "Portada guardada en %d carpetas"
+ },
+ "Omdøbningshandling": {
+  "en": "Rename action",
+  "de": "Umbenennungsaktion",
+  "fr": "Action de renommage",
+  "it": "Azione di rinomina",
+  "sv": "Namnbytesåtgärd",
+  "es": "Acción de cambio de nombre"
+ },
+ "Kør handlingen \"%s\"?": {
+  "en": "Run the action \"%s\"?",
+  "de": "Aktion \"%s\" ausführen?",
+  "fr": "Exécuter l'action « %s » ?",
+  "it": "Eseguire l'azione \"%s\"?",
+  "sv": "Kör åtgärden \"%s\"?",
+  "es": "¿Ejecutar la acción \"%s\"?"
+ },
+ "Filer: %d omdøbes med %s": {
+  "en": "Files: %d are renamed with %s",
+  "de": "Dateien: %d werden umbenannt mit %s",
+  "fr": "Fichiers : %d renommés avec %s",
+  "it": "File: %d vengono rinominati con %s",
+  "sv": "Filer: %d byter namn med %s",
+  "es": "Archivos: %d se renombran con %s"
+ },
+ "Mapper: omdøbes bagefter med %s": {
+  "en": "Folders: renamed afterwards with %s",
+  "de": "Ordner: werden danach umbenannt mit %s",
+  "fr": "Dossiers : renommés ensuite avec %s",
+  "it": "Cartelle: rinominate dopo con %s",
+  "sv": "Mappar: byter namn efteråt med %s",
+  "es": "Carpetas: se renombran después con %s"
+ },
+ "filer/mapper": {
+  "en": "files/folders",
+  "de": "Dateien/Ordner",
+  "fr": "fichiers/dossiers",
+  "it": "file/cartelle",
+  "sv": "filer/mappar",
+  "es": "archivos/carpetas"
+ },
+ "%s: %d filer og %d mapper omdøbt, %d fejl": {
+  "en": "%s: %d files and %d folders renamed, %d errors",
+  "de": "%s: %d Dateien und %d Ordner umbenannt, %d Fehler",
+  "fr": "%s : %d fichiers et %d dossiers renommés, %d erreurs",
+  "it": "%s: %d file e %d cartelle rinominati, %d errori",
+  "sv": "%s: %d filer och %d mappar omdöpta, %d fel",
+  "es": "%s: %d archivos y %d carpetas renombrados, %d errores"
+ },
+ "Uventet tag-struktur": {
+  "en": "Unexpected tag structure",
+  "de": "Unerwartete Tag-Struktur",
+  "fr": "Structure de tag inattendue",
+  "it": "Struttura dei tag inattesa",
+  "sv": "Oväntad taggstruktur",
+  "es": "Estructura de etiquetas inesperada"
+ },
+ "Fra:": {
+  "en": "From:",
+  "de": "Von:",
+  "fr": "De :",
+  "it": "Da:",
+  "sv": "Från:",
+  "es": "De:"
+ },
+ "Til:": {
+  "en": "To:",
+  "de": "Nach:",
+  "fr": "Vers :",
+  "it": "A:",
+  "sv": "Till:",
+  "es": "A:"
+ },
+ "Ordudskiftninger ved omdøbning": {
+  "en": "Word replacements for renaming",
+  "de": "Wortersetzungen beim Umbenennen",
+  "fr": "Remplacements de mots au renommage",
+  "it": "Sostituzioni di parole nella rinomina",
+  "sv": "Ordersättningar vid namnbyte",
+  "es": "Reemplazos de palabras al renombrar"
+ },
+ "Erstat tekst (skelner mellem store og små bogstaver; mellemrum tæller med):": {
+  "en": "Replace text (case-sensitive; spaces count):",
+  "de": "Text ersetzen (Groß-/Kleinschreibung wird beachtet; Leerzeichen zählen):",
+  "fr": "Remplacer le texte (sensible à la casse ; les espaces comptent) :",
+  "it": "Sostituisci testo (distingue maiuscole/minuscole; gli spazi contano):",
+  "sv": "Ersätt text (skiljer på versaler och gemener; mellanslag räknas):",
+  "es": "Reemplazar texto (distingue mayúsculas; los espacios cuentan):"
+ },
+ "Erstat": {
+  "en": "Replace",
+  "de": "Ersetzen",
+  "fr": "Remplacer",
+  "it": "Sostituisci",
+  "sv": "Ersätt",
+  "es": "Reemplazar"
+ },
+ "Med": {
+  "en": "With",
+  "de": "Durch",
+  "fr": "Par",
+  "it": "Con",
+  "sv": "Med",
+  "es": "Por"
+ },
+ "Ord der altid skrives sådan (hele ord, et pr. linje, fx AC/DC eller ABBA):": {
+  "en": "Words always written like this (whole words, one per line, e.g. AC/DC or ABBA):",
+  "de": "Wörter mit fester Schreibweise (ganze Wörter, eines pro Zeile, z. B. AC/DC oder ABBA):",
+  "fr": "Mots toujours écrits ainsi (mots entiers, un par ligne, p. ex. AC/DC ou ABBA) :",
+  "it": "Parole scritte sempre così (parole intere, una per riga, es. AC/DC o ABBA):",
+  "sv": "Ord som alltid skrivs så här (hela ord, ett per rad, t.ex. AC/DC eller ABBA):",
+  "es": "Palabras que siempre se escriben así (palabras completas, una por línea, p. ej. AC/DC o ABBA):"
+ },
+ "Bruges af alle omdøbninger efter versalskift. Faste ord først, så udskiftninger.": {
+  "en": "Used by every rename after the case change. Fixed words first, then replacements.",
+  "de": "Gilt für alle Umbenennungen nach der Groß-/Kleinschreibung. Zuerst feste Wörter, dann Ersetzungen.",
+  "fr": "Utilisé par tous les renommages après le changement de casse. D'abord les mots fixes, puis les remplacements.",
+  "it": "Usato da tutte le rinomine dopo il cambio di maiuscole. Prima le parole fisse, poi le sostituzioni.",
+  "sv": "Används av alla namnbyten efter skiftlägesändring. Fasta ord först, sedan ersättningar.",
+  "es": "Se usa en todos los cambios de nombre tras el cambio de mayúsculas. Primero las palabras fijas, luego los reemplazos."
+ },
+ "Handlinger:": {
+  "en": "Actions:",
+  "de": "Aktionen:",
+  "fr": "Actions :",
+  "it": "Azioni:",
+  "sv": "Åtgärder:",
+  "es": "Acciones:"
+ },
+ "Navn:": {
+  "en": "Name:",
+  "de": "Name:",
+  "fr": "Nom :",
+  "it": "Nome:",
+  "sv": "Namn:",
+  "es": "Nombre:"
+ },
+ "Mappemaske (omdøber mapperne bagefter):": {
+  "en": "Folder mask (renames the folders afterwards):",
+  "de": "Ordnermaske (benennt die Ordner danach um):",
+  "fr": "Masque de dossier (renomme les dossiers ensuite) :",
+  "it": "Maschera cartella (rinomina le cartelle dopo):",
+  "sv": "Mappmask (byter namn på mapparna efteråt):",
+  "es": "Máscara de carpeta (renombra las carpetas después):"
+ },
+ "Tilføj": {
+  "en": "Add",
+  "de": "Hinzufügen",
+  "fr": "Ajouter",
+  "it": "Aggiungi",
+  "sv": "Lägg till",
+  "es": "Añadir"
+ },
+ "Ny handling": {
+  "en": "New action",
+  "de": "Neue Aktion",
+  "fr": "Nouvelle action",
+  "it": "Nuova azione",
+  "sv": "Ny åtgärd",
+  "es": "Nueva acción"
+ },
+ "En handling omdøber de afkrydsede (eller markerede) filer med filnavnsmasken og derefter deres mapper med mappemasken. Versaler og ordudskiftninger følger indstillingerne i fanebladet Omdøb filer. Handlingerne findes i menuen Værktøjer.": {
+  "en": "An action renames the checked (or selected) files with the file name mask and then their folders with the folder mask. Case and word replacements follow the settings on the Rename files tab. The actions are in the Tools menu.",
+  "de": "Eine Aktion benennt die abgehakten (oder markierten) Dateien mit der Dateinamen-Maske und danach ihre Ordner mit der Ordnermaske um. Groß-/Kleinschreibung und Wortersetzungen folgen den Einstellungen der Registerkarte Dateien umbenennen. Die Aktionen stehen im Menü Werkzeuge.",
+  "fr": "Une action renomme les fichiers cochés (ou sélectionnés) avec le masque de nom de fichier, puis leurs dossiers avec le masque de dossier. La casse et les remplacements suivent les réglages de l'onglet Renommer les fichiers. Les actions se trouvent dans le menu Outils.",
+  "it": "Un'azione rinomina i file spuntati (o selezionati) con la maschera nome file e poi le loro cartelle con la maschera cartella. Maiuscole e sostituzioni seguono le impostazioni della scheda Rinomina file. Le azioni si trovano nel menu Strumenti.",
+  "sv": "En åtgärd byter namn på de förbockade (eller markerade) filerna med filnamnsmasken och därefter på deras mappar med mappmasken. Skiftläge och ordersättningar följer inställningarna på fliken Byt namn på filer. Åtgärderna finns i menyn Verktyg.",
+  "es": "Una acción renombra los archivos marcados (o seleccionados) con la máscara de nombre y después sus carpetas con la máscara de carpeta. Las mayúsculas y los reemplazos siguen la configuración de la pestaña Renombrar archivos. Las acciones están en el menú Herramientas."
+ },
+ "Giv handlingen et navn og mindst én maske.": {
+  "en": "Give the action a name and at least one mask.",
+  "de": "Gib der Aktion einen Namen und mindestens eine Maske.",
+  "fr": "Donnez un nom à l'action et au moins un masque.",
+  "it": "Dai un nome all'azione e almeno una maschera.",
+  "sv": "Ge åtgärden ett namn och minst en mask.",
+  "es": "Dale un nombre a la acción y al menos una máscara."
  }
 }

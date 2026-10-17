@@ -11,7 +11,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
   StdCtrls, ShellCtrls, Menus, ActnList, IniFiles, AudioTypes, ScanThread, RenameCore,
-  BatchWrite;
+  BatchWrite, FieldTools, AppSettings;
 
 type
   TColumnKind = (ckCheck, ckFileName, ckField, ckDuration, ckBitrate, ckSampleRate,
@@ -154,6 +154,12 @@ type
     FView: TFPList;         // the visible subset of FItems (filter, hidden files)
     FScanner: TScanThread;
     FFolder: string;
+    FSwapA, FSwapB, FCopySrc, FCopyDst: TTagField; // last choices in the field dialogs
+    FCopyOnlyEmpty: Boolean;
+    FActionsMenu: TMenuItem;
+    FActManageActions: TAction;
+    FAutoYes: Boolean;
+    FAutoLog: TStringList;
     FSortColumn: Integer;
     FSortDescending: Boolean;
     FKeepTimestamp: Boolean;
@@ -211,6 +217,33 @@ type
     procedure ActShortcutsExecute(Sender: TObject);
     procedure ActAboutExecute(Sender: TObject);
     procedure AddLanguageMenu(ParentItem: TMenuItem);
+    // tag, cover and rename tools
+    procedure RunFieldPlans(const Items: TAudioInfoArray; const Plans: array of TFieldPlan; const What: string);
+    procedure SwapFields(A, B: TTagField);
+    procedure ActSwapArtistTitleExecute(Sender: TObject);
+    procedure ActSwapArtistAlbumExecute(Sender: TObject);
+    procedure ActSwapAlbumTitleExecute(Sender: TObject);
+    procedure ActSwapFieldsExecute(Sender: TObject);
+    procedure ActCopyFieldExecute(Sender: TObject);
+    procedure ActCleanSpacesExecute(Sender: TObject);
+    procedure RefreshInfo(Info: TAudioInfo);
+    procedure ActRemoveTagsExecute(Sender: TObject);
+    procedure ActCoverToTagsExecute(Sender: TObject);
+    procedure ActCoverFromTagsExecute(Sender: TObject);
+    procedure ActRenameWordsExecute(Sender: TObject);
+    procedure ActManageActionsExecute(Sender: TObject);
+    procedure RebuildActionsMenu;
+    procedure RenameActionClick(Sender: TObject);
+    procedure DoCopyField(Src, Dst: TTagField; OnlyIfEmpty: Boolean);
+    procedure RunRenameAction(const Act: TRenameAction);
+    // confirmations and messages that the self-test answers itself
+    function AskYes(const Title, Msg: string; DlgType: TMsgDlgType = mtConfirmation): Boolean;
+    procedure Inform(const Title, Msg: string; DlgType: TMsgDlgType = mtInformation);
+  public
+    { Developer check: "TagKlon.exe --selftest <folder> <report.txt>" runs the tag, cover
+      and rename tools on the files of <folder> (use copies!) without dialogs. }
+    procedure RunSelfTest(const ReportFile: string);
+  private
     procedure LanguageClick(Sender: TObject);
     procedure ActFolderUpExecute(Sender: TObject);
     procedure ActFavoritesExecute(Sender: TObject);
@@ -266,7 +299,8 @@ type
     procedure LoadInlineOptions;
     procedure SaveInlineOptions;
     procedure WriteFieldsBatch(const Items: TAudioInfoArray; const PerItem: array of TFieldValues;
-      const PerItemFields: array of TTagFieldSet; const Cover: TBytes; const What: string);
+      const PerItemFields: array of TTagFieldSet; const Cover: TBytes; const What: string;
+      const PerCover: TCoverArray = nil);
     // covers
     procedure UpdateCovers;
     procedure ShowImageBytes(Image: TImage; const Data: TBytes);
@@ -286,9 +320,66 @@ implementation
 uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
-  AppSettings, Language, Process;
+  Language, Process, TagRemove, ToolDialogs;
 
 resourcestring
+  rsSpornumreMenu = 'Spornumre...';
+  rsDiscogsTokenMenu = 'Discogs-token...';
+  rsOpMenu = 'Op';
+  rsTagVaerktoejer = 'Tag-værktøjer';
+  rsCoverVaerktoejer = 'Cover-værktøjer';
+  rsOmdoebningshandlingerMenu = 'Omdøbningshandlinger';
+  rsKunstnerTitelMenu = 'Byt Kunstner ↔ Titel';
+  rsKunstnerAlbumMenu = 'Byt Kunstner ↔ Album';
+  rsAlbumTitelMenu = 'Byt Album ↔ Titel';
+  rsBytToFelter = 'Byt to felter...';
+  rsBytToVilkaarligeFelter = 'Byt indholdet af to vilkårlige felter i de afkrydsede/markerede filer';
+  rsKopierFeltTilFelt = 'Kopiér felt til felt...';
+  rsKopierTekstFraEtFelt = 'Kopiér teksten fra ét felt til et andet, fx Kunstner til Albumkunstner';
+  rsRydMellemrumIFelter = 'Ryd mellemrum i felter';
+  rsRydMellemrumHint = 'Fjern mellemrum foran og bagved og dobbelte mellemrum i alle felter';
+  rsFjernTagsMenu = 'Fjern tags...';
+  rsFjernTagsHint = 'Fjern alle tags fra de afkrydsede/markerede filer';
+  rsLaegMappensCoverIndIFilerne = 'Læg mappens cover ind i filerne';
+  rsLaegMappensCoverHint = 'Gem folder.jpg/cover.jpg fra hver mappe som forside-cover i mappens filer';
+  rsGemFilernesCoverSomFolderJpg = 'Gem filernes cover som folder.jpg';
+  rsGemFilernesCoverHint = 'Gem coveret fra filernes tag som folder.jpg i mapper, der ikke har et';
+  rsAdministrerHandlinger = 'Administrer handlinger...';
+  rsAdministrerHandlingerHint = 'Opret og ret navngivne omdøbninger (filmaske og/eller mappemaske)';
+  rsOrdudskiftningerMenu = 'Ordudskiftninger ved omdøbning...';
+  rsOrdudskiftningerHint = 'Tekst der erstattes, og ord der altid staves ens, når filer og mapper omdøbes';
+  rsIngenFilerAendres = 'Ingen af filerne ændres.';
+  rsAendreDFiler = 'Ændre %d filer?';
+  rsBytSS = 'Byt %s og %s';
+  rsBytFelter = 'Byt felter';
+  rsFelt1 = 'Felt 1:';
+  rsFelt2 = 'Felt 2:';
+  rsKopierFelt = 'Kopiér felt';
+  rsFraFelt = 'Fra felt:';
+  rsTilFelt = 'Til felt:';
+  rsKunHvisFeltetErTomt = 'Kun hvis målfeltet er tomt';
+  rsKopierSTilS = 'Kopiér %s til %s';
+  rsRydMellemrum = 'Ryd mellemrum';
+  rsFjernTags = 'Fjern tags';
+  rsFjernAlleTagsIDFiler = 'Fjern alle tags fra %d filer?';
+  rsFjernTagsForklaring = 'MP3, WAV/AIFF, APE, WavPack, Musepack og OptimFROG: tags fjernes helt. ' +
+    'FLAC, Ogg, MP4 og WMA: alle felter og billeder ryddes; tekniske felter som ReplayGain bevares. ' +
+    'Lyddata ændres ikke. Det kan ikke fortrydes.';
+  rsMappeCoverIFiler = 'Mappens cover i filerne';
+  rsIngenAfMapperneHarEtCover = 'Ingen af mapperne har et folder.jpg/cover.jpg (JPEG eller PNG).';
+  rsLaegMappensCoverIndIDFiler = 'Læg mappens cover ind som forside-cover i %d filer?';
+  rsDFilerLiggerIMapperUdenCover = '%d filer ligger i mapper uden cover og springes over.';
+  rsCoverTilMappe = 'Cover til mappe';
+  rsIngenMapperAtGemme = 'Intet at gemme: %d mapper har allerede et cover, og i %d mapper har ingen af filerne et cover.';
+  rsGemFilernesCoverIDMapper = 'Gem filernes cover som folder.jpg i %d mapper?' + LineEnding +
+    '(%d mapper har allerede et cover og %d mapper har ingen filer med cover - de springes over.)';
+  rsCoverGemtIDMapper = 'Cover gemt i %d mapper';
+  rsOmdoebningshandling = 'Omdøbningshandling';
+  rsKoerHandlingenS = 'Kør handlingen "%s"?';
+  rsFilerDOmdoebesMedS = 'Filer: %d omdøbes med %s';
+  rsMapperneOmdoebesMedS = 'Mapper: omdøbes bagefter med %s';
+  rsFilerMapper = 'filer/mapper';
+  rsHandlingDFilerDMapperDFejl = '%s: %d filer og %d mapper omdøbt, %d fejl';
   rsSprogLanguage = 'Sprog (Language)';
   rsSprog = 'Sprog';
   rsAutomatiskWindowsSprog = 'Automatisk (Windows-sprog)';
@@ -762,8 +853,9 @@ var
     aSelAll, aSelNone, aChkSel, aUnchkSel, aChkAll, aUnchkAll, aInvert, aCopy, aFind,
     aPlChecked, aPlAll, aTabRename, aTabMulti, aTabF2T, aRenameDlg, aF2TDlg, aTracks, aWeb,
     aToken, aKeys, aAbout, aUp, aFav, aNewFolder, aTreeRefresh, aCloseFolders,
-    aMoveUp, aMoveDown, aExport: TAction;
-  TopMenu: TMenuItem;
+    aMoveUp, aMoveDown, aExport, aSwapAT, aSwapAA, aSwapLT, aSwap, aCopyField, aClean,
+    aRemoveTags, aCoverIn, aCoverOut, aWords: TAction;
+  TopMenu, SubMenu: TMenuItem;
   X: Integer;
 
   function Menu(const Caption: string): TMenuItem;
@@ -780,6 +872,13 @@ var
     M := TMenuItem.Create(Parent);
     if A = nil then M.Caption := '-' else M.Action := A;
     Parent.Add(M);
+  end;
+
+  function Sub(Parent: TMenuItem; const Caption: string): TMenuItem;
+  begin
+    Result := TMenuItem.Create(Parent);
+    Result.Caption := Caption;
+    Parent.Add(Result);
   end;
 
   procedure AddPopup(A: TAction);
@@ -808,6 +907,11 @@ var
   end;
 
 begin
+  FSwapA := tfArtist;
+  FSwapB := tfAlbumArtist;
+  FCopySrc := tfArtist;
+  FCopyDst := tfAlbumArtist;
+  FCopyOnlyEmpty := True;
   FActions := TActionList.Create(Self);
   FActions.Images := ImagesMain;
 
@@ -850,21 +954,32 @@ begin
   aTabF2T := NewAction(rsTagsFraFilnavn, rsVisFanebladetTagsFraFilnavn, ShortCut(VK_F4, [ssShift]), icoFileToTag, @ActTabFileToTagExecute);
   aRenameDlg := NewAction(rsOmdoebFilerMedForhaandsvisning, '', 0, icoPreview, @ActRenameDialogExecute);
   aF2TDlg := NewAction(rsTagsFraFilnavnMedForhaandsvisning, '', 0, icoPreview, @ActFileToTagDialogExecute);
-  aTracks := NewAction('Spornumre...', rsFormaterEllerNummererSpornumre, ShortCut(VK_T, [ssCtrl]), icoTracks, @ActTracksExecute);
+  aTracks := NewAction(rsSpornumreMenu, rsFormaterEllerNummererSpornumre, ShortCut(VK_T, [ssCtrl]), icoTracks, @ActTracksExecute);
   aWeb := NewAction(rsWebOpslagMusicbrainzDiscogs, rsHentTitlerSpornumreOgCover,
     ShortCut(VK_W, [ssCtrl]), icoWeb, @ActWebExecute);
   FActUndo := NewAction(rsFortrydOmdoebning, rsGivDeSenestOmdoebteFiler,
     ShortCut(VK_Z, [ssCtrl]), icoUndo, @ActUndoExecute);
   FActUndo.Enabled := False;
   FActKeepDate := NewAction(rsBevarFilernesDatoVedGem, '', 0, -1, @ActKeepDateExecute);
-  aToken := NewAction('Discogs-token...', '', 0, icoSettings, @ActDiscogsTokenExecute);
+  aToken := NewAction(rsDiscogsTokenMenu, '', 0, icoSettings, @ActDiscogsTokenExecute);
   aKeys := NewAction(rsTastaturgenveje, '', ShortCut(VK_F1, []), icoHelp, @ActShortcutsExecute);
   aAbout := NewAction(rsOmTagklon, '', 0, icoInfo, @ActAboutExecute);
-  aUp := NewAction('Op', rsGaaEnMappeOp, ShortCut(VK_BACK, [ssAlt]), icoFolderUp, @ActFolderUpExecute);
+  aUp := NewAction(rsOpMenu, rsGaaEnMappeOp, ShortCut(VK_BACK, [ssAlt]), icoFolderUp, @ActFolderUpExecute);
   aFav := NewAction(rsFavoritter, rsFavoritmapper, 0, icoFavorites, @ActFavoritesExecute);
   aNewFolder := NewAction(rsNyMappe2, rsOpretEnUndermappeIDen, 0, icoNewFolder, @ActNewFolderExecute);
   aTreeRefresh := NewAction(rsOpdaterMappetraeet, '', 0, icoRefresh, @ActRefreshTreeExecute);
   aCloseFolders := NewAction(rsSkjulMappepanelet, '', 0, icoClose, @ActFoldersExecute);
+  aSwapAT := NewAction(rsKunstnerTitelMenu, '', 0, -1, @ActSwapArtistTitleExecute);
+  aSwapAA := NewAction(rsKunstnerAlbumMenu, '', 0, -1, @ActSwapArtistAlbumExecute);
+  aSwapLT := NewAction(rsAlbumTitelMenu, '', 0, -1, @ActSwapAlbumTitleExecute);
+  aSwap := NewAction(rsBytToFelter, rsBytToVilkaarligeFelter, 0, -1, @ActSwapFieldsExecute);
+  aCopyField := NewAction(rsKopierFeltTilFelt, rsKopierTekstFraEtFelt, 0, icoCopy, @ActCopyFieldExecute);
+  aClean := NewAction(rsRydMellemrumIFelter, rsRydMellemrumHint, 0, -1, @ActCleanSpacesExecute);
+  aRemoveTags := NewAction(rsFjernTagsMenu, rsFjernTagsHint, ShortCut(VK_DELETE, [ssCtrl]), -1, @ActRemoveTagsExecute);
+  aCoverIn := NewAction(rsLaegMappensCoverIndIFilerne, rsLaegMappensCoverHint, 0, -1, @ActCoverToTagsExecute);
+  aCoverOut := NewAction(rsGemFilernesCoverSomFolderJpg, rsGemFilernesCoverHint, 0, icoSave, @ActCoverFromTagsExecute);
+  FActManageActions := NewAction(rsAdministrerHandlinger, rsAdministrerHandlingerHint, 0, icoSettings, @ActManageActionsExecute);
+  aWords := NewAction(rsOrdudskiftningerMenu, rsOrdudskiftningerHint, 0, icoSettings, @ActRenameWordsExecute);
   FActToolsPanel.AutoCheck := True;
   FActFolders.AutoCheck := True;
   FActAddress.AutoCheck := True;
@@ -891,9 +1006,17 @@ begin
   Add(TopMenu, aTabRename); Add(TopMenu, aTabMulti); Add(TopMenu, aTabF2T); Add(TopMenu, nil);
   Add(TopMenu, aRenameDlg); Add(TopMenu, aF2TDlg); Add(TopMenu, aRenameFolder); Add(TopMenu, aTracks); Add(TopMenu, aWeb);
   Add(TopMenu, aExport);
+  Add(TopMenu, nil);
+  SubMenu := Sub(TopMenu, rsTagVaerktoejer);
+  Add(SubMenu, aSwapAT); Add(SubMenu, aSwapAA); Add(SubMenu, aSwapLT); Add(SubMenu, aSwap);
+  Add(SubMenu, nil); Add(SubMenu, aCopyField); Add(SubMenu, aClean); Add(SubMenu, nil); Add(SubMenu, aRemoveTags);
+  SubMenu := Sub(TopMenu, rsCoverVaerktoejer);
+  Add(SubMenu, aCoverIn); Add(SubMenu, aCoverOut);
+  FActionsMenu := Sub(TopMenu, rsOmdoebningshandlingerMenu);
+  RebuildActionsMenu;
   Add(TopMenu, nil); Add(TopMenu, FActUndo);
   TopMenu := Menu(rsIndstillinger);
-  Add(TopMenu, FActKeepDate); Add(TopMenu, aToken); Add(TopMenu, nil);
+  Add(TopMenu, FActKeepDate); Add(TopMenu, aWords); Add(TopMenu, aToken); Add(TopMenu, nil);
   AddLanguageMenu(TopMenu);
   TopMenu := Menu(rsHjaelp);
   Add(TopMenu, aKeys); Add(TopMenu, aAbout);
@@ -1486,8 +1609,7 @@ var
   Restored: Integer;
 begin
   if Length(FUndoLog) = 0 then Exit;
-  if MessageDlg(rsFortrydOmdoebning, Format(rsGivDFilerMapperDeres,
-    [Length(FUndoLog)]), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
+  if not AskYes(rsFortrydOmdoebning, Format(rsGivDFilerMapperDeres, [Length(FUndoLog)])) then Exit;
   Errors := TStringList.Create;
   try
     Restored := UndoRename(FUndoLog, Errors);
@@ -1498,8 +1620,8 @@ begin
     SetMessage(Format(rsDFilerMapperFikDeres, [Restored]));
     SelectionChanged;
     if Errors.Count > 0 then
-      MessageDlg(rsFortrydOmdoebning, Format(rsDFilerMapperFikDeres2,
-        [Restored]) + LineEnding + Errors.Text, mtWarning, [mbOK], 0);
+      Inform(rsFortrydOmdoebning, Format(rsDFilerMapperFikDeres2,
+        [Restored]) + LineEnding + Errors.Text, mtWarning);
   finally
     Errors.Free;
   end;
@@ -1595,6 +1717,7 @@ begin
     RadioRenameTitle, RadioRenameSentence);
   Result.SpacesToUnderscores := CheckRenameUnderscores.Checked;
   Result.PadTrack := CheckRenamePadTrack.Checked;
+  ApplyRenameWords(Result);
 end;
 
 function TFormMain.F2TCaseMode: TCaseMode;
@@ -1842,9 +1965,11 @@ end;
 
 { Writes per-file values with progress in the status bar, then reports. }
 procedure TFormMain.WriteFieldsBatch(const Items: TAudioInfoArray; const PerItem: array of TFieldValues;
-  const PerItemFields: array of TTagFieldSet; const Cover: TBytes; const What: string);
+  const PerItemFields: array of TTagFieldSet; const Cover: TBytes; const What: string;
+  const PerCover: TCoverArray);
 var
   I, Saved, Failed, Skipped: Integer;
+  ItemCover: TBytes;
   Err: string;
   Skip: Boolean;
   Errors: TStringList;
@@ -1857,10 +1982,12 @@ begin
   try
     for I := 0 to High(Items) do
     begin
-      if (PerItemFields[I] = []) and (Cover = nil) then Continue;
+      // one cover for all files, or one per file (nil = no change)
+      if PerCover <> nil then ItemCover := PerCover[I] else ItemCover := Cover;
+      if (PerItemFields[I] = []) and (ItemCover = nil) then Continue;
       SetMessage(Format(rsSDAfD, [What, I + 1, Length(Items)]));
       Application.ProcessMessages;
-      if UpdateFileTags(Items[I], PerItem[I], PerItemFields[I], Cover, FKeepTimestamp, Err, Skip) then
+      if UpdateFileTags(Items[I], PerItem[I], PerItemFields[I], ItemCover, FKeepTimestamp, Err, Skip) then
         Inc(Saved)
       else if Skip then
         Inc(Skipped)
@@ -1876,7 +2003,7 @@ begin
   SetMessage(Format(rsSGemtIDFiler, [What, Saved, Failed,
     IfThen(Skipped > 0, Format(rsDSprungetOverFiltype, [Skipped]), '')]));
   if Errors.Count > 0 then
-    MessageDlg(rsNogleFilerBlevIkkeGemt, Errors.Text, mtWarning, [mbOK], 0);
+    Inform(rsNogleFilerBlevIkkeGemt, Errors.Text, mtWarning);
   Errors.Free;
   FCoverFile := '';
   FileList.Invalidate;
@@ -2617,6 +2744,518 @@ begin
     rsEnterDobbeltklikRedigerTagFor, mtInformation, [mbOK], 0);
 end;
 
+function TFormMain.AskYes(const Title, Msg: string; DlgType: TMsgDlgType): Boolean;
+begin
+  if FAutoYes then
+  begin
+    FAutoLog.Add('  ? ' + Title + ': ' + StringReplace(Msg, LineEnding, ' / ', [rfReplaceAll]));
+    Exit(True);
+  end;
+  Result := MessageDlg(Title, Msg, DlgType, [mbYes, mbNo], 0) = mrYes;
+end;
+
+procedure TFormMain.Inform(const Title, Msg: string; DlgType: TMsgDlgType);
+begin
+  if FAutoYes then
+    FAutoLog.Add('  ! ' + Title + ': ' + StringReplace(Msg, LineEnding, ' / ', [rfReplaceAll]))
+  else
+    MessageDlg(Title, Msg, DlgType, [mbOK], 0);
+end;
+
+procedure TFormMain.RunSelfTest(const ReportFile: string);
+var
+  I: Integer;
+  Act: TRenameAction;
+
+  procedure Dump(const Step: string);
+  var
+    J: Integer;
+    D: TAudioInfo;
+  begin
+    FAutoLog.Add('== ' + Step);
+    for J := 0 to FItems.Count - 1 do
+    begin
+      D := ReadAudioInfo(TAudioInfo(FItems[J]).FileName, False);
+      try
+        FAutoLog.Add(Format('  %s | kunstner=%s | albumkunstner=%s | titel=%s | album=%s | cover=%s | tags=%s',
+          [ExtractFileName(D.FileName), D.Fields[tfArtist], D.Fields[tfAlbumArtist], D.Fields[tfTitle],
+          D.Fields[tfAlbum], BoolToStr(D.HasCover, 'ja', 'nej'), D.TagTypes]));
+      finally
+        D.Free;
+      end;
+    end;
+  end;
+
+begin
+  FAutoLog := TStringList.Create;
+  try
+    for I := 1 to 1500 do // wait for the scan (max. 30 s)
+    begin
+      if FScanner = nil then Break;
+      Application.ProcessMessages;
+      Sleep(20);
+    end;
+    FAutoYes := True;
+    for I := 0 to FItems.Count - 1 do TAudioInfo(FItems[I]).Checked := True;
+    Dump('start');
+    DoCopyField(tfArtist, tfAlbumArtist, True);
+    Dump('kopier kunstner -> albumkunstner (kun tomme)');
+    SwapFields(tfAlbum, tfTitle);
+    Dump('byt album og titel');
+    ActCleanSpacesExecute(nil);
+    Dump('ryd mellemrum');
+    ActCoverToTagsExecute(nil);
+    Dump('mappens cover ind i filerne');
+    DeleteFile(FindFolderCover(FFolder));
+    ActCoverFromTagsExecute(nil);
+    FAutoLog.Add('  mappe-cover efter udtraek: ' + ExtractFileName(FindFolderCover(FFolder)));
+    Act.Name := 'Selvtest';
+    Act.FileMask := '%1 - %2';
+    Act.FolderMask := 'Selvtest-mappe';
+    RunRenameAction(Act);
+    FAutoLog.Add('  mappe efter handling: ' + FFolder);
+    Dump('omdoebningshandling');
+    ActUndoExecute(nil);
+    FAutoLog.Add('  mappe efter fortryd: ' + FFolder);
+    Dump('fortryd');
+    ActRemoveTagsExecute(nil);
+    Dump('fjern tags');
+    FAutoLog.SaveToFile(ReportFile);
+  finally
+    FAutoYes := False;
+    FreeAndNil(FAutoLog);
+  end;
+end;
+
+procedure WriteFileBytes(const FileName: string; const Data: TBytes);
+var
+  S: TFileStream;
+begin
+  S := TFileStream.Create(FileName, fmCreate);
+  try
+    if Length(Data) > 0 then S.WriteBuffer(Data[0], Length(Data));
+  finally
+    S.Free;
+  end;
+end;
+
+{ ---------- tag tools ---------- }
+
+procedure TFormMain.RunFieldPlans(const Items: TAudioInfoArray; const Plans: array of TFieldPlan;
+  const What: string);
+var
+  PerItem: array of TFieldValues;
+  PerFields: array of TTagFieldSet;
+  I, Count: Integer;
+begin
+  SetLength(PerItem, Length(Items));
+  SetLength(PerFields, Length(Items));
+  Count := 0;
+  for I := 0 to High(Items) do
+  begin
+    PerItem[I] := Plans[I].Values;
+    PerFields[I] := Plans[I].Fields;
+    if Plans[I].Fields <> [] then Inc(Count);
+  end;
+  if Count = 0 then
+  begin
+    Inform(What, rsIngenFilerAendres);
+    Exit;
+  end;
+  if not AskYes(What, Format(rsAendreDFiler, [Count])) then Exit;
+  WriteFieldsBatch(Items, PerItem, PerFields, nil, What);
+end;
+
+procedure TFormMain.SwapFields(A, B: TTagField);
+var
+  Items: TAudioInfoArray;
+  Plans: array of TFieldPlan;
+  I: Integer;
+begin
+  if not RequireTargets(Items) then Exit;
+  SetLength(Plans, Length(Items));
+  for I := 0 to High(Items) do Plans[I] := PlanSwap(Items[I], A, B);
+  RunFieldPlans(Items, Plans, Format(rsBytSS, [TagFieldCaptions[A], TagFieldCaptions[B]]));
+end;
+
+procedure TFormMain.ActSwapArtistTitleExecute(Sender: TObject);
+begin
+  SwapFields(tfArtist, tfTitle);
+end;
+
+procedure TFormMain.ActSwapArtistAlbumExecute(Sender: TObject);
+begin
+  SwapFields(tfArtist, tfAlbum);
+end;
+
+procedure TFormMain.ActSwapAlbumTitleExecute(Sender: TObject);
+begin
+  SwapFields(tfAlbum, tfTitle);
+end;
+
+procedure TFormMain.ActSwapFieldsExecute(Sender: TObject);
+var
+  Dummy: Boolean;
+begin
+  Dummy := False;
+  if AskFieldPair(rsBytFelter, rsFelt1, rsFelt2, '', FSwapA, FSwapB, Dummy) then
+    SwapFields(FSwapA, FSwapB);
+end;
+
+procedure TFormMain.ActCopyFieldExecute(Sender: TObject);
+begin
+  if AskFieldPair(rsKopierFelt, rsFraFelt, rsTilFelt, rsKunHvisFeltetErTomt,
+    FCopySrc, FCopyDst, FCopyOnlyEmpty) then
+    DoCopyField(FCopySrc, FCopyDst, FCopyOnlyEmpty);
+end;
+
+procedure TFormMain.DoCopyField(Src, Dst: TTagField; OnlyIfEmpty: Boolean);
+var
+  Items: TAudioInfoArray;
+  Plans: array of TFieldPlan;
+  I: Integer;
+begin
+  if not RequireTargets(Items) then Exit;
+  SetLength(Plans, Length(Items));
+  for I := 0 to High(Items) do Plans[I] := PlanCopy(Items[I], Src, Dst, OnlyIfEmpty);
+  RunFieldPlans(Items, Plans, Format(rsKopierSTilS, [TagFieldCaptions[Src], TagFieldCaptions[Dst]]));
+end;
+
+procedure TFormMain.ActCleanSpacesExecute(Sender: TObject);
+var
+  Items: TAudioInfoArray;
+  Plans: array of TFieldPlan;
+  I: Integer;
+begin
+  if not RequireTargets(Items) then Exit;
+  SetLength(Plans, Length(Items));
+  for I := 0 to High(Items) do Plans[I] := PlanCleanSpaces(Items[I]);
+  RunFieldPlans(Items, Plans, rsRydMellemrum);
+end;
+
+procedure TFormMain.RefreshInfo(Info: TAudioInfo);
+var
+  Fresh: TAudioInfo;
+  F: TTagField;
+begin
+  Fresh := ReadAudioInfo(Info.FileName, False);
+  try
+    for F := Low(TTagField) to High(TTagField) do Info.Fields[F] := Fresh.Fields[F];
+    Info.TagTypes := Fresh.TagTypes;
+    Info.HasCover := Fresh.HasCover;
+    Info.FileSize := Fresh.FileSize;
+    Info.Error := Fresh.Error;
+  finally
+    Fresh.Free;
+  end;
+end;
+
+procedure TFormMain.ActRemoveTagsExecute(Sender: TObject);
+var
+  Items: TAudioInfoArray;
+  I, Done, Failed: Integer;
+  Errors: TStringList;
+begin
+  if not RequireTargets(Items) then Exit;
+  if not AskYes(rsFjernTags, Format(rsFjernAlleTagsIDFiler, [Length(Items)]) + LineEnding + LineEnding +
+    rsFjernTagsForklaring, mtWarning) then Exit;
+  Done := 0;
+  Failed := 0;
+  Errors := TStringList.Create;
+  Screen.Cursor := crHourGlass;
+  try
+    for I := 0 to High(Items) do
+    begin
+      SetMessage(Format(rsSDAfD, [rsFjernTags, I + 1, Length(Items)]));
+      Application.ProcessMessages;
+      try
+        RemoveAllTags(Items[I].FileName, FKeepTimestamp);
+        Inc(Done);
+      except
+        on E: Exception do
+        begin
+          Inc(Failed);
+          if Errors.Count < 20 then Errors.Add(ExtractFileName(Items[I].FileName) + ': ' + E.Message);
+        end;
+      end;
+      RefreshInfo(Items[I]);
+    end;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+  SetMessage(Format(rsSGemtIDFiler, [rsFjernTags, Done, Failed, '']));
+  if Errors.Count > 0 then Inform(rsNogleFilerBlevIkkeGemt, Errors.Text, mtWarning);
+  Errors.Free;
+  FCoverFile := '';
+  FFolderCoverDir := '';
+  FileList.Invalidate;
+  SelectionChanged;
+end;
+
+{ ---------- cover tools ---------- }
+
+procedure TFormMain.ActCoverToTagsExecute(Sender: TObject);
+var
+  Items: TAudioInfoArray;
+  PerItem: array of TFieldValues;
+  PerFields: array of TTagFieldSet;
+  PerCover: TCoverArray;
+  Dirs: TStringList;
+  I, K, WithCover: Integer;
+  Dir, Path: string;
+  Data: TBytes;
+  Empty: TFieldValues;
+  F: TTagField;
+  Covers: array of TBytes; // per entry of Dirs
+begin
+  if not RequireTargets(Items) then Exit;
+  for F := Low(TTagField) to High(TTagField) do Empty[F] := '';
+  SetLength(PerItem, Length(Items));
+  SetLength(PerFields, Length(Items));
+  SetLength(PerCover, Length(Items));
+  Dirs := TStringList.Create; // folder -> index into Covers (Objects), -1 = none
+  try
+    WithCover := 0;
+    for I := 0 to High(Items) do
+    begin
+      PerItem[I] := Empty;
+      PerFields[I] := [];
+      Dir := ExtractFileDir(Items[I].FileName);
+      K := Dirs.IndexOf(Dir);
+      if K < 0 then
+      begin
+        Path := FindFolderCover(Dir);
+        Data := nil;
+        if Path <> '' then
+          try
+            Data := ReadFileBytes(Path);
+          except
+            Data := nil;
+          end;
+        if (Data <> nil) and (DetectImageMime(Data, '') = '') then Data := nil; // not JPEG/PNG
+        K := Dirs.Add(Dir);
+        SetLength(Covers, Dirs.Count);
+        Covers[K] := Data;
+      end;
+      PerCover[I] := Covers[K];
+      if PerCover[I] <> nil then Inc(WithCover);
+    end;
+  finally
+    Dirs.Free;
+  end;
+  if WithCover = 0 then
+  begin
+    Inform(rsMappeCoverIFiler, rsIngenAfMapperneHarEtCover);
+    Exit;
+  end;
+  if not AskYes(rsMappeCoverIFiler, Format(rsLaegMappensCoverIndIDFiler, [WithCover]) +
+    IfThen(WithCover < Length(Items), LineEnding + Format(rsDFilerLiggerIMapperUdenCover,
+    [Length(Items) - WithCover]), '')) then Exit;
+  WriteFieldsBatch(Items, PerItem, PerFields, nil, rsMappeCoverIFiler, PerCover);
+end;
+
+procedure TFormMain.ActCoverFromTagsExecute(Sender: TObject);
+var
+  Items: TAudioInfoArray;
+  Dirs: TStringList;
+  I, K, Saved, Existing, Without: Integer;
+  Dir, Target: string;
+  Full: TAudioInfo;
+  Pic, K2: Integer;
+  Errors: TStringList;
+begin
+  if not RequireTargets(Items) then Exit;
+  Dirs := TStringList.Create;
+  Errors := TStringList.Create;
+  try
+    // one entry per folder: the first file with a cover (Objects = item index + 1)
+    for I := 0 to High(Items) do
+    begin
+      Dir := ExtractFileDir(Items[I].FileName);
+      K := Dirs.IndexOf(Dir);
+      if K < 0 then K := Dirs.AddObject(Dir, nil);
+      if (Dirs.Objects[K] = nil) and Items[I].HasCover then Dirs.Objects[K] := TObject(PtrInt(I + 1));
+    end;
+    Existing := 0;
+    Without := 0;
+    for K := 0 to Dirs.Count - 1 do
+      if FindFolderCover(Dirs[K]) <> '' then Inc(Existing)
+      else if Dirs.Objects[K] = nil then Inc(Without);
+    if Dirs.Count - Existing - Without = 0 then
+    begin
+      Inform(rsCoverTilMappe, Format(rsIngenMapperAtGemme, [Existing, Without]));
+      Exit;
+    end;
+    if not AskYes(rsCoverTilMappe, Format(rsGemFilernesCoverIDMapper,
+      [Dirs.Count - Existing - Without, Existing, Without])) then Exit;
+    Saved := 0;
+    Screen.Cursor := crHourGlass;
+    try
+      for K := 0 to Dirs.Count - 1 do
+      begin
+        if (Dirs.Objects[K] = nil) or (FindFolderCover(Dirs[K]) <> '') then Continue;
+        I := PtrInt(Dirs.Objects[K]) - 1;
+        Full := ReadAudioInfo(Items[I].FileName, True);
+        try
+          Pic := -1;
+          for K2 := 0 to High(Full.Pictures) do
+            if Full.Pictures[K2].PicType = PicTypeFrontCover then begin Pic := K2; Break; end;
+          if (Pic < 0) and (Length(Full.Pictures) > 0) then Pic := 0;
+          if Pic < 0 then Continue;
+          if Full.Pictures[Pic].MimeType = 'image/png' then Target := 'folder.png' else Target := 'folder.jpg';
+          Target := IncludeTrailingPathDelimiter(Dirs[K]) + Target;
+          try
+            WriteFileBytes(Target, Full.Pictures[Pic].Data);
+            Inc(Saved);
+          except
+            on E: Exception do Errors.Add(Target + ': ' + E.Message);
+          end;
+        finally
+          Full.Free;
+        end;
+      end;
+    finally
+      Screen.Cursor := crDefault;
+    end;
+    SetMessage(Format(rsCoverGemtIDMapper, [Saved]));
+    if Errors.Count > 0 then Inform(rsCoverTilMappe, Errors.Text, mtWarning);
+  finally
+    Dirs.Free;
+    Errors.Free;
+  end;
+  FFolderCoverDir := '';
+  SelectionChanged;
+end;
+
+{ ---------- rename words and actions ---------- }
+
+procedure TFormMain.ActRenameWordsExecute(Sender: TObject);
+var
+  W: TRenameWords;
+begin
+  W := LoadRenameWords;
+  if not EditRenameWords(W) then Exit;
+  SaveRenameWords(W);
+  SelectionChanged; // the live rename result uses them
+end;
+
+procedure TFormMain.ActManageActionsExecute(Sender: TObject);
+var
+  A: TRenameActions;
+begin
+  A := LoadRenameActions;
+  if not EditRenameActions(A, ComboRenameMask.Text) then Exit;
+  SaveRenameActions(A);
+  RebuildActionsMenu;
+end;
+
+procedure TFormMain.RebuildActionsMenu;
+var
+  A: TRenameActions;
+  I: Integer;
+  M: TMenuItem;
+begin
+  FActionsMenu.Clear;
+  A := LoadRenameActions;
+  for I := 0 to High(A) do
+  begin
+    M := TMenuItem.Create(FActionsMenu);
+    M.Caption := A[I].Name;
+    M.Tag := I;
+    M.OnClick := @RenameActionClick;
+    FActionsMenu.Add(M);
+  end;
+  if Length(A) > 0 then
+  begin
+    M := TMenuItem.Create(FActionsMenu);
+    M.Caption := '-';
+    FActionsMenu.Add(M);
+  end;
+  M := TMenuItem.Create(FActionsMenu);
+  M.Action := FActManageActions;
+  FActionsMenu.Add(M);
+end;
+
+procedure TFormMain.RenameActionClick(Sender: TObject);
+var
+  A: TRenameActions;
+  I: Integer;
+begin
+  A := LoadRenameActions;
+  I := (Sender as TMenuItem).Tag;
+  if (I >= 0) and (I <= High(A)) then RunRenameAction(A[I]);
+end;
+
+procedure TFormMain.RunRenameAction(const Act: TRenameAction);
+var
+  Items: TAudioInfoArray;
+  FilePlan, FolderPlan: TRenamePlan;
+  FileLog, FolderLog, Log: TRenameLog;
+  Opt: TRenameOptions;
+  FileCount, FolderCount, I, Failed: Integer;
+  Msg, Problems: string;
+begin
+  if not CanStartBatch or not RequireTargets(Items) then Exit;
+  Opt := RenameOptions;
+  FilePlan := nil;
+  FileCount := 0;
+  if Act.FileMask <> '' then
+  begin
+    FilePlan := PlanRename(Items, Act.FileMask, Opt);
+    FileCount := CountStatus(FilePlan, rsOk);
+  end;
+  Msg := Format(rsKoerHandlingenS, [Act.Name]) + LineEnding;
+  if Act.FileMask <> '' then
+    Msg := Msg + LineEnding + Format(rsFilerDOmdoebesMedS, [FileCount, Act.FileMask]);
+  if Act.FolderMask <> '' then
+    Msg := Msg + LineEnding + Format(rsMapperneOmdoebesMedS, [Act.FolderMask]);
+  if not AskYes(rsOmdoebningshandling, Msg) then Exit;
+
+  Failed := 0;
+  FileLog := nil;
+  FolderLog := nil;
+  FolderPlan := nil;
+  Screen.Cursor := crHourGlass;
+  try
+    if FileCount > 0 then
+    begin
+      FileLog := ExecuteRename(FilePlan);
+      Inc(Failed, CountStatus(FilePlan, rsFailed));
+    end;
+    FolderCount := 0;
+    if Act.FolderMask <> '' then
+    begin
+      FolderPlan := PlanFolderRename(Items, Act.FolderMask, Opt); // after the file renames
+      if CountStatus(FolderPlan, rsOk) > 0 then
+      begin
+        FolderLog := ExecuteRename(FolderPlan);
+        FolderCount := Length(FolderLog);
+        Inc(Failed, CountStatus(FolderPlan, rsFailed));
+        ApplyRenameLog(FolderLog, False);
+      end;
+    end;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+  // one undo step for both: files first, then their folders
+  Log := Concat(FileLog, FolderLog);
+  if Length(Log) > 0 then SetUndoLog(Log, rsFilerMapper);
+  SetMessage(Format(rsHandlingDFilerDMapperDFejl, [Act.Name, Length(FileLog), FolderCount, Failed]));
+  if Failed > 0 then
+  begin
+    Problems := '';
+    for I := 0 to High(FilePlan) do
+      if FilePlan[I].Status = rsFailed then
+        Problems := Problems + ExtractFileName(FilePlan[I].OldName) + ': ' + FilePlan[I].Detail + LineEnding;
+    for I := 0 to High(FolderPlan) do
+      if FolderPlan[I].Status = rsFailed then
+        Problems := Problems + FolderPlan[I].OldName + ': ' + FolderPlan[I].Detail + LineEnding;
+    Inform(rsNogleFilerBlevIkkeOmdoebt, Problems, mtWarning);
+  end;
+  FileList.Invalidate;
+  SelectionChanged;
+end;
+
 procedure TFormMain.AddLanguageMenu(ParentItem: TMenuItem);
 var
   Sub, M: TMenuItem;
@@ -2815,7 +3454,9 @@ begin
   PanelFilter.Visible := FActFilter.Checked;
   ActFoldersExecute(FActFolders);
   if (ParamCount > 0) and DirectoryExists(ParamStr(1)) then
-    Start := ParamStr(1);
+    Start := ParamStr(1)
+  else if (ParamCount >= 2) and (ParamStr(1) = '--selftest') then
+    Start := ParamStr(2);
   if (Start = '') or not DirectoryExists(Start) then
     Start := GetUserDir + 'Music';
   if not DirectoryExists(Start) then

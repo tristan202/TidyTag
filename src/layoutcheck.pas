@@ -16,7 +16,47 @@ implementation
 uses
   Classes, SysUtils, Types, Forms, Controls, StdCtrls, ExtCtrls, ComCtrls, Buttons,
   Graphics, MainForm, TagEditForm, RenameForm, FileToTagForm, MultiEditForm,
-  TrackToolsForm, WebLookupForm, ExportImportForm;
+  TrackToolsForm, WebLookupForm, ExportImportForm, AudioTypes, AppSettings, ToolDialogs;
+
+resourcestring
+  // same texts as in the main window, so they get the same translations
+  rsKopierFelt = 'Kopiér felt';
+  rsFraFelt = 'Fra felt:';
+  rsTilFelt = 'Til felt:';
+  rsKunHvisFeltetErTomt = 'Kun hvis målfeltet er tomt';
+
+type
+  { Checks a modal dialog while it is shown, then closes it. Two rounds through the
+    message queue: the first lets LayoutFit (also queued) adjust the dialog. }
+  TModalInspector = class
+    Report: TStrings;
+    Round: Integer;
+    procedure Inspect(Data: PtrInt);
+  end;
+
+procedure CheckTree(W: TWinControl; Report: TStrings; const FormName: string); forward;
+
+procedure TModalInspector.Inspect(Data: PtrInt);
+var
+  F: TCustomForm;
+  I: Integer;
+begin
+  F := Screen.ActiveCustomForm;
+  if (Round < 3) or (F = nil) or (F = FormMain) then
+  begin
+    Inc(Round);
+    if Round < 50 then Application.QueueAsyncCall(@Inspect, 0);
+    Exit;
+  end;
+  CheckTree(F, Report, 'Dialog "' + F.Caption + '"');
+  // TAGKLON_LAYOUT_PAUSE=<ms>: keep the dialog open, e.g. for a screenshot
+  for I := 1 to StrToIntDef(GetEnvironmentVariable('TAGKLON_LAYOUT_PAUSE'), 0) div 50 do
+  begin
+    Application.ProcessMessages;
+    Sleep(50);
+  end;
+  F.ModalResult := mrCancel;
+end;
 
 function LayoutCheckRequested: Boolean;
 begin
@@ -114,6 +154,44 @@ begin
   CheckTree(F, Report, F.ClassName);
 end;
 
+procedure CheckDialogs(Report: TStrings);
+var
+  Insp: TModalInspector;
+  A, B: TTagField;
+  Check: Boolean;
+  W: TRenameWords;
+  Acts: TRenameActions;
+
+  procedure Arm;
+  begin
+    Insp.Round := 0;
+    Application.QueueAsyncCall(@Insp.Inspect, 0);
+  end;
+
+begin
+  Insp := TModalInspector.Create;
+  try
+    Insp.Report := Report;
+    A := tfArtist;
+    B := tfAlbumArtist;
+    Check := True;
+    Arm;
+    AskFieldPair(rsKopierFelt, rsFraFelt, rsTilFelt, rsKunHvisFeltetErTomt, A, B, Check);
+    W := LoadRenameWords;
+    Arm;
+    EditRenameWords(W);
+    Acts := nil;
+    SetLength(Acts, 1);
+    Acts[0].Name := 'Test';
+    Acts[0].FileMask := '%1 - %2';
+    Acts[0].FolderMask := '%1';
+    Arm;
+    EditRenameActions(Acts, '%1 - %2');
+  finally
+    Insp.Free;
+  end;
+end;
+
 procedure RunLayoutCheck;
 const
   Classes_: array[0..6] of TFormClass = (TFormTagEdit, TFormRename, TFormFileToTag,
@@ -135,6 +213,7 @@ begin
         F.Free;
       end;
     end;
+    CheckDialogs(Report);
     Report.SaveToFile(ParamStr(2));
   finally
     Report.Free;

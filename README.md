@@ -3,7 +3,16 @@
 Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne i Tag&Rename 3.9.15
 (se [docs/Funktionsoversigt.md](docs/Funktionsoversigt.md)). Arbejdstitel – navnet kan ændres.
 
-## Status (MVP, trin 11)
+## Status (MVP, trin 12)
+- **Tag-værktøjer** (Værktøjer > Tag-værktøjer): byt Kunstner/Titel/Album eller to vilkårlige felter,
+  kopiér felt til felt (evt. kun hvis tomt), ryd mellemrum, **fjern tags** (Ctrl+Del; MP3, WAV/AIFF og
+  APE-familien mister hele tagget, FLAC/Ogg/MP4/WMA får felter og billeder ryddet).
+- **Cover-værktøjer:** læg mappens folder.jpg/cover.jpg ind i filerne, gem filernes cover som
+  folder.jpg i mapper uden et.
+- **Omdøbningshandlinger:** navngivne forudindstillinger med filmaske og/eller mappemaske, kørt fra
+  Værktøjer-menuen; ét fortryd dækker både filer og mapper.
+- **Ordudskiftninger** (Indstillinger): tekst der erstattes og ord med fast stavemåde (AC/DC, ABBA)
+  i alle omdøbninger.
 - **Sprog:** dansk, engelsk, tysk, fransk, italiensk, svensk og spansk. Vælges under
   *Indstillinger > Sprog (Language)*; "Automatisk" bruger Windows-sproget (ellers engelsk).
   Skift af sprog genstarter programmet i samme mappe. Også LCL's dialogknapper er oversat.
@@ -116,7 +125,14 @@ Layout-kontrol for et sprog (sæt `Language=xx` under `[Main]` i indstillingsfil
 ```
 bin\TagKlon.exe --layoutcheck C:\Temp\layout.txt
 ```
-opretter alle vinduer og skriver tekster, der ikke kan være der, overlapper eller stikker ud.
+opretter alle vinduer og dialoger og skriver tekster, der ikke kan være der, overlapper eller stikker ud.
+
+Selvtest af værktøjerne i hovedvinduet (brug en mappe med **kopier**):
+```
+bin\TagKlon.exe --selftest C:\Temp\kopierlbum C:\Temp\selftest.txt
+```
+kører kopiér/byt/ryd felter, cover ind/ud, en omdøbningshandling med fortryd og fjern tags uden
+dialoger og skriver felterne efter hvert trin i rapporten.
 
 Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret – gem også den tilhørende `.pas`.
 
@@ -138,6 +154,9 @@ Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret
 | `src/wavreader.pas`, `src/wavwriter.pas` | WAV/AIFF-chunks: lydinfo, ID3-chunk, LIST/INFO |
 | `src/apetag.pas`, `src/apereader.pas` | APEv2-tags; lydinfo for APE/WavPack/Musepack/OptimFROG |
 | `src/asfreader.pas`, `src/asfwriter.pas` | WMA/ASF-header-objekter |
+| `src/fieldtools.pas` | Byt/kopiér felter, ryd mellemrum (planlægning pr. fil) |
+| `src/tagremove.pas` | Fjern tags |
+| `src/tooldialogs.pas` | Dialoger: vælg felter, ordudskiftninger, omdøbningshandlinger |
 | `src/language.pas` | Sprogvalg og indlæsning af `.po`-filer (LCLTranslator) |
 | `src/layoutfit.pas` | Giver plads til længere oversatte tekster, når et vindue vises |
 | `src/layoutcheck.pas` | Udviklerkontrol `--layoutcheck` af alle vinduer |

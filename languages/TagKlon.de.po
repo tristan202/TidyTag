@@ -494,6 +494,249 @@ msgstr "FLAC-Datei ohne STREAMINFO"
 msgid "ID3v2.%d understøttes ikke"
 msgstr "ID3v2.%d wird nicht unterstützt"
 
+#: layoutcheck.rskopierfelt
+msgctxt "layoutcheck.rskopierfelt"
+msgid "Kopiér felt"
+msgstr "Feld kopieren"
+
+#: layoutcheck.rsfrafelt
+msgctxt "layoutcheck.rsfrafelt"
+msgid "Fra felt:"
+msgstr "Von Feld:"
+
+#: layoutcheck.rstilfelt
+msgctxt "layoutcheck.rstilfelt"
+msgid "Til felt:"
+msgstr "In Feld:"
+
+#: layoutcheck.rskunhvisfeltetertomt
+msgctxt "layoutcheck.rskunhvisfeltetertomt"
+msgid "Kun hvis målfeltet er tomt"
+msgstr "Nur wenn das Zielfeld leer ist"
+
+#: mainform.rsspornumremenu
+msgid "Spornumre..."
+msgstr "Tracknummern..."
+
+#: mainform.rsdiscogstokenmenu
+msgctxt "mainform.rsdiscogstokenmenu"
+msgid "Discogs-token..."
+msgstr "Discogs-Token..."
+
+#: mainform.rsopmenu
+msgctxt "mainform.rsopmenu"
+msgid "Op"
+msgstr "Auf"
+
+#: mainform.rstagvaerktoejer
+msgid "Tag-værktøjer"
+msgstr "Tag-Werkzeuge"
+
+#: mainform.rscovervaerktoejer
+msgid "Cover-værktøjer"
+msgstr "Cover-Werkzeuge"
+
+#: mainform.rsomdoebningshandlingermenu
+msgctxt "mainform.rsomdoebningshandlingermenu"
+msgid "Omdøbningshandlinger"
+msgstr "Umbenennungsaktionen"
+
+#: mainform.rskunstnertitelmenu
+msgid "Byt Kunstner ↔ Titel"
+msgstr "Interpret ↔ Titel tauschen"
+
+#: mainform.rskunstneralbummenu
+msgid "Byt Kunstner ↔ Album"
+msgstr "Interpret ↔ Album tauschen"
+
+#: mainform.rsalbumtitelmenu
+msgid "Byt Album ↔ Titel"
+msgstr "Album ↔ Titel tauschen"
+
+#: mainform.rsbyttofelter
+msgid "Byt to felter..."
+msgstr "Zwei Felder tauschen..."
+
+#: mainform.rsbyttovilkaarligefelter
+msgid "Byt indholdet af to vilkårlige felter i de afkrydsede/markerede filer"
+msgstr "Inhalt zweier beliebiger Felder in den abgehakten/markierten Dateien tauschen"
+
+#: mainform.rskopierfelttilfelt
+msgid "Kopiér felt til felt..."
+msgstr "Feld in Feld kopieren..."
+
+#: mainform.rskopiertekstfraetfelt
+msgid "Kopiér teksten fra ét felt til et andet, fx Kunstner til Albumkunstner"
+msgstr "Text von einem Feld in ein anderes kopieren, z. B. Interpret in Album-Interpret"
+
+#: mainform.rsrydmellemrumifelter
+msgid "Ryd mellemrum i felter"
+msgstr "Leerzeichen in Feldern bereinigen"
+
+#: mainform.rsrydmellemrumhint
+msgid "Fjern mellemrum foran og bagved og dobbelte mellemrum i alle felter"
+msgstr "Führende, nachgestellte und doppelte Leerzeichen in allen Feldern entfernen"
+
+#: mainform.rsfjerntagsmenu
+msgid "Fjern tags..."
+msgstr "Tags entfernen..."
+
+#: mainform.rsfjerntagshint
+msgid "Fjern alle tags fra de afkrydsede/markerede filer"
+msgstr "Alle Tags aus den abgehakten/markierten Dateien entfernen"
+
+#: mainform.rslaegmappenscoverindifilerne
+msgid "Læg mappens cover ind i filerne"
+msgstr "Ordner-Cover in die Dateien übernehmen"
+
+#: mainform.rslaegmappenscoverhint
+msgid "Gem folder.jpg/cover.jpg fra hver mappe som forside-cover i mappens filer"
+msgstr "folder.jpg/cover.jpg jedes Ordners als Vorderseiten-Cover in dessen Dateien speichern"
+
+#: mainform.rsgemfilernescoversomfolderjpg
+msgid "Gem filernes cover som folder.jpg"
+msgstr "Cover der Dateien als folder.jpg speichern"
+
+#: mainform.rsgemfilernescoverhint
+msgid "Gem coveret fra filernes tag som folder.jpg i mapper, der ikke har et"
+msgstr "Cover aus dem Tag der Dateien als folder.jpg in Ordnern ohne Cover speichern"
+
+#: mainform.rsadministrerhandlinger
+msgid "Administrer handlinger..."
+msgstr "Aktionen verwalten..."
+
+#: mainform.rsadministrerhandlingerhint
+msgid "Opret og ret navngivne omdøbninger (filmaske og/eller mappemaske)"
+msgstr "Benannte Umbenennungen anlegen und bearbeiten (Datei- und/oder Ordnermaske)"
+
+#: mainform.rsordudskiftningermenu
+msgid "Ordudskiftninger ved omdøbning..."
+msgstr "Wortersetzungen beim Umbenennen..."
+
+#: mainform.rsordudskiftningerhint
+msgid "Tekst der erstattes, og ord der altid staves ens, når filer og mapper omdøbes"
+msgstr "Text, der ersetzt wird, und Wörter mit fester Schreibweise beim Umbenennen von Dateien und Ordnern"
+
+#: mainform.rsingenfileraendres
+msgid "Ingen af filerne ændres."
+msgstr "Keine der Dateien wird geändert."
+
+#: mainform.rsaendredfiler
+msgid "Ændre %d filer?"
+msgstr "%d Dateien ändern?"
+
+#: mainform.rsbytss
+msgid "Byt %s og %s"
+msgstr "%s und %s tauschen"
+
+#: mainform.rsbytfelter
+msgid "Byt felter"
+msgstr "Felder tauschen"
+
+#: mainform.rsfelt1
+msgid "Felt 1:"
+msgstr "Feld 1:"
+
+#: mainform.rsfelt2
+msgid "Felt 2:"
+msgstr "Feld 2:"
+
+#: mainform.rskopierfelt
+msgctxt "mainform.rskopierfelt"
+msgid "Kopiér felt"
+msgstr "Feld kopieren"
+
+#: mainform.rsfrafelt
+msgctxt "mainform.rsfrafelt"
+msgid "Fra felt:"
+msgstr "Von Feld:"
+
+#: mainform.rstilfelt
+msgctxt "mainform.rstilfelt"
+msgid "Til felt:"
+msgstr "In Feld:"
+
+#: mainform.rskunhvisfeltetertomt
+msgctxt "mainform.rskunhvisfeltetertomt"
+msgid "Kun hvis målfeltet er tomt"
+msgstr "Nur wenn das Zielfeld leer ist"
+
+#: mainform.rskopierstils
+msgid "Kopiér %s til %s"
+msgstr "%s nach %s kopieren"
+
+#: mainform.rsrydmellemrum
+msgid "Ryd mellemrum"
+msgstr "Leerzeichen bereinigen"
+
+#: mainform.rsfjerntags
+msgid "Fjern tags"
+msgstr "Tags entfernen"
+
+#: mainform.rsfjernalletagsidfiler
+msgid "Fjern alle tags fra %d filer?"
+msgstr "Alle Tags aus %d Dateien entfernen?"
+
+#: mainform.rsfjerntagsforklaring
+msgid "MP3, WAV/AIFF, APE, WavPack, Musepack og OptimFROG: tags fjernes helt. FLAC, Ogg, MP4 og WMA: alle felter og billeder ryddes; tekniske felter som ReplayGain bevares. Lyddata ændres ikke. Det kan ikke fortrydes."
+msgstr "MP3, WAV/AIFF, APE, WavPack, Musepack und OptimFROG: Tags werden vollständig entfernt. FLAC, Ogg, MP4 und WMA: alle Felder und Bilder werden geleert; technische Felder wie ReplayGain bleiben erhalten. Audiodaten werden nicht verändert. Dies kann nicht rückgängig gemacht werden."
+
+#: mainform.rsmappecoverifiler
+msgid "Mappens cover i filerne"
+msgstr "Ordner-Cover in die Dateien"
+
+#: mainform.rsingenafmapperneharetcover
+msgid "Ingen af mapperne har et folder.jpg/cover.jpg (JPEG eller PNG)."
+msgstr "Keiner der Ordner hat ein folder.jpg/cover.jpg (JPEG oder PNG)."
+
+#: mainform.rslaegmappenscoverindidfiler
+msgid "Læg mappens cover ind som forside-cover i %d filer?"
+msgstr "Ordner-Cover als Vorderseiten-Cover in %d Dateien übernehmen?"
+
+#: mainform.rsdfilerliggerimapperudencover
+msgid "%d filer ligger i mapper uden cover og springes over."
+msgstr "%d Dateien liegen in Ordnern ohne Cover und werden übersprungen."
+
+#: mainform.rscovertilmappe
+msgid "Cover til mappe"
+msgstr "Cover in den Ordner"
+
+#: mainform.rsingenmapperatgemme
+msgid "Intet at gemme: %d mapper har allerede et cover, og i %d mapper har ingen af filerne et cover."
+msgstr "Nichts zu speichern: %d Ordner haben bereits ein Cover, und in %d Ordnern hat keine Datei ein Cover."
+
+#: mainform.rsgemfilernescoveridmapper
+msgid "Gem filernes cover som folder.jpg i %d mapper?\n(%d mapper har allerede et cover og %d mapper har ingen filer med cover - de springes over.)"
+msgstr "Cover der Dateien als folder.jpg in %d Ordnern speichern?\n(%d Ordner haben bereits ein Cover und %d Ordner haben keine Dateien mit Cover - sie werden übersprungen.)"
+
+#: mainform.rscovergemtidmapper
+msgid "Cover gemt i %d mapper"
+msgstr "Cover in %d Ordnern gespeichert"
+
+#: mainform.rsomdoebningshandling
+msgid "Omdøbningshandling"
+msgstr "Umbenennungsaktion"
+
+#: mainform.rskoerhandlingens
+msgid "Kør handlingen \"%s\"?"
+msgstr "Aktion \"%s\" ausführen?"
+
+#: mainform.rsfilerdomdoebesmeds
+msgid "Filer: %d omdøbes med %s"
+msgstr "Dateien: %d werden umbenannt mit %s"
+
+#: mainform.rsmapperneomdoebesmeds
+msgid "Mapper: omdøbes bagefter med %s"
+msgstr "Ordner: werden danach umbenannt mit %s"
+
+#: mainform.rsfilermapper
+msgid "filer/mapper"
+msgstr "Dateien/Ordner"
+
+#: mainform.rshandlingdfilerdmapperdfejl
+msgid "%s: %d filer og %d mapper omdøbt, %d fejl"
+msgstr "%s: %d Dateien und %d Ordner umbenannt, %d Fehler"
+
 #: mainform.rssproglanguage
 msgid "Sprog (Language)"
 msgstr "Sprache (Language)"
@@ -1765,13 +2008,98 @@ msgstr "PNG-Bild|*.png"
 msgid "JPEG-billede|*.jpg"
 msgstr "JPEG-Bild|*.jpg"
 
+#: tagremove.rsuventettagstruktur
+msgid "Uventet tag-struktur"
+msgstr "Unerwartete Tag-Struktur"
+
+#: tagremove.rsfiltypenkanikkegemmes
+msgctxt "tagremove.rsfiltypenkanikkegemmes"
+msgid "Skrivning af denne filtype understøttes ikke endnu"
+msgstr "Das Schreiben dieses Dateityps wird noch nicht unterstützt"
+
 #: tagwriter.rsinternfejlfilenerlaest
 msgid "Intern fejl: filen er læst uden billeder"
 msgstr "Interner Fehler: Datei wurde ohne Bilder gelesen"
 
 #: tagwriter.rsskrivningafdennefiltypeunderstoettes
+msgctxt "tagwriter.rsskrivningafdennefiltypeunderstoettes"
 msgid "Skrivning af denne filtype understøttes ikke endnu"
 msgstr "Das Schreiben dieses Dateityps wird noch nicht unterstützt"
+
+#: tooldialogs.rsfra
+msgid "Fra:"
+msgstr "Von:"
+
+#: tooldialogs.rstil
+msgid "Til:"
+msgstr "Nach:"
+
+#: tooldialogs.rsordudskiftninger
+msgid "Ordudskiftninger ved omdøbning"
+msgstr "Wortersetzungen beim Umbenennen"
+
+#: tooldialogs.rserstattekst
+msgid "Erstat tekst (skelner mellem store og små bogstaver; mellemrum tæller med):"
+msgstr "Text ersetzen (Groß-/Kleinschreibung wird beachtet; Leerzeichen zählen):"
+
+#: tooldialogs.rserstat
+msgid "Erstat"
+msgstr "Ersetzen"
+
+#: tooldialogs.rsmed
+msgid "Med"
+msgstr "Durch"
+
+#: tooldialogs.rsfasteord
+msgid "Ord der altid skrives sådan (hele ord, et pr. linje, fx AC/DC eller ABBA):"
+msgstr "Wörter mit fester Schreibweise (ganze Wörter, eines pro Zeile, z. B. AC/DC oder ABBA):"
+
+#: tooldialogs.rsordhjaelp
+msgid "Bruges af alle omdøbninger efter versalskift. Faste ord først, så udskiftninger."
+msgstr "Gilt für alle Umbenennungen nach der Groß-/Kleinschreibung. Zuerst feste Wörter, dann Ersetzungen."
+
+#: tooldialogs.rsomdoebningshandlinger
+msgctxt "tooldialogs.rsomdoebningshandlinger"
+msgid "Omdøbningshandlinger"
+msgstr "Umbenennungsaktionen"
+
+#: tooldialogs.rshandlinger
+msgid "Handlinger:"
+msgstr "Aktionen:"
+
+#: tooldialogs.rsnavn
+msgid "Navn:"
+msgstr "Name:"
+
+#: tooldialogs.rsfilnavnsmaske
+msgctxt "tooldialogs.rsfilnavnsmaske"
+msgid "Filnavnsmaske:"
+msgstr "Dateinamen-Maske:"
+
+#: tooldialogs.rsmappemaske
+msgid "Mappemaske (omdøber mapperne bagefter):"
+msgstr "Ordnermaske (benennt die Ordner danach um):"
+
+#: tooldialogs.rstilfoej
+msgid "Tilføj"
+msgstr "Hinzufügen"
+
+#: tooldialogs.rsfjern
+msgctxt "tooldialogs.rsfjern"
+msgid "Fjern"
+msgstr "Entfernen"
+
+#: tooldialogs.rsnyhandling
+msgid "Ny handling"
+msgstr "Neue Aktion"
+
+#: tooldialogs.rshandlinghjaelp
+msgid "En handling omdøber de afkrydsede (eller markerede) filer med filnavnsmasken og derefter deres mapper med mappemasken. Versaler og ordudskiftninger følger indstillingerne i fanebladet Omdøb filer. Handlingerne findes i menuen Værktøjer."
+msgstr "Eine Aktion benennt die abgehakten (oder markierten) Dateien mit der Dateinamen-Maske und danach ihre Ordner mit der Ordnermaske um. Groß-/Kleinschreibung und Wortersetzungen folgen den Einstellungen der Registerkarte Dateien umbenennen. Die Aktionen stehen im Menü Werkzeuge."
+
+#: tooldialogs.rsgivhandlingenetnavn
+msgid "Giv handlingen et navn og mindst én maske."
+msgstr "Gib der Aktion einen Namen und mindestens eine Maske."
 
 #: tracktoolsform.rsformatereksisterendespornumre
 msgid "Formatér eksisterende spornumre"
@@ -2558,6 +2886,7 @@ msgid "Tilføj..."
 msgstr "Hinzufügen..."
 
 #: tformtagedit.pagefields.tabgeneral.buttonremovepicture.caption
+msgctxt "tformtagedit.pagefields.tabgeneral.buttonremovepicture.caption"
 msgid "Fjern"
 msgstr "Entfernen"
 
@@ -2721,6 +3050,7 @@ msgid "Web-opslag"
 msgstr "Web-Suche"
 
 #: tformweblookup.buttontoken.caption
+msgctxt "tformweblookup.buttontoken.caption"
 msgid "Discogs-token..."
 msgstr "Discogs-Token..."
 
@@ -2806,6 +3136,7 @@ msgid "Længde"
 msgstr "Länge"
 
 #: tformweblookup.buttonup.caption
+msgctxt "tformweblookup.buttonup.caption"
 msgid "Op"
 msgstr "Auf"
 

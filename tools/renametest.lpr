@@ -85,6 +85,36 @@ begin
   end;
 end;
 
+procedure TestWords;
+var
+  Info: TAudioInfo;
+  Opt: TRenameOptions;
+  Missing: string;
+  Log: TRenameLog;
+begin
+  WriteLn('-- ordudskiftninger og faste versaler');
+  Opt.CaseMode := cmTitle;
+  Opt.SpacesToUnderscores := False;
+  Opt.PadTrack := True;
+  Opt.KeepCaseWords := ['AC/DC', 'ABBA', 'feat.'];
+  Opt.ReplaceFrom := [' & ', 'Feat.'];
+  Opt.ReplaceTo := [' and ', 'ft.'];
+  Eq(AdjustWords('Ac/Dc Og Abba Feat. Abbatar', Opt), 'AC/DC Og ABBA feat. Abbatar', 'kun hele ord; faste ord før udskiftning');
+  Info := MakeInfo('C:\Musik\x.mp3', 'ac/dc & abba', 'live feat. someone', 'Album', '1');
+  try
+    Eq(ExpandRenameMask('%1 - %2', Info, 1, 2, Opt, Missing), 'C:\Musik\AC-DC and ABBA - Live feat. Someone.mp3',
+      'i masken: versaler, faste ord, udskiftning, rensning');
+  finally
+    Info.Free;
+  end;
+  // a log of file renames followed by the rename of their folder maps both ways
+  SetLength(Log, 2);
+  Log[0].OldName := 'C:\M\a\1.mp3'; Log[0].NewName := 'C:\M\a\One.mp3';
+  Log[1].OldName := 'C:\M\a'; Log[1].NewName := 'C:\M\Album';
+  Eq(MapRenamedPath('C:\M\a\1.mp3', Log, False), 'C:\M\Album\One.mp3', 'fil + mappe frem');
+  Eq(MapRenamedPath('C:\M\Album\One.mp3', Log, True), 'C:\M\a\1.mp3', 'fil + mappe tilbage');
+end;
+
 procedure TestMatch;
 var
   M: TFileNameMatch;
@@ -307,6 +337,7 @@ begin
   SetTextCodePage(Output, CP_UTF8);
   TestCase;
   TestExpand;
+  TestWords;
   TestMatch;
   TestTracks;
   TestFolderPlan;

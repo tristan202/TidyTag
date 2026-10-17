@@ -41,6 +41,10 @@ type
     CaseMode: TCaseMode;
     SpacesToUnderscores: Boolean;
     PadTrack: Boolean;          // '7/12' -> '07'
+    { Applied to every inserted value after the case change: words that keep their
+      spelling (whole words, any case, e.g. 'AC/DC'), then text replacements. }
+    KeepCaseWords: TStringArray;
+    ReplaceFrom, ReplaceTo: TStringArray;
   end;
 
   TRenameStatus = (rsOk, rsUnchanged, rsMissing, rsExists, rsDuplicate, rsInvalid,
@@ -79,6 +83,8 @@ const
 function ApplyCase(const S: string; Mode: TCaseMode): string;
 { Makes text safe as one file/folder name component (no \ / : * ? " < > |). }
 function SanitizeNamePart(const S: string): string;
+{ Keep-case words and replacements of Opt applied to one value. }
+function AdjustWords(const S: string; const Opt: TRenameOptions): string;
 { Expands Mask for one file. Returns the new full path, or '' with Missing set to the
   captions of empty fields the mask needs. FileNumber is 1-based; Width pads it. }
 function ExpandRenameMask(const Mask: string; Info: TAudioInfo; FileNumber, NumberWidth: Integer;
@@ -103,7 +109,7 @@ function CountStatus(const Plan: TRenamePlan; S: TRenameStatus): Integer;
 implementation
 
 uses
-  TagUtils;
+  Math, TagUtils;
 
 function IsLetter(C: WideChar): Boolean;
 begin
@@ -203,6 +209,43 @@ end;
 
 { Expands the variables and rebuilds a clean path text (relative or 'X:\...').
   Returns '' when a needed field is empty (Missing lists them) or a part is empty. }
+function IsWordChar(C: WideChar): Boolean;
+begin
+  Result := IsLetter(C) or ((C >= '0') and (C <= '9'));
+end;
+
+function AdjustWords(const S: string; const Opt: TRenameOptions): string;
+var
+  W, Word, Low: UnicodeString;
+  I, P: Integer;
+begin
+  Result := S;
+  W := UTF8Decode(Result);
+  for I := 0 to High(Opt.KeepCaseWords) do
+  begin
+    Word := UTF8Decode(Trim(Opt.KeepCaseWords[I]));
+    if Word = '' then Continue;
+    Low := WideLowerCase(Word);
+    P := 1;
+    while P <= Length(W) - Length(Word) + 1 do
+    begin
+      if (WideLowerCase(Copy(W, P, Length(Word))) = Low) and
+        ((P = 1) or not IsWordChar(W[P - 1])) and
+        ((P + Length(Word) > Length(W)) or not IsWordChar(W[P + Length(Word)])) then
+      begin
+        W := Copy(W, 1, P - 1) + Word + Copy(W, P + Length(Word), MaxInt);
+        Inc(P, Length(Word));
+      end
+      else
+        Inc(P);
+    end;
+  end;
+  Result := UTF8Encode(W);
+  for I := 0 to Min(High(Opt.ReplaceFrom), High(Opt.ReplaceTo)) do
+    if Opt.ReplaceFrom[I] <> '' then
+      Result := StringReplace(Result, Opt.ReplaceFrom[I], Opt.ReplaceTo[I], [rfReplaceAll]);
+end;
+
 function ExpandMaskPath(const Mask: string; const V: TMaskValues; const Opt: TRenameOptions;
   out Missing: string): string;
 var
@@ -283,7 +326,7 @@ begin
       Inc(I, 1 + Length(Code));
       Continue;
     end;
-    Value := SanitizeNamePart(Value);
+    if NeedsField and (SanitizeNamePart(Value) = '') then Value := '';
     if NeedsField and (Value = '') then
     begin
       if Missing <> '' then Missing := Missing + ', ';
@@ -291,7 +334,7 @@ begin
       if F in V.Different then Why := Why + rsForskellige;
       Missing := Missing + Why;
     end;
-    Res := Res + ApplyCase(Value, Opt.CaseMode);
+    Res := Res + SanitizeNamePart(AdjustWords(ApplyCase(Value, Opt.CaseMode), Opt));
     Inc(I, 1 + Length(Code));
   end;
   if Missing <> '' then Exit('');
@@ -471,27 +514,31 @@ end;
 
 function MapRenamedPath(const Path: string; const Log: TRenameLog; Reverse: Boolean): string;
 var
-  I: Integer;
+  I, J: Integer;
   FromName, ToName: string;
 begin
+  // every entry in turn (backwards when undoing): a log may hold file renames followed by
+  // the renames of their folders
   Result := Path;
-  for I := 0 to High(Log) do
+  for J := 0 to High(Log) do
   begin
     if Reverse then
     begin
+      I := High(Log) - J;
       FromName := Log[I].NewName;
       ToName := Log[I].OldName;
     end
     else
     begin
+      I := J;
       FromName := Log[I].OldName;
       ToName := Log[I].NewName;
     end;
     if Result = FromName then
-      Exit(ToName)
+      Result := ToName
     else if IsInside(Result, FromName) then
-      Exit(IncludeTrailingPathDelimiter(ToName) +
-        Copy(Result, Length(IncludeTrailingPathDelimiter(FromName)) + 1, MaxInt));
+      Result := IncludeTrailingPathDelimiter(ToName) +
+        Copy(Result, Length(IncludeTrailingPathDelimiter(FromName)) + 1, MaxInt);
   end;
 end;
 

@@ -280,6 +280,21 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="LayoutCheck"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\fieldtools.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="FieldTools"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\tagremove.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="TagRemove"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\tooldialogs.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ToolDialogs"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

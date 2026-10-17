@@ -24,5 +24,11 @@ begin
     RunLayoutCheck;
     Exit;
   end;
+  if (ParamCount >= 3) and (ParamStr(1) = '--selftest') then
+  begin
+    FormMain.Show;
+    FormMain.RunSelfTest(ParamStr(3));
+    Exit;
+  end;
   Application.Run;
 end.
