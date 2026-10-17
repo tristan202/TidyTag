@@ -247,6 +247,8 @@ type
     procedure RenameActionClick(Sender: TObject);
     procedure DoCopyField(Src, Dst: TTagField; OnlyIfEmpty: Boolean);
     procedure BuildFilterExtras;
+    procedure MaskEditorClick(Sender: TObject);
+    function RenameMaskPreview(const Mask: string): string;
     procedure ActDeleteFolderCoversExecute(Sender: TObject);
     procedure ActResizeFileCoversExecute(Sender: TObject);
     procedure ActResizeFolderCoversExecute(Sender: TObject);
@@ -360,6 +362,12 @@ uses
   Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage;
 
 resourcestring
+  rsRtUdgivelsesdato = '%rt|Udgivelsesdato (hele datoen)';
+  rsDbitBitdybde = '%dbit|Bitdybde';
+  rsEncKodetAf = '%enc|Kodet af';
+  rsRndTilfaeldigtTal = '%rnd|Tilfældigt tal (4 cifre)';
+  rsMaskeEditorMenu = 'Maske-editor...';
+  rsMaskeEditorTitel = 'Maske-editor';
   rsSletMappeCover = 'Slet mappe-cover i de valgte mapper...';
   rsSletMappeCoverHint = 'Læg folder.jpg/cover.jpg/front.jpg (og .png) i papirkurven';
   rsSkalerCoverIFilerne = 'Skalér cover i filerne...';
@@ -699,12 +707,13 @@ const
   DefaultF2TMasks: array[0..6] of string = ('%1 - %2', '%6 - %2', '%6 - %1 - %2', '%6. %2',
     '%6 %1 - %2', '%1\%3\%6 - %2', '%1\%4 - %3\%6 - %2');
 
-  RenameVars: array[0..28] of string = (
+  RenameVars: array[0..32] of string = (
     rsKunstner, rsTitel, rsAlbum, rsAar, rsGenre, rsSpor, rsDisc,
     rsFilnavn, rsFilnummer, rsKommentar, rsBitrate, rsBBpm, rsTSpilletid,
     rsAaAlbumkunstner, rsCpKomponist, rsCoDirigent, rsLbPladeselskab, rsCatKatalognr,
     rsGrpGruppering, rsRbRemixetAf, rsMdStemning, rsKeyToneart,
-    rsExtFiltype, rsKhzSamplerate, '-|',
+    rsExtFiltype, rsKhzSamplerate, rsRtUdgivelsesdato, rsDbitBitdybde, rsEncKodetAf,
+    rsRndTilfaeldigtTal, '-|',
     rsBindestreg, rsNyMappe, rsEksempelSporKunstnerTitel,
     rsEksempelMapperPrKunstnerOg);
   F2TVars: array[0..17] of string = (
@@ -2041,6 +2050,13 @@ begin
   PopupVars.Items.Clear;
   if FVarsTarget = ComboRenameMask then
   begin
+    M := TMenuItem.Create(PopupVars);
+    M.Caption := rsMaskeEditorMenu;
+    M.OnClick := @MaskEditorClick;
+    PopupVars.Items.Add(M);
+    M := TMenuItem.Create(PopupVars);
+    M.Caption := '-';
+    PopupVars.Items.Add(M);
     for I := 0 to High(RenameVars) do
     begin
       M := TMenuItem.Create(PopupVars);
@@ -3299,6 +3315,34 @@ begin
   end;
   FFolderCoverDir := '';
   SelectionChanged;
+end;
+
+function TFormMain.RenameMaskPreview(const Mask: string): string;
+var
+  Info: TAudioInfo;
+  Missing, Dir: string;
+begin
+  Info := FocusedInfo;
+  if (Info = nil) and (FView.Count > 0) then Info := Item(0);
+  if Info = nil then Exit('');
+  Result := ExpandRenameMask(Mask, Info, 1, 2, RenameOptions, Missing);
+  if Result = '' then
+  begin
+    if Missing <> '' then Result := rsMangler + Missing else Result := rsUgyldigMaske;
+    Exit;
+  end;
+  Dir := IncludeTrailingPathDelimiter(ExtractFileDir(Info.FileName));
+  if SameFileName(Copy(Result, 1, Length(Dir)), Dir) then Delete(Result, 1, Length(Dir));
+end;
+
+procedure TFormMain.MaskEditorClick(Sender: TObject);
+var
+  Mask: string;
+begin
+  Mask := ComboRenameMask.Text;
+  if not EditMask(rsMaskeEditorTitel, Mask, RenameVars, @RenameMaskPreview, 'SavedRenameMasks') then Exit;
+  ComboRenameMask.Text := Mask;
+  UpdateInlinePreviews;
 end;
 
 procedure TFormMain.BuildFilterExtras;

@@ -67,6 +67,7 @@ begin
     else Bits := 16;
   end;
   Info.Codec := Format('Monkey''s Audio %d.%.2d (%d-bit)', [Ver div 1000, (Ver mod 1000) div 10, Bits]);
+  Info.BitDepth := Bits;
   if Frames > 0 then
     SetLength_(Info, (Int64(Frames) - 1) * BlocksPerFrame + FinalBlocks, AudioBytes);
 end;
@@ -85,6 +86,7 @@ begin
   if Idx < 15 then Info.SampleRate := Rates[Idx] else Info.SampleRate := 0;
   if Flags and 4 <> 0 then Info.Channels := 1 else Info.Channels := 2;
   Info.Codec := Format('WavPack %d-bit', [((Flags and 3) + 1) * 8]);
+  Info.BitDepth := ((Flags and 3) + 1) * 8;
   if Flags and 8 <> 0 then Info.Codec := Info.Codec + ' (hybrid)';
   Total := LE32(B, 12);
   if Total <> $FFFFFFFF then
@@ -169,7 +171,10 @@ begin
   Info.Channels := B[15] + 1;
   Info.SampleRate := LE32(B, 16);
   if SampleType <= High(Bits) then
-    Info.Codec := Format('OptimFROG %d-bit', [Bits[SampleType]])
+  begin
+    Info.Codec := Format('OptimFROG %d-bit', [Bits[SampleType]]);
+    Info.BitDepth := Bits[SampleType];
+  end
   else
     Info.Codec := 'OptimFROG';
   if Info.Channels > 0 then

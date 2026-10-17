@@ -80,6 +80,14 @@ begin
     Opt.CaseMode := cmNone;
     Opt.SpacesToUnderscores := False;
     Eq(ExpandRenameMask('%6 %2x', Info, 1, 2, Opt, Missing), 'C:\Musik\7-12 What ''Now'' - (Live)x.mp3', 'spor uden udfyldning');
+    // new variables: year of a full date, release date, encoder, bit depth, random number
+    Info.Fields[tfYear] := '2001-02-03';
+    Info.Fields[tfEncodedBy] := 'LAME';
+    Info.BitDepth := 24;
+    Eq(ExpandRenameMask('%4 %rt %enc %dbit', Info, 1, 2, Opt, Missing), 'C:\Musik\2001 2001-02-03 LAME 24.mp3', 'år, udgivelsesdato, encoder, bitdybde');
+    Check(Length(ExtractFileName(ExpandRenameMask('%rnd', Info, 1, 2, Opt, Missing))) = Length('0000.mp3'), 'tilfældigt tal med 4 cifre');
+    Info.BitDepth := 0;
+    Eq(ExpandRenameMask('%2 [%dbit]', Info, 1, 2, Opt, Missing), 'C:\Musik\What ''Now'' - (Live) [].mp3', 'ukendt bitdybde er tom (ikke manglende felt)');
   finally
     Info.Free;
   end;

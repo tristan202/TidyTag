@@ -19,9 +19,9 @@ begin
     WriteLn('== ', FileName);
     if Info.Error <> '' then WriteLn('   FEJL: ', Info.Error);
     if not Info.Supported then WriteLn('   (format ikke understøttet endnu)');
-    WriteLn(Format('   %s | %s | %d kbit/s | %d Hz | %d kanaler | tags: %s | cover: %s',
+    WriteLn(Format('   %s | %s | %d kbit/s | %d Hz | %d kanaler | %d bit | tags: %s | cover: %s',
       [Info.Codec, FormatDuration(Info.Duration), Info.Bitrate, Info.SampleRate,
-       Info.Channels, Info.TagTypes, BoolToStr(Info.HasCover, 'ja', 'nej')]));
+       Info.Channels, Info.BitDepth, Info.TagTypes, BoolToStr(Info.HasCover, 'ja', 'nej')]));
     for F := Low(TTagField) to High(TTagField) do
       if Info.Fields[F] <> '' then
         WriteLn('   ', TagFieldCaptions[F], ': ', Info.Fields[F]);

@@ -70,7 +70,7 @@ type
   TMaskValues = record
     Fields: array[TTagField] of string;
     Different: TFieldSet;       // fields whose value differs between the folder's files
-    FileName, FileNumber, Bitrate, Duration, Ext, SampleRate, FolderName: string;
+    FileName, FileNumber, Bitrate, Duration, Ext, SampleRate, FolderName, BitDepth: string;
   end;
 
 const
@@ -278,10 +278,11 @@ begin
     end;
     // Longest codes first: %aa %cp %ext %khz, then single characters.
     Code := '';
-    for J := 3 downto 1 do
+    for J := 4 downto 1 do
       if (Code = '') and (I + J <= Length(Mask)) then
         case LowerCase(Copy(Mask, I + 1, J)) of
-          'aa', 'cp', 'co', 'lb', 'rb', 'md', 'ext', 'khz', 'key', 'grp', 'cat':
+          'aa', 'cp', 'co', 'lb', 'rb', 'md', 'ext', 'khz', 'key', 'grp', 'cat', 'rt', 'rnd',
+          'dbit', 'enc':
             Code := LowerCase(Copy(Mask, I + 1, J));
         end;
     if Code = '' then Code := Mask[I + 1];
@@ -291,7 +292,16 @@ begin
       '1': Need(tfArtist);
       '2': Need(tfTitle);
       '3': Need(tfAlbum);
-      '4': Need(tfYear);
+      '4': begin
+             Need(tfYear);
+             // the year of a full date (2001-02-03); %rt gives the whole date
+             if (Length(Value) > 4) and (Length(LeadingNumber(Value)) = 4) then
+               Value := LeadingNumber(Value);
+           end;
+      'rt': Need(tfYear);
+      'enc': Need(tfEncodedBy);
+      'rnd': Value := Format('%.4d', [Random(10000)]);
+      'dbit': Value := V.BitDepth;
       '5': Need(tfGenre);
       '6': begin
              Need(tfTrack);
@@ -377,6 +387,7 @@ begin
   V.Duration := StringReplace(FormatDuration(Info.Duration), ':', '.', [rfReplaceAll]);
   V.Ext := Copy(ExtractFileExt(Info.FileName), 2, MaxInt);
   if Info.SampleRate > 0 then V.SampleRate := IntToStr(Info.SampleRate) else V.SampleRate := '';
+  if Info.BitDepth > 0 then V.BitDepth := IntToStr(Info.BitDepth) else V.BitDepth := '';
   V.FolderName := ExtractFileName(ExtractFileDir(Info.FileName));
   Res := ExpandMaskPath(Mask, V, Opt, Missing);
   if (Res = '') or (Res[Length(Res)] = ':') then Exit('');
@@ -400,6 +411,7 @@ begin
   Result.Duration := '';
   Result.Ext := '';
   Result.SampleRate := '';
+  Result.BitDepth := '';
   Result.FolderName := ExtractFileName(Dir);
   First := True;
   for Info in Items do

@@ -532,10 +532,40 @@ msgctxt "layoutcheck.rsskalercoverifilerne"
 msgid "Skalér cover i filerne..."
 msgstr "Redimensionar portadas de los archivos..."
 
+#: layoutcheck.rsmaskeeditor
+msgctxt "layoutcheck.rsmaskeeditor"
+msgid "Maske-editor"
+msgstr "Editor de máscara"
+
 #: layoutcheck.rsvaelgfelterderindsaettes
 msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr "Elige los campos que se pegan en %d archivos:"
+
+#: mainform.rsrtudgivelsesdato
+msgid "%rt|Udgivelsesdato (hele datoen)"
+msgstr "%rt|Fecha de publicación (fecha completa)"
+
+#: mainform.rsdbitbitdybde
+msgid "%dbit|Bitdybde"
+msgstr "%dbit|Profundidad de bits"
+
+#: mainform.rsenckodetaf
+msgid "%enc|Kodet af"
+msgstr "%enc|Codificado por"
+
+#: mainform.rsrndtilfaeldigttal
+msgid "%rnd|Tilfældigt tal (4 cifre)"
+msgstr "%rnd|Número aleatorio (4 cifras)"
+
+#: mainform.rsmaskeeditormenu
+msgid "Maske-editor..."
+msgstr "Editor de máscara..."
+
+#: mainform.rsmaskeeditortitel
+msgctxt "mainform.rsmaskeeditortitel"
+msgid "Maske-editor"
+msgstr "Editor de máscara"
 
 #: mainform.rssletmappecover
 msgid "Slet mappe-cover i de valgte mapper..."
@@ -2382,6 +2412,31 @@ msgstr "Campos: título, artista, álbum, año, comentario, pista y género. ID3
 msgctxt "tooldialogs.rsalle"
 msgid "Alle"
 msgstr "Todos"
+
+#: tooldialogs.rsmaskeeditor
+msgctxt "tooldialogs.rsmaskeeditor"
+msgid "Maske-editor"
+msgstr "Editor de máscara"
+
+#: tooldialogs.rsmaske
+msgid "Maske:"
+msgstr "Máscara:"
+
+#: tooldialogs.rseksempelcolon
+msgid "Eksempel:"
+msgstr "Ejemplo:"
+
+#: tooldialogs.rsvariabler
+msgid "Variabler (klik for at indsætte)"
+msgstr "Variables (clic para insertar)"
+
+#: tooldialogs.rsgemtemasker
+msgid "Gemte masker (dobbeltklik for at bruge)"
+msgstr "Máscaras guardadas (doble clic para usar)"
+
+#: tooldialogs.rsgemmasken
+msgid "Gem masken"
+msgstr "Guardar máscara"
 
 #: tooldialogs.rsstoersteside
 msgid "Største side (pixel):"

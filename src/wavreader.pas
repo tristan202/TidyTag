@@ -228,6 +228,7 @@ begin
         Info.SampleRate := LE32(B, 4);
         ByteRate := LE32(B, 8);
         Bits := LE16(B, 14);
+        Info.BitDepth := Bits;
         case FormatTag of
           1, $FFFE: Info.Codec := Format('WAV PCM %d-bit', [Bits]);
           3: Info.Codec := Format('WAV float %d-bit', [Bits]);
@@ -254,6 +255,7 @@ begin
         Info.Channels := BE16(B, 0);
         Frames := BE32(B, 2);
         Bits := BE16(B, 6);
+        Info.BitDepth := Bits;
         Info.SampleRate := Round(Extended80(B, 8));
         if Info.SampleRate > 0 then
         begin

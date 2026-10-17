@@ -77,6 +77,7 @@ type
     Bitrate: Integer;    // kbit/s
     SampleRate: Integer; // Hz
     Channels: Integer;
+    BitDepth: Integer;   // bits per sample of lossless/PCM audio, 0 = unknown/lossy
     Supported: Boolean;  // False = listed, but tags are not read yet
     Error: string;
     { Set before reading to keep picture data (the file list only needs HasCover). }

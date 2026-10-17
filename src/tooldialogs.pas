@@ -21,10 +21,20 @@ function AskFieldSet(const Title, Prompt: string; const Values: TFieldValues;
   var Fields: TTagFieldSet): Boolean;
 function AskCoverResize(const Title: string; var Opt: TCoverResize): Boolean;
 
+type
+  { Example result of a mask, shown live in the mask editor. }
+  TMaskPreviewFunc = function(const Mask: string): string of object;
+
+{ Mask editor: Vars are 'code|caption' entries ('-|' = separator, skipped); saved masks
+  are kept in the settings section SavedSection. }
+function EditMask(const Title: string; var Mask: string; const Vars: array of string;
+  Preview: TMaskPreviewFunc; const SavedSection: string): Boolean;
+
 implementation
 
 uses
-  Forms, Controls, Graphics, StdCtrls, ExtCtrls, Grids, Dialogs, ButtonPanel, CheckLst, Spin;
+  Forms, Controls, Graphics, StdCtrls, ExtCtrls, Grids, Dialogs, ButtonPanel, CheckLst, Spin,
+  IniFiles;
 
 resourcestring
   rsFra = 'Fra:';
@@ -58,6 +68,12 @@ resourcestring
   rsSyncHjaelp = 'Felter: titel, kunstner, album, år, kommentar, spor og genre. ID3v1 kan kun rumme ' +
     '30 tegn pr. felt og kun vesteuropæiske bogstaver.';
   rsAlle = 'Alle';
+  rsMaskeEditor = 'Maske-editor';
+  rsMaske = 'Maske:';
+  rsEksempelColon = 'Eksempel:';
+  rsVariabler = 'Variabler (klik for at indsætte)';
+  rsGemteMasker = 'Gemte masker (dobbeltklik for at bruge)';
+  rsGemMasken = 'Gem masken';
   rsStoersteSide = 'Største side (pixel):';
   rsJpegKvalitet = 'JPEG-kvalitet (1-100):';
   rsKonverterPngTilJpeg = 'Konvertér PNG til JPEG';
@@ -561,6 +577,134 @@ begin
       Opt.ToJpeg := CJ.Checked;
     end;
   finally
+    F.Free;
+  end;
+end;
+
+type
+  TMaskEditor = class
+    Edit: TEdit;
+    Example: TLabel;
+    List: TListBox;
+    Preview: TMaskPreviewFunc;
+    procedure EditChange(Sender: TObject);
+    procedure VarClick(Sender: TObject);
+    procedure ListDblClick(Sender: TObject);
+    procedure SaveClick(Sender: TObject);
+    procedure RemoveClick(Sender: TObject);
+  end;
+
+procedure TMaskEditor.EditChange(Sender: TObject);
+begin
+  if Assigned(Preview) then Example.Caption := Preview(Edit.Text);
+end;
+
+procedure TMaskEditor.VarClick(Sender: TObject);
+begin
+  Edit.SelText := (Sender as TButton).Hint;
+  Edit.SetFocus;
+end;
+
+procedure TMaskEditor.ListDblClick(Sender: TObject);
+begin
+  if List.ItemIndex >= 0 then Edit.Text := List.Items[List.ItemIndex];
+end;
+
+procedure TMaskEditor.SaveClick(Sender: TObject);
+begin
+  if (Trim(Edit.Text) <> '') and (List.Items.IndexOf(Edit.Text) < 0) then List.Items.Add(Edit.Text);
+end;
+
+procedure TMaskEditor.RemoveClick(Sender: TObject);
+begin
+  if List.ItemIndex >= 0 then List.Items.Delete(List.ItemIndex);
+end;
+
+function EditMask(const Title: string; var Mask: string; const Vars: array of string;
+  Preview: TMaskPreviewFunc; const SavedSection: string): Boolean;
+var
+  F: TForm;
+  E: TMaskEditor;
+  G: TGroupBox;
+  Flow: TFlowPanel;
+  B: TButton;
+  I, Bar: Integer;
+  Code: string;
+  Ini: TIniFile;
+begin
+  F := NewDialog(Title, 700, 470);
+  E := TMaskEditor.Create;
+  try
+    E.Preview := Preview;
+    AddLabel(F, rsMaske, 12, 16);
+    E.Edit := TEdit.Create(F);
+    E.Edit.Parent := F;
+    E.Edit.SetBounds(F.Scale96ToForm(110), F.Scale96ToForm(12), F.Scale96ToForm(578), F.Scale96ToForm(23));
+    AddLabel(F, rsEksempelColon, 12, 46);
+    E.Example := AddLabel(F, '', 110, 46);
+    E.Example.Font.Style := [fsBold];
+    G := TGroupBox.Create(F);
+    G.Parent := F;
+    G.Caption := rsVariabler;
+    G.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(72), F.Scale96ToForm(676), F.Scale96ToForm(200));
+    Flow := TFlowPanel.Create(F);
+    Flow.Parent := G;
+    Flow.Align := alClient;
+    Flow.BevelOuter := bvNone;
+    Flow.AutoWrap := True;
+    for I := 0 to High(Vars) do
+    begin
+      Bar := Pos('|', Vars[I]);
+      Code := Copy(Vars[I], 1, Bar - 1);
+      if (Code = '') or (Code = '-') or (Pos(' ', Code) > 0) then Continue;
+      B := TButton.Create(F);
+      B.Parent := Flow;
+      B.AutoSize := True;
+      B.Caption := Copy(Vars[I], Bar + 1, MaxInt) + ' (' + Code + ')';
+      B.Hint := Code;
+      B.BorderSpacing.Around := F.Scale96ToForm(2);
+      B.OnClick := @E.VarClick;
+    end;
+    AddLabel(F, rsGemteMasker, 12, 282);
+    E.List := TListBox.Create(F);
+    E.List.Parent := F;
+    E.List.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(302), F.Scale96ToForm(540), F.Scale96ToForm(110));
+    E.List.OnDblClick := @E.ListDblClick;
+    B := TButton.Create(F);
+    B.Parent := F;
+    B.Caption := rsGemMasken;
+    B.SetBounds(F.Scale96ToForm(560), F.Scale96ToForm(302), F.Scale96ToForm(128), F.Scale96ToForm(26));
+    B.OnClick := @E.SaveClick;
+    B := TButton.Create(F);
+    B.Parent := F;
+    B.Caption := rsFjern;
+    B.SetBounds(F.Scale96ToForm(560), F.Scale96ToForm(334), F.Scale96ToForm(128), F.Scale96ToForm(26));
+    B.OnClick := @E.RemoveClick;
+    Ini := OpenSettings;
+    try
+      for I := 1 to Ini.ReadInteger(SavedSection, 'Count', 0) do
+        E.List.Items.Add(Ini.ReadString(SavedSection, 'Mask' + IntToStr(I), ''));
+    finally
+      Ini.Free;
+    end;
+    AddButtons(F);
+    E.Edit.Text := Mask;
+    E.Edit.OnChange := @E.EditChange;
+    E.EditChange(nil);
+    Result := F.ShowModal = mrOK;
+    // the saved list is kept even when the mask itself is not taken over
+    Ini := OpenSettings;
+    try
+      Ini.EraseSection(SavedSection);
+      Ini.WriteInteger(SavedSection, 'Count', E.List.Count);
+      for I := 0 to E.List.Count - 1 do
+        Ini.WriteString(SavedSection, 'Mask' + IntToStr(I + 1), E.List.Items[I]);
+    finally
+      Ini.Free;
+    end;
+    if Result then Mask := E.Edit.Text;
+  finally
+    E.Free;
     F.Free;
   end;
 end;

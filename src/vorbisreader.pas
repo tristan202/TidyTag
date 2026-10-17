@@ -146,6 +146,7 @@ var
 begin
   Info.SampleRate := (Integer(B[P + 10]) shl 12) or (Integer(B[P + 11]) shl 4) or (B[P + 12] shr 4);
   Info.Channels := ((B[P + 12] shr 1) and 7) + 1;
+  Info.BitDepth := (((B[P + 12] and 1) shl 4) or (B[P + 13] shr 4)) + 1;
   Total := (QWord(B[P + 13] and $0F) shl 32) or BE32(B, P + 14);
   if Info.SampleRate > 0 then
     Info.Duration := Total / Info.SampleRate;

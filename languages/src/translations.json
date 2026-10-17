@@ -5342,5 +5342,93 @@
   "it": "Le immagini già più piccole non vengono modificate (tranne nella conversione in JPEG).",
   "sv": "Bilder som redan är mindre ändras inte (utom vid konvertering till JPEG).",
   "es": "Las imágenes que ya son más pequeñas no cambian (salvo al convertir a JPEG)."
+ },
+ "Maske-editor": {
+  "en": "Mask editor",
+  "de": "Masken-Editor",
+  "fr": "Éditeur de masque",
+  "it": "Editor maschera",
+  "sv": "Maskredigerare",
+  "es": "Editor de máscara"
+ },
+ "Maske-editor...": {
+  "en": "Mask editor...",
+  "de": "Masken-Editor...",
+  "fr": "Éditeur de masque...",
+  "it": "Editor maschera...",
+  "sv": "Maskredigerare...",
+  "es": "Editor de máscara..."
+ },
+ "%rt|Udgivelsesdato (hele datoen)": {
+  "en": "%rt|Release date (full date)",
+  "de": "%rt|Veröffentlichungsdatum (ganzes Datum)",
+  "fr": "%rt|Date de sortie (date complète)",
+  "it": "%rt|Data di pubblicazione (data completa)",
+  "sv": "%rt|Utgivningsdatum (hela datumet)",
+  "es": "%rt|Fecha de publicación (fecha completa)"
+ },
+ "%dbit|Bitdybde": {
+  "en": "%dbit|Bit depth",
+  "de": "%dbit|Bittiefe",
+  "fr": "%dbit|Profondeur de bits",
+  "it": "%dbit|Profondità di bit",
+  "sv": "%dbit|Bitdjup",
+  "es": "%dbit|Profundidad de bits"
+ },
+ "%enc|Kodet af": {
+  "en": "%enc|Encoded by",
+  "de": "%enc|Kodiert von",
+  "fr": "%enc|Encodé par",
+  "it": "%enc|Codificato da",
+  "sv": "%enc|Kodad av",
+  "es": "%enc|Codificado por"
+ },
+ "%rnd|Tilfældigt tal (4 cifre)": {
+  "en": "%rnd|Random number (4 digits)",
+  "de": "%rnd|Zufallszahl (4 Ziffern)",
+  "fr": "%rnd|Nombre aléatoire (4 chiffres)",
+  "it": "%rnd|Numero casuale (4 cifre)",
+  "sv": "%rnd|Slumptal (4 siffror)",
+  "es": "%rnd|Número aleatorio (4 cifras)"
+ },
+ "Maske:": {
+  "en": "Mask:",
+  "de": "Maske:",
+  "fr": "Masque :",
+  "it": "Maschera:",
+  "sv": "Mask:",
+  "es": "Máscara:"
+ },
+ "Eksempel:": {
+  "en": "Example:",
+  "de": "Beispiel:",
+  "fr": "Exemple :",
+  "it": "Esempio:",
+  "sv": "Exempel:",
+  "es": "Ejemplo:"
+ },
+ "Variabler (klik for at indsætte)": {
+  "en": "Variables (click to insert)",
+  "de": "Variablen (zum Einfügen klicken)",
+  "fr": "Variables (cliquez pour insérer)",
+  "it": "Variabili (clic per inserire)",
+  "sv": "Variabler (klicka för att infoga)",
+  "es": "Variables (clic para insertar)"
+ },
+ "Gemte masker (dobbeltklik for at bruge)": {
+  "en": "Saved masks (double-click to use)",
+  "de": "Gespeicherte Masken (Doppelklick zum Verwenden)",
+  "fr": "Masques enregistrés (double-clic pour utiliser)",
+  "it": "Maschere salvate (doppio clic per usarle)",
+  "sv": "Sparade masker (dubbelklicka för att använda)",
+  "es": "Máscaras guardadas (doble clic para usar)"
+ },
+ "Gem masken": {
+  "en": "Save mask",
+  "de": "Maske speichern",
+  "fr": "Enregistrer le masque",
+  "it": "Salva maschera",
+  "sv": "Spara masken",
+  "es": "Guardar máscara"
  }
 }

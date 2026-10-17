@@ -29,9 +29,9 @@ dagligt brug, **B** = nyttigt, **C** = sjældent/nichepræget, **–** = droppes
 | Funktion | Prioritet | Bemærkning |
 |---|---|---|
 | "Rename Actions": navngivne forudindstillinger (filmaske + mappemaske) i en menu | **Færdig** | Én klik for faste mønstre |
-| Maske-editor med knapper for variabler, eksempel og gemte masker | B | Vi har Variabler-menu og historik |
+| Maske-editor med knapper for variabler, eksempel og gemte masker | **Færdig** | Vi har Variabler-menu og historik |
 | Ordudskiftninger (fx "&" → "and") og ord der altid beholder versaler (fx "AC/DC", "ABBA") | **Færdig** | Indstillinger > File Rename Strings |
-| Flere maskevariabler: %rt udgivelsestid, %rnd tilfældigt tal, %dbit bitdybde, %enc encoder, tv-serie (%swt %eid %snr %enr) | B | |
+| Flere maskevariabler: %rt udgivelsestid, %rnd tilfældigt tal, %dbit bitdybde, %enc encoder, tv-serie (%swt %eid %snr %enr) | **Færdig** (undtagen tv-serie) | |
 | "Omdøb ikke, hvis filen findes" som indstilling | C | Vi springer allerede over ved konflikt |
 | Rediger fil-/mappenavn i dialog med "og forrige/næste" (F6) | C | Vi har direkte omdøbning i listen |
 

@@ -26,6 +26,7 @@ resourcestring
   rsKunHvisFeltetErTomt = 'Kun hvis målfeltet er tomt';
   rsIndsaetTag = 'Indsæt tag';
   rsSkalerCoverIFilerne = 'Skalér cover i filerne...';
+  rsMaskeEditor = 'Maske-editor';
   rsVaelgFelterDerIndsaettes = 'Vælg de felter, der indsættes i %d filer:';
 
 type
@@ -35,9 +36,15 @@ type
     Report: TStrings;
     Round: Integer;
     procedure Inspect(Data: PtrInt);
+    function Preview(const Mask: string): string;
   end;
 
 procedure CheckTree(W: TWinControl; Report: TStrings; const FormName: string); forward;
+
+function TModalInspector.Preview(const Mask: string): string;
+begin
+  Result := Mask + '.mp3';
+end;
 
 procedure TModalInspector.Inspect(Data: PtrInt);
 var
@@ -170,6 +177,7 @@ var
   Fs: TTagFieldSet;
   T: TTagField;
   CO: TCoverResize;
+  MaskText: string;
 
   procedure Arm;
   begin
@@ -209,6 +217,11 @@ begin
     CO.ToJpeg := False;
     Arm;
     AskCoverResize(rsSkalerCoverIFilerne, CO);
+    MaskText := '%1 - %2';
+    Arm;
+    EditMask(rsMaskeEditor, MaskText, ['%1|' + TagFieldCaptions[tfArtist], '%2|' + TagFieldCaptions[tfTitle],
+      '%3|' + TagFieldCaptions[tfAlbum], '%aa|' + TagFieldCaptions[tfAlbumArtist], '%rt|Udgivelsesdato'],
+      @Insp.Preview, 'LayoutCheckMasks');
   finally
     Insp.Free;
   end;
