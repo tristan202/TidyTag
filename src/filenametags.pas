@@ -22,7 +22,8 @@ type
 const
   FileToTagVariablesHelp =
     '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc' + LineEnding +
-    '%9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist   %d Spring over' + LineEnding +
+    '%9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab' + LineEnding +
+    '%d Spring over' + LineEnding +
     'Filtypen fjernes automatisk. Brug \ for mappenavne, fx  %1\%3\%6 - %2';
 
 { Which fields a mask fills (for preview columns). }
@@ -75,9 +76,12 @@ begin
     end;
     Code := WideLowerCase(Copy(U, I + 1, 2));
     Kind := tkField;
-    if (Code = 'aa') or (Code = 'cp') then
+    if (Code = 'aa') or (Code = 'cp') or (Code = 'co') or (Code = 'lb') then
     begin
-      if Code = 'aa' then F := tfAlbumArtist else F := tfComposer;
+      if Code = 'aa' then F := tfAlbumArtist
+      else if Code = 'cp' then F := tfComposer
+      else if Code = 'co' then F := tfConductor
+      else F := tfPublisher;
       Inc(I, 3);
     end
     else

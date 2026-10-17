@@ -3,7 +3,7 @@
 Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne i Tag&Rename 3.9.15
 (se [docs/Funktionsoversigt.md](docs/Funktionsoversigt.md)). Arbejdstitel – navnet kan ændres.
 
-## Status (MVP, trin 8)
+## Status (MVP, trin 9)
 - **Hovedvindue i Tag&Rename-stil:** menulinje (Filer, Rediger, Vis, Playliste, Værktøjer,
   Indstillinger, Hjælp), værktøjspanel (F8) med fanerne *Omdøb filer (F4)*, *Multi-fil-tag-editor
   (Ctrl+F4)* og *Tags fra filnavn (Shift+F4)* direkte i vinduet (med live-resultat for den markerede
@@ -11,6 +11,15 @@ Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne
   adresselinje med historik, filterlinje (Filtrer! / Skjul valgte filer / Vis alle), mappepanel med
   Op/Favoritter/Ny mappe, og statuslinje med antal og spilletid for alle/markerede/afkrydsede filer.
 - Kopiér/indsæt tag (Ctrl+Shift+C/V), playlister (.m3u8/.m3u), afspil fil, vis i Stifinder.
+- **Flere felter** (31 i alt): sangtekst, dirigent, tekstforfatter, oprindelig kunstner, remixet af,
+  pladeselskab, katalognr., ISRC, copyright, kodet af, URL, gruppering, undertitel, stemning,
+  toneart og fem sorteringsfelter – i ID3v2 (TPE3, TEXT, TOPE, TPE4, TPUB, TSRC, TCOP, TENC, WXXX,
+  TIT1, TIT3, TMOO/TXXX:MOOD, TKEY, TSO*, USLT, TXXX:CATALOGNUMBER), Vorbis comments og MP4
+  (©lyr, cprt, ©grp, so*, ----:com.apple.iTunes:*). Tag-editoren har fanerne Generelt, Flere felter,
+  Sortering og Sangtekst; nye maskevariabler %co %lb %cat %grp %rb %md %key.
+- **Flyt fil op/ned** (Ctrl+Op/Ned) – manuel rækkefølge, fx før "Nummerér i listens rækkefølge".
+- **Eksportér** til CSV (Excel, semikolon + BOM), CSV (komma), tekst, HTML og XML med valgfrie
+  kolonner; **importér** fra CSV/XLSX med forhåndsvisning (matcher på "Sti" eller "Filnavn").
 - Mappetræ og virtuel filliste med 21 kolonner; klik på en kolonneoverskrift for at sortere.
 - "Søg i undermapper"; tags læses i en baggrundstråd, så vinduet ikke fryser.
 - Husker sidste mappe, undermappe-valg og træets bredde (`%LOCALAPPDATA%\TagKlon\tagklon.ini`).
@@ -80,7 +89,7 @@ bin\renametest.exe C:\Temp\renametest
 ```
 
 Øvrige værktøjer i `tools\`: `webtest.lpr` (offline-test af MusicBrainz-svar og parring),
-`dgtest.lpr` (live Discogs: `bin\dgtest.exe 249504`), `mbtest.lpr` (live-søgning: `bin\mbtest.exe "Gasolin'" "Gas 5"`), `tagset.lpr` (sæt felter:
+`dgtest.lpr` (live Discogs: `bin\dgtest.exe 249504`), `mbtest.lpr` (live-søgning: `bin\mbtest.exe "Gasolin'" "Gas 5"`), `exporttest.lpr` (eksport/import), `tagset.lpr` (sæt felter:
 `bin\tagset.exe fil.mp3 artist=X album=Y track=1`).
 
 Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret – gem også den tilhørende `.pas`.
@@ -113,12 +122,13 @@ Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret
 | `src/trackmatch.pas` | Parring af filer og spor, udfyldning af felter |
 | `src/weblookupform.pas/.lfm` | Dialog: Web-opslag (MusicBrainz/Discogs) |
 | `src/mainform.pas/.lfm` | Hovedvindue (menu/værktøjslinje bygges i koden fra én handlingstabel) |
+| `src/exportimport.pas` | Eksport (CSV/TXT/HTML/XML), CSV-/XLSX-læsning, import-plan |
+| `src/exportimportform.pas/.lfm` | Dialog: Eksportér/importér tags |
 | `src/batchwrite.pas` | Gem udvalgte felter/cover i én fil (bruges af faner, indsæt tag, træk-og-slip) |
 | `res/icons/`, `res/icons.rc` | Ikoner (Lazarus general_purpose af Roland Hahn, CC0) |
 | `reference/forms/` | Formularer fra originalen (kun som reference – må ikke kopieres) |
 
 ## Næste skridt
-1. Afprøv Discogs-søgning med eget token
-2. Flere felter i editoren (lyrics, label, ISRC, sortering) og Ogg-skrivning
-3. Flyt fil op/ned i listen, playlister og eksport (CSV/HTML)
+1. Ogg/Opus-skrivning og understøttelse af WMA, APE/WavPack og WAV/AIFF
+2. Rating (POPM) og flere billedtyper i editoren
 4. Indstilling for kontakt-info i MusicBrainz' User-Agent (anbefales af MusicBrainz)

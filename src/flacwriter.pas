@@ -39,7 +39,11 @@ begin
     'TITLE', 'ARTIST', 'ALBUM', 'DATE', 'YEAR', 'TRACKNUMBER', 'TRACKTOTAL', 'TOTALTRACKS',
     'DISCNUMBER', 'DISCTOTAL', 'TOTALDISCS', 'GENRE', 'COMMENT', 'DESCRIPTION',
     'ALBUMARTIST', 'ALBUM ARTIST', 'ALBUM_ARTIST', 'COMPOSER', 'BPM',
-    'METADATA_BLOCK_PICTURE', 'COVERART', 'COVERARTMIME':
+    'METADATA_BLOCK_PICTURE', 'COVERART', 'COVERARTMIME',
+    'LYRICS', 'UNSYNCEDLYRICS', 'CONDUCTOR', 'LYRICIST', 'ORIGINALARTIST', 'ORIGARTIST',
+    'REMIXER', 'LABEL', 'ORGANIZATION', 'PUBLISHER', 'CATALOGNUMBER', 'ISRC', 'COPYRIGHT',
+    'ENCODEDBY', 'ENCODED-BY', 'WEBSITE', 'URL', 'GROUPING', 'SUBTITLE', 'MOOD', 'KEY',
+    'INITIALKEY', 'TITLESORT', 'ARTISTSORT', 'ALBUMARTISTSORT', 'ALBUMSORT', 'COMPOSERSORT':
       Result := True;
   else
     Result := False;
@@ -97,6 +101,11 @@ var
       if Trim(Part) <> '' then Entries.Add(Key + '=' + Trim(Part));
   end;
 
+  procedure AddOne(const Key, Value: string);
+  begin
+    if Value <> '' then Entries.Add(Key + '=' + Value);
+  end;
+
   procedure AddNumberPair(const NumKey, TotalKey, Value: string);
   var
     Slash: Integer;
@@ -149,6 +158,26 @@ begin
     AddMulti('COMPOSER', Info.Fields[tfComposer]);
     if Info.Fields[tfBpm] <> '' then Entries.Add('BPM=' + Info.Fields[tfBpm]);
     if Info.Fields[tfComment] <> '' then Entries.Add('COMMENT=' + Info.Fields[tfComment]);
+    AddMulti('CONDUCTOR', Info.Fields[tfConductor]);
+    AddMulti('LYRICIST', Info.Fields[tfLyricist]);
+    AddMulti('ORIGINALARTIST', Info.Fields[tfOrigArtist]);
+    AddMulti('REMIXER', Info.Fields[tfRemixer]);
+    AddMulti('LABEL', Info.Fields[tfPublisher]);
+    AddOne('CATALOGNUMBER', Info.Fields[tfCatalogNo]);
+    AddOne('ISRC', Info.Fields[tfIsrc]);
+    AddOne('COPYRIGHT', Info.Fields[tfCopyright]);
+    AddOne('ENCODEDBY', Info.Fields[tfEncodedBy]);
+    AddOne('WEBSITE', Info.Fields[tfUrl]);
+    AddOne('GROUPING', Info.Fields[tfGrouping]);
+    AddOne('SUBTITLE', Info.Fields[tfSubtitle]);
+    AddOne('MOOD', Info.Fields[tfMood]);
+    AddOne('KEY', Info.Fields[tfInitialKey]);
+    AddOne('TITLESORT', Info.Fields[tfSortTitle]);
+    AddOne('ARTISTSORT', Info.Fields[tfSortArtist]);
+    AddOne('ALBUMARTISTSORT', Info.Fields[tfSortAlbumArtist]);
+    AddOne('ALBUMSORT', Info.Fields[tfSortAlbum]);
+    AddOne('COMPOSERSORT', Info.Fields[tfSortComposer]);
+    AddOne('LYRICS', Info.Fields[tfLyrics]);
     if WithPictures then
       for I := 0 to High(Info.Pictures) do
       begin

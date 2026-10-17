@@ -2,7 +2,9 @@ program TagSet;
 
 { Developer tool: sets tag fields from the command line.
     tagset <file> artist="Kim Larsen" album="Midt om natten" track=1 ...
-  Field names: title artist album year track disc genre comment albumartist composer bpm }
+  Field names: title artist album year track disc genre comment albumartist composer bpm
+  lyrics conductor lyricist origartist remixer label catalog isrc copyright encodedby url
+  grouping subtitle mood key sorttitle sortartist sortalbumartist sortalbum sortcomposer }
 
 {$mode objfpc}{$H+}
 
@@ -12,7 +14,10 @@ uses
 
 const
   Names: array[TTagField] of string = ('title', 'artist', 'album', 'year', 'track', 'disc',
-    'genre', 'comment', 'albumartist', 'composer', 'bpm');
+    'genre', 'comment', 'albumartist', 'composer', 'bpm', 'lyrics', 'conductor', 'lyricist',
+    'origartist', 'remixer', 'label', 'catalog', 'isrc', 'copyright', 'encodedby', 'url',
+    'grouping', 'subtitle', 'mood', 'key', 'sorttitle', 'sortartist', 'sortalbumartist',
+    'sortalbum', 'sortcomposer');
 
 var
   Info: TAudioInfo;

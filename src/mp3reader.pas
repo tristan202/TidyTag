@@ -126,10 +126,14 @@ end;
 
 function V22ToV23(const ID: string): string;
 const
-  Map: array[0..11, 0..1] of string = (
+  Map: array[0..25, 0..1] of string = (
     ('TT2', 'TIT2'), ('TP1', 'TPE1'), ('TAL', 'TALB'), ('TYE', 'TYER'),
     ('TRK', 'TRCK'), ('TPA', 'TPOS'), ('TCO', 'TCON'), ('COM', 'COMM'),
-    ('TP2', 'TPE2'), ('TCM', 'TCOM'), ('TBP', 'TBPM'), ('PIC', 'APIC'));
+    ('TP2', 'TPE2'), ('TCM', 'TCOM'), ('TBP', 'TBPM'), ('PIC', 'APIC'),
+    ('TP3', 'TPE3'), ('TXT', 'TEXT'), ('TOA', 'TOPE'), ('TP4', 'TPE4'),
+    ('TPB', 'TPUB'), ('TRC', 'TSRC'), ('TCR', 'TCOP'), ('TEN', 'TENC'),
+    ('TT1', 'TIT1'), ('TT3', 'TIT3'), ('TKE', 'TKEY'), ('ULT', 'USLT'),
+    ('WXX', 'WXXX'), ('TXX', 'TXXX'));
 var
   I: Integer;
 begin
@@ -190,7 +194,53 @@ begin
     else if ID = 'TCON' then Info.SetField(tfGenre, NormalizeGenre(Txt))
     else if ID = 'TPE2' then Info.SetField(tfAlbumArtist, Txt)
     else if ID = 'TCOM' then Info.SetField(tfComposer, Txt)
-    else if ID = 'TBPM' then Info.SetField(tfBpm, Txt);
+    else if ID = 'TBPM' then Info.SetField(tfBpm, Txt)
+    else if ID = 'TPE3' then Info.SetField(tfConductor, Txt)
+    else if ID = 'TEXT' then Info.SetField(tfLyricist, Txt)
+    else if ID = 'TOPE' then Info.SetField(tfOrigArtist, Txt)
+    else if ID = 'TPE4' then Info.SetField(tfRemixer, Txt)
+    else if ID = 'TPUB' then Info.SetField(tfPublisher, Txt)
+    else if ID = 'TSRC' then Info.SetField(tfIsrc, Txt)
+    else if ID = 'TCOP' then Info.SetField(tfCopyright, Txt)
+    else if ID = 'TENC' then Info.SetField(tfEncodedBy, Txt)
+    else if ID = 'TIT1' then Info.SetField(tfGrouping, Txt)
+    else if ID = 'GRP1' then Info.SetField(tfGrouping, Txt, False) // newer iTunes
+    else if ID = 'TIT3' then Info.SetField(tfSubtitle, Txt)
+    else if ID = 'TMOO' then Info.SetField(tfMood, Txt)
+    else if ID = 'TKEY' then Info.SetField(tfInitialKey, Txt)
+    else if ID = 'TSOT' then Info.SetField(tfSortTitle, Txt)
+    else if ID = 'TSOP' then Info.SetField(tfSortArtist, Txt)
+    else if ID = 'TSO2' then Info.SetField(tfSortAlbumArtist, Txt)
+    else if ID = 'TSOA' then Info.SetField(tfSortAlbum, Txt)
+    else if ID = 'TSOC' then Info.SetField(tfSortComposer, Txt);
+  end
+  else if ID = 'TXXX' then
+  begin
+    // encoding, description<NUL>, value
+    Enc := F[0];
+    P := SkipTerminated(F, 1, Enc);
+    Desc := UpperCase(DecodeID3Text(F, 1, P - 1, Enc));
+    Txt := DecodeID3Text(F, P, Length(F) - P, Enc);
+    if Desc = 'CATALOGNUMBER' then Info.SetField(tfCatalogNo, Txt)
+    else if Desc = 'MOOD' then Info.SetField(tfMood, Txt, False)
+    else if Desc = 'LABEL' then Info.SetField(tfPublisher, Txt, False);
+  end
+  else if ID = 'USLT' then
+  begin
+    // encoding, language, description<NUL>, lyrics; prefer the one without description
+    Enc := F[0];
+    P := SkipTerminated(F, 4, Enc);
+    Desc := DecodeID3Text(F, 4, P - 4, Enc);
+    Txt := DecodeID3Text(F, P, Length(F) - P, Enc);
+    Info.SetField(tfLyrics, Txt, Desc = '');
+  end
+  else if ID = 'WXXX' then
+  begin
+    // encoding, description<NUL>, URL (always Latin-1)
+    Enc := F[0];
+    P := SkipTerminated(F, 1, Enc);
+    Desc := DecodeID3Text(F, 1, P - 1, Enc);
+    Info.SetField(tfUrl, CleanTagText(Latin1ToUTF8(F, P, Length(F) - P)), Desc = '');
   end
   else if ID = 'COMM' then
   begin

@@ -276,6 +276,14 @@ object FormWebLookup: TFormWebLookup
       Caption = '(som 07/12)'
       TabOrder = 7
     end
+    object CheckLabel: TCheckBox
+      Left = 840
+      Height = 19
+      Top = 6
+      Width = 180
+      Caption = 'Pladeselskab, katalognr.'
+      TabOrder = 13
+    end
     object CheckDisc: TCheckBox
       Left = 8
       Height = 19

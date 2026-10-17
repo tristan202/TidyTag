@@ -93,6 +93,37 @@ begin
   end;
 end;
 
+{ iTunes freeform item '----': children 'mean' (com.apple.iTunes), 'name' and 'data'. }
+procedure ReadFreeform(const B: TBytes; P, Limit: SizeInt; Info: TAudioInfo);
+var
+  Size, Hdr: Int64;
+  Name, Value: string;
+begin
+  Name := '';
+  Value := '';
+  while AtomHeader(B, P, Limit, Size, Hdr) do
+  begin
+    if AtomIs(B, P + 4, 'name') and (Size > Hdr + 4) then
+      Name := UpperCase(RawUTF8(B, P + Hdr + 4, Size - Hdr - 4))
+    else if AtomIs(B, P + 4, 'data') and (Value = '') and (Size > Hdr + 8) then
+      Value := CleanTagText(RawUTF8(B, P + Hdr + 8, Size - Hdr - 8));
+    Inc(P, Size);
+  end;
+  if Value = '' then Exit;
+  if Name = 'CONDUCTOR' then Info.SetField(tfConductor, Value)
+  else if Name = 'LYRICIST' then Info.SetField(tfLyricist, Value)
+  else if (Name = 'ORIGINALARTIST') or (Name = 'ORIGINAL ARTIST') then Info.SetField(tfOrigArtist, Value)
+  else if Name = 'REMIXER' then Info.SetField(tfRemixer, Value)
+  else if (Name = 'LABEL') or (Name = 'PUBLISHER') then Info.SetField(tfPublisher, Value)
+  else if Name = 'CATALOGNUMBER' then Info.SetField(tfCatalogNo, Value)
+  else if Name = 'ISRC' then Info.SetField(tfIsrc, Value)
+  else if Name = 'ENCODEDBY' then Info.SetField(tfEncodedBy, Value)
+  else if Name = 'URL' then Info.SetField(tfUrl, Value)
+  else if Name = 'SUBTITLE' then Info.SetField(tfSubtitle, Value)
+  else if Name = 'MOOD' then Info.SetField(tfMood, Value)
+  else if (Name = 'INITIALKEY') or (Name = 'KEY') then Info.SetField(tfInitialKey, Value);
+end;
+
 procedure ParseIlstItem(const B: TBytes; P, Limit: SizeInt; ItemP: SizeInt; Info: TAudioInfo);
 var
   DP, DL: SizeInt;
@@ -113,6 +144,11 @@ begin
   if AtomIs(B, ItemP, 'covr') then
   begin
     ReadCovers(B, P, Limit, Info);
+    Exit;
+  end;
+  if AtomIs(B, ItemP, '----') then
+  begin
+    ReadFreeform(B, P, Limit, Info);
     Exit;
   end;
   if not FindData(B, P, Limit, DP, DL, DT) then Exit;
@@ -136,7 +172,15 @@ begin
     else if AtomIs(B, ItemP, '@gen') then Info.SetField(tfGenre, Txt)
     else if AtomIs(B, ItemP, '@cmt') then Info.SetField(tfComment, Txt)
     else if AtomIs(B, ItemP, 'aART') then Info.SetField(tfAlbumArtist, Txt)
-    else if AtomIs(B, ItemP, '@wrt') then Info.SetField(tfComposer, Txt);
+    else if AtomIs(B, ItemP, '@wrt') then Info.SetField(tfComposer, Txt)
+    else if AtomIs(B, ItemP, '@lyr') then Info.SetField(tfLyrics, Txt)
+    else if AtomIs(B, ItemP, 'cprt') then Info.SetField(tfCopyright, Txt)
+    else if AtomIs(B, ItemP, '@grp') then Info.SetField(tfGrouping, Txt)
+    else if AtomIs(B, ItemP, 'sonm') then Info.SetField(tfSortTitle, Txt)
+    else if AtomIs(B, ItemP, 'soar') then Info.SetField(tfSortArtist, Txt)
+    else if AtomIs(B, ItemP, 'soaa') then Info.SetField(tfSortAlbumArtist, Txt)
+    else if AtomIs(B, ItemP, 'soal') then Info.SetField(tfSortAlbum, Txt)
+    else if AtomIs(B, ItemP, 'soco') then Info.SetField(tfSortComposer, Txt);
   end;
 end;
 

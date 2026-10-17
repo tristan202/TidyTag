@@ -145,6 +145,7 @@ begin
   Ini := OpenSettings;
   try
     ComboMask.Text := Ini.ReadString(Section, 'Mask', ComboMask.Items[0]);
+    if Trim(ComboMask.Text) = '' then ComboMask.Text := ComboMask.Items[0];
     ComboCase.ItemIndex := Ini.ReadInteger(Section, 'Case', 0);
     CheckUnderscores.Checked := Ini.ReadBool(Section, 'Underscores', False);
     CheckPadTrack.Checked := Ini.ReadBool(Section, 'PadTrack', True);
@@ -264,13 +265,13 @@ begin
   begin
     if MessageDlg('Omdøb mapper', Format('Omdøb %d mapper?', [CountStatus(FPlan, rsOk)]),
       mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
-    AddMaskToHistory('FolderMasks', ComboMask.Text, ComboMask.Items);
+    AddComboMaskToHistory('FolderMasks', ComboMask);
   end
   else
   begin
     if MessageDlg('Omdøb filer', Format('Omdøb %d filer?', [CountStatus(FPlan, rsOk)]),
       mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
-    AddMaskToHistory('RenameMasks', ComboMask.Text, ComboMask.Items);
+    AddComboMaskToHistory('RenameMasks', ComboMask);
   end;
   SaveOptions;
   Screen.Cursor := crHourGlass;

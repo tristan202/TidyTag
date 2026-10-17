@@ -7,7 +7,7 @@ unit AppSettings;
 interface
 
 uses
-  Classes, SysUtils, IniFiles;
+  Classes, SysUtils, IniFiles, StdCtrls;
 
 function SettingsFileName: string;
 function OpenSettings: TIniFile;
@@ -15,6 +15,8 @@ function OpenSettings: TIniFile;
 procedure LoadMaskHistory(const Section: string; Items: TStrings; const Defaults: array of string);
 { Moves Mask to the top of the history and saves at most MaxMasks entries. }
 procedure AddMaskToHistory(const Section, Mask: string; Items: TStrings);
+{ Same for a combo box, keeping its text: deleting the shown item would clear it. }
+procedure AddComboMaskToHistory(const Section: string; Combo: TComboBox);
 
 const
   MaxMasks = 15;
@@ -71,6 +73,15 @@ begin
   finally
     Ini.Free;
   end;
+end;
+
+procedure AddComboMaskToHistory(const Section: string; Combo: TComboBox);
+var
+  Mask: string;
+begin
+  Mask := Combo.Text;
+  AddMaskToHistory(Section, Mask, Combo.Items);
+  Combo.Text := Mask;
 end;
 
 end.

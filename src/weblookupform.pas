@@ -47,6 +47,7 @@ type
     CheckCoverTags: TCheckBox;
     CheckDisc: TCheckBox;
     CheckGenre: TCheckBox;
+    CheckLabel: TCheckBox;
     CheckKeepTimestamp: TCheckBox;
     CheckTitle: TCheckBox;
     CheckTrack: TCheckBox;
@@ -191,6 +192,7 @@ begin
     CheckTrackTotal.Checked := Ini.ReadBool('Web', 'TrackTotal', False);
     CheckDisc.Checked := Ini.ReadBool('Web', 'Disc', True);
     CheckGenre.Checked := Ini.ReadBool('Web', 'Genre', False);
+    CheckLabel.Checked := Ini.ReadBool('Web', 'Label', False);
     CheckCoverTags.Checked := Ini.ReadBool('Web', 'CoverTags', True);
     CheckCoverFolder.Checked := Ini.ReadBool('Web', 'CoverFolder', False);
     ComboSource.ItemIndex := Ini.ReadInteger('Web', 'Source', 0);
@@ -216,6 +218,7 @@ begin
     Ini.WriteBool('Web', 'TrackTotal', CheckTrackTotal.Checked);
     Ini.WriteBool('Web', 'Disc', CheckDisc.Checked);
     Ini.WriteBool('Web', 'Genre', CheckGenre.Checked);
+    Ini.WriteBool('Web', 'Label', CheckLabel.Checked);
     Ini.WriteBool('Web', 'CoverTags', CheckCoverTags.Checked);
     Ini.WriteBool('Web', 'CoverFolder', CheckCoverFolder.Checked);
     Ini.WriteInteger('Web', 'Source', ComboSource.ItemIndex);
@@ -547,6 +550,7 @@ begin
   if CheckTrack.Checked then Include(Result.Fields, tfTrack);
   if CheckDisc.Checked then Include(Result.Fields, tfDisc);
   if CheckGenre.Checked then Include(Result.Fields, tfGenre);
+  if CheckLabel.Checked then Result.Fields := Result.Fields + [tfPublisher, tfCatalogNo];
   Result.YearOnly := CheckYearOnly.Checked;
   Result.TrackWithTotal := CheckTrackTotal.Checked;
 end;

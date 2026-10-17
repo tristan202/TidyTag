@@ -1,0 +1,250 @@
+object FormExportImport: TFormExportImport
+  Left = 300
+  Height = 600
+  Top = 120
+  Width = 860
+  Caption = 'Eksport'#233'r / import'#233'r tags'
+  ClientHeight = 600
+  ClientWidth = 860
+  Position = poOwnerFormCenter
+  OnCreate = FormCreate
+  LCLVersion = '4.6.0.0'
+  object PageMain: TPageControl
+    Left = 8
+    Height = 540
+    Top = 8
+    Width = 844
+    ActivePage = TabExport
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    TabIndex = 0
+    TabOrder = 0
+    object TabExport: TTabSheet
+      Caption = 'Eksport'
+      ClientHeight = 512
+      ClientWidth = 836
+      object RadioFormat: TRadioGroup
+        Left = 8
+        Height = 150
+        Top = 8
+        Width = 270
+        AutoFill = True
+        Caption = 'Format'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        TabOrder = 0
+      end
+      object RadioScope: TRadioGroup
+        Left = 8
+        Height = 70
+        Top = 166
+        Width = 270
+        AutoFill = True
+        Caption = 'Filer'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        Items.Strings = (
+          'Valgte'
+          'Alle'
+        )
+        TabOrder = 1
+      end
+      object CheckOpenAfter: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 246
+        Width = 160
+        Caption = #197'bn filen bagefter'
+        TabOrder = 2
+      end
+      object LabelColumns: TLabel
+        Left = 294
+        Height = 15
+        Top = 8
+        Width = 54
+        Caption = 'Kolonner:'
+      end
+      object CheckListColumns: TCheckListBox
+        Left = 294
+        Height = 440
+        Top = 28
+        Width = 534
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        Columns = 2
+        ItemHeight = 17
+        TabOrder = 3
+      end
+      object ButtonColsAll: TButton
+        Left = 294
+        Height = 27
+        Top = 476
+        Width = 80
+        Anchors = [akLeft, akBottom]
+        Caption = 'Alle'
+        TabOrder = 4
+        OnClick = ButtonColsAllClick
+      end
+      object ButtonColsNone: TButton
+        Left = 380
+        Height = 27
+        Top = 476
+        Width = 80
+        Anchors = [akLeft, akBottom]
+        Caption = 'Ingen'
+        TabOrder = 5
+        OnClick = ButtonColsNoneClick
+      end
+      object ButtonColsDefault: TButton
+        Left = 466
+        Height = 27
+        Top = 476
+        Width = 90
+        Anchors = [akLeft, akBottom]
+        Caption = 'Standard'
+        TabOrder = 6
+        OnClick = ButtonColsDefaultClick
+      end
+      object ButtonExport: TButton
+        Left = 8
+        Height = 30
+        Top = 280
+        Width = 150
+        Caption = 'Eksport'#233'r...'
+        Default = True
+        TabOrder = 7
+        OnClick = ButtonExportClick
+      end
+    end
+    object TabImport: TTabSheet
+      Caption = 'Import (CSV / XLSX)'
+      ClientHeight = 512
+      ClientWidth = 836
+      object LabelImportFile: TLabel
+        Left = 8
+        Height = 15
+        Top = 12
+        Width = 17
+        Caption = 'Fil:'
+      end
+      object EditImportFile: TEdit
+        Left = 40
+        Height = 23
+        Top = 8
+        Width = 640
+        Anchors = [akTop, akLeft, akRight]
+        ReadOnly = True
+        TabOrder = 0
+      end
+      object ButtonBrowse: TButton
+        Left = 688
+        Height = 27
+        Top = 6
+        Width = 140
+        Anchors = [akTop, akRight]
+        Caption = 'V'#230'lg fil...'
+        TabOrder = 1
+        OnClick = ButtonBrowseClick
+      end
+      object CheckEmptyClears: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 40
+        Width = 220
+        Caption = 'Tomme celler rydder felterne'
+        TabOrder = 2
+        OnChange = CheckEmptyClearsChange
+      end
+      object LabelImportInfo: TLabel
+        Left = 8
+        Height = 34
+        Top = 64
+        Width = 820
+        Anchors = [akTop, akLeft, akRight]
+        AutoSize = False
+        Caption = 'V'#230'lg en CSV- eller XLSX-fil med en kolonne "Sti" eller "Filnavn" og kolonner med feltnavne (fx en eksport, du har rettet i Excel).'
+        WordWrap = True
+      end
+      object ListImport: TListView
+        Left = 8
+        Height = 368
+        Top = 102
+        Width = 820
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        Columns = <
+          item
+            Caption = 'R'#230'kke'
+            Width = 50
+          end
+          item
+            Caption = 'Fil'
+            Width = 220
+          end
+          item
+            Caption = #198'ndringer'
+            Width = 400
+          end
+          item
+            Caption = 'Status'
+            Width = 130
+          end>
+        ReadOnly = True
+        RowSelect = True
+        TabOrder = 3
+        ViewStyle = vsReport
+      end
+      object LabelImportSummary: TLabel
+        Left = 8
+        Height = 15
+        Top = 482
+        Width = 600
+        Anchors = [akLeft, akBottom]
+        AutoSize = False
+        Caption = ''
+      end
+      object ButtonImportWrite: TButton
+        Left = 688
+        Height = 30
+        Top = 476
+        Width = 140
+        Anchors = [akRight, akBottom]
+        Caption = 'Skriv tags'
+        Enabled = False
+        TabOrder = 4
+        OnClick = ButtonImportWriteClick
+      end
+    end
+  end
+  object ButtonClose: TButton
+    Left = 742
+    Height = 30
+    Top = 558
+    Width = 110
+    Anchors = [akRight, akBottom]
+    Cancel = True
+    Caption = 'Luk'
+    TabOrder = 1
+    OnClick = ButtonCloseClick
+  end
+  object SaveExportDialog: TSaveDialog
+    Title = 'Eksport'#233'r'
+    Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
+    Left = 400
+    Top = 300
+  end
+  object OpenTableDialog: TOpenDialog
+    Title = 'Import'#233'r tags'
+    Filter = 'Regneark og CSV (*.xlsx;*.csv;*.txt)|*.xlsx;*.csv;*.txt|Alle filer (*.*)|*.*'
+    Options = [ofFileMustExist, ofEnableSizing, ofViewDetail]
+    Left = 480
+    Top = 300
+  end
+end

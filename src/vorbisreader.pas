@@ -101,6 +101,28 @@ begin
       'ALBUMARTIST', 'ALBUM ARTIST', 'ALBUM_ARTIST': Info.AppendField(tfAlbumArtist, Value);
       'COMPOSER': Info.AppendField(tfComposer, Value);
       'BPM': Info.SetField(tfBpm, Value);
+      'LYRICS': Info.SetField(tfLyrics, Value);
+      'UNSYNCEDLYRICS': Info.SetField(tfLyrics, Value, False);
+      'CONDUCTOR': Info.AppendField(tfConductor, Value);
+      'LYRICIST': Info.AppendField(tfLyricist, Value);
+      'ORIGINALARTIST', 'ORIGARTIST': Info.AppendField(tfOrigArtist, Value);
+      'REMIXER': Info.AppendField(tfRemixer, Value);
+      'LABEL': Info.AppendField(tfPublisher, Value);
+      'ORGANIZATION', 'PUBLISHER': Info.SetField(tfPublisher, Value, False);
+      'CATALOGNUMBER': Info.SetField(tfCatalogNo, Value);
+      'ISRC': Info.SetField(tfIsrc, Value);
+      'COPYRIGHT': Info.SetField(tfCopyright, Value);
+      'ENCODEDBY', 'ENCODED-BY': Info.SetField(tfEncodedBy, Value);
+      'WEBSITE', 'URL': Info.SetField(tfUrl, Value, False);
+      'GROUPING': Info.SetField(tfGrouping, Value);
+      'SUBTITLE': Info.SetField(tfSubtitle, Value);
+      'MOOD': Info.SetField(tfMood, Value);
+      'KEY', 'INITIALKEY': Info.SetField(tfInitialKey, Value, False);
+      'TITLESORT': Info.SetField(tfSortTitle, Value);
+      'ARTISTSORT': Info.SetField(tfSortArtist, Value);
+      'ALBUMARTISTSORT': Info.SetField(tfSortAlbumArtist, Value);
+      'ALBUMSORT': Info.SetField(tfSortAlbum, Value);
+      'COMPOSERSORT': Info.SetField(tfSortComposer, Value);
       'METADATA_BLOCK_PICTURE': ParseBase64Picture(Value, Info);
       'COVERART': Info.HasCover := True; // old, non-standard; not loaded
     end;

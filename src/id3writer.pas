@@ -29,8 +29,20 @@ var
 begin
   if (ID = 'TIT2') or (ID = 'TPE1') or (ID = 'TALB') or (ID = 'TYER') or (ID = 'TDAT') or
     (ID = 'TDRC') or (ID = 'TRCK') or (ID = 'TPOS') or (ID = 'TCON') or (ID = 'TPE2') or
-    (ID = 'TCOM') or (ID = 'TBPM') or (ID = 'APIC') or (ID = 'PIC') then
+    (ID = 'TCOM') or (ID = 'TBPM') or (ID = 'APIC') or (ID = 'PIC') or
+    (ID = 'TPE3') or (ID = 'TEXT') or (ID = 'TOPE') or (ID = 'TPE4') or (ID = 'TPUB') or
+    (ID = 'TSRC') or (ID = 'TCOP') or (ID = 'TENC') or (ID = 'TIT1') or (ID = 'GRP1') or
+    (ID = 'TIT3') or (ID = 'TMOO') or (ID = 'TKEY') or (ID = 'TSOT') or (ID = 'TSOP') or
+    (ID = 'TSO2') or (ID = 'TSOA') or (ID = 'TSOC') or (ID = 'USLT') then
     Exit(True);
+  if (ID = 'TXXX') or (ID = 'WXXX') then
+  begin
+    if Length(Fr.Data) < 2 then Exit(True);
+    P := SkipTerminated(Fr.Data, 1, Fr.Data[0]);
+    Desc := UpperCase(DecodeID3Text(Fr.Data, 1, P - 1, Fr.Data[0]));
+    if ID = 'WXXX' then Exit(Desc = ''); // the plain URL we edit; other links stay
+    Exit((Desc = 'CATALOGNUMBER') or (Desc = 'MOOD') or (Desc = 'LABEL'));
+  end;
   if ID = 'COMM' then
   begin
     // iTunes keeps technical data in comments (iTunNORM, iTunSMPB, ...): leave those.
@@ -140,6 +152,65 @@ begin
   end;
 end;
 
+{ TXXX: user-defined text with a description such as 'CATALOGNUMBER'. }
+procedure AddTxxxFrame(Dest: TStream; Version: Byte; const Desc, Value: string);
+var
+  B: TBytesStream;
+  Enc: Byte;
+begin
+  if Value = '' then Exit;
+  B := TBytesStream.Create;
+  try
+    Enc := ChooseEncoding(Version, [Desc, Value]);
+    B.WriteByte(Enc);
+    WriteEncoded(B, Desc, Enc, True);
+    WriteEncoded(B, Value, Enc, False);
+    WriteFrame(Dest, Version, 'TXXX', 0, StreamBytes(B));
+  finally
+    B.Free;
+  end;
+end;
+
+procedure AddLyricsFrame(Dest: TStream; Version: Byte; const Value: string);
+var
+  B: TBytesStream;
+  Enc: Byte;
+begin
+  if Value = '' then Exit;
+  B := TBytesStream.Create;
+  try
+    Enc := ChooseEncoding(Version, [Value]);
+    B.WriteByte(Enc);
+    WriteAscii(B, 'eng');
+    WriteEncoded(B, '', Enc, True);
+    WriteEncoded(B, Value, Enc, False);
+    WriteFrame(Dest, Version, 'USLT', 0, StreamBytes(B));
+  finally
+    B.Free;
+  end;
+end;
+
+{ WXXX: encoding, empty description, URL as Latin-1. }
+procedure AddUrlFrame(Dest: TStream; Version: Byte; const Url: string);
+var
+  B: TBytesStream;
+  U: UnicodeString;
+  C: WideChar;
+begin
+  if Url = '' then Exit;
+  B := TBytesStream.Create;
+  try
+    B.WriteByte(0);
+    B.WriteByte(0);
+    U := UTF8Decode(Url);
+    for C in U do
+      if Ord(C) <= 255 then B.WriteByte(Ord(C)) else B.WriteByte(Ord('?'));
+    WriteFrame(Dest, Version, 'WXXX', 0, StreamBytes(B));
+  finally
+    B.Free;
+  end;
+end;
+
 procedure AddPictureFrame(Dest: TStream; Version: Byte; const Pic: TTagPicture);
 var
   B: TBytesStream;
@@ -221,6 +292,29 @@ begin
     AddTextFrame(Dest, Version, 'TCOM', Info.Fields[tfComposer]);
     AddTextFrame(Dest, Version, 'TBPM', Info.Fields[tfBpm]);
     AddCommentFrame(Dest, Version, Info.Fields[tfComment]);
+    AddTextFrame(Dest, Version, 'TPE3', Info.Fields[tfConductor]);
+    AddTextFrame(Dest, Version, 'TEXT', Info.Fields[tfLyricist]);
+    AddTextFrame(Dest, Version, 'TOPE', Info.Fields[tfOrigArtist]);
+    AddTextFrame(Dest, Version, 'TPE4', Info.Fields[tfRemixer]);
+    AddTextFrame(Dest, Version, 'TPUB', Info.Fields[tfPublisher]);
+    AddTxxxFrame(Dest, Version, 'CATALOGNUMBER', Info.Fields[tfCatalogNo]);
+    AddTextFrame(Dest, Version, 'TSRC', Info.Fields[tfIsrc]);
+    AddTextFrame(Dest, Version, 'TCOP', Info.Fields[tfCopyright]);
+    AddTextFrame(Dest, Version, 'TENC', Info.Fields[tfEncodedBy]);
+    AddUrlFrame(Dest, Version, Info.Fields[tfUrl]);
+    AddTextFrame(Dest, Version, 'TIT1', Info.Fields[tfGrouping]);
+    AddTextFrame(Dest, Version, 'TIT3', Info.Fields[tfSubtitle]);
+    // TMOO only exists in v2.4; v2.3 players read the TXXX:MOOD convention
+    if Version = 4 then AddTextFrame(Dest, Version, 'TMOO', Info.Fields[tfMood])
+    else AddTxxxFrame(Dest, Version, 'MOOD', Info.Fields[tfMood]);
+    AddTextFrame(Dest, Version, 'TKEY', Info.Fields[tfInitialKey]);
+    // Sort frames: standard in v2.4, written by iTunes in v2.3 as well
+    AddTextFrame(Dest, Version, 'TSOT', Info.Fields[tfSortTitle]);
+    AddTextFrame(Dest, Version, 'TSOP', Info.Fields[tfSortArtist]);
+    AddTextFrame(Dest, Version, 'TSO2', Info.Fields[tfSortAlbumArtist]);
+    AddTextFrame(Dest, Version, 'TSOA', Info.Fields[tfSortAlbum]);
+    AddTextFrame(Dest, Version, 'TSOC', Info.Fields[tfSortComposer]);
+    AddLyricsFrame(Dest, Version, Info.Fields[tfLyrics]);
     for I := 0 to High(Info.Pictures) do
       AddPictureFrame(Dest, Version, Info.Pictures[I]);
     Result := StreamBytes(Dest);

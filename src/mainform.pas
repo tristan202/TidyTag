@@ -186,6 +186,10 @@ type
     procedure ActUncheckAllExecute(Sender: TObject);
     procedure ActInvertChecksExecute(Sender: TObject);
     procedure ActCopyTagExecute(Sender: TObject);
+    procedure ActMoveUpExecute(Sender: TObject);
+    procedure ActMoveDownExecute(Sender: TObject);
+    procedure ActExportImportExecute(Sender: TObject);
+    procedure MoveSelected(Delta: Integer);
     procedure ActPasteTagExecute(Sender: TObject);
     procedure ActFindExecute(Sender: TObject);
     procedure ActToolsPanelExecute(Sender: TObject);
@@ -279,37 +283,42 @@ implementation
 
 uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
-  FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, AppSettings;
+  FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
+  AppSettings;
 
 const
   CheckOn = '☑';
   CheckOff = '☐';
 
-  IconNames: array[0..29] of string = ('open', 'refresh', 'search', 'subfolders', 'edit',
+  IconNames: array[0..33] of string = ('open', 'refresh', 'search', 'subfolders', 'edit',
     'multiedit', 'renamefiles', 'renamefolder', 'filetotag', 'tracks', 'web', 'play', 'undo',
     'checkall', 'uncheck', 'help', 'info', 'favorites', 'settings', 'preview', 'save', 'filter',
-    'copy', 'paste', 'folderup', 'newfolder', 'close', 'exit', 'picture', 'delete');
+    'copy', 'paste', 'folderup', 'newfolder', 'close', 'exit', 'picture', 'delete',
+    'moveup', 'movedown', 'export', 'import');
   icoOpen = 0; icoRefresh = 1; icoSearch = 2; icoSubfolders = 3; icoEdit = 4; icoMultiEdit = 5;
   icoRenameFiles = 6; icoRenameFolder = 7; icoFileToTag = 8; icoTracks = 9; icoWeb = 10;
   icoPlay = 11; icoUndo = 12; icoCheckAll = 13; icoUncheck = 14; icoHelp = 15; icoInfo = 16;
   icoFavorites = 17; icoSettings = 18; icoPreview = 19; icoSave = 20; icoFilter = 21;
   icoCopy = 22; icoPaste = 23; icoFolderUp = 24; icoNewFolder = 25; icoClose = 26;
-  icoExit = 27; icoPicture = 28;
+  icoExit = 27; icoPicture = 28; icoMoveUp = 30; icoMoveDown = 31; icoExport = 32; icoImport = 33;
 
   DefaultRenameMasks: array[0..5] of string = ('%1 - %2', '%6 - %2', '%6 - %1 - %2',
     '%1 - %3 - %6 - %2', '%1\%3\%6 - %2', '%aa\%4 - %3\%6 - %2');
   DefaultF2TMasks: array[0..6] of string = ('%1 - %2', '%6 - %2', '%6 - %1 - %2', '%6. %2',
     '%6 %1 - %2', '%1\%3\%6 - %2', '%1\%4 - %3\%6 - %2');
 
-  RenameVars: array[0..21] of string = (
+  RenameVars: array[0..28] of string = (
     '%1|Kunstner', '%2|Titel', '%3|Album', '%4|År', '%5|Genre', '%6|Spor', '%#|Disc',
     '%7|Filnavn', '%8|Filnummer', '%9|Kommentar', '%0|Bitrate', '%b|BPM', '%t|Spilletid',
-    '%aa|Albumkunstner', '%cp|Komponist', '%ext|Filtype', '%khz|Samplerate', '-|',
+    '%aa|Albumkunstner', '%cp|Komponist', '%co|Dirigent', '%lb|Pladeselskab', '%cat|Katalognr.',
+    '%grp|Gruppering', '%rb|Remixet af', '%md|Stemning', '%key|Toneart',
+    '%ext|Filtype', '%khz|Samplerate', '-|',
     ' - |" - " (bindestreg)', '\|\ (ny mappe)', '%6 - %1 - %2|Eksempel: spor - kunstner - titel',
     '%1\%3\%6 - %2|Eksempel: mapper pr. kunstner og album');
-  F2TVars: array[0..15] of string = (
+  F2TVars: array[0..17] of string = (
     '%1|Kunstner', '%2|Titel', '%3|Album', '%4|År', '%5|Genre', '%6|Spor', '%#|Disc',
-    '%9|Kommentar', '%b|BPM', '%aa|Albumkunstner', '%cp|Komponist', '%d|Spring over',
+    '%9|Kommentar', '%b|BPM', '%aa|Albumkunstner', '%cp|Komponist', '%co|Dirigent',
+    '%lb|Pladeselskab', '%d|Spring over',
     '-|', ' - |" - " (bindestreg)', '\|\ (mappeniveau)', '%6 - %1 - %2|Eksempel: spor - kunstner - titel');
 
   FilterFieldNames: array[0..7] of string = ('Filnavn', 'Titel', 'Kunstner', 'Album', 'År',
@@ -357,6 +366,10 @@ begin
   AddColumn('Codec', 70, ckCodec);
   AddColumn('Tag-typer', 120, ckTagTypes);
   AddColumn('Størrelse', 75, ckSize, tfTitle, True);
+  AddColumn(TagFieldCaptions[tfPublisher], 140, ckField, tfPublisher);
+  AddColumn(TagFieldCaptions[tfCatalogNo], 90, ckField, tfCatalogNo);
+  AddColumn(TagFieldCaptions[tfGrouping], 110, ckField, tfGrouping);
+  AddColumn(TagFieldCaptions[tfConductor], 120, ckField, tfConductor);
   AddColumn('Mappe', 300, ckFolder);
 end;
 
@@ -471,7 +484,8 @@ begin
       '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor' + LineEnding +
       '%# Disc   %7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate' + LineEnding +
       '%b BPM   %t Spilletid   %aa Albumkunstner   %cp Komponist' + LineEnding +
-      '%ext Filtype   %khz Samplerate.   \ laver mapper, fx  %1\%3\%6 - %2' + LineEnding +
+      '%co Dirigent   %lb Pladeselskab   %grp Gruppering   ... (se "Variabler")' + LineEnding +
+      '\ laver mapper, fx  %1\%3\%6 - %2' + LineEnding +
       'Gælder de afkrydsede filer (ellers de markerede).';
     LabelMultiHelp.Caption :=
       '1. Kun felter med flueben bliver ændret (et felt får flueben, når du skriver i det).' + LineEnding +
@@ -548,7 +562,8 @@ var
   aOpen, aRefresh, aEdit, aMulti, aRenameFolder, aPlay, aExplorer, aExit,
     aSelAll, aSelNone, aChkSel, aUnchkSel, aChkAll, aUnchkAll, aInvert, aCopy, aFind,
     aPlChecked, aPlAll, aTabRename, aTabMulti, aTabF2T, aRenameDlg, aF2TDlg, aTracks, aWeb,
-    aToken, aKeys, aAbout, aUp, aFav, aNewFolder, aTreeRefresh, aCloseFolders: TAction;
+    aToken, aKeys, aAbout, aUp, aFav, aNewFolder, aTreeRefresh, aCloseFolders,
+    aMoveUp, aMoveDown, aExport: TAction;
   TopMenu: TMenuItem;
   X: Integer;
 
@@ -617,6 +632,12 @@ begin
   FActPaste := NewAction('Indsæt tag', 'Indsæt det kopierede tag (undtagen titel og spor) i de afkrydsede/markerede filer',
     ShortCut(VK_V, [ssCtrl, ssShift]), icoPaste, @ActPasteTagExecute);
   FActPaste.Enabled := False;
+  aMoveUp := NewAction('Flyt fil op', 'Flyt de markerede filer et trin op (manuel rækkefølge)',
+    ShortCut(VK_UP, [ssCtrl]), icoMoveUp, @ActMoveUpExecute);
+  aMoveDown := NewAction('Flyt fil ned', 'Flyt de markerede filer et trin ned (manuel rækkefølge)',
+    ShortCut(VK_DOWN, [ssCtrl]), icoMoveDown, @ActMoveDownExecute);
+  aExport := NewAction('Eksportér/importér tags...', 'Eksportér til CSV/TXT/HTML/XML eller importér fra CSV/XLSX',
+    ShortCut(VK_X, [ssCtrl, ssShift]), icoExport, @ActExportImportExecute);
   aFind := NewAction('Find / filtrér...', 'Filtrér fillisten', ShortCut(VK_F, [ssCtrl]), icoSearch, @ActFindExecute);
   FActToolsPanel := NewAction('Værktøjspanel', 'Vis/skjul værktøjspanelet (F8)', ShortCut(VK_F8, []), -1, @ActToolsPanelExecute);
   FActFolders := NewAction('Mappepanel', '', 0, -1, @ActFoldersExecute);
@@ -660,7 +681,8 @@ begin
   TopMenu := Menu('&Rediger');
   Add(TopMenu, aSelAll); Add(TopMenu, aSelNone); Add(TopMenu, nil);
   Add(TopMenu, aChkSel); Add(TopMenu, aUnchkSel); Add(TopMenu, aChkAll); Add(TopMenu, aUnchkAll); Add(TopMenu, aInvert);
-  Add(TopMenu, nil); Add(TopMenu, aCopy); Add(TopMenu, FActPaste); Add(TopMenu, nil); Add(TopMenu, aFind);
+  Add(TopMenu, nil); Add(TopMenu, aCopy); Add(TopMenu, FActPaste);
+  Add(TopMenu, nil); Add(TopMenu, aMoveUp); Add(TopMenu, aMoveDown); Add(TopMenu, nil); Add(TopMenu, aFind);
   TopMenu := Menu('&Vis');
   Add(TopMenu, FActToolsPanel); Add(TopMenu, FActFolders); Add(TopMenu, FActAddress); Add(TopMenu, FActFilter);
   Add(TopMenu, nil); Add(TopMenu, FActSubfolders); Add(TopMenu, nil); Add(TopMenu, aRefresh);
@@ -669,6 +691,7 @@ begin
   TopMenu := Menu('Vær&ktøjer');
   Add(TopMenu, aTabRename); Add(TopMenu, aTabMulti); Add(TopMenu, aTabF2T); Add(TopMenu, nil);
   Add(TopMenu, aRenameDlg); Add(TopMenu, aF2TDlg); Add(TopMenu, aRenameFolder); Add(TopMenu, aTracks); Add(TopMenu, aWeb);
+  Add(TopMenu, aExport);
   Add(TopMenu, nil); Add(TopMenu, FActUndo);
   TopMenu := Menu('&Indstillinger');
   Add(TopMenu, FActKeepDate); Add(TopMenu, aToken);
@@ -678,7 +701,8 @@ begin
   // ---- file list popup
   AddPopup(aEdit); AddPopup(aMulti); AddPopup(nil);
   AddPopup(aChkSel); AddPopup(aUnchkSel); AddPopup(aChkAll); AddPopup(aUnchkAll); AddPopup(aInvert);
-  AddPopup(nil); AddPopup(aCopy); AddPopup(FActPaste); AddPopup(nil); AddPopup(aPlay); AddPopup(aExplorer);
+  AddPopup(nil); AddPopup(aCopy); AddPopup(FActPaste); AddPopup(nil); AddPopup(aMoveUp); AddPopup(aMoveDown);
+  AddPopup(nil); AddPopup(aPlay); AddPopup(aExplorer);
 
   // ---- toolbars
   X := 0;
@@ -687,8 +711,8 @@ begin
   Btn(ToolBarMain, aEdit); Btn(ToolBarMain, aMulti); Btn(ToolBarMain, aRenameDlg);
   Btn(ToolBarMain, aRenameFolder); Btn(ToolBarMain, aF2TDlg); Btn(ToolBarMain, nil);
   Btn(ToolBarMain, aCopy); Btn(ToolBarMain, FActPaste); Btn(ToolBarMain, nil);
-  Btn(ToolBarMain, aPlay); Btn(ToolBarMain, nil);
-  Btn(ToolBarMain, aTracks); Btn(ToolBarMain, aWeb); Btn(ToolBarMain, nil);
+  Btn(ToolBarMain, aPlay); Btn(ToolBarMain, aMoveUp); Btn(ToolBarMain, aMoveDown); Btn(ToolBarMain, nil);
+  Btn(ToolBarMain, aTracks); Btn(ToolBarMain, aWeb); Btn(ToolBarMain, aExport); Btn(ToolBarMain, nil);
   Btn(ToolBarMain, aChkAll); Btn(ToolBarMain, aUnchkAll); Btn(ToolBarMain, nil);
   Btn(ToolBarMain, FActUndo); Btn(ToolBarMain, nil);
   Btn(ToolBarMain, aKeys); Btn(ToolBarMain, aAbout);
@@ -821,8 +845,77 @@ end;
 procedure TFormMain.SortItems;
 begin
   SortForm := Self;
-  FItems.Sort(@CompareInfos);
+  if FSortColumn >= 0 then FItems.Sort(@CompareInfos); // -1 = manual order (moved files)
   RebuildView;
+end;
+
+{ Moves the selected files one step; the list then keeps this manual order
+  (e.g. for "Nummerér i listens rækkefølge") until a column header is clicked. }
+procedure TFormMain.MoveSelected(Delta: Integer);
+var
+  Sel: array of Integer;
+  I, K, A, B, IA, IB: Integer;
+  T: Pointer;
+begin
+  Sel := nil;
+  for I := 0 to FView.Count - 1 do
+    if FileList.Items[I].Selected then
+    begin
+      SetLength(Sel, Length(Sel) + 1);
+      Sel[High(Sel)] := I;
+    end;
+  if Length(Sel) = 0 then Exit;
+  if (Delta < 0) and (Sel[0] = 0) then Exit;
+  if (Delta > 0) and (Sel[High(Sel)] = FView.Count - 1) then Exit;
+  for K := 0 to High(Sel) do
+  begin
+    if Delta < 0 then I := Sel[K] else I := Sel[High(Sel) - K];
+    A := I;
+    B := I + Delta;
+    // swap in the view and the same two objects in the master list
+    IA := FItems.IndexOf(FView[A]);
+    IB := FItems.IndexOf(FView[B]);
+    T := FView[A]; FView[A] := FView[B]; FView[B] := T;
+    if (IA >= 0) and (IB >= 0) then
+    begin
+      T := FItems[IA]; FItems[IA] := FItems[IB]; FItems[IB] := T;
+    end;
+  end;
+  FSortColumn := -1;
+  FileList.ClearSelection;
+  for K := 0 to High(Sel) do
+    FileList.Items[Sel[K] + Delta].Selected := True;
+  FileList.ItemIndex := Sel[0] + Delta;
+  FileList.Items[Sel[0] + Delta].Focused := True;
+  FileList.Items[Sel[0] + Delta].MakeVisible(False);
+  FileList.Invalidate;
+  SetMessage('Manuel rækkefølge - klik på en kolonneoverskrift for at sortere igen');
+end;
+
+procedure TFormMain.ActExportImportExecute(Sender: TObject);
+var
+  Subset: TAudioInfoArray;
+  SubsetCaption: string;
+  Prefer: Boolean;
+begin
+  if not CanStartBatch or (FView.Count = 0) then Exit;
+  Subset := TargetItems(SubsetCaption, Prefer);
+  if TFormExportImport.Execute(AllItems, Subset, SubsetCaption, Prefer, FKeepTimestamp) then
+  begin
+    FCoverFile := '';
+    FileList.Invalidate;
+    SelectionChanged;
+  end;
+end;
+
+procedure TFormMain.ActMoveUpExecute(Sender: TObject);
+begin
+  MoveSelected(-1);
+end;
+
+procedure TFormMain.ActMoveDownExecute(Sender: TObject);
+begin
+  MoveSelected(1);
 end;
 
 procedure TFormMain.FileListSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
@@ -1079,6 +1172,7 @@ begin
   Caption := 'TagKlon - ' + FFolder;
   FCoverFile := '';
   FFolderCoverDir := '';
+  if FSortColumn < 0 then FSortColumn := 1; // a fresh scan starts sorted by file name
   FScanner := TScanThread.Create(FFolder, FActSubfolders.Checked);
   TimerPoll.Enabled := True;
   UpdateStatus;
@@ -1317,11 +1411,13 @@ begin
   Ini := OpenSettings;
   try
     ComboRenameMask.Text := Ini.ReadString('Rename', 'Mask', ComboRenameMask.Items[0]);
+    if Trim(ComboRenameMask.Text) = '' then ComboRenameMask.Text := ComboRenameMask.Items[0];
     SetCaseControls(TCaseMode(Ini.ReadInteger('Rename', 'Case', 0)), CheckRenameCase,
       RadioRenameLower, RadioRenameUpper, RadioRenameTitle, RadioRenameSentence);
     CheckRenameUnderscores.Checked := Ini.ReadBool('Rename', 'Underscores', False);
     CheckRenamePadTrack.Checked := Ini.ReadBool('Rename', 'PadTrack', True);
     ComboF2TMask.Text := Ini.ReadString('FileToTag', 'Mask', ComboF2TMask.Items[0]);
+    if Trim(ComboF2TMask.Text) = '' then ComboF2TMask.Text := ComboF2TMask.Items[0];
     SetCaseControls(TCaseMode(Ini.ReadInteger('FileToTag', 'Case', 0)), CheckF2TCase,
       RadioF2TLower, RadioF2TUpper, RadioF2TTitle, RadioF2TSentence);
     CheckF2TUnderscores.Checked := Ini.ReadBool('FileToTag', 'Underscores', True);
@@ -1492,7 +1588,7 @@ begin
   if MessageDlg('Omdøb filer', Format('Omdøb %d filer?%s', [OkCount,
     IfThen(Skipped > 0, Format(' (%d springes over - brug "Forhåndsvis..." for at se hvorfor)', [Skipped]), '')]) +
     LineEnding + LineEnding + Examples, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
-  AddMaskToHistory('RenameMasks', ComboRenameMask.Text, ComboRenameMask.Items);
+  AddComboMaskToHistory('RenameMasks', ComboRenameMask);
   SaveInlineOptions;
   Screen.Cursor := crHourGlass;
   try
@@ -1683,7 +1779,7 @@ begin
   if MessageDlg('Skriv tags', Format('Skriv tags fra filnavnet i %d filer?%s', [Ready,
     IfThen(NoMatch > 0, Format(' (%d passer ikke til masken og springes over)', [NoMatch]), '')]),
     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
-  AddMaskToHistory('FileToTagMasks', ComboF2TMask.Text, ComboF2TMask.Items);
+  AddComboMaskToHistory('FileToTagMasks', ComboF2TMask);
   SaveInlineOptions;
   WriteFieldsBatch(Items, PerItem, PerFields, nil, 'Tags fra filnavn');
 end;
@@ -2333,6 +2429,8 @@ begin
     'Ctrl+W'#9#9'Web-opslag' + LineEnding +
     'Ctrl+Z'#9#9'Fortryd omdøbning' + LineEnding +
     'Ctrl+Shift+C / V'#9'Kopiér / indsæt tag' + LineEnding +
+    'Ctrl+Op / Ned'#9'Flyt markerede filer op / ned' + LineEnding +
+    'Ctrl+Shift+X'#9'Eksportér / importér tags' + LineEnding +
     'Ctrl+F'#9#9'Filtrér listen (Esc rydder filteret)' + LineEnding +
     'Ctrl+O'#9#9'Åbn mappe' + LineEnding +
     'Alt+Backspace'#9'Mappe op', mtInformation, [mbOK], 0);

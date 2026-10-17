@@ -107,6 +107,7 @@ begin
   Ini := OpenSettings;
   try
     ComboMask.Text := Ini.ReadString('FileToTag', 'Mask', ComboMask.Items[0]);
+    if Trim(ComboMask.Text) = '' then ComboMask.Text := ComboMask.Items[0];
     ComboCase.ItemIndex := Ini.ReadInteger('FileToTag', 'Case', 0);
     CheckUnderscores.Checked := Ini.ReadBool('FileToTag', 'Underscores', True);
   finally
@@ -246,7 +247,7 @@ var
 begin
   if MessageDlg('Skriv tags', Format('Skriv tags i %d filer?', [CountRows(fsReady)]),
     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
-  AddMaskToHistory(HistorySection, ComboMask.Text, ComboMask.Items);
+  AddComboMaskToHistory(HistorySection, ComboMask);
   SaveOptions;
   ButtonWrite.Enabled := False;
   Screen.Cursor := crHourGlass;

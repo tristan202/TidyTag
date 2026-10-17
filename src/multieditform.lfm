@@ -19,13 +19,15 @@ object FormMultiEdit: TFormMultiEdit
     Caption = 'info'
     WordWrap = True
   end
-  object PanelFields: TPanel
+  object PanelFields: TScrollBox
     Left = 12
     Height = 290
     Top = 46
     Width = 616
+    HorzScrollBar.Visible = False
+    VertScrollBar.Increment = 31
     Anchors = [akTop, akLeft, akRight]
-    BevelOuter = bvNone
+    BorderStyle = bsNone
     TabOrder = 0
   end
   object GroupCover: TGroupBox

@@ -59,7 +59,8 @@ const
   RenameVariablesHelp =
     '%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc' + LineEnding +
     '%7 Filnavn   %8 Filnummer   %9 Kommentar   %0 Bitrate   %b BPM   %t Spilletid' + LineEnding +
-    '%aa Albumkunstner   %cp Komponist   %ext Filtype   %khz Samplerate' + LineEnding +
+    '%aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab   %cat Katalognr.' + LineEnding +
+    '%grp Gruppering   %rb Remixet af   %md Stemning   %key Toneart   %ext Filtype   %khz Samplerate' + LineEnding +
     'Brug \ for at lave mapper, fx  %1\%3\%6 - %2';
 
 function ApplyCase(const S: string; Mode: TCaseMode): string;
@@ -224,7 +225,8 @@ begin
     for J := 3 downto 1 do
       if (Code = '') and (I + J <= Length(Mask)) then
         case LowerCase(Copy(Mask, I + 1, J)) of
-          'aa', 'cp', 'ext', 'khz': Code := LowerCase(Copy(Mask, I + 1, J));
+          'aa', 'cp', 'co', 'lb', 'rb', 'md', 'ext', 'khz', 'key', 'grp', 'cat':
+            Code := LowerCase(Copy(Mask, I + 1, J));
         end;
     if Code = '' then Code := Mask[I + 1];
     NeedsField := False;
@@ -248,6 +250,13 @@ begin
       'b': Need(tfBpm);
       'aa': Need(tfAlbumArtist);
       'cp': Need(tfComposer);
+      'co': Need(tfConductor);
+      'lb': Need(tfPublisher);
+      'rb': Need(tfRemixer);
+      'md': Need(tfMood);
+      'key': Need(tfInitialKey);
+      'grp': Need(tfGrouping);
+      'cat': Need(tfCatalogNo);
       '7': Value := V.FileName;
       '8': Value := V.FileNumber;
       '0': Value := V.Bitrate;

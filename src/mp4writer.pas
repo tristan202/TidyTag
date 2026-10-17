@@ -236,14 +236,72 @@ end;
 
 function IsManagedItem(Name: Cardinal): Boolean;
 const
-  Managed: array[0..12] of string = ('@nam', '@ART', '@alb', '@day', '@gen', 'gnre',
-    '@cmt', 'aART', '@wrt', 'trkn', 'disk', 'tmpo', 'covr');
+  Managed: array[0..20] of string = ('@nam', '@ART', '@alb', '@day', '@gen', 'gnre',
+    '@cmt', 'aART', '@wrt', 'trkn', 'disk', 'tmpo', 'covr', '@lyr', 'cprt', '@grp',
+    'sonm', 'soar', 'soaa', 'soal', 'soco');
 var
   N: string;
 begin
   for N in Managed do
     if FourCC(N) = Name then Exit(True);
   Result := False;
+end;
+
+const
+  // Freeform names (----:com.apple.iTunes:NAME) we edit; others are kept.
+  ManagedFreeform: array[0..13] of string = ('CONDUCTOR', 'LYRICIST', 'ORIGINALARTIST',
+    'ORIGINAL ARTIST', 'REMIXER', 'LABEL', 'PUBLISHER', 'CATALOGNUMBER', 'ISRC', 'ENCODEDBY',
+    'URL', 'SUBTITLE', 'MOOD', 'INITIALKEY');
+
+{ The 'name' of a freeform item, upper case; '' if it has none. }
+function FreeformName(Item: TAtom): string;
+var
+  P: SizeInt;
+  Size: Cardinal;
+begin
+  Result := '';
+  P := 0;
+  while P + 8 <= Length(Item.Data) do
+  begin
+    Size := BE32(Item.Data, P);
+    if (Size < 8) or (P + Size > Length(Item.Data)) then Exit;
+    if BytesAre(Item.Data, P + 4, 'name') and (Size > 12) then
+      Exit(UpperCase(RawUTF8(Item.Data, P + 12, Size - 12)));
+    Inc(P, Size);
+  end;
+end;
+
+function IsManagedFreeform(Item: TAtom): Boolean;
+var
+  N, M: string;
+begin
+  Result := False;
+  if Item.Name <> FourCC('----') then Exit;
+  N := FreeformName(Item);
+  for M in ManagedFreeform do
+    if M = N then Exit(True);
+end;
+
+function PrefixedAtom(const Name, Text: string): TAtom;
+var
+  S: TBytesStream;
+begin
+  Result := TAtom.Create(FourCC(Name));
+  S := TBytesStream.Create;
+  try
+    WriteBE32(S, 0); // version/flags
+    WriteBytes(S, UTF8Bytes(Text));
+    Result.Data := StreamBytes(S);
+  finally
+    S.Free;
+  end;
+end;
+
+procedure AddFreeform(Ilst: TAtom; const Name, Value: string);
+begin
+  if Value <> '' then
+    Ilst.Add(ItemAtom('----', [PrefixedAtom('mean', 'com.apple.iTunes'), PrefixedAtom('name', Name),
+      DataAtom(1, UTF8Bytes(Value))]));
 end;
 
 function NewHdlr: TAtom;
@@ -289,7 +347,7 @@ begin
 
   // ilst children were parsed as containers of 'data' atoms; keep the ones we do not edit.
   for I := Ilst.Children.Count - 1 downto 0 do
-    if IsManagedItem(TAtom(Ilst.Children[I]).Name) then
+    if IsManagedItem(TAtom(Ilst.Children[I]).Name) or IsManagedFreeform(TAtom(Ilst.Children[I])) then
       Ilst.Children.Delete(I);
 
   AddText(Ilst, '@nam', Info.Fields[tfTitle]);
@@ -302,6 +360,26 @@ begin
   AddText(Ilst, '@gen', Info.Fields[tfGenre]);
   AddText(Ilst, '@wrt', Info.Fields[tfComposer]);
   AddText(Ilst, '@cmt', Info.Fields[tfComment]);
+  AddText(Ilst, '@lyr', Info.Fields[tfLyrics]);
+  AddText(Ilst, 'cprt', Info.Fields[tfCopyright]);
+  AddText(Ilst, '@grp', Info.Fields[tfGrouping]);
+  AddText(Ilst, 'sonm', Info.Fields[tfSortTitle]);
+  AddText(Ilst, 'soar', Info.Fields[tfSortArtist]);
+  AddText(Ilst, 'soaa', Info.Fields[tfSortAlbumArtist]);
+  AddText(Ilst, 'soal', Info.Fields[tfSortAlbum]);
+  AddText(Ilst, 'soco', Info.Fields[tfSortComposer]);
+  AddFreeform(Ilst, 'CONDUCTOR', Info.Fields[tfConductor]);
+  AddFreeform(Ilst, 'LYRICIST', Info.Fields[tfLyricist]);
+  AddFreeform(Ilst, 'ORIGINALARTIST', Info.Fields[tfOrigArtist]);
+  AddFreeform(Ilst, 'REMIXER', Info.Fields[tfRemixer]);
+  AddFreeform(Ilst, 'LABEL', Info.Fields[tfPublisher]);
+  AddFreeform(Ilst, 'CATALOGNUMBER', Info.Fields[tfCatalogNo]);
+  AddFreeform(Ilst, 'ISRC', Info.Fields[tfIsrc]);
+  AddFreeform(Ilst, 'ENCODEDBY', Info.Fields[tfEncodedBy]);
+  AddFreeform(Ilst, 'URL', Info.Fields[tfUrl]);
+  AddFreeform(Ilst, 'SUBTITLE', Info.Fields[tfSubtitle]);
+  AddFreeform(Ilst, 'MOOD', Info.Fields[tfMood]);
+  AddFreeform(Ilst, 'initialkey', Info.Fields[tfInitialKey]);
   Bpm := StrToIntDef(Trim(Info.Fields[tfBpm]), 0);
   if (Bpm > 0) and (Bpm <= $FFFF) then
   begin

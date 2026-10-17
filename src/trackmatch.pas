@@ -141,6 +141,10 @@ begin
     Info.Fields[tfDisc] := Format('%d/%d', [T.Disc, Detail.DiscCount]);
   if (tfGenre in Opt.Fields) and (Detail.Genre <> '') then
     Info.Fields[tfGenre] := Detail.Genre;
+  if (tfPublisher in Opt.Fields) and (Detail.Release.LabelName <> '') then
+    Info.Fields[tfPublisher] := Detail.Release.LabelName;
+  if (tfCatalogNo in Opt.Fields) and (Detail.Release.CatalogNo <> '') then
+    Info.Fields[tfCatalogNo] := Detail.Release.CatalogNo;
 end;
 
 end.

@@ -35,7 +35,7 @@ type
     LabelInfo: TLabel;
     LabelStatus: TLabel;
     OpenPictureDialog: TOpenDialog;
-    PanelFields: TPanel;
+    PanelFields: TScrollBox;
     ProgressBar: TProgressBar;
     procedure ButtonApplyClick(Sender: TObject);
     procedure ButtonChooseCoverClick(Sender: TObject);
@@ -68,8 +68,9 @@ uses
   AudioTags, TagWriter, TagUtils;
 
 const
-  EditFields: array[0..8] of TTagField = (tfArtist, tfAlbum, tfAlbumArtist, tfComposer,
-    tfYear, tfDisc, tfGenre, tfBpm, tfComment);
+  EditFields: array[0..14] of TTagField = (tfArtist, tfAlbum, tfAlbumArtist, tfComposer,
+    tfYear, tfDisc, tfGenre, tfBpm, tfComment, tfPublisher, tfCatalogNo, tfGrouping,
+    tfConductor, tfCopyright, tfMood);
   DifferentHint = '(forskellige værdier)';
 
 class function TFormMultiEdit.Execute(const Items: TAudioInfoArray; const ScopeCaption: string;
@@ -144,7 +145,7 @@ begin
           Width := Scale96ToForm(170)
         else
         begin
-          Width := PanelFields.ClientWidth - Scale96ToForm(170);
+          Width := PanelFields.ClientWidth - Scale96ToForm(190); // room for the scroll bar
           Anchors := [akTop, akLeft, akRight];
         end;
         OnChange := @ValueChange;

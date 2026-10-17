@@ -1,14 +1,14 @@
 unit TagEditForm;
 
-{ Single-file tag editor with cover art. Steps through the main file list with
-  "Gem og forrige" / "Gem og næste". }
+{ Single-file tag editor with cover art. Tabs: Generelt, Flere felter, Sortering,
+  Sangtekst. Steps through the main file list with "Gem og forrige" / "Gem og næste". }
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, ComCtrls,
   AudioTypes;
 
 type
@@ -22,6 +22,9 @@ type
   TFormTagEdit = class(TForm)
     ButtonAddPicture: TButton;
     ButtonClose: TButton;
+    ButtonLyricsClear: TButton;
+    ButtonLyricsLoad: TButton;
+    ButtonLyricsSave: TButton;
     ButtonNextPicture: TButton;
     ButtonPrevPicture: TButton;
     ButtonRemovePicture: TButton;
@@ -56,11 +59,22 @@ type
     LabelTrack: TLabel;
     LabelYear: TLabel;
     MemoComment: TMemo;
+    MemoLyrics: TMemo;
     OpenPictureDialog: TOpenDialog;
+    OpenTextDialog: TOpenDialog;
+    PageFields: TPageControl;
     PanelCover: TPanel;
     SavePictureDialog: TSaveDialog;
+    SaveTextDialog: TSaveDialog;
+    TabGeneral: TTabSheet;
+    TabLyrics: TTabSheet;
+    TabMore: TTabSheet;
+    TabSort: TTabSheet;
     procedure ButtonAddPictureClick(Sender: TObject);
     procedure ButtonCloseClick(Sender: TObject);
+    procedure ButtonLyricsClearClick(Sender: TObject);
+    procedure ButtonLyricsLoadClick(Sender: TObject);
+    procedure ButtonLyricsSaveClick(Sender: TObject);
     procedure ButtonNextPictureClick(Sender: TObject);
     procedure ButtonPrevPictureClick(Sender: TObject);
     procedure ButtonRemovePictureClick(Sender: TObject);
@@ -81,6 +95,8 @@ type
     FModified: Boolean;
     FFileAt: TFileAtFunc;
     FOnSaved: TFileSavedEvent;
+    FExtraEdits: array[TTagField] of TEdit; // fields on "Flere felter" and "Sortering"
+    procedure BuildExtraFields;
     function FieldEdit(F: TTagField): TCustomEdit;
     procedure LoadFile(Index: Integer);
     procedure ShowPicture;
@@ -133,6 +149,57 @@ begin
   finally
     ComboGenre.Items.EndUpdate;
   end;
+  BuildExtraFields;
+  PageFields.ActivePage := TabGeneral;
+end;
+
+{ Label + edit rows for the extra fields, in two columns on "Flere felter". }
+procedure TFormTagEdit.BuildExtraFields;
+const
+  MoreLeft: array[0..6] of TTagField = (tfConductor, tfLyricist, tfOrigArtist, tfRemixer,
+    tfPublisher, tfCatalogNo, tfIsrc);
+  MoreRight: array[0..6] of TTagField = (tfCopyright, tfEncodedBy, tfUrl, tfGrouping,
+    tfSubtitle, tfMood, tfInitialKey);
+  SortFields: array[0..4] of TTagField = (tfSortTitle, tfSortArtist, tfSortAlbumArtist,
+    tfSortAlbum, tfSortComposer);
+
+  procedure Row(Page: TTabSheet; F: TTagField; Col, RowNo: Integer; LabelWidth, EditWidth: Integer);
+  var
+    L: TLabel;
+    E: TEdit;
+    X, Y: Integer;
+  begin
+    X := Scale96ToForm(8 + Col * 390);
+    Y := Scale96ToForm(10 + RowNo * 32);
+    L := TLabel.Create(Self);
+    L.Parent := Page;
+    L.Caption := TagFieldCaptions[F];
+    L.Left := X;
+    L.Top := Y + Scale96ToForm(3);
+    E := TEdit.Create(Self);
+    E.Parent := Page;
+    E.Left := X + Scale96ToForm(LabelWidth);
+    E.Top := Y;
+    E.Width := Scale96ToForm(EditWidth);
+    E.OnChange := @FieldChange;
+    E.TabOrder := Col * 10 + RowNo;
+    FExtraEdits[F] := E;
+  end;
+
+var
+  I: Integer;
+  SortHint: TLabel;
+begin
+  for I := 0 to High(MoreLeft) do Row(TabMore, MoreLeft[I], 0, I, 120, 250);
+  for I := 0 to High(MoreRight) do Row(TabMore, MoreRight[I], 1, I, 90, 280);
+  for I := 0 to High(SortFields) do Row(TabSort, SortFields[I], 0, I, 140, 400);
+  SortHint := TLabel.Create(Self);
+  SortHint.Parent := TabSort;
+  SortHint.Left := Scale96ToForm(8);
+  SortHint.Top := Scale96ToForm(10 + 5 * 32 + 8);
+  SortHint.Font.Color := clGrayText;
+  SortHint.Caption := 'Sorteringsfelter bestemmer, hvordan afspillere sorterer, fx "Beatles, The" ' +
+    'eller "Nielsen, Carl", uden at ændre det viste navn.';
 end;
 
 procedure TFormTagEdit.FormDestroy(Sender: TObject);
@@ -153,9 +220,37 @@ begin
     tfAlbumArtist: Result := EditAlbumArtist;
     tfComposer: Result := EditComposer;
     tfBpm: Result := EditBpm;
+    tfLyrics: Result := MemoLyrics;
+    tfGenre: Result := nil; // genre uses the combo box
   else
-    Result := nil; // genre uses the combo box
+    Result := FExtraEdits[F];
   end;
+end;
+
+procedure TFormTagEdit.ButtonLyricsLoadClick(Sender: TObject);
+var
+  L: TStringList;
+begin
+  if not OpenTextDialog.Execute then Exit;
+  L := TStringList.Create;
+  try
+    L.LoadFromFile(OpenTextDialog.FileName); // UTF-8 with or without BOM
+    MemoLyrics.Text := L.Text;
+  finally
+    L.Free;
+  end;
+end;
+
+procedure TFormTagEdit.ButtonLyricsSaveClick(Sender: TObject);
+begin
+  SaveTextDialog.InitialDir := ExtractFileDir(FInfo.FileName);
+  SaveTextDialog.FileName := ChangeFileExt(ExtractFileName(FInfo.FileName), '.txt');
+  if SaveTextDialog.Execute then MemoLyrics.Lines.SaveToFile(SaveTextDialog.FileName);
+end;
+
+procedure TFormTagEdit.ButtonLyricsClearClick(Sender: TObject);
+begin
+  MemoLyrics.Clear;
 end;
 
 procedure TFormTagEdit.LoadFile(Index: Integer);

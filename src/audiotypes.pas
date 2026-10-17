@@ -11,7 +11,11 @@ uses
 
 type
   TTagField = (tfTitle, tfArtist, tfAlbum, tfYear, tfTrack, tfDisc, tfGenre,
-    tfComment, tfAlbumArtist, tfComposer, tfBpm);
+    tfComment, tfAlbumArtist, tfComposer, tfBpm,
+    // further fields (editor tabs "Flere felter", "Sortering", "Sangtekst")
+    tfLyrics, tfConductor, tfLyricist, tfOrigArtist, tfRemixer, tfPublisher, tfCatalogNo,
+    tfIsrc, tfCopyright, tfEncodedBy, tfUrl, tfGrouping, tfSubtitle, tfMood, tfInitialKey,
+    tfSortTitle, tfSortArtist, tfSortAlbumArtist, tfSortAlbum, tfSortComposer);
 
   TTagPicture = record
     PicType: Byte;       // ID3/FLAC picture type, 3 = front cover
@@ -53,7 +57,11 @@ type
 
 const
   TagFieldCaptions: array[TTagField] of string = ('Titel', 'Kunstner', 'Album',
-    'År', 'Spor', 'Disc', 'Genre', 'Kommentar', 'Albumkunstner', 'Komponist', 'BPM');
+    'År', 'Spor', 'Disc', 'Genre', 'Kommentar', 'Albumkunstner', 'Komponist', 'BPM',
+    'Sangtekst', 'Dirigent', 'Tekstforfatter', 'Oprindelig kunstner', 'Remixet af',
+    'Pladeselskab', 'Katalognr.', 'ISRC', 'Copyright', 'Kodet af', 'URL', 'Gruppering',
+    'Undertitel', 'Stemning', 'Toneart', 'Sortér titel', 'Sortér kunstner',
+    'Sortér albumkunstner', 'Sortér album', 'Sortér komponist');
   PicTypeFrontCover = 3;
 
 { 'image/png' / 'image/jpeg' from the data signature; Fallback if unknown. }
