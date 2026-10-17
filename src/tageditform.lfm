@@ -1,0 +1,345 @@
+object FormTagEdit: TFormTagEdit
+  Left = 300
+  Height = 520
+  Top = 160
+  Width = 800
+  BorderIcons = [biSystemMenu]
+  Caption = 'Rediger tag'
+  ClientHeight = 520
+  ClientWidth = 800
+  KeyPreview = True
+  Position = poOwnerFormCenter
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  LCLVersion = '4.6.0.0'
+  object LabelFile: TLabel
+    Left = 12
+    Height = 15
+    Top = 12
+    Width = 776
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    Caption = 'fil'
+    Font.Style = [fsBold]
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object LabelTitle: TLabel
+    Left = 12
+    Height = 15
+    Top = 47
+    Width = 25
+    Caption = 'Titel'
+  end
+  object EditTitle: TEdit
+    Left = 110
+    Height = 23
+    Top = 44
+    Width = 400
+    TabOrder = 0
+    OnChange = FieldChange
+  end
+  object LabelArtist: TLabel
+    Left = 12
+    Height = 15
+    Top = 77
+    Width = 47
+    Caption = 'Kunstner'
+  end
+  object EditArtist: TEdit
+    Left = 110
+    Height = 23
+    Top = 74
+    Width = 400
+    TabOrder = 1
+    OnChange = FieldChange
+  end
+  object LabelAlbum: TLabel
+    Left = 12
+    Height = 15
+    Top = 107
+    Width = 36
+    Caption = 'Album'
+  end
+  object EditAlbum: TEdit
+    Left = 110
+    Height = 23
+    Top = 104
+    Width = 400
+    TabOrder = 2
+    OnChange = FieldChange
+  end
+  object LabelAlbumArtist: TLabel
+    Left = 12
+    Height = 15
+    Top = 137
+    Width = 80
+    Caption = 'Albumkunstner'
+  end
+  object EditAlbumArtist: TEdit
+    Left = 110
+    Height = 23
+    Top = 134
+    Width = 400
+    TabOrder = 3
+    OnChange = FieldChange
+  end
+  object LabelComposer: TLabel
+    Left = 12
+    Height = 15
+    Top = 167
+    Width = 58
+    Caption = 'Komponist'
+  end
+  object EditComposer: TEdit
+    Left = 110
+    Height = 23
+    Top = 164
+    Width = 400
+    TabOrder = 4
+    OnChange = FieldChange
+  end
+  object LabelYear: TLabel
+    Left = 12
+    Height = 15
+    Top = 197
+    Width = 13
+    Caption = #197'r'
+  end
+  object EditYear: TEdit
+    Left = 110
+    Height = 23
+    Top = 194
+    Width = 90
+    TabOrder = 5
+    OnChange = FieldChange
+  end
+  object LabelTrack: TLabel
+    Left = 222
+    Height = 15
+    Top = 197
+    Width = 24
+    Caption = 'Spor'
+  end
+  object EditTrack: TEdit
+    Left = 260
+    Height = 23
+    Top = 194
+    Width = 70
+    TabOrder = 6
+    OnChange = FieldChange
+  end
+  object LabelDisc: TLabel
+    Left = 352
+    Height = 15
+    Top = 197
+    Width = 21
+    Caption = 'Disc'
+  end
+  object EditDisc: TEdit
+    Left = 390
+    Height = 23
+    Top = 194
+    Width = 60
+    TabOrder = 7
+    OnChange = FieldChange
+  end
+  object LabelGenre: TLabel
+    Left = 12
+    Height = 15
+    Top = 227
+    Width = 31
+    Caption = 'Genre'
+  end
+  object ComboGenre: TComboBox
+    Left = 110
+    Height = 23
+    Top = 224
+    Width = 250
+    ItemHeight = 15
+    TabOrder = 8
+    OnChange = FieldChange
+  end
+  object LabelBpm: TLabel
+    Left = 380
+    Height = 15
+    Top = 227
+    Width = 23
+    Caption = 'BPM'
+  end
+  object EditBpm: TEdit
+    Left = 420
+    Height = 23
+    Top = 224
+    Width = 90
+    TabOrder = 9
+    OnChange = FieldChange
+  end
+  object LabelComment: TLabel
+    Left = 12
+    Height = 15
+    Top = 257
+    Width = 60
+    Caption = 'Kommentar'
+  end
+  object MemoComment: TMemo
+    Left = 110
+    Height = 90
+    Top = 254
+    Width = 400
+    ScrollBars = ssAutoVertical
+    TabOrder = 10
+    OnChange = FieldChange
+  end
+  object PanelCover: TPanel
+    Left = 530
+    Height = 250
+    Top = 44
+    Width = 258
+    BevelOuter = bvLowered
+    ClientHeight = 250
+    ClientWidth = 258
+    TabOrder = 11
+    object ImageCover: TImage
+      Left = 1
+      Height = 248
+      Top = 1
+      Width = 256
+      Align = alClient
+      Center = True
+      Proportional = True
+      Stretch = True
+    end
+  end
+  object LabelCoverInfo: TLabel
+    Left = 530
+    Height = 30
+    Top = 298
+    Width = 258
+    AutoSize = False
+    Caption = 'Intet billede'
+    WordWrap = True
+  end
+  object ButtonPrevPicture: TButton
+    Left = 530
+    Height = 25
+    Top = 330
+    Width = 30
+    Caption = '<'
+    TabOrder = 12
+    OnClick = ButtonPrevPictureClick
+  end
+  object ButtonNextPicture: TButton
+    Left = 564
+    Height = 25
+    Top = 330
+    Width = 30
+    Caption = '>'
+    TabOrder = 13
+    OnClick = ButtonNextPictureClick
+  end
+  object ButtonAddPicture: TButton
+    Left = 600
+    Height = 25
+    Top = 330
+    Width = 60
+    Caption = 'Tilf'#248'j...'
+    TabOrder = 14
+    OnClick = ButtonAddPictureClick
+  end
+  object ButtonRemovePicture: TButton
+    Left = 664
+    Height = 25
+    Top = 330
+    Width = 52
+    Caption = 'Fjern'
+    TabOrder = 15
+    OnClick = ButtonRemovePictureClick
+  end
+  object ButtonSavePicture: TButton
+    Left = 720
+    Height = 25
+    Top = 330
+    Width = 68
+    Caption = 'Gem som...'
+    TabOrder = 16
+    OnClick = ButtonSavePictureClick
+  end
+  object LabelFileInfo: TLabel
+    Left = 12
+    Height = 30
+    Top = 372
+    Width = 776
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    Caption = 'info'
+    Font.Color = clGrayText
+    ParentFont = False
+    WordWrap = True
+  end
+  object CheckKeepTimestamp: TCheckBox
+    Left = 12
+    Height = 19
+    Top = 420
+    Width = 230
+    Caption = 'Bevar filens dato (tidsstempel) ved gem'
+    TabOrder = 17
+  end
+  object ButtonSavePrev: TButton
+    Left = 300
+    Height = 30
+    Top = 475
+    Width = 120
+    Anchors = [akRight, akBottom]
+    Caption = 'Gem og forrige'
+    TabOrder = 18
+    OnClick = ButtonSavePrevClick
+  end
+  object ButtonSave: TButton
+    Left = 428
+    Height = 30
+    Top = 475
+    Width = 110
+    Anchors = [akRight, akBottom]
+    Caption = 'Gem'
+    Default = True
+    TabOrder = 19
+    OnClick = ButtonSaveClick
+  end
+  object ButtonSaveNext: TButton
+    Left = 546
+    Height = 30
+    Top = 475
+    Width = 120
+    Anchors = [akRight, akBottom]
+    Caption = 'Gem og n'#230'ste'
+    TabOrder = 20
+    OnClick = ButtonSaveNextClick
+  end
+  object ButtonClose: TButton
+    Left = 678
+    Height = 30
+    Top = 475
+    Width = 110
+    Anchors = [akRight, akBottom]
+    Cancel = True
+    Caption = 'Luk'
+    TabOrder = 21
+    OnClick = ButtonCloseClick
+  end
+  object OpenPictureDialog: TOpenDialog
+    Title = 'V'#230'lg cover-billede'
+    Filter = 'Billeder (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png'
+    Options = [ofFileMustExist, ofEnableSizing, ofViewDetail]
+    Left = 560
+    Top = 400
+  end
+  object SavePictureDialog: TSaveDialog
+    Title = 'Gem billede'
+    Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
+    Left = 640
+    Top = 400
+  end
+end

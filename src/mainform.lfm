@@ -1,0 +1,830 @@
+object FormMain: TFormMain
+  Left = 120
+  Height = 820
+  Top = 60
+  Width = 1320
+  AllowDropFiles = True
+  Caption = 'TagKlon'
+  ClientHeight = 820
+  ClientWidth = 1320
+  KeyPreview = True
+  Menu = MainMenu
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnDropFiles = FormDropFiles
+  OnKeyDown = FormKeyDown
+  LCLVersion = '4.6.0.0'
+  object PanelTools: TPanel
+    Left = 0
+    Height = 212
+    Top = 0
+    Width = 1320
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 212
+    ClientWidth = 1320
+    TabOrder = 0
+    object PageTools: TPageControl
+      Left = 4
+      Height = 204
+      Top = 4
+      Width = 880
+      ActivePage = TabRename
+      TabIndex = 0
+      TabOrder = 0
+      object TabRename: TTabSheet
+        Caption = 'Omd'#248'b filer (F4)'
+        ClientHeight = 176
+        ClientWidth = 872
+        object LabelRenameMask: TLabel
+          Left = 8
+          Height = 15
+          Top = 12
+          Width = 85
+          Caption = 'Filnavnsmaske:'
+        end
+        object ComboRenameMask: TComboBox
+          Left = 100
+          Height = 23
+          Top = 8
+          Width = 232
+          ItemHeight = 15
+          TabOrder = 0
+          OnChange = InlineOptionChange
+        end
+        object ButtonRenameVars: TButton
+          Left = 338
+          Height = 25
+          Top = 7
+          Width = 90
+          Caption = 'Variabler '#9662
+          TabOrder = 1
+          OnClick = ButtonVarsClick
+        end
+        object LabelRenameResult: TLabel
+          Left = 8
+          Height = 15
+          Top = 40
+          Width = 47
+          Caption = 'Resultat:'
+        end
+        object PanelRenamePreview: TPanel
+          Left = 8
+          Height = 24
+          Top = 58
+          Width = 420
+          BevelOuter = bvLowered
+          ClientHeight = 24
+          ClientWidth = 420
+          TabOrder = 2
+          object LabelRenamePreview: TLabel
+            Left = 6
+            Height = 15
+            Top = 4
+            Width = 408
+            AutoSize = False
+            Caption = ''
+          end
+        end
+        object CheckRenameUnderscores: TCheckBox
+          Left = 8
+          Height = 19
+          Top = 88
+          Width = 170
+          Caption = 'Erstat mellemrum med _'
+          TabOrder = 3
+          OnChange = InlineOptionChange
+        end
+        object CheckRenamePadTrack: TCheckBox
+          Left = 200
+          Height = 19
+          Top = 88
+          Width = 200
+          Caption = 'Spornummer med 2 cifre (%6)'
+          TabOrder = 4
+          OnChange = InlineOptionChange
+        end
+        object CheckRenameCase: TCheckBox
+          Left = 8
+          Height = 19
+          Top = 112
+          Width = 110
+          Caption = 'Skift versaler:'
+          TabOrder = 5
+          OnChange = InlineOptionChange
+        end
+        object PanelRenameCase: TPanel
+          Left = 8
+          Height = 40
+          Top = 132
+          Width = 420
+          BevelOuter = bvNone
+          ClientHeight = 40
+          ClientWidth = 420
+          TabOrder = 6
+          object RadioRenameLower: TRadioButton
+            Left = 20
+            Height = 19
+            Top = 0
+            Width = 120
+            Caption = 'sm'#229' bogstaver'
+            TabOrder = 0
+            OnChange = InlineOptionChange
+          end
+          object RadioRenameUpper: TRadioButton
+            Left = 20
+            Height = 19
+            Top = 20
+            Width = 130
+            Caption = 'STORE BOGSTAVER'
+            TabOrder = 1
+            OnChange = InlineOptionChange
+          end
+          object RadioRenameTitle: TRadioButton
+            Left = 200
+            Height = 19
+            Top = 0
+            Width = 150
+            Caption = 'Hvert Ord Med Stort'
+            Checked = True
+            TabOrder = 2
+            TabStop = True
+            OnChange = InlineOptionChange
+          end
+          object RadioRenameSentence: TRadioButton
+            Left = 200
+            Height = 19
+            Top = 20
+            Width = 150
+            Caption = 'F'#248'rste bogstav stort'
+            TabOrder = 3
+            OnChange = InlineOptionChange
+          end
+        end
+        object LabelRenameHelp: TLabel
+          Left = 444
+          Height = 128
+          Top = 6
+          Width = 420
+          AutoSize = False
+          Caption = 'help'
+          WordWrap = True
+        end
+        object ButtonRenamePreview: TButton
+          Left = 444
+          Height = 28
+          Top = 142
+          Width = 130
+          Caption = 'Forh'#229'ndsvis...'
+          TabOrder = 7
+          OnClick = ButtonRenamePreviewClick
+        end
+        object ButtonRenameDo: TButton
+          Left = 582
+          Height = 28
+          Top = 142
+          Width = 130
+          Caption = 'Omd'#248'b'
+          TabOrder = 8
+          OnClick = ButtonRenameDoClick
+        end
+        object ButtonRenameUndo: TButton
+          Left = 720
+          Height = 28
+          Top = 142
+          Width = 130
+          Caption = 'Fortryd'
+          Enabled = False
+          TabOrder = 9
+          OnClick = ActUndoExecute
+        end
+      end
+      object TabMulti: TTabSheet
+        Caption = 'Multi-fil-tag-editor (Ctrl+F4)'
+        ClientHeight = 176
+        ClientWidth = 872
+        object CheckMultiArtist: TCheckBox
+          Left = 8
+          Height = 19
+          Top = 10
+          Width = 100
+          Caption = 'Kunstner'
+          TabOrder = 0
+        end
+        object EditMultiArtist: TEdit
+          Left = 120
+          Height = 23
+          Top = 8
+          Width = 300
+          TabOrder = 1
+          OnChange = MultiValueChange
+        end
+        object CheckMultiAlbum: TCheckBox
+          Left = 8
+          Height = 19
+          Top = 38
+          Width = 100
+          Caption = 'Album'
+          TabOrder = 2
+        end
+        object EditMultiAlbum: TEdit
+          Left = 120
+          Height = 23
+          Top = 36
+          Width = 300
+          TabOrder = 3
+          OnChange = MultiValueChange
+        end
+        object CheckMultiAlbumArtist: TCheckBox
+          Left = 8
+          Height = 19
+          Top = 66
+          Width = 110
+          Caption = 'Albumkunstner'
+          TabOrder = 4
+        end
+        object EditMultiAlbumArtist: TEdit
+          Left = 120
+          Height = 23
+          Top = 64
+          Width = 300
+          TabOrder = 5
+          OnChange = MultiValueChange
+        end
+        object CheckMultiYear: TCheckBox
+          Left = 8
+          Height = 19
+          Top = 94
+          Width = 100
+          Caption = #197'r'
+          TabOrder = 6
+        end
+        object EditMultiYear: TEdit
+          Left = 120
+          Height = 23
+          Top = 92
+          Width = 80
+          TabOrder = 7
+          OnChange = MultiValueChange
+        end
+        object CheckMultiGenre: TCheckBox
+          Left = 214
+          Height = 19
+          Top = 94
+          Width = 60
+          Caption = 'Genre'
+          TabOrder = 8
+        end
+        object ComboMultiGenre: TComboBox
+          Left = 280
+          Height = 23
+          Top = 92
+          Width = 140
+          ItemHeight = 15
+          Sorted = True
+          TabOrder = 9
+          OnChange = MultiValueChange
+        end
+        object CheckMultiComment: TCheckBox
+          Left = 8
+          Height = 19
+          Top = 122
+          Width = 100
+          Caption = 'Kommentar'
+          TabOrder = 10
+        end
+        object EditMultiComment: TEdit
+          Left = 120
+          Height = 23
+          Top = 120
+          Width = 300
+          TabOrder = 11
+          OnChange = MultiValueChange
+        end
+        object LabelMultiHelp: TLabel
+          Left = 444
+          Height = 128
+          Top = 6
+          Width = 420
+          AutoSize = False
+          Caption = 'help'
+          WordWrap = True
+        end
+        object ButtonMultiSave: TButton
+          Left = 444
+          Height = 28
+          Top = 142
+          Width = 130
+          Caption = 'Gem tags'
+          TabOrder = 12
+          OnClick = ButtonMultiSaveClick
+        end
+        object ButtonMultiCopy: TButton
+          Left = 582
+          Height = 28
+          Top = 142
+          Width = 130
+          Caption = 'Kopi'#233'r fra fil'
+          Hint = 'Udfyld felterne med v'#230'rdierne fra den fokuserede fil'
+          TabOrder = 13
+          OnClick = ButtonMultiCopyClick
+        end
+        object ButtonMultiAll: TButton
+          Left = 720
+          Height = 28
+          Top = 142
+          Width = 130
+          Caption = 'Alle felter...'
+          Hint = 'Rediger flere felter (og cover) i alle afkrydsede/markerede filer'
+          TabOrder = 14
+          OnClick = ActMultiEditExecute
+        end
+      end
+      object TabFileToTag: TTabSheet
+        Caption = 'Tags fra filnavn (Shift+F4)'
+        ClientHeight = 176
+        ClientWidth = 872
+        object LabelF2TMask: TLabel
+          Left = 8
+          Height = 15
+          Top = 12
+          Width = 85
+          Caption = 'Filnavnsmaske:'
+        end
+        object ComboF2TMask: TComboBox
+          Left = 100
+          Height = 23
+          Top = 8
+          Width = 232
+          ItemHeight = 15
+          TabOrder = 0
+          OnChange = InlineOptionChange
+        end
+        object ButtonF2TVars: TButton
+          Left = 338
+          Height = 25
+          Top = 7
+          Width = 90
+          Caption = 'Variabler '#9662
+          TabOrder = 1
+          OnClick = ButtonVarsClick
+        end
+        object LabelF2TResult: TLabel
+          Left = 8
+          Height = 15
+          Top = 40
+          Width = 47
+          Caption = 'Resultat:'
+        end
+        object PanelF2TPreview: TPanel
+          Left = 8
+          Height = 24
+          Top = 58
+          Width = 420
+          BevelOuter = bvLowered
+          ClientHeight = 24
+          ClientWidth = 420
+          TabOrder = 2
+          object LabelF2TPreview: TLabel
+            Left = 6
+            Height = 15
+            Top = 4
+            Width = 408
+            AutoSize = False
+            Caption = ''
+          end
+        end
+        object CheckF2TUnderscores: TCheckBox
+          Left = 8
+          Height = 19
+          Top = 88
+          Width = 170
+          Caption = 'Erstat _ med mellemrum'
+          TabOrder = 3
+          OnChange = InlineOptionChange
+        end
+        object CheckF2TCase: TCheckBox
+          Left = 8
+          Height = 19
+          Top = 112
+          Width = 110
+          Caption = 'Skift versaler:'
+          TabOrder = 4
+          OnChange = InlineOptionChange
+        end
+        object PanelF2TCase: TPanel
+          Left = 8
+          Height = 40
+          Top = 132
+          Width = 420
+          BevelOuter = bvNone
+          ClientHeight = 40
+          ClientWidth = 420
+          TabOrder = 5
+          object RadioF2TLower: TRadioButton
+            Left = 20
+            Height = 19
+            Top = 0
+            Width = 120
+            Caption = 'sm'#229' bogstaver'
+            TabOrder = 0
+            OnChange = InlineOptionChange
+          end
+          object RadioF2TUpper: TRadioButton
+            Left = 20
+            Height = 19
+            Top = 20
+            Width = 130
+            Caption = 'STORE BOGSTAVER'
+            TabOrder = 1
+            OnChange = InlineOptionChange
+          end
+          object RadioF2TTitle: TRadioButton
+            Left = 200
+            Height = 19
+            Top = 0
+            Width = 150
+            Caption = 'Hvert Ord Med Stort'
+            Checked = True
+            TabOrder = 2
+            TabStop = True
+            OnChange = InlineOptionChange
+          end
+          object RadioF2TSentence: TRadioButton
+            Left = 200
+            Height = 19
+            Top = 20
+            Width = 150
+            Caption = 'F'#248'rste bogstav stort'
+            TabOrder = 3
+            OnChange = InlineOptionChange
+          end
+        end
+        object LabelF2THelp: TLabel
+          Left = 444
+          Height = 128
+          Top = 6
+          Width = 420
+          AutoSize = False
+          Caption = 'help'
+          WordWrap = True
+        end
+        object ButtonF2TPreview: TButton
+          Left = 444
+          Height = 28
+          Top = 142
+          Width = 130
+          Caption = 'Forh'#229'ndsvis...'
+          TabOrder = 6
+          OnClick = ButtonF2TPreviewClick
+        end
+        object ButtonF2TWrite: TButton
+          Left = 582
+          Height = 28
+          Top = 142
+          Width = 130
+          Caption = 'Skriv tags'
+          TabOrder = 7
+          OnClick = ButtonF2TWriteClick
+        end
+      end
+    end
+    object PanelFolderCover: TPanel
+      Left = 890
+      Height = 204
+      Top = 4
+      Width = 200
+      BevelOuter = bvLowered
+      ClientHeight = 204
+      ClientWidth = 200
+      TabOrder = 1
+      object LabelFolderCover: TLabel
+        Left = 6
+        Height = 15
+        Top = 4
+        Width = 188
+        AutoSize = False
+        Caption = 'Mappens cover'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object ImageFolderCover: TImage
+        Left = 6
+        Height = 150
+        Top = 24
+        Width = 188
+        Center = True
+        Proportional = True
+        Stretch = True
+      end
+      object LabelFolderCoverInfo: TLabel
+        Left = 6
+        Height = 24
+        Top = 176
+        Width = 188
+        AutoSize = False
+        Caption = 'Tr'#230'k et billede hertil'
+        Font.Color = clGrayText
+        ParentFont = False
+        WordWrap = True
+      end
+    end
+    object PanelFileCover: TPanel
+      Left = 1096
+      Height = 204
+      Top = 4
+      Width = 200
+      BevelOuter = bvLowered
+      ClientHeight = 204
+      ClientWidth = 200
+      TabOrder = 2
+      object LabelFileCover: TLabel
+        Left = 6
+        Height = 15
+        Top = 4
+        Width = 188
+        AutoSize = False
+        Caption = 'Filens cover'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object ImageFileCover: TImage
+        Left = 6
+        Height = 150
+        Top = 24
+        Width = 188
+        Center = True
+        Proportional = True
+        Stretch = True
+      end
+      object LabelFileCoverInfo: TLabel
+        Left = 6
+        Height = 24
+        Top = 176
+        Width = 188
+        AutoSize = False
+        Caption = 'Tr'#230'k et billede hertil'
+        Font.Color = clGrayText
+        ParentFont = False
+        WordWrap = True
+      end
+    end
+  end
+  object ToolBarMain: TToolBar
+    Left = 0
+    Height = 28
+    Top = 212
+    Width = 1320
+    AutoSize = True
+    ButtonHeight = 26
+    ButtonWidth = 26
+    EdgeBorders = [ebTop, ebBottom]
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 1
+  end
+  object PanelAddress: TPanel
+    Left = 0
+    Height = 30
+    Top = 240
+    Width = 1320
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 30
+    ClientWidth = 1320
+    TabOrder = 2
+    object LabelAddress: TLabel
+      Left = 8
+      Height = 15
+      Top = 8
+      Width = 47
+      Caption = 'Adresse:'
+    end
+    object ComboAddress: TComboBox
+      Left = 64
+      Height = 23
+      Top = 4
+      Width = 640
+      ItemHeight = 15
+      TabOrder = 0
+      OnKeyDown = ComboAddressKeyDown
+      OnSelect = ComboAddressSelect
+    end
+  end
+  object PanelFilter: TPanel
+    Left = 0
+    Height = 30
+    Top = 270
+    Width = 1320
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 30
+    ClientWidth = 1320
+    TabOrder = 3
+    object LabelFilter: TLabel
+      Left = 8
+      Height = 15
+      Top = 8
+      Width = 67
+      Caption = 'Filtrer efter'
+    end
+    object ComboFilterField: TComboBox
+      Left = 84
+      Height = 23
+      Top = 4
+      Width = 140
+      ItemHeight = 15
+      Style = csDropDownList
+      TabOrder = 0
+    end
+    object EditFilter: TEdit
+      Left = 232
+      Height = 23
+      Top = 4
+      Width = 300
+      TabOrder = 1
+      OnKeyDown = EditFilterKeyDown
+    end
+    object ButtonFilterApply: TButton
+      Left = 540
+      Height = 25
+      Top = 3
+      Width = 80
+      Caption = 'Filtrer!'
+      TabOrder = 2
+      OnClick = ButtonFilterApplyClick
+    end
+    object ButtonHideSelected: TButton
+      Left = 626
+      Height = 25
+      Top = 3
+      Width = 130
+      Caption = 'Skjul valgte filer'
+      TabOrder = 3
+      OnClick = ButtonHideSelectedClick
+    end
+    object ButtonShowAll: TButton
+      Left = 762
+      Height = 25
+      Top = 3
+      Width = 80
+      Caption = 'Vis alle'
+      TabOrder = 4
+      OnClick = ButtonShowAllClick
+    end
+  end
+  object PanelFolders: TPanel
+    Left = 0
+    Height = 497
+    Top = 300
+    Width = 280
+    Align = alLeft
+    BevelOuter = bvNone
+    ClientHeight = 497
+    ClientWidth = 280
+    TabOrder = 4
+    object PanelFoldersHeader: TPanel
+      Left = 0
+      Height = 28
+      Top = 0
+      Width = 280
+      Align = alTop
+      BevelOuter = bvNone
+      ClientHeight = 28
+      ClientWidth = 280
+      TabOrder = 0
+      object LabelFolders: TLabel
+        Left = 6
+        Height = 15
+        Top = 7
+        Width = 45
+        Caption = 'Mapper:'
+      end
+      object ToolBarFolders: TToolBar
+        Left = 64
+        Height = 26
+        Top = 1
+        Width = 214
+        Align = alNone
+        Anchors = [akTop, akLeft, akRight]
+        AutoSize = False
+        ButtonHeight = 24
+        ButtonWidth = 24
+        EdgeBorders = []
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 0
+      end
+    end
+    object ShellTree: TShellTreeView
+      Left = 0
+      Height = 469
+      Top = 28
+      Width = 280
+      Align = alClient
+      FileSortType = fstAlphabet
+      HideSelection = False
+      ReadOnly = True
+      TabOrder = 1
+      ObjectTypes = [otFolders]
+      OnChange = ShellTreeChange
+    end
+  end
+  object Splitter1: TSplitter
+    Left = 280
+    Height = 497
+    Top = 300
+    Width = 5
+  end
+  object FileList: TListView
+    Left = 285
+    Height = 497
+    Top = 300
+    Width = 1035
+    Align = alClient
+    Columns = <>
+    HideSelection = False
+    MultiSelect = True
+    OwnerData = True
+    PopupMenu = PopupFileList
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 5
+    ViewStyle = vsReport
+    OnColumnClick = FileListColumnClick
+    OnData = FileListData
+    OnDblClick = FileListDblClick
+    OnKeyDown = FileListKeyDown
+    OnMouseDown = FileListMouseDown
+    OnSelectItem = FileListSelectItem
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 797
+    Width = 1320
+    Panels = <
+      item
+        Width = 130
+      end
+      item
+        Width = 130
+      end
+      item
+        Width = 150
+      end
+      item
+        Width = 150
+      end
+      item
+        Width = 120
+      end
+      item
+        Width = 50
+      end>
+    SimplePanel = False
+  end
+  object MainMenu: TMainMenu
+    Left = 400
+    Top = 400
+  end
+  object PopupFileList: TPopupMenu
+    Left = 480
+    Top = 400
+  end
+  object PopupVars: TPopupMenu
+    Left = 560
+    Top = 400
+  end
+  object PopupFavorites: TPopupMenu
+    Left = 640
+    Top = 400
+  end
+  object ImagesMain: TImageList
+    Scaled = True
+    Left = 720
+    Top = 400
+  end
+  object TimerPoll: TTimer
+    Enabled = False
+    Interval = 150
+    OnTimer = TimerPollTimer
+    Left = 400
+    Top = 480
+  end
+  object TimerDebounce: TTimer
+    Enabled = False
+    Interval = 250
+    OnTimer = TimerDebounceTimer
+    Left = 480
+    Top = 480
+  end
+  object TimerSelection: TTimer
+    Enabled = False
+    Interval = 120
+    OnTimer = TimerSelectionTimer
+    Left = 560
+    Top = 480
+  end
+end

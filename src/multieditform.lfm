@@ -1,0 +1,143 @@
+object FormMultiEdit: TFormMultiEdit
+  Left = 320
+  Height = 600
+  Top = 140
+  Width = 640
+  Caption = 'Rediger flere filer'
+  ClientHeight = 600
+  ClientWidth = 640
+  Position = poOwnerFormCenter
+  OnCloseQuery = FormCloseQuery
+  LCLVersion = '4.6.0.0'
+  object LabelInfo: TLabel
+    Left = 12
+    Height = 32
+    Top = 10
+    Width = 616
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    Caption = 'info'
+    WordWrap = True
+  end
+  object PanelFields: TPanel
+    Left = 12
+    Height = 290
+    Top = 46
+    Width = 616
+    Anchors = [akTop, akLeft, akRight]
+    BevelOuter = bvNone
+    TabOrder = 0
+  end
+  object GroupCover: TGroupBox
+    Left = 12
+    Height = 110
+    Top = 342
+    Width = 616
+    Anchors = [akTop, akLeft, akRight]
+    Caption = 'Cover'
+    ClientHeight = 90
+    ClientWidth = 612
+    TabOrder = 1
+    object CheckReplaceCover: TCheckBox
+      Left = 8
+      Height = 19
+      Top = 8
+      Width = 160
+      Caption = 'Erstat alle covers med:'
+      TabOrder = 0
+      OnChange = CheckReplaceCoverChange
+    end
+    object ButtonChooseCover: TButton
+      Left = 180
+      Height = 25
+      Top = 5
+      Width = 110
+      Caption = 'V'#230'lg billede...'
+      TabOrder = 1
+      OnClick = ButtonChooseCoverClick
+    end
+    object LabelCoverFile: TLabel
+      Left = 300
+      Height = 15
+      Top = 10
+      Width = 200
+      AutoSize = False
+      Caption = '(intet billede valgt)'
+      Font.Color = clGrayText
+      ParentFont = False
+    end
+    object CheckRemoveCovers: TCheckBox
+      Left = 8
+      Height = 19
+      Top = 44
+      Width = 180
+      Caption = 'Fjern alle cover-billeder'
+      TabOrder = 2
+      OnChange = CheckRemoveCoversChange
+    end
+    object ImageCover: TImage
+      Left = 520
+      Height = 80
+      Top = 2
+      Width = 80
+      Anchors = [akTop, akRight]
+      Center = True
+      Proportional = True
+      Stretch = True
+    end
+  end
+  object CheckKeepTimestamp: TCheckBox
+    Left = 12
+    Height = 19
+    Top = 462
+    Width = 230
+    Caption = 'Bevar filernes dato (tidsstempel)'
+    TabOrder = 2
+  end
+  object ProgressBar: TProgressBar
+    Left = 12
+    Height = 16
+    Top = 490
+    Width = 616
+    Anchors = [akLeft, akRight, akBottom]
+    TabOrder = 3
+  end
+  object LabelStatus: TLabel
+    Left = 12
+    Height = 15
+    Top = 512
+    Width = 616
+    Anchors = [akLeft, akRight, akBottom]
+    AutoSize = False
+    Caption = ''
+  end
+  object ButtonApply: TButton
+    Left = 378
+    Height = 30
+    Top = 558
+    Width = 130
+    Anchors = [akRight, akBottom]
+    Caption = 'Gem'
+    Default = True
+    TabOrder = 4
+    OnClick = ButtonApplyClick
+  end
+  object ButtonClose: TButton
+    Left = 516
+    Height = 30
+    Top = 558
+    Width = 112
+    Anchors = [akRight, akBottom]
+    Cancel = True
+    Caption = 'Luk'
+    TabOrder = 5
+    OnClick = ButtonCloseClick
+  end
+  object OpenPictureDialog: TOpenDialog
+    Title = 'V'#230'lg cover-billede'
+    Filter = 'Billeder (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png'
+    Options = [ofFileMustExist, ofEnableSizing, ofViewDetail]
+    Left = 300
+    Top = 460
+  end
+end

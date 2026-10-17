@@ -1,0 +1,352 @@
+object FormWebLookup: TFormWebLookup
+  Left = 260
+  Height = 720
+  Top = 100
+  Width = 1060
+  Caption = 'Web-opslag'
+  ClientHeight = 720
+  ClientWidth = 1060
+  Position = poOwnerFormCenter
+  OnCloseQuery = FormCloseQuery
+  LCLVersion = '4.6.0.0'
+  object ComboSource: TComboBox
+    Left = 12
+    Height = 23
+    Top = 12
+    Width = 112
+    ItemHeight = 15
+    Items.Strings = (
+      'MusicBrainz'
+      'Discogs'
+    )
+    Style = csDropDownList
+    TabOrder = 10
+    OnChange = ComboSourceChange
+  end
+  object ButtonToken: TButton
+    Left = 866
+    Height = 27
+    Top = 10
+    Width = 120
+    Caption = 'Discogs-token...'
+    TabOrder = 11
+    Visible = False
+    OnClick = ButtonTokenClick
+  end
+  object LabelArtist: TLabel
+    Left = 136
+    Height = 15
+    Top = 16
+    Width = 50
+    Caption = 'Kunstner:'
+  end
+  object EditArtist: TEdit
+    Left = 196
+    Height = 23
+    Top = 12
+    Width = 250
+    TabOrder = 0
+    OnKeyPress = EditKeyPress
+  end
+  object LabelAlbum: TLabel
+    Left = 458
+    Height = 15
+    Top = 16
+    Width = 39
+    Caption = 'Album:'
+  end
+  object EditAlbum: TEdit
+    Left = 506
+    Height = 23
+    Top = 12
+    Width = 250
+    TabOrder = 1
+    OnKeyPress = EditKeyPress
+  end
+  object ButtonSearch: TButton
+    Left = 768
+    Height = 27
+    Top = 10
+    Width = 90
+    Caption = 'S'#248'g'
+    TabOrder = 2
+    OnClick = ButtonSearchClick
+  end
+  object ListReleases: TListView
+    Left = 12
+    Height = 170
+    Top = 46
+    Width = 1036
+    Anchors = [akTop, akLeft, akRight]
+    Columns = <
+      item
+        Caption = 'Kunstner'
+        Width = 200
+      end
+      item
+        Caption = 'Album'
+        Width = 250
+      end
+      item
+        Caption = 'Dato'
+        Width = 85
+      end
+      item
+        Caption = 'Land'
+        Width = 45
+      end
+      item
+        Caption = 'Spor'
+        Width = 45
+      end
+      item
+        Caption = 'Format'
+        Width = 110
+      end
+      item
+        Caption = 'Pladeselskab'
+        Width = 150
+      end
+      item
+        Caption = 'Katalognr.'
+        Width = 120
+      end>
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 3
+    ViewStyle = vsReport
+    OnSelectItem = ListReleasesSelectItem
+  end
+  object LabelTracks: TLabel
+    Left = 12
+    Height = 15
+    Top = 224
+    Width = 500
+    Caption = 'Spor p'#229' den valgte udgivelse og de filer, der f'#229'r dem (flyt filer med Op/Ned):'
+  end
+  object ListTracks: TListView
+    Left = 12
+    Height = 300
+    Top = 244
+    Width = 760
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Columns = <
+      item
+        Caption = 'Nr.'
+        Width = 50
+      end
+      item
+        Caption = 'Titel (fra kilden)'
+        Width = 230
+      end
+      item
+        Caption = 'Kunstner'
+        Width = 150
+      end
+      item
+        Caption = 'L'#230'ngde'
+        Width = 55
+      end
+      item
+        Caption = 'Fil'
+        Width = 200
+      end
+      item
+        Caption = 'L'#230'ngde'
+        Width = 55
+      end>
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 4
+    ViewStyle = vsReport
+  end
+  object ButtonUp: TButton
+    Left = 780
+    Height = 27
+    Top = 244
+    Width = 76
+    Anchors = [akTop, akRight]
+    Caption = 'Op'
+    TabOrder = 5
+    OnClick = ButtonUpClick
+  end
+  object ButtonDown: TButton
+    Left = 780
+    Height = 27
+    Top = 276
+    Width = 76
+    Anchors = [akTop, akRight]
+    Caption = 'Ned'
+    TabOrder = 6
+    OnClick = ButtonDownClick
+  end
+  object ImageCover: TImage
+    Left = 868
+    Height = 180
+    Top = 244
+    Width = 180
+    Anchors = [akTop, akRight]
+    Center = True
+    Proportional = True
+    Stretch = True
+  end
+  object LabelCover: TLabel
+    Left = 868
+    Height = 30
+    Top = 430
+    Width = 180
+    Anchors = [akTop, akRight]
+    AutoSize = False
+    Caption = ''
+    WordWrap = True
+  end
+  object GroupOptions: TGroupBox
+    Left = 12
+    Height = 92
+    Top = 552
+    Width = 1036
+    Anchors = [akLeft, akRight, akBottom]
+    Caption = 'Skriv'
+    ClientHeight = 72
+    ClientWidth = 1032
+    TabOrder = 7
+    object CheckTitle: TCheckBox
+      Left = 8
+      Height = 19
+      Top = 6
+      Width = 60
+      Caption = 'Titler'
+      TabOrder = 0
+    end
+    object CheckArtist: TCheckBox
+      Left = 100
+      Height = 19
+      Top = 6
+      Width = 80
+      Caption = 'Kunstner'
+      TabOrder = 1
+    end
+    object CheckAlbum: TCheckBox
+      Left = 200
+      Height = 19
+      Top = 6
+      Width = 70
+      Caption = 'Album'
+      TabOrder = 2
+    end
+    object CheckAlbumArtist: TCheckBox
+      Left = 290
+      Height = 19
+      Top = 6
+      Width = 110
+      Caption = 'Albumkunstner'
+      TabOrder = 3
+    end
+    object CheckYear: TCheckBox
+      Left = 420
+      Height = 19
+      Top = 6
+      Width = 50
+      Caption = #197'r'
+      TabOrder = 4
+    end
+    object CheckYearOnly: TCheckBox
+      Left = 480
+      Height = 19
+      Top = 6
+      Width = 100
+      Caption = '(kun '#229'rstal)'
+      TabOrder = 5
+    end
+    object CheckTrack: TCheckBox
+      Left = 600
+      Height = 19
+      Top = 6
+      Width = 90
+      Caption = 'Spornumre'
+      TabOrder = 6
+    end
+    object CheckTrackTotal: TCheckBox
+      Left = 700
+      Height = 19
+      Top = 6
+      Width = 120
+      Caption = '(som 07/12)'
+      TabOrder = 7
+    end
+    object CheckDisc: TCheckBox
+      Left = 8
+      Height = 19
+      Top = 38
+      Width = 80
+      Caption = 'Disc-nr.'
+      TabOrder = 8
+    end
+    object CheckGenre: TCheckBox
+      Left = 100
+      Height = 19
+      Top = 38
+      Width = 70
+      Caption = 'Genre'
+      TabOrder = 9
+    end
+    object CheckCoverTags: TCheckBox
+      Left = 200
+      Height = 19
+      Top = 38
+      Width = 130
+      Caption = 'Cover i filerne'
+      TabOrder = 10
+    end
+    object CheckCoverFolder: TCheckBox
+      Left = 350
+      Height = 19
+      Top = 38
+      Width = 220
+      Caption = 'Cover som folder.jpg i mappen'
+      TabOrder = 11
+    end
+    object CheckKeepTimestamp: TCheckBox
+      Left = 600
+      Height = 19
+      Top = 38
+      Width = 180
+      Caption = 'Bevar filernes dato'
+      TabOrder = 12
+    end
+  end
+  object LabelStatus: TLabel
+    Left = 12
+    Height = 30
+    Top = 652
+    Width = 760
+    Anchors = [akLeft, akRight, akBottom]
+    AutoSize = False
+    Caption = ''
+    WordWrap = True
+  end
+  object ButtonWrite: TButton
+    Left = 800
+    Height = 30
+    Top = 678
+    Width = 130
+    Anchors = [akRight, akBottom]
+    Caption = 'Skriv tags'
+    Enabled = False
+    TabOrder = 8
+    OnClick = ButtonWriteClick
+  end
+  object ButtonClose: TButton
+    Left = 938
+    Height = 30
+    Top = 678
+    Width = 110
+    Anchors = [akRight, akBottom]
+    Cancel = True
+    Caption = 'Luk'
+    TabOrder = 9
+    OnClick = ButtonCloseClick
+  end
+end

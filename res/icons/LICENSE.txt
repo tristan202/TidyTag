@@ -1,0 +1,2 @@
+﻿Icons from the Lazarus 'general_purpose' image set by Roland Hahn (https://www.rhsoft.de/).
+License: Creative Commons CC0 1.0 Universal (public domain), https://creativecommons.org/publicdomain/zero/1.0/

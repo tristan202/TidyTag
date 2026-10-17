@@ -1,0 +1,358 @@
+unit ID3Writer;
+
+{ Writes the editable fields and pictures of TAudioInfo into an MP3's ID3v2 tag.
+  Frames we do not edit are kept byte for byte. An existing v2.3/v2.4 tag keeps its
+  version; files without a tag (or with v2.2) get ID3v2.3, which every player reads.
+  An existing ID3v1 tag is updated so both tags agree; none is created. }
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, AudioTypes;
+
+procedure WriteMp3Tags(const FileName: string; Info: TAudioInfo);
+
+implementation
+
+uses
+  TagUtils, Mp3Reader;
+
+const
+  NewTagPadding = 4096;
+
+function IsManagedFrame(const ID: string; const Fr: TID3Frame): Boolean;
+var
+  Desc: string;
+  P: SizeInt;
+begin
+  if (ID = 'TIT2') or (ID = 'TPE1') or (ID = 'TALB') or (ID = 'TYER') or (ID = 'TDAT') or
+    (ID = 'TDRC') or (ID = 'TRCK') or (ID = 'TPOS') or (ID = 'TCON') or (ID = 'TPE2') or
+    (ID = 'TCOM') or (ID = 'TBPM') or (ID = 'APIC') or (ID = 'PIC') then
+    Exit(True);
+  if ID = 'COMM' then
+  begin
+    // iTunes keeps technical data in comments (iTunNORM, iTunSMPB, ...): leave those.
+    if Length(Fr.Data) < 4 then Exit(True);
+    P := SkipTerminated(Fr.Data, 4, Fr.Data[0]);
+    Desc := DecodeID3Text(Fr.Data, 4, P - 4, Fr.Data[0]);
+    Exit(not SameText(Copy(Desc, 1, 4), 'iTun'));
+  end;
+  Result := False;
+end;
+
+function FitsLatin1(const U: UnicodeString): Boolean;
+var
+  C: WideChar;
+begin
+  for C in U do
+    if Ord(C) > 255 then Exit(False);
+  Result := True;
+end;
+
+{ Text encoding byte: v2.4 -> UTF-8; v2.3 -> Latin-1 when possible, else UTF-16 with BOM. }
+function ChooseEncoding(Version: Byte; const Texts: array of string): Byte;
+var
+  T: string;
+begin
+  if Version = 4 then Exit(3);
+  for T in Texts do
+    if not FitsLatin1(UTF8Decode(T)) then Exit(1);
+  Result := 0;
+end;
+
+procedure WriteEncoded(S: TStream; const Text: string; Enc: Byte; Terminate: Boolean);
+var
+  U: UnicodeString;
+  C: WideChar;
+begin
+  case Enc of
+    0: begin
+         U := UTF8Decode(Text);
+         for C in U do S.WriteByte(Ord(C));
+         if Terminate then S.WriteByte(0);
+       end;
+    1: begin
+         U := UTF8Decode(Text);
+         S.WriteByte($FF); S.WriteByte($FE);
+         for C in U do
+         begin
+           S.WriteByte(Ord(C) and $FF);
+           S.WriteByte(Ord(C) shr 8);
+         end;
+         if Terminate then begin S.WriteByte(0); S.WriteByte(0); end;
+       end;
+  else // 3 = UTF-8
+    WriteBytes(S, UTF8Bytes(Text));
+    if Terminate then S.WriteByte(0);
+  end;
+end;
+
+procedure WriteFrame(Dest: TStream; Version: Byte; const ID: string; Flags: Word; const Body: TBytes);
+var
+  N: Cardinal;
+begin
+  WriteAscii(Dest, ID);
+  N := Length(Body);
+  if Version = 4 then
+    WriteBE32(Dest, ((N shr 21) and $7F) shl 24 or ((N shr 14) and $7F) shl 16 or
+      ((N shr 7) and $7F) shl 8 or (N and $7F))
+  else
+    WriteBE32(Dest, N);
+  WriteBE16(Dest, Flags);
+  WriteBytes(Dest, Body);
+end;
+
+procedure AddTextFrame(Dest: TStream; Version: Byte; const ID, Value: string);
+var
+  B: TBytesStream;
+  Enc: Byte;
+begin
+  if Value = '' then Exit;
+  B := TBytesStream.Create;
+  try
+    Enc := ChooseEncoding(Version, [Value]);
+    B.WriteByte(Enc);
+    WriteEncoded(B, Value, Enc, False);
+    WriteFrame(Dest, Version, ID, 0, StreamBytes(B));
+  finally
+    B.Free;
+  end;
+end;
+
+procedure AddCommentFrame(Dest: TStream; Version: Byte; const Value: string);
+var
+  B: TBytesStream;
+  Enc: Byte;
+begin
+  if Value = '' then Exit;
+  B := TBytesStream.Create;
+  try
+    Enc := ChooseEncoding(Version, [Value]);
+    B.WriteByte(Enc);
+    WriteAscii(B, 'eng');
+    WriteEncoded(B, '', Enc, True); // empty description
+    WriteEncoded(B, Value, Enc, False);
+    WriteFrame(Dest, Version, 'COMM', 0, StreamBytes(B));
+  finally
+    B.Free;
+  end;
+end;
+
+procedure AddPictureFrame(Dest: TStream; Version: Byte; const Pic: TTagPicture);
+var
+  B: TBytesStream;
+  Enc: Byte;
+begin
+  B := TBytesStream.Create;
+  try
+    Enc := ChooseEncoding(Version, [Pic.Description]);
+    B.WriteByte(Enc);
+    WriteAscii(B, Pic.MimeType);
+    B.WriteByte(0);
+    B.WriteByte(Pic.PicType);
+    WriteEncoded(B, Pic.Description, Enc, True);
+    WriteBytes(B, Pic.Data);
+    WriteFrame(Dest, Version, 'APIC', 0, StreamBytes(B));
+  finally
+    B.Free;
+  end;
+end;
+
+procedure AddYearFrames(Dest: TStream; Version: Byte; const Year: string);
+var
+  Y, M, D: string;
+begin
+  if Year = '' then Exit;
+  if Version = 4 then
+  begin
+    AddTextFrame(Dest, Version, 'TDRC', Year);
+    Exit;
+  end;
+  // v2.3 has a 4-digit year (TYER) and a separate DDMM date (TDAT).
+  Y := Copy(Year, 1, 4);
+  if (Length(Year) >= 10) and (Year[5] = '-') and (Year[8] = '-') and
+    (StrToIntDef(Y, -1) >= 0) then
+  begin
+    M := Copy(Year, 6, 2);
+    D := Copy(Year, 9, 2);
+    AddTextFrame(Dest, Version, 'TYER', Y);
+    AddTextFrame(Dest, Version, 'TDAT', D + M);
+  end
+  else
+    AddTextFrame(Dest, Version, 'TYER', Year);
+end;
+
+function BuildFrames(Version, OldVersion: Byte; const Old: TID3Frames; Info: TAudioInfo): TBytes;
+var
+  Dest: TBytesStream;
+  I: Integer;
+  ID: string;
+begin
+  Dest := TBytesStream.Create;
+  try
+    // 1. Everything we do not edit, unchanged.
+    for I := 0 to High(Old) do
+    begin
+      ID := Old[I].ID;
+      if OldVersion = 2 then
+      begin
+        ID := V22ToV23(ID);
+        if Length(ID) <> 4 then Continue; // v2.2-only frame we cannot convert
+        if IsManagedFrame(ID, Old[I]) then Continue;
+        WriteFrame(Dest, Version, ID, 0, Old[I].Data);
+      end
+      else
+      begin
+        if IsManagedFrame(ID, Old[I]) then Continue;
+        WriteFrame(Dest, Version, ID, Old[I].Flags, Old[I].Raw);
+      end;
+    end;
+    // 2. The edited fields.
+    AddTextFrame(Dest, Version, 'TIT2', Info.Fields[tfTitle]);
+    AddTextFrame(Dest, Version, 'TPE1', Info.Fields[tfArtist]);
+    AddTextFrame(Dest, Version, 'TALB', Info.Fields[tfAlbum]);
+    AddTextFrame(Dest, Version, 'TPE2', Info.Fields[tfAlbumArtist]);
+    AddYearFrames(Dest, Version, Info.Fields[tfYear]);
+    AddTextFrame(Dest, Version, 'TRCK', Info.Fields[tfTrack]);
+    AddTextFrame(Dest, Version, 'TPOS', Info.Fields[tfDisc]);
+    AddTextFrame(Dest, Version, 'TCON', Info.Fields[tfGenre]);
+    AddTextFrame(Dest, Version, 'TCOM', Info.Fields[tfComposer]);
+    AddTextFrame(Dest, Version, 'TBPM', Info.Fields[tfBpm]);
+    AddCommentFrame(Dest, Version, Info.Fields[tfComment]);
+    for I := 0 to High(Info.Pictures) do
+      AddPictureFrame(Dest, Version, Info.Pictures[I]);
+    Result := StreamBytes(Dest);
+  finally
+    Dest.Free;
+  end;
+end;
+
+procedure WriteTagHeader(Dest: TStream; Version: Byte; BodySize: Cardinal);
+begin
+  WriteAscii(Dest, 'ID3');
+  Dest.WriteByte(Version);
+  Dest.WriteByte(0); // revision
+  Dest.WriteByte(0); // flags: no unsync, no extended header, no footer
+  WriteBE32(Dest, ((BodySize shr 21) and $7F) shl 24 or ((BodySize shr 14) and $7F) shl 16 or
+    ((BodySize shr 7) and $7F) shl 8 or (BodySize and $7F));
+end;
+
+{ ---------- ID3v1 ---------- }
+
+procedure PutLatin1(var B: TBytes; P, MaxLen: Integer; const Text: string);
+var
+  U: UnicodeString;
+  I: Integer;
+begin
+  FillChar(B[P], MaxLen, 0);
+  U := UTF8Decode(Text);
+  for I := 1 to Length(U) do
+  begin
+    if I > MaxLen then Break;
+    if Ord(U[I]) <= 255 then B[P + I - 1] := Ord(U[I]) else B[P + I - 1] := Ord('?');
+  end;
+end;
+
+procedure UpdateID3v1(const FileName: string; Info: TAudioInfo);
+var
+  S: TFileStream;
+  B: TBytes;
+  Track, Genre: Integer;
+begin
+  S := TFileStream.Create(FileName, fmOpenReadWrite or fmShareDenyWrite);
+  try
+    if S.Size < 128 then Exit;
+    S.Position := S.Size - 128;
+    B := ReadStreamBytes(S, 128);
+    if (Length(B) < 128) or not BytesAre(B, 0, 'TAG') then Exit;
+    PutLatin1(B, 3, 30, Info.Fields[tfTitle]);
+    PutLatin1(B, 33, 30, Info.Fields[tfArtist]);
+    PutLatin1(B, 63, 30, Info.Fields[tfAlbum]);
+    PutLatin1(B, 93, 4, Copy(Info.Fields[tfYear], 1, 4));
+    Track := StrToIntDef(Copy(Info.Fields[tfTrack], 1, Pos('/', Info.Fields[tfTrack] + '/') - 1), 0);
+    if (Track > 0) and (Track <= 255) then
+    begin
+      PutLatin1(B, 97, 28, Info.Fields[tfComment]);
+      B[125] := 0;
+      B[126] := Track;
+    end
+    else
+      PutLatin1(B, 97, 30, Info.Fields[tfComment]);
+    Genre := ID3GenreIndex(Info.Fields[tfGenre]);
+    if Genre >= 0 then B[127] := Genre
+    else if Info.Fields[tfGenre] = '' then B[127] := 255;
+    S.Position := S.Size - 128;
+    S.WriteBuffer(B[0], 128);
+  finally
+    S.Free;
+  end;
+end;
+
+{ ---------- main ---------- }
+
+procedure WriteMp3Tags(const FileName: string; Info: TAudioInfo);
+var
+  Src, Dst: TFileStream;
+  OldVersion, Version: Byte;
+  Old: TID3Frames;
+  OldTagSize: Int64;
+  Body: TBytes;
+  Padding: Int64;
+  Temp: string;
+begin
+  Src := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  try
+    if not ParseID3v2(Src, OldVersion, Old, OldTagSize) then
+    begin
+      if OldTagSize > 0 then
+        raise Exception.CreateFmt('ID3v2.%d understøttes ikke', [OldVersion]);
+      OldVersion := 0;
+    end;
+    if OldVersion in [3, 4] then Version := OldVersion else Version := 3;
+    Body := BuildFrames(Version, OldVersion, Old, Info);
+
+    if (OldTagSize > 0) and (10 + Int64(Length(Body)) <= OldTagSize) then
+    begin
+      // Fits in the old tag's space: overwrite it in place, the rest is padding.
+      Src.Free;
+      Src := nil;
+      Padding := OldTagSize - 10 - Length(Body);
+      Dst := TFileStream.Create(FileName, fmOpenReadWrite or fmShareDenyWrite);
+      try
+        WriteTagHeader(Dst, Version, Length(Body) + Padding);
+        WriteBytes(Dst, Body);
+        WriteZeros(Dst, Padding);
+      finally
+        Dst.Free;
+      end;
+    end
+    else
+    begin
+      // Too big: write tag + audio to a new file, then swap it in.
+      Temp := TempFileFor(FileName);
+      Dst := TFileStream.Create(Temp, fmCreate);
+      try
+        try
+          WriteTagHeader(Dst, Version, Length(Body) + NewTagPadding);
+          WriteBytes(Dst, Body);
+          WriteZeros(Dst, NewTagPadding);
+          CopyStreamRange(Src, Dst, OldTagSize, Src.Size - OldTagSize);
+        finally
+          Dst.Free;
+        end;
+        FreeAndNil(Src);
+        ReplaceFileWith(Temp, FileName);
+      except
+        DeleteFile(Temp);
+        raise;
+      end;
+    end;
+  finally
+    Src.Free;
+  end;
+  UpdateID3v1(FileName, Info);
+end;
+
+end.
