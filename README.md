@@ -207,6 +207,16 @@ To add a language, add its code in `src\language.pas`, add translations to the J
 | `TidyTag.ico`, `res/logo/tidytag.png` | Program icon |
 | `docs/` | [Feature overview](docs/feature-overview.md) of Tag&Rename and the [list of its features and their state in TidyTag](docs/missing-features.md) |
 
+## License
+Copyright (C) 2026 tristan202
+
+TidyTag is free software: you can redistribute it and/or modify it under the terms of the
+[GNU General Public License version 3](LICENSE) or (at your option) any later version. It is
+distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; see the license for details.
+
+Third-party parts: the Lazarus Component Library (modified LGPL with a static linking exception)
+and the toolbar icons from the Lazarus general_purpose set by Roland Hahn (CC0 1.0).
+
 ## Roadmap
 1. Rating (POPM) and more picture types in the editor
 2. ReplayGain for Ogg Vorbis and Opus without a Windows codec
