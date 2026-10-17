@@ -243,6 +243,12 @@ begin
   begin
     V := Info.Fields[F];
     if (V = '') or (WmNames[F] = '') then Continue;
+    if F = tfCompilation then
+    begin
+      // WMP writes a BOOL (4 bytes)
+      if IsTrueFlag(V) then Put(WmNames[F], AsfBool, TBytes.Create(1, 0, 0, 0));
+      Continue;
+    end;
     if F = tfTrack then
     begin
       Slash := Pos('/', V);

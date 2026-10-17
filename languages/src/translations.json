@@ -5430,5 +5430,69 @@
   "it": "Salva maschera",
   "sv": "Spara masken",
   "es": "Guardar máscara"
+ },
+ "Del af opsamling": {
+  "en": "Part of a compilation",
+  "de": "Teil einer Kompilation",
+  "fr": "Partie d'une compilation",
+  "it": "Parte di una compilation",
+  "sv": "Del av samlingsalbum",
+  "es": "Parte de un recopilatorio"
+ },
+ "Podcast": {
+  "en": "Podcast",
+  "de": "Podcast",
+  "fr": "Podcast",
+  "it": "Podcast",
+  "sv": "Podcast",
+  "es": "Pódcast"
+ },
+ "Indstillinger...": {
+  "en": "Settings...",
+  "de": "Einstellungen...",
+  "fr": "Paramètres...",
+  "it": "Impostazioni...",
+  "sv": "Inställningar...",
+  "es": "Configuración..."
+ },
+ "Alle indstillinger samlet ét sted": {
+  "en": "All settings in one place",
+  "de": "Alle Einstellungen an einem Ort",
+  "fr": "Tous les paramètres au même endroit",
+  "it": "Tutte le impostazioni in un unico posto",
+  "sv": "Alla inställningar på ett ställe",
+  "es": "Toda la configuración en un solo lugar"
+ },
+ "Indstillinger": {
+  "en": "Settings",
+  "de": "Einstellungen",
+  "fr": "Paramètres",
+  "it": "Impostazioni",
+  "sv": "Inställningar",
+  "es": "Configuración"
+ },
+ "Fillisten": {
+  "en": "File list",
+  "de": "Dateiliste",
+  "fr": "Liste des fichiers",
+  "it": "Elenco file",
+  "sv": "Fillistan",
+  "es": "Lista de archivos"
+ },
+ "Omdøbning og web": {
+  "en": "Renaming and web",
+  "de": "Umbenennen und Web",
+  "fr": "Renommage et web",
+  "it": "Rinomina e web",
+  "sv": "Namnbyte och webb",
+  "es": "Renombrado y web"
+ },
+ "Skalér store cover automatisk, når tags gemmes": {
+  "en": "Resize big covers automatically when tags are saved",
+  "de": "Große Cover beim Speichern von Tags automatisch skalieren",
+  "fr": "Redimensionner automatiquement les grandes pochettes à l'enregistrement des tags",
+  "it": "Ridimensiona automaticamente le copertine grandi al salvataggio dei tag",
+  "sv": "Skala om stora omslag automatiskt när taggar sparas",
+  "es": "Redimensionar automáticamente las portadas grandes al guardar etiquetas"
  }
 }

@@ -161,6 +161,7 @@ type
     FActAutoFitAfterScan: TAction;
     FActDeleteFiles: TAction;
     FActAutoResize: TAction;
+    FLanguageMenu, FAlbumArtistMenu: TMenuItem; // radio submenus, kept in step with the dialog
     FTestTargetDir: string; // self-test: target of copy/move instead of a folder dialog
     FAutoYes: Boolean;
     FSyncDir: TSyncDirection;
@@ -247,6 +248,8 @@ type
     procedure RenameActionClick(Sender: TObject);
     procedure DoCopyField(Src, Dst: TTagField; OnlyIfEmpty: Boolean);
     procedure BuildFilterExtras;
+    procedure ChangeLanguage(const Code: string);
+    procedure SyncSettingsMenus;
     procedure MaskEditorClick(Sender: TObject);
     function RenameMaskPreview(const Mask: string): string;
     procedure ActDeleteFolderCoversExecute(Sender: TObject);
@@ -282,6 +285,7 @@ type
     { Developer check: "TagKlon.exe --selftest <folder> <report.txt>" runs the tag, cover
       and rename tools on the files of <folder> (use copies!) without dialogs. }
     procedure RunSelfTest(const ReportFile: string);
+    procedure ActSettingsExecute(Sender: TObject);
   private
     procedure LanguageClick(Sender: TObject);
     procedure ActFolderUpExecute(Sender: TObject);
@@ -359,9 +363,20 @@ implementation
 uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
-  Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage;
+  Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage, Spin, ButtonPanel;
 
 resourcestring
+  rsIndstillingerMenu = 'Indstillinger...';
+  rsIndstillingerMenuHint = 'Alle indstillinger samlet ét sted';
+  rsIndstillingerTitel = 'Indstillinger';
+  rsGenerelt = 'Generelt';
+  rsCoverFane = 'Cover';
+  rsFillisteFane = 'Fillisten';
+  rsOmdoebningOgWeb = 'Omdøbning og web';
+  rsSkalerStoreCoverAutomatisk = 'Skalér store cover automatisk, når tags gemmes';
+  rsStoersteSideSetting = 'Største side (pixel):';
+  rsJpegKvalitetSetting = 'JPEG-kvalitet (1-100):';
+  rsKonverterPngTilJpegSetting = 'Konvertér PNG til JPEG';
   rsRtUdgivelsesdato = '%rt|Udgivelsesdato (hele datoen)';
   rsDbitBitdybde = '%dbit|Bitdybde';
   rsEncKodetAf = '%enc|Kodet af';
@@ -982,7 +997,7 @@ var
     aToken, aKeys, aAbout, aUp, aFav, aNewFolder, aTreeRefresh, aCloseFolders,
     aMoveUp, aMoveDown, aExport, aSwapAT, aSwapAA, aSwapLT, aSwap, aCopyField, aClean,
     aRemoveTags, aCoverIn, aCoverOut, aWords, aSync, aAutoFit, aRandom, aCopyTo, aMoveTo,
-    aDelFolderCover, aResizeFiles, aResizeFolders, aCoverAsFolder: TAction;
+    aDelFolderCover, aResizeFiles, aResizeFolders, aCoverAsFolder, aSettings: TAction;
   CoverPopup: TPopupMenu;
   PM: TMenuItem;
   NameTools: array[TNameTool] of TAction;
@@ -1126,6 +1141,8 @@ begin
   aResizeFiles := NewAction(rsSkalerCoverIFilerne, rsSkalerCoverIFilerneHint, 0, -1, @ActResizeFileCoversExecute);
   aResizeFolders := NewAction(rsSkalerMappeCover, rsSkalerMappeCoverHint, 0, -1, @ActResizeFolderCoversExecute);
   aCoverAsFolder := NewAction(rsBrugFilensCoverSomMappeCover, '', 0, icoSave, @ActCoverAsFolderExecute);
+  aSettings := NewAction(rsIndstillingerMenu, rsIndstillingerMenuHint, ShortCut(VK_O, [ssCtrl, ssAlt]),
+    icoSettings, @ActSettingsExecute);
   FActAutoResize := NewAction(rsSkalerStoreCoverVedGem, rsSkalerStoreCoverVedGemHint, 0, -1, @ActAutoResizeExecute);
   FActAutoResize.AutoCheck := True;
   aCopyTo := NewAction(rsKopierTilMappe, rsKopierTilMappeHint, 0, icoCopy, @ActCopyToExecute);
@@ -1186,6 +1203,7 @@ begin
   RebuildActionsMenu;
   Add(TopMenu, nil); Add(TopMenu, FActUndo);
   TopMenu := Menu(rsIndstillinger);
+  Add(TopMenu, aSettings); Add(TopMenu, nil);
   Add(TopMenu, FActKeepDate); Add(TopMenu, FActAutoResize); AddAlbumArtistMenu(TopMenu); Add(TopMenu, aWords); Add(TopMenu, aToken);
   Add(TopMenu, nil);
   AddLanguageMenu(TopMenu);
@@ -3345,6 +3363,196 @@ begin
   UpdateInlinePreviews;
 end;
 
+procedure TFormMain.SyncSettingsMenus;
+var
+  I: Integer;
+  Cur: string;
+begin
+  if FLanguageMenu <> nil then
+  begin
+    Cur := LanguageSetting;
+    for I := 0 to FLanguageMenu.Count - 1 do
+      if FLanguageMenu[I].Tag < 0 then FLanguageMenu[I].Checked := Cur = ''
+      else FLanguageMenu[I].Checked := Cur = LanguageCodes[FLanguageMenu[I].Tag];
+  end;
+  if FAlbumArtistMenu <> nil then
+    for I := 0 to FAlbumArtistMenu.Count - 1 do
+      FAlbumArtistMenu[I].Checked := FAlbumArtistMenu[I].Tag = Ord(AlbumArtistRule);
+end;
+
+type
+  { Buttons on the settings dialog that open the existing dialogs. }
+  TSettingsButtons = class
+    Main: TFormMain;
+    procedure WordsClick(Sender: TObject);
+    procedure ActionsClick(Sender: TObject);
+    procedure TokenClick(Sender: TObject);
+  end;
+
+procedure TSettingsButtons.WordsClick(Sender: TObject);
+begin
+  Main.ActRenameWordsExecute(nil);
+end;
+
+procedure TSettingsButtons.ActionsClick(Sender: TObject);
+begin
+  Main.ActManageActionsExecute(nil);
+end;
+
+procedure TSettingsButtons.TokenClick(Sender: TObject);
+begin
+  Main.ActDiscogsTokenExecute(nil);
+end;
+
+procedure TFormMain.ActSettingsExecute(Sender: TObject);
+var
+  F: TForm;
+  Pages: TPageControl;
+  Tab: TTabSheet;
+  RLang, RAlbum: TRadioGroup;
+  CKeep, CAuto, CJpeg, CFit, CSub: TCheckBox;
+  ESide, EQual: TSpinEdit;
+  BP: TButtonPanel;
+  Btns: TSettingsButtons;
+  I, Y: Integer;
+  Cur, NewLang: string;
+  R: TAlbumArtistRule;
+
+  function NewTab(const ACaption: string): TTabSheet;
+  begin
+    Result := Pages.AddTabSheet;
+    Result.Caption := ACaption;
+    Y := 10;
+  end;
+
+  function Chk(Parent_: TWinControl; const ACaption: string; Value: Boolean): TCheckBox;
+  begin
+    Result := TCheckBox.Create(F);
+    Result.Parent := Parent_;
+    Result.Caption := ACaption;
+    Result.Checked := Value;
+    Result.Left := F.Scale96ToForm(12);
+    Result.Top := F.Scale96ToForm(Y);
+    Inc(Y, 30);
+  end;
+
+  function Lbl(Parent_: TWinControl; const ACaption: string): TLabel;
+  begin
+    Result := TLabel.Create(F);
+    Result.Parent := Parent_;
+    Result.Caption := ACaption;
+    Result.Left := F.Scale96ToForm(32);
+    Result.Top := F.Scale96ToForm(Y + 3);
+  end;
+
+  function Spin(Parent_: TWinControl; AMin, AMax, Value: Integer): TSpinEdit;
+  begin
+    Result := TSpinEdit.Create(F);
+    Result.Parent := Parent_;
+    Result.MinValue := AMin;
+    Result.MaxValue := AMax;
+    Result.Value := Value;
+    Result.SetBounds(F.Scale96ToForm(260), F.Scale96ToForm(Y), F.Scale96ToForm(90), F.Scale96ToForm(23));
+    Inc(Y, 32);
+  end;
+
+  function Btn(Parent_: TWinControl; const ACaption: string; Handler: TNotifyEvent): TButton;
+  begin
+    Result := TButton.Create(F);
+    Result.Parent := Parent_;
+    Result.Caption := ACaption;
+    Result.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(Y), F.Scale96ToForm(300), F.Scale96ToForm(28));
+    Result.OnClick := Handler;
+    Inc(Y, 38);
+  end;
+
+begin
+  F := TForm.CreateNew(Self);
+  Btns := TSettingsButtons.Create;
+  try
+    Btns.Main := Self;
+    F.Caption := rsIndstillingerTitel;
+    F.BorderStyle := bsDialog;
+    F.Position := poMainFormCenter;
+    F.ClientWidth := F.Scale96ToForm(560);
+    F.ClientHeight := F.Scale96ToForm(430);
+    BP := TButtonPanel.Create(F);
+    BP.Parent := F;
+    BP.ShowButtons := [pbOK, pbCancel];
+    Pages := TPageControl.Create(F);
+    Pages.Parent := F;
+    Pages.Align := alClient;
+
+    // general
+    Tab := NewTab(rsGenerelt);
+    RLang := TRadioGroup.Create(F);
+    RLang.Parent := Tab;
+    RLang.Caption := rsSprogLanguage;
+    RLang.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(8), F.Scale96ToForm(240), F.Scale96ToForm(230));
+    RLang.Items.Add(rsAutomatiskWindowsSprog);
+    for I := 0 to High(LanguageNames) do RLang.Items.Add(LanguageNames[I]);
+    Cur := LanguageSetting;
+    RLang.ItemIndex := 0;
+    for I := 0 to High(LanguageCodes) do
+      if LanguageCodes[I] = Cur then RLang.ItemIndex := I + 1;
+    RAlbum := TRadioGroup.Create(F);
+    RAlbum.Parent := Tab;
+    RAlbum.Caption := rsAlbumkunstnerVedGem;
+    RAlbum.SetBounds(F.Scale96ToForm(264), F.Scale96ToForm(8), F.Scale96ToForm(280), F.Scale96ToForm(130));
+    RAlbum.Items.Add(rsAlbumkunstnerIngen);
+    RAlbum.Items.Add(rsAlbumkunstnerHvisTom);
+    RAlbum.Items.Add(rsAlbumkunstnerAltid);
+    RAlbum.ItemIndex := Ord(AlbumArtistRule);
+    Y := 250;
+    CKeep := Chk(Tab, rsBevarFilernesDatoVedGem, FKeepTimestamp);
+
+    // covers
+    Tab := NewTab(rsCoverFane);
+    CAuto := Chk(Tab, rsSkalerStoreCoverAutomatisk, FActAutoResize.Checked);
+    Lbl(Tab, rsStoersteSideSetting);
+    ESide := Spin(Tab, 50, 5000, GCoverOpt.MaxSide);
+    Lbl(Tab, rsJpegKvalitetSetting);
+    EQual := Spin(Tab, 1, 100, GCoverOpt.Quality);
+    CJpeg := Chk(Tab, rsKonverterPngTilJpegSetting, GCoverOpt.ToJpeg);
+
+    // file list
+    Tab := NewTab(rsFillisteFane);
+    CFit := Chk(Tab, rsTilpasKolonnerEfterMappeskift, FActAutoFitAfterScan.Checked);
+    CSub := Chk(Tab, rsSoegIUndermapper, FActSubfolders.Checked);
+
+    // rename and web
+    Tab := NewTab(rsOmdoebningOgWeb);
+    Btn(Tab, rsOrdudskiftningerMenu, @Btns.WordsClick);
+    Btn(Tab, rsAdministrerHandlinger, @Btns.ActionsClick);
+    Btn(Tab, rsDiscogsTokenMenu, @Btns.TokenClick);
+
+    Pages.ActivePageIndex := 0;
+    if F.ShowModal <> mrOK then Exit;
+
+    // apply
+    R := TAlbumArtistRule(RAlbum.ItemIndex);
+    if R <> AlbumArtistRule then
+    begin
+      FAlbumArtistMenu[Ord(R)].Click; // stores the setting as well
+    end;
+    FKeepTimestamp := CKeep.Checked;
+    FActKeepDate.Checked := FKeepTimestamp;
+    GCoverOpt.MaxSide := ESide.Value;
+    GCoverOpt.Quality := EQual.Value;
+    GCoverOpt.ToJpeg := CJpeg.Checked;
+    FActAutoResize.Checked := CAuto.Checked;
+    ActAutoResizeExecute(nil);
+    FActAutoFitAfterScan.Checked := CFit.Checked;
+    if CSub.Checked <> FActSubfolders.Checked then FActSubfolders.Execute; // rescans
+    SaveSettings;
+    if RLang.ItemIndex <= 0 then NewLang := '' else NewLang := LanguageCodes[RLang.ItemIndex - 1];
+    if NewLang <> LanguageSetting then ChangeLanguage(NewLang);
+  finally
+    Btns.Free;
+    F.Free;
+  end;
+end;
+
 procedure TFormMain.BuildFilterExtras;
 var
   L: TLabel;
@@ -3553,6 +3761,7 @@ begin
   Sub := TMenuItem.Create(ParentItem);
   Sub.Caption := rsAlbumkunstnerVedGem;
   ParentItem.Add(Sub);
+  FAlbumArtistMenu := Sub;
   for R := Low(TAlbumArtistRule) to High(TAlbumArtistRule) do
   begin
     M := TMenuItem.Create(Sub);
@@ -4225,6 +4434,7 @@ begin
   Sub := TMenuItem.Create(ParentItem);
   Sub.Caption := rsSprogLanguage;
   ParentItem.Add(Sub);
+  FLanguageMenu := Sub;
   for I := -1 to High(LanguageCodes) do
   begin
     M := TMenuItem.Create(Sub);
@@ -4250,14 +4460,20 @@ end;
 procedure TFormMain.LanguageClick(Sender: TObject);
 var
   M: TMenuItem;
-  Code, Old: string;
-  P: TProcess;
 begin
   M := Sender as TMenuItem;
-  if M.Tag < 0 then Code := '' else Code := LanguageCodes[M.Tag];
+  M.Checked := True;
+  if M.Tag < 0 then ChangeLanguage('') else ChangeLanguage(LanguageCodes[M.Tag]);
+end;
+
+procedure TFormMain.ChangeLanguage(const Code: string);
+var
+  Old: string;
+  P: TProcess;
+begin
   Old := EffectiveLanguage;
   SetLanguageSetting(Code);
-  M.Checked := True;
+  SyncSettingsMenus;
   if EffectiveLanguage = Old then Exit;
   if MessageDlg(rsSprog, rsSprogetSkiftesNaarTagklonGenstartes, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     Exit;

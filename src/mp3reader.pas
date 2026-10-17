@@ -212,7 +212,13 @@ begin
     else if ID = 'TSOP' then Info.SetField(tfSortArtist, Txt)
     else if ID = 'TSO2' then Info.SetField(tfSortAlbumArtist, Txt)
     else if ID = 'TSOA' then Info.SetField(tfSortAlbum, Txt)
-    else if ID = 'TSOC' then Info.SetField(tfSortComposer, Txt);
+    else if ID = 'TSOC' then Info.SetField(tfSortComposer, Txt)
+    else if ID = 'TCMP' then Info.SetField(tfCompilation, FlagValue(Txt));
+  end
+  else if ID = 'PCST' then
+  begin
+    for P := 0 to High(F) do
+      if F[P] <> 0 then Info.SetField(tfPodcast, '1');
   end
   else if ID = 'TXXX' then
   begin

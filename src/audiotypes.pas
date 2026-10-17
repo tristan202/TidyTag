@@ -10,6 +10,12 @@ uses
   SysUtils;
 
 resourcestring
+  rsAlbumFelt = 'Album';
+  rsDiscFelt = 'Disc';
+  rsGenreFelt = 'Genre';
+  rsKatalognrFelt = 'Katalognr.';
+  rsDelAfOpsamling = 'Del af opsamling';
+  rsPodcast = 'Podcast';
   rsTitel = 'Titel';
   rsKunstner = 'Kunstner';
   rsAar = 'År';
@@ -55,7 +61,9 @@ type
     // further fields (editor tabs "Flere felter", "Sortering", "Sangtekst")
     tfLyrics, tfConductor, tfLyricist, tfOrigArtist, tfRemixer, tfPublisher, tfCatalogNo,
     tfIsrc, tfCopyright, tfEncodedBy, tfUrl, tfGrouping, tfSubtitle, tfMood, tfInitialKey,
-    tfSortTitle, tfSortArtist, tfSortAlbumArtist, tfSortAlbum, tfSortComposer);
+    tfSortTitle, tfSortArtist, tfSortAlbumArtist, tfSortAlbum, tfSortComposer,
+    // flags: '1' = set, '' = not set
+    tfCompilation, tfPodcast);
 
   TTagPicture = record
     PicType: Byte;       // ID3/FLAC picture type, 3 = front cover
@@ -97,21 +105,40 @@ type
   TAudioInfoArray = array of TAudioInfo;
 
 const
-  TagFieldCaptions: array[TTagField] of string = (rsTitel, rsKunstner, 'Album',
-    rsAar, rsSpor, 'Disc', 'Genre', rsKommentar, rsAlbumkunstner, rsKomponist, 'BPM',
+  TagFieldCaptions: array[TTagField] of string = (rsTitel, rsKunstner, rsAlbumFelt,
+    rsAar, rsSpor, rsDiscFelt, rsGenreFelt, rsKommentar, rsAlbumkunstner, rsKomponist, 'BPM',
     rsSangtekst, rsDirigent, rsTekstforfatter, rsOprindeligKunstner, rsRemixetAf,
-    rsPladeselskab, 'Katalognr.', 'ISRC', rsCopyright, rsKodetAf, 'URL', rsGruppering,
+    rsPladeselskab, rsKatalognrFelt, 'ISRC', rsCopyright, rsKodetAf, 'URL', rsGruppering,
     rsUndertitel, rsStemning, rsToneart, rsSorterTitel, rsSorterKunstner,
-    rsSorterAlbumkunstner, rsSorterAlbum, rsSorterKomponist);
+    rsSorterAlbumkunstner, rsSorterAlbum, rsSorterKomponist,
+    rsDelAfOpsamling, rsPodcast);
   PicTypeFrontCover = 3;
 
 { 'image/png' / 'image/jpeg' from the data signature; Fallback if unknown. }
+{ True for '1', 'true', 'yes' and other non-zero numbers: flag fields in files vary. }
+function IsTrueFlag(const S: string): Boolean;
+{ '1' or '' for a flag field. }
+function FlagValue(const S: string): string;
+
 function DetectImageMime(const Data: TBytes; const Fallback: string = 'image/jpeg'): string;
 { Pixel size from PNG/JPEG headers; False if it cannot be determined. }
 function ImageDimensions(const Data: TBytes; out W, H: Integer): Boolean;
 function PictureTypeName(T: Byte): string;
 
 implementation
+
+function IsTrueFlag(const S: string): Boolean;
+var
+  T: string;
+begin
+  T := LowerCase(Trim(S));
+  Result := (T = 'true') or (T = 'yes') or (StrToIntDef(T, 0) <> 0);
+end;
+
+function FlagValue(const S: string): string;
+begin
+  if IsTrueFlag(S) then Result := '1' else Result := '';
+end;
 
 procedure TAudioInfo.SetField(F: TTagField; const V: string; Overwrite: Boolean);
 var

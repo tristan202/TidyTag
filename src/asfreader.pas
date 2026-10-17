@@ -39,7 +39,7 @@ const
     'WM/ModifiedBy', 'WM/Publisher', 'WM/CatalogNo', 'WM/ISRC', '', 'WM/EncodedBy',
     'WM/AuthorURL', 'WM/ContentGroupDescription', 'WM/SubTitle', 'WM/Mood',
     'WM/InitialKey', 'WM/TitleSortOrder', 'WM/ArtistSortOrder', 'WM/AlbumArtistSortOrder',
-    'WM/AlbumSortOrder', 'WM/ComposerSortOrder');
+    'WM/AlbumSortOrder', 'WM/ComposerSortOrder', 'WM/IsCompilation', '');
 
 function GuidBytes(const G: string): TBytes;
 function IsGuid(const B: TBytes; P: SizeInt; const G: string): Boolean;
@@ -174,7 +174,9 @@ begin
   for F := Low(TTagField) to High(TTagField) do
     if (WmNames[F] <> '') and SameText(Name, WmNames[F]) then
     begin
-      if F = tfLyrics then Info.SetField(F, V, False) else Info.AppendField(F, CleanTagText(V));
+      if F = tfCompilation then Info.SetField(F, FlagValue(V))
+      else if F = tfLyrics then Info.SetField(F, V, False)
+      else Info.AppendField(F, CleanTagText(V));
       Exit;
     end;
 end;

@@ -51,7 +51,8 @@ begin
     'LYRICS', 'UNSYNCEDLYRICS', 'CONDUCTOR', 'LYRICIST', 'ORIGINALARTIST', 'ORIGARTIST',
     'REMIXER', 'LABEL', 'ORGANIZATION', 'PUBLISHER', 'CATALOGNUMBER', 'ISRC', 'COPYRIGHT',
     'ENCODEDBY', 'ENCODED-BY', 'WEBSITE', 'URL', 'GROUPING', 'SUBTITLE', 'MOOD', 'KEY',
-    'INITIALKEY', 'TITLESORT', 'ARTISTSORT', 'ALBUMARTISTSORT', 'ALBUMSORT', 'COMPOSERSORT':
+    'INITIALKEY', 'TITLESORT', 'ARTISTSORT', 'ALBUMARTISTSORT', 'ALBUMSORT', 'COMPOSERSORT',
+    'COMPILATION', 'PODCAST':
       Result := True;
   else
     Result := False;
@@ -186,6 +187,8 @@ begin
     AddOne('ALBUMARTISTSORT', Info.Fields[tfSortAlbumArtist]);
     AddOne('ALBUMSORT', Info.Fields[tfSortAlbum]);
     AddOne('COMPOSERSORT', Info.Fields[tfSortComposer]);
+    AddOne('COMPILATION', FlagValue(Info.Fields[tfCompilation]));
+    AddOne('PODCAST', FlagValue(Info.Fields[tfPodcast]));
     AddOne('LYRICS', Info.Fields[tfLyrics]);
     if WithPictures then
       for K := 0 to High(Info.Pictures) do

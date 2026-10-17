@@ -81,7 +81,7 @@ const
     'genre', 'comment', 'albumartist', 'composer', 'bpm', 'lyrics', 'conductor', 'lyricist',
     'origartist', 'remixer', 'label', 'catalog', 'isrc', 'copyright', 'encodedby', 'url',
     'grouping', 'subtitle', 'mood', 'key', 'sorttitle', 'sortartist', 'sortalbumartist',
-    'sortalbum', 'sortcomposer');
+    'sortalbum', 'sortcomposer', 'compilation', 'podcast');
 
 function AllExportColumns: TExportColumns;
 function ExportCellText(Info: TAudioInfo; const C: TExportColumn): string;

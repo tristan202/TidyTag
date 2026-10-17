@@ -129,6 +129,8 @@ begin
       'ALBUMARTISTSORT': Info.SetField(tfSortAlbumArtist, Value);
       'ALBUMSORT': Info.SetField(tfSortAlbum, Value);
       'COMPOSERSORT': Info.SetField(tfSortComposer, Value);
+      'COMPILATION': Info.SetField(tfCompilation, FlagValue(Value));
+      'PODCAST': Info.SetField(tfPodcast, FlagValue(Value));
       'METADATA_BLOCK_PICTURE': ParseBase64Picture(Value, Info);
       'COVERART': Info.HasCover := True; // old, non-standard; not loaded
     end;

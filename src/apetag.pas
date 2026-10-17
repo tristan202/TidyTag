@@ -42,7 +42,8 @@ const
     'Disc', 'Genre', 'Comment', 'Album Artist', 'Composer', 'BPM', 'Lyrics', 'Conductor',
     'Lyricist', 'Original Artist', 'MixArtist', 'Label', 'CatalogNumber', 'ISRC',
     'Copyright', 'EncodedBy', 'Weblink', 'Grouping', 'Subtitle', 'Mood', 'Key',
-    'TitleSort', 'ArtistSort', 'AlbumArtistSort', 'AlbumSort', 'ComposerSort');
+    'TitleSort', 'ArtistSort', 'AlbumArtistSort', 'AlbumSort', 'ComposerSort',
+    'Compilation', 'Podcast');
 
   PicNames: array[0..20] of string = ('Other', 'Png Icon', 'Icon', 'Front', 'Back',
     'Leaflet', 'Media', 'Lead Artist', 'Artist', 'Conductor', 'Band', 'Composer',
@@ -198,7 +199,9 @@ begin
     else if (It.Flags and 6 = 0) and KeyField(It.Key, F) then
     begin
       V := StringReplace(RawUTF8(It.Value, 0, Length(It.Value)), #0, '; ', [rfReplaceAll]);
-      if F = tfLyrics then
+      if F in [tfCompilation, tfPodcast] then
+        Info.SetField(F, FlagValue(V))
+      else if F = tfLyrics then
         Info.SetField(F, V, Info.Fields[F] = '')
       else
         Info.AppendField(F, CleanTagText(V));
@@ -263,7 +266,11 @@ begin
         if (PicKeyType(It.Key) < 0) and not ((It.Flags and 6 = 0) and KeyField(It.Key, F)) then
           AddItem(Items, It.Key, It.Flags and $7, It.Value, Count);
       for F := Low(TTagField) to High(TTagField) do
-        if Info.Fields[F] <> '' then
+        if F in [tfCompilation, tfPodcast] then
+        begin
+          if IsTrueFlag(Info.Fields[F]) then AddItem(Items, FieldKeys[F], 0, UTF8Bytes('1'), Count);
+        end
+        else if Info.Fields[F] <> '' then
           AddItem(Items, FieldKeys[F], 0, UTF8Bytes(Info.Fields[F]), Count);
       FillChar(Used, SizeOf(Used), 0);
       for I := 0 to High(Info.Pictures) do

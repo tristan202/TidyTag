@@ -44,7 +44,8 @@ begin
     (ID = 'TPE3') or (ID = 'TEXT') or (ID = 'TOPE') or (ID = 'TPE4') or (ID = 'TPUB') or
     (ID = 'TSRC') or (ID = 'TCOP') or (ID = 'TENC') or (ID = 'TIT1') or (ID = 'GRP1') or
     (ID = 'TIT3') or (ID = 'TMOO') or (ID = 'TKEY') or (ID = 'TSOT') or (ID = 'TSOP') or
-    (ID = 'TSO2') or (ID = 'TSOA') or (ID = 'TSOC') or (ID = 'USLT') then
+    (ID = 'TSO2') or (ID = 'TSOA') or (ID = 'TSOC') or (ID = 'USLT') or (ID = 'TCMP') or
+    (ID = 'PCST') then
     Exit(True);
   if (ID = 'TXXX') or (ID = 'WXXX') then
   begin
@@ -325,6 +326,9 @@ begin
     AddTextFrame(Dest, Version, 'TSO2', Info.Fields[tfSortAlbumArtist]);
     AddTextFrame(Dest, Version, 'TSOA', Info.Fields[tfSortAlbum]);
     AddTextFrame(Dest, Version, 'TSOC', Info.Fields[tfSortComposer]);
+    // iTunes flags: TCMP "1" = part of a compilation, PCST (4-byte number) = podcast
+    if IsTrueFlag(Info.Fields[tfCompilation]) then AddTextFrame(Dest, Version, 'TCMP', '1');
+    if IsTrueFlag(Info.Fields[tfPodcast]) then WriteFrame(Dest, Version, 'PCST', 0, TBytes.Create(0, 0, 0, 1));
     AddLyricsFrame(Dest, Version, Info.Fields[tfLyrics]);
     for I := 0 to High(Info.Pictures) do
       AddPictureFrame(Dest, Version, Info.Pictures[I]);

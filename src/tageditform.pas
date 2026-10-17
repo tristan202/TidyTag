@@ -96,6 +96,7 @@ type
     FFileAt: TFileAtFunc;
     FOnSaved: TFileSavedEvent;
     FExtraEdits: array[TTagField] of TEdit; // fields on "Flere felter" and "Sortering"
+    FFlagChecks: array[tfCompilation..tfPodcast] of TCheckBox; // flags on "Flere felter"
     procedure BuildExtraFields;
     function FieldEdit(F: TTagField): TCustomEdit;
     procedure LoadFile(Index: Integer);
@@ -210,10 +211,20 @@ const
 
 var
   I: Integer;
+  F: TTagField;
   SortHint: TLabel;
 begin
   for I := 0 to High(MoreLeft) do Row(TabMore, MoreLeft[I], 0, I, 120, 250);
   for I := 0 to High(MoreRight) do Row(TabMore, MoreRight[I], 1, I, 90, 280);
+  for F := Low(FFlagChecks) to High(FFlagChecks) do
+  begin
+    FFlagChecks[F] := TCheckBox.Create(Self);
+    FFlagChecks[F].Parent := TabMore;
+    FFlagChecks[F].Caption := TagFieldCaptions[F];
+    FFlagChecks[F].Left := Scale96ToForm(8 + (Ord(F) - Ord(tfCompilation)) * 390);
+    FFlagChecks[F].Top := Scale96ToForm(10 + Length(MoreLeft) * 32 + 4);
+    FFlagChecks[F].OnClick := @FieldChange;
+  end;
   for I := 0 to High(SortFields) do Row(TabSort, SortFields[I], 0, I, 140, 400);
   SortHint := TLabel.Create(Self);
   SortHint.Parent := TabSort;
@@ -291,6 +302,8 @@ begin
     for F := Low(TTagField) to High(TTagField) do
       if F = tfGenre then
         ComboGenre.Text := FInfo.Fields[F]
+      else if F in [tfCompilation, tfPodcast] then
+        FFlagChecks[F].Checked := IsTrueFlag(FInfo.Fields[F])
       else
         FieldEdit(F).Text := FInfo.Fields[F];
     LabelFile.Caption := ExtractFileName(FilePath);
@@ -396,6 +409,10 @@ begin
   for F := Low(TTagField) to High(TTagField) do
     if F = tfGenre then
       FInfo.Fields[F] := Trim(ComboGenre.Text)
+    else if F in [tfCompilation, tfPodcast] then
+    begin
+      if FFlagChecks[F].Checked then FInfo.Fields[F] := '1' else FInfo.Fields[F] := '';
+    end
     else
       FInfo.Fields[F] := Trim(FieldEdit(F).Text);
   Screen.Cursor := crHourGlass;

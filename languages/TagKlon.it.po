@@ -41,6 +41,34 @@ msgstr "Oggetto ASF non valido"
 msgid "ASF-filen mangler File Properties"
 msgstr "Il file ASF non ha File Properties"
 
+#: audiotypes.rsalbumfelt
+msgctxt "audiotypes.rsalbumfelt"
+msgid "Album"
+msgstr "Album"
+
+#: audiotypes.rsdiscfelt
+msgctxt "audiotypes.rsdiscfelt"
+msgid "Disc"
+msgstr "Disco"
+
+#: audiotypes.rsgenrefelt
+msgctxt "audiotypes.rsgenrefelt"
+msgid "Genre"
+msgstr "Genere"
+
+#: audiotypes.rskatalognrfelt
+msgctxt "audiotypes.rskatalognrfelt"
+msgid "Katalognr."
+msgstr "N. catalogo"
+
+#: audiotypes.rsdelafopsamling
+msgid "Del af opsamling"
+msgstr "Parte di una compilation"
+
+#: audiotypes.rspodcast
+msgid "Podcast"
+msgstr "Podcast"
+
 #: audiotypes.rstitel
 msgctxt "audiotypes.rstitel"
 msgid "Titel"
@@ -541,6 +569,55 @@ msgstr "Editor maschera"
 msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr "Scegli i campi da incollare in %d file:"
+
+#: mainform.rsindstillingermenu
+msgid "Indstillinger..."
+msgstr "Impostazioni..."
+
+#: mainform.rsindstillingermenuhint
+msgid "Alle indstillinger samlet ét sted"
+msgstr "Tutte le impostazioni in un unico posto"
+
+#: mainform.rsindstillingertitel
+msgid "Indstillinger"
+msgstr "Impostazioni"
+
+#: mainform.rsgenerelt
+msgctxt "mainform.rsgenerelt"
+msgid "Generelt"
+msgstr "Generale"
+
+#: mainform.rscoverfane
+msgctxt "mainform.rscoverfane"
+msgid "Cover"
+msgstr "Copertina"
+
+#: mainform.rsfillistefane
+msgid "Fillisten"
+msgstr "Elenco file"
+
+#: mainform.rsomdoebningogweb
+msgid "Omdøbning og web"
+msgstr "Rinomina e web"
+
+#: mainform.rsskalerstorecoverautomatisk
+msgid "Skalér store cover automatisk, når tags gemmes"
+msgstr "Ridimensiona automaticamente le copertine grandi al salvataggio dei tag"
+
+#: mainform.rsstoerstesidesetting
+msgctxt "mainform.rsstoerstesidesetting"
+msgid "Største side (pixel):"
+msgstr "Lato maggiore (pixel):"
+
+#: mainform.rsjpegkvalitetsetting
+msgctxt "mainform.rsjpegkvalitetsetting"
+msgid "JPEG-kvalitet (1-100):"
+msgstr "Qualità JPEG (1-100):"
+
+#: mainform.rskonverterpngtiljpegsetting
+msgctxt "mainform.rskonverterpngtiljpegsetting"
+msgid "Konvertér PNG til JPEG"
+msgstr "Converti PNG in JPEG"
 
 #: mainform.rsrtudgivelsesdato
 msgid "%rt|Udgivelsesdato (hele datoen)"
@@ -2439,14 +2516,17 @@ msgid "Gem masken"
 msgstr "Salva maschera"
 
 #: tooldialogs.rsstoersteside
+msgctxt "tooldialogs.rsstoersteside"
 msgid "Største side (pixel):"
 msgstr "Lato maggiore (pixel):"
 
 #: tooldialogs.rsjpegkvalitet
+msgctxt "tooldialogs.rsjpegkvalitet"
 msgid "JPEG-kvalitet (1-100):"
 msgstr "Qualità JPEG (1-100):"
 
 #: tooldialogs.rskonverterpngtiljpeg
+msgctxt "tooldialogs.rskonverterpngtiljpeg"
 msgid "Konvertér PNG til JPEG"
 msgstr "Converti PNG in JPEG"
 
@@ -3180,6 +3260,7 @@ msgid "fil"
 msgstr ""
 
 #: tformtagedit.pagefields.tabgeneral.caption
+msgctxt "tformtagedit.pagefields.tabgeneral.caption"
 msgid "Generelt"
 msgstr "Generale"
 
@@ -3219,6 +3300,7 @@ msgid "Spor"
 msgstr "Traccia"
 
 #: tformtagedit.pagefields.tabgeneral.labeldisc.caption
+msgctxt "tformtagedit.pagefields.tabgeneral.labeldisc.caption"
 msgid "Disc"
 msgstr "Disco"
 
@@ -3460,6 +3542,7 @@ msgid "Pladeselskab"
 msgstr "Etichetta"
 
 #: tformweblookup.listreleases.item7.caption
+msgctxt "tformweblookup.listreleases.item7.caption"
 msgid "Katalognr."
 msgstr "N. catalogo"
 

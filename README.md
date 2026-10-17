@@ -3,7 +3,23 @@
 Tag-editor og musikorganisator i Lazarus/Free Pascal, inspireret af funktionerne i Tag&Rename 3.9.15
 (se [docs/Funktionsoversigt.md](docs/Funktionsoversigt.md)). Arbejdstitel – navnet kan ændres.
 
-## Status (MVP, trin 12)
+## Status (MVP, trin 13)
+- **B-listen** (se `docs/mangler.md`):
+  - *Tag-værktøjer:* kunstnerværktøjer ("The Beatles" ↔ "Beatles, The", "Carl Nielsen" ↔
+    "Nielsen, Carl"), Mp3-tag-synkronisering ID3v1 ↔ ID3v2, valg af felter ved "Indsæt tag",
+    albumkunstner automatisk ved gem.
+  - *Fillisten:* tagtype-filter i adresselinjen, søgning i et valgt felt eller alle felter med
+    "Hele ord" og "Store/små bogstaver", tilpas kolonnebredder (også efter mappeskift),
+    sekundær sortering, tilfældig rækkefølge.
+  - *Filer:* slet til papirkurven (Delete i fillisten), kopiér/flyt til mappe.
+  - *Cover:* slet mappe-cover, skalér cover i filer og mapper (største side, JPEG-kvalitet,
+    PNG→JPEG), automatisk skalering ved gem, brug filens cover som mappe-cover.
+  - *Omdøbning:* maske-editor med gemte masker; nye variabler %rt (udgivelsesdato), %dbit
+    (bitdybde), %enc (kodet af) og %rnd (tilfældigt tal). %4 giver nu kun årstallet.
+  - *Felter:* "Del af opsamling" og "Podcast" (TCMP/PCST, COMPILATION, cpil/pcst, APE,
+    WM/IsCompilation) som afkrydsningsfelter i tag-editoren.
+  - *Indstillinger...* (Ctrl+Alt+O): sprog, albumkunstner, bevar dato, cover-skalering,
+    fillisten, ordudskiftninger, handlinger og Discogs-token samlet ét sted.
 - **Tag-værktøjer** (Værktøjer > Tag-værktøjer): byt Kunstner/Titel/Album eller to vilkårlige felter,
   kopiér felt til felt (evt. kun hvis tomt), ryd mellemrum, **fjern tags** (Ctrl+Del; MP3, WAV/AIFF og
   APE-familien mister hele tagget, FLAC/Ogg/MP4/WMA får felter og billeder ryddet).
@@ -104,7 +120,7 @@ C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe -Mobjfpc -Sh -Fusrc -FUlib\tools -
 bin\renametest.exe C:\Temp\renametest
 ```
 
-Øvrige værktøjer i `tools\`: `webtest.lpr` (offline-test af MusicBrainz-svar og parring),
+Øvrige værktøjer i `tools\`: `tooltest.lpr` (felt-værktøjer, ID3-synkronisering, papirkurv: `bin	ooltest.exe C:\Temp	t fil.mp3` - lægger én lille testfil i papirkurven), `addtranslations.py` (flet oversættelser ind), `webtest.lpr` (offline-test af MusicBrainz-svar og parring),
 `dgtest.lpr` (live Discogs: `bin\dgtest.exe 249504`), `mbtest.lpr` (live-søgning: `bin\mbtest.exe "Gasolin'" "Gas 5"`), `exporttest.lpr` (eksport/import), `tagset.lpr` (sæt felter:
 `bin\tagset.exe fil.mp3 artist=X album=Y track=1`).
 
@@ -154,6 +170,9 @@ Bemærk: `lazbuild` genbygger ikke en formular, hvis kun `.lfm`-filen er ændret
 | `src/wavreader.pas`, `src/wavwriter.pas` | WAV/AIFF-chunks: lydinfo, ID3-chunk, LIST/INFO |
 | `src/apetag.pas`, `src/apereader.pas` | APEv2-tags; lydinfo for APE/WavPack/Musepack/OptimFROG |
 | `src/asfreader.pas`, `src/asfwriter.pas` | WMA/ASF-header-objekter |
+| `src/id3sync.pas` | ID3v1 ↔ ID3v2-synkronisering |
+| `src/fileops.pas` | Papirkurv, kopiér/flyt filer |
+| `src/coverimage.pas` | Skalering af cover-billeder |
 | `src/fieldtools.pas` | Byt/kopiér felter, ryd mellemrum (planlægning pr. fil) |
 | `src/tagremove.pas` | Fjern tags |
 | `src/tooldialogs.pas` | Dialoger: vælg felter, ordudskiftninger, omdøbningshandlinger |

@@ -291,6 +291,8 @@ begin
            Info.Fields[tfSortAlbumArtist] := 'Kunstnere, Diverse';
            Info.Fields[tfSortAlbum] := 'Ålborg, Album';
            Info.Fields[tfSortComposer] := 'Nielsen, Carl';
+           Info.Fields[tfCompilation] := '1';
+           Info.Fields[tfPodcast] := '1';
            SetPicture(Info, 0);
          end;
       1: SetPicture(Info, 400 * 1024);
@@ -305,6 +307,8 @@ begin
          end;
     end;
     for F := Low(TTagField) to High(TTagField) do Expected[F] := Info.Fields[F];
+    // WMA has no podcast flag
+    if SameText(ExtractFileExt(FileName), '.wma') then Expected[tfPodcast] := '';
     Pics := Copy(Info.Pictures);
     try
       WriteAudioTags(Info, True);

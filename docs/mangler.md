@@ -56,7 +56,7 @@ dagligt brug, **B** = nyttigt, **C** = sjældent/nichepræget, **–** = droppes
 ## Tag-editor
 | Funktion | Prioritet | Bemærkning |
 |---|---|---|
-| "Del af opsamling" (TCMP/cpil) og "Podcast"-markering | B | |
+| "Del af opsamling" (TCMP/cpil) og "Podcast"-markering | **Færdig** | |
 | Rediger tag i alle valgte filer (Ctrl+F5) | – | Findes: Rediger flere filer |
 
 ## Indsæt tag
@@ -67,7 +67,7 @@ dagligt brug, **B** = nyttigt, **C** = sjældent/nichepræget, **–** = droppes
 ## Indstillinger (dialog)
 | Funktion | Prioritet | Bemærkning |
 |---|---|---|
-| Samlet indstillingsdialog | B | Nu spredt i menuer |
+| Samlet indstillingsdialog | **Færdig** | Nu spredt i menuer |
 | ID3v2: gem altid i Unicode / ASCII hvis muligt | C | Vi gemmer UTF-16 ved behov |
 | Kopiér Kunstner → Albumkunstner (hvis tom / altid) | **Færdig** | |
 | Afspiller pr. filtype | C | Vi bruger Windows' standardprogram |

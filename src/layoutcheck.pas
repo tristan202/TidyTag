@@ -222,6 +222,8 @@ begin
     EditMask(rsMaskeEditor, MaskText, ['%1|' + TagFieldCaptions[tfArtist], '%2|' + TagFieldCaptions[tfTitle],
       '%3|' + TagFieldCaptions[tfAlbum], '%aa|' + TagFieldCaptions[tfAlbumArtist], '%rt|Udgivelsesdato'],
       @Insp.Preview, 'LayoutCheckMasks');
+    Arm;
+    FormMain.ActSettingsExecute(nil);
   finally
     Insp.Free;
   end;

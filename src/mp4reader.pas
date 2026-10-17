@@ -163,6 +163,11 @@ begin
     Info.SetField(tfDisc, NumPair)
   else if AtomIs(B, ItemP, 'gnre') then
     Info.SetField(tfGenre, ID3GenreName(BE16(B, DP) - 1), False)
+  else if AtomIs(B, ItemP, 'cpil') or AtomIs(B, ItemP, 'pcst') then
+  begin
+    if (DL > 0) and (B[DP] <> 0) then
+      if AtomIs(B, ItemP, 'cpil') then Info.SetField(tfCompilation, '1') else Info.SetField(tfPodcast, '1');
+  end
   else if AtomIs(B, ItemP, 'tmpo') then
   begin
     if BE16(B, DP) > 0 then Info.SetField(tfBpm, IntToStr(BE16(B, DP)));

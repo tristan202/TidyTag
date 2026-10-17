@@ -247,9 +247,9 @@ end;
 
 function IsManagedItem(Name: Cardinal): Boolean;
 const
-  Managed: array[0..20] of string = ('@nam', '@ART', '@alb', '@day', '@gen', 'gnre',
+  Managed: array[0..22] of string = ('@nam', '@ART', '@alb', '@day', '@gen', 'gnre',
     '@cmt', 'aART', '@wrt', 'trkn', 'disk', 'tmpo', 'covr', '@lyr', 'cprt', '@grp',
-    'sonm', 'soar', 'soaa', 'soal', 'soco');
+    'sonm', 'soar', 'soaa', 'soal', 'soco', 'cpil', 'pcst');
 var
   N: string;
 begin
@@ -402,6 +402,9 @@ begin
       S.Free;
     end;
   end;
+  // flags: one byte, data type 21 (integer)
+  if IsTrueFlag(Info.Fields[tfCompilation]) then Ilst.Add(ItemAtom('cpil', [DataAtom(21, TBytes.Create(1))]));
+  if IsTrueFlag(Info.Fields[tfPodcast]) then Ilst.Add(ItemAtom('pcst', [DataAtom(21, TBytes.Create(1))]));
   if Length(Info.Pictures) > 0 then
   begin
     Covers := nil;
