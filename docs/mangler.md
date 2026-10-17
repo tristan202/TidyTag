@@ -38,10 +38,10 @@ dagligt brug, **B** = nyttigt, **C** = sjældent/nichepræget, **–** = droppes
 ## Fil-liste og visning
 | Funktion | Prioritet | Bemærkning |
 |---|---|---|
-| Visningstilstand: vis kun filer med ID3v2 / WMA / Ogg-Flac / MP4 / APE | B | Filter på tagtype |
+| Visningstilstand: vis kun filer med ID3v2 / WMA / Ogg-Flac / MP4 / APE | **Færdig** | Filter på tagtype |
 | Flad filliste (alle undermapper) | – | Findes: "Søg i undermapper" |
-| Søg: i valgte felter, helt ord, store/små bogstaver, find alle, tæl | B | Vi har et simpelt filter |
-| Kolonner: autotilpas bredde (også efter mappeskift), sekundær sortering, tilfældig rækkefølge | B | |
+| Søg: i valgte felter, helt ord, store/små bogstaver, find alle, tæl | **Færdig** | Vi har et simpelt filter |
+| Kolonner: autotilpas bredde (også efter mappeskift), sekundær sortering, tilfældig rækkefølge | **Færdig** | |
 | Farver: marker lav bitrate, vis "mangler ID3v1", skjul filtypenavne, gitterlinjer | C | |
 | Udvid/fold alle mapper, "afspil filer i mappe" fra mappemenuen | C | |
 | Historik-menu for mapper | C | Adresselinjen har historik |

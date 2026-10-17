@@ -524,6 +524,47 @@ msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr ""
 
+#: mainform.rsheleord
+msgid "Hele ord"
+msgstr ""
+
+#: mainform.rsstoresmaabogstaver
+msgid "Store/små bogstaver"
+msgstr ""
+
+#: mainform.rstagtype
+msgid "Tagtype:"
+msgstr ""
+
+#: mainform.rsalletagtyper
+msgctxt "mainform.rsalletagtyper"
+msgid "Alle"
+msgstr ""
+
+#: mainform.rsingentagsfilter
+msgid "Ingen tags"
+msgstr ""
+
+#: mainform.rstilpaskolonnebredder
+msgid "Tilpas kolonnebredder"
+msgstr ""
+
+#: mainform.rstilpaskolonnebredderhint
+msgid "Gør kolonnerne lige så brede som deres indhold"
+msgstr ""
+
+#: mainform.rstilpaskolonnereftermappeskift
+msgid "Tilpas kolonner efter mappeskift"
+msgstr ""
+
+#: mainform.rstilfaeldigraekkefoelge
+msgid "Tilfældig rækkefølge"
+msgstr ""
+
+#: mainform.rstilfaeldigraekkefoelgehint
+msgid "Bland filerne i listen (fx før nummerering eller en playliste)"
+msgstr ""
+
 #: mainform.rskunstnervaerktoejer
 msgid "Kunstner-værktøjer"
 msgstr ""

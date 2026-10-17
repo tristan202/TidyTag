@@ -5006,5 +5006,77 @@
   "it": "Campi: titolo, artista, album, anno, commento, traccia e genere. ID3v1 contiene solo 30 caratteri per campo e solo lettere dell'Europa occidentale.",
   "sv": "Fält: titel, artist, album, år, kommentar, spår och genre. ID3v1 rymmer bara 30 tecken per fält och bara västeuropeiska bokstäver.",
   "es": "Campos: título, artista, álbum, año, comentario, pista y género. ID3v1 solo admite 30 caracteres por campo y solo letras de Europa occidental."
+ },
+ "Hele ord": {
+  "en": "Whole words",
+  "de": "Ganze Wörter",
+  "fr": "Mots entiers",
+  "it": "Parole intere",
+  "sv": "Hela ord",
+  "es": "Palabras completas"
+ },
+ "Store/små bogstaver": {
+  "en": "Match case",
+  "de": "Groß/klein",
+  "fr": "Respecter la casse",
+  "it": "Maiuscole/minuscole",
+  "sv": "Skiftläge",
+  "es": "Mayús./minús."
+ },
+ "Tagtype:": {
+  "en": "Tag type:",
+  "de": "Tag-Typ:",
+  "fr": "Type de tag :",
+  "it": "Tipo di tag:",
+  "sv": "Taggtyp:",
+  "es": "Tipo de etiqueta:"
+ },
+ "Ingen tags": {
+  "en": "No tags",
+  "de": "Keine Tags",
+  "fr": "Aucun tag",
+  "it": "Nessun tag",
+  "sv": "Inga taggar",
+  "es": "Sin etiquetas"
+ },
+ "Tilpas kolonnebredder": {
+  "en": "Auto-fit column widths",
+  "de": "Spaltenbreiten anpassen",
+  "fr": "Ajuster la largeur des colonnes",
+  "it": "Adatta larghezza colonne",
+  "sv": "Anpassa kolumnbredder",
+  "es": "Ajustar ancho de columnas"
+ },
+ "Gør kolonnerne lige så brede som deres indhold": {
+  "en": "Make the columns as wide as their contents",
+  "de": "Spalten so breit wie ihren Inhalt machen",
+  "fr": "Rendre les colonnes aussi larges que leur contenu",
+  "it": "Rendi le colonne larghe quanto il loro contenuto",
+  "sv": "Gör kolumnerna lika breda som innehållet",
+  "es": "Hacer las columnas tan anchas como su contenido"
+ },
+ "Tilpas kolonner efter mappeskift": {
+  "en": "Auto-fit columns after changing folder",
+  "de": "Spalten nach Ordnerwechsel anpassen",
+  "fr": "Ajuster les colonnes après changement de dossier",
+  "it": "Adatta le colonne dopo il cambio cartella",
+  "sv": "Anpassa kolumner efter mappbyte",
+  "es": "Ajustar columnas al cambiar de carpeta"
+ },
+ "Tilfældig rækkefølge": {
+  "en": "Random order",
+  "de": "Zufällige Reihenfolge",
+  "fr": "Ordre aléatoire",
+  "it": "Ordine casuale",
+  "sv": "Slumpmässig ordning",
+  "es": "Orden aleatorio"
+ },
+ "Bland filerne i listen (fx før nummerering eller en playliste)": {
+  "en": "Shuffle the files in the list (e.g. before numbering or a playlist)",
+  "de": "Dateien in der Liste mischen (z. B. vor dem Nummerieren oder einer Wiedergabeliste)",
+  "fr": "Mélanger les fichiers de la liste (p. ex. avant la numérotation ou une liste de lecture)",
+  "it": "Mescola i file dell'elenco (es. prima della numerazione o di una playlist)",
+  "sv": "Blanda filerna i listan (t.ex. före numrering eller en spellista)",
+  "es": "Mezclar los archivos de la lista (p. ej. antes de numerar o de una lista de reproducción)"
  }
 }

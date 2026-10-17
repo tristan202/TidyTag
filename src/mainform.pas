@@ -158,6 +158,7 @@ type
     FCopyOnlyEmpty: Boolean;
     FActionsMenu: TMenuItem;
     FActManageActions: TAction;
+    FActAutoFitAfterScan: TAction;
     FAutoYes: Boolean;
     FSyncDir: TSyncDirection;
     FSyncExisting: TSyncExisting;
@@ -167,7 +168,12 @@ type
     FKeepTimestamp: Boolean;
     FUndoLog: TRenameLog;
     FFilterText: string;
-    FFilterField: Integer;
+    FFilterField: Integer;     // 0 = file name, 1.. = tag field + 1, last = all fields
+    FTagTypeFilter: Integer;   // index into TagTypeTokens, 0 = all
+    FSort2Column: Integer;     // previous sort column, decides ties
+    FSort2Descending: Boolean;
+    CheckFilterWhole, CheckFilterCase: TCheckBox;
+    ComboTagType: TComboBox;
     FLoading: Boolean;
     FVarsTarget: TComboBox;
     FClip: TFieldValues;
@@ -237,6 +243,12 @@ type
     procedure RebuildActionsMenu;
     procedure RenameActionClick(Sender: TObject);
     procedure DoCopyField(Src, Dst: TTagField; OnlyIfEmpty: Boolean);
+    procedure BuildFilterExtras;
+    procedure FilterOptionChange(Sender: TObject);
+    procedure ActAutoFitExecute(Sender: TObject);
+    procedure ActAutoFitAfterScanExecute(Sender: TObject);
+    procedure ActRandomOrderExecute(Sender: TObject);
+    procedure AutoFitColumns;
     procedure ActNameToolExecute(Sender: TObject);
     procedure RunNameTool(Tool: TNameTool);
     procedure ActID3SyncExecute(Sender: TObject);
@@ -330,9 +342,19 @@ implementation
 uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
-  Language, Process, TagRemove, ToolDialogs;
+  Math, Language, Process, TagRemove, ToolDialogs;
 
 resourcestring
+  rsHeleOrd = 'Hele ord';
+  rsStoreSmaaBogstaver = 'Store/små bogstaver';
+  rsTagtype = 'Tagtype:';
+  rsAlleTagtyper = 'Alle';
+  rsIngenTagsFilter = 'Ingen tags';
+  rsTilpasKolonnebredder = 'Tilpas kolonnebredder';
+  rsTilpasKolonnebredderHint = 'Gør kolonnerne lige så brede som deres indhold';
+  rsTilpasKolonnerEfterMappeskift = 'Tilpas kolonner efter mappeskift';
+  rsTilfaeldigRaekkefoelge = 'Tilfældig rækkefølge';
+  rsTilfaeldigRaekkefoelgeHint = 'Bland filerne i listen (fx før nummerering eller en playliste)';
   rsKunstnerVaerktoejer = 'Kunstner-værktøjer';
   rsFjernTheForrest = 'Fjern "The" forrest i Kunstner';
   rsTheArtistTilArtistThe = '"The Artist" → "Artist, The"';
@@ -649,8 +671,8 @@ const
     rsLbPladeselskab, rsDSpringOver,
     '-|', rsBindestreg, rsMappeniveau, rsEksempelSporKunstnerTitel);
 
-  FilterFieldNames: array[0..7] of string = (rsFilnavn2, rsTitel2, rsKunstner2, 'Album', rsAar2,
-    'Genre', rsKommentar2, rsAlleFelter);
+  TagTypeTokens: array[0..8] of string = ('', 'ID3v2', 'ID3v1', 'APE', 'Vorbis', 'MP4', 'ASF',
+    'RIFF INFO', '-');
 
 var
   Columns: array of TColumnDef;
@@ -746,10 +768,21 @@ begin
   else
     Result := UTF8CompareText(SortForm.CellText(A, SortForm.FSortColumn),
       SortForm.CellText(B, SortForm.FSortColumn));
-  if Result = 0 then // stable, predictable order: folder, then file name
-    Result := UTF8CompareText(A.FileName, B.FileName)
-  else if SortForm.FSortDescending then
-    Result := -Result;
+  if SortForm.FSortDescending then Result := -Result;
+  // ties: the previous sort column, then folder and file name
+  if (Result = 0) and (SortForm.FSort2Column >= 0) and (SortForm.FSort2Column <> SortForm.FSortColumn) then
+  begin
+    Result := UTF8CompareText(SortForm.CellText(A, SortForm.FSort2Column),
+      SortForm.CellText(B, SortForm.FSort2Column));
+    if Columns[SortForm.FSort2Column].Numeric then
+    begin
+      NA := NumericValue(A, Columns[SortForm.FSort2Column]);
+      NB := NumericValue(B, Columns[SortForm.FSort2Column]);
+      if NA < NB then Result := -1 else if NA > NB then Result := 1 else Result := 0;
+    end;
+    if SortForm.FSort2Descending then Result := -Result;
+  end;
+  if Result = 0 then Result := UTF8CompareText(A.FileName, B.FileName);
 end;
 
 function FormatSize(Bytes: Int64): string;
@@ -787,6 +820,7 @@ procedure TFormMain.FormCreate(Sender: TObject);
 var
   S: string;
   I: Integer;
+  F: TTagField;
 begin
   FItems := TFPList.Create;
   FView := TFPList.Create;
@@ -798,8 +832,12 @@ begin
     BuildActionsAndMenus;
     DefineColumns;
     SetupColumns;
-    for S in FilterFieldNames do ComboFilterField.Items.Add(S);
+    ComboFilterField.Items.Add(rsFilnavn2);
+    for F := Low(TTagField) to High(TTagField) do ComboFilterField.Items.Add(TagFieldCaptions[F]);
+    ComboFilterField.Items.Add(rsAlleFelter);
     ComboFilterField.ItemIndex := 0;
+    ComboFilterField.DropDownCount := 20;
+    BuildFilterExtras;
     ComboMultiGenre.Items.BeginUpdate;
     try
       for I := 0 to ID3GenreCount - 1 do
@@ -880,7 +918,7 @@ var
     aPlChecked, aPlAll, aTabRename, aTabMulti, aTabF2T, aRenameDlg, aF2TDlg, aTracks, aWeb,
     aToken, aKeys, aAbout, aUp, aFav, aNewFolder, aTreeRefresh, aCloseFolders,
     aMoveUp, aMoveDown, aExport, aSwapAT, aSwapAA, aSwapLT, aSwap, aCopyField, aClean,
-    aRemoveTags, aCoverIn, aCoverOut, aWords, aSync: TAction;
+    aRemoveTags, aCoverIn, aCoverOut, aWords, aSync, aAutoFit, aRandom: TAction;
   NameTools: array[TNameTool] of TAction;
   NT: TNameTool;
   TopMenu, SubMenu: TMenuItem;
@@ -935,6 +973,7 @@ var
   end;
 
 begin
+  FSort2Column := -1;
   FSyncDir := sdV1ToV2;
   FSyncExisting := seBlankOnly;
   FSwapA := tfArtist;
@@ -1017,6 +1056,10 @@ begin
   NameTools[ntSurnameFirstToName] := NewAction(rsEfternavnFornavnTil, '', 0, -1, @ActNameToolExecute);
   for NT := Low(TNameTool) to High(TNameTool) do NameTools[NT].Tag := Ord(NT);
   aSync := NewAction(rsMpTagSynkroniseringMenu, rsMpTagSynkroniseringHint, 0, -1, @ActID3SyncExecute);
+  aAutoFit := NewAction(rsTilpasKolonnebredder, rsTilpasKolonnebredderHint, 0, -1, @ActAutoFitExecute);
+  FActAutoFitAfterScan := NewAction(rsTilpasKolonnerEfterMappeskift, '', 0, -1, @ActAutoFitAfterScanExecute);
+  FActAutoFitAfterScan.AutoCheck := True;
+  aRandom := NewAction(rsTilfaeldigRaekkefoelge, rsTilfaeldigRaekkefoelgeHint, 0, -1, @ActRandomOrderExecute);
   FActToolsPanel.AutoCheck := True;
   FActFolders.AutoCheck := True;
   FActAddress.AutoCheck := True;
@@ -1036,7 +1079,9 @@ begin
   Add(TopMenu, nil); Add(TopMenu, aMoveUp); Add(TopMenu, aMoveDown); Add(TopMenu, nil); Add(TopMenu, aFind);
   TopMenu := Menu(rsVis);
   Add(TopMenu, FActToolsPanel); Add(TopMenu, FActFolders); Add(TopMenu, FActAddress); Add(TopMenu, FActFilter);
-  Add(TopMenu, nil); Add(TopMenu, FActSubfolders); Add(TopMenu, nil); Add(TopMenu, aRefresh);
+  Add(TopMenu, nil); Add(TopMenu, FActSubfolders); Add(TopMenu, nil);
+  Add(TopMenu, aAutoFit); Add(TopMenu, FActAutoFitAfterScan); Add(TopMenu, aRandom); Add(TopMenu, nil);
+  Add(TopMenu, aRefresh);
   TopMenu := Menu(rsPlayliste);
   Add(TopMenu, aPlChecked); Add(TopMenu, aPlAll);
   TopMenu := Menu(rsVaerKtoejer);
@@ -1123,25 +1168,61 @@ begin
   if (I >= 0) and (I < FView.Count) then Result := Item(I);
 end;
 
+function IsWordCharW(C: WideChar): Boolean;
+begin
+  Result := (WideUpperCase(C) <> WideLowerCase(C)) or ((C >= '0') and (C <= '9'));
+end;
+
+{ Needle in Hay; whole words only when Whole (letters and digits form words). }
+function ContainsText(const Hay, Needle: UnicodeString; Whole: Boolean): Boolean;
+var
+  P, Start: Integer;
+begin
+  Start := 1;
+  repeat
+    P := Pos(Needle, Copy(Hay, Start, MaxInt));
+    if P = 0 then Exit(False);
+    P := P + Start - 1;
+    if not Whole or (((P = 1) or not IsWordCharW(Hay[P - 1])) and
+      ((P + Length(Needle) > Length(Hay)) or not IsWordCharW(Hay[P + Length(Needle)]))) then
+      Exit(True);
+    Start := P + 1;
+  until False;
+end;
+
 function TFormMain.MatchesFilter(Info: TAudioInfo): Boolean;
 var
   Hay: string;
   F: TTagField;
+  H, N: UnicodeString;
 begin
+  if FTagTypeFilter > 0 then
+  begin
+    if TagTypeTokens[FTagTypeFilter] = '-' then
+    begin
+      if (Info.TagTypes <> '') or (Info.Error <> '') then Exit(False);
+    end
+    else if Pos(TagTypeTokens[FTagTypeFilter], Info.TagTypes) = 0 then
+      Exit(False);
+  end;
   if FFilterText = '' then Exit(True);
-  case FFilterField of
-    0: Hay := ExtractFileName(Info.FileName);
-    1: Hay := Info.Fields[tfTitle];
-    2: Hay := Info.Fields[tfArtist];
-    3: Hay := Info.Fields[tfAlbum];
-    4: Hay := Info.Fields[tfYear];
-    5: Hay := Info.Fields[tfGenre];
-    6: Hay := Info.Fields[tfComment];
+  if FFilterField = 0 then
+    Hay := ExtractFileName(Info.FileName)
+  else if FFilterField <= Ord(High(TTagField)) + 1 then
+    Hay := Info.Fields[TTagField(FFilterField - 1)]
   else
+  begin
     Hay := ExtractFileName(Info.FileName);
     for F := Low(TTagField) to High(TTagField) do Hay := Hay + #1 + Info.Fields[F];
   end;
-  Result := Pos(FFilterText, UTF8LowerCase(Hay)) > 0;
+  H := UTF8Decode(Hay);
+  N := UTF8Decode(FFilterText);
+  if not CheckFilterCase.Checked then
+  begin
+    H := WideLowerCase(H);
+    N := WideLowerCase(N);
+  end;
+  Result := ContainsText(H, N, CheckFilterWhole.Checked);
 end;
 
 procedure TFormMain.RebuildView;
@@ -1201,6 +1282,9 @@ begin
     FSortDescending := not FSortDescending
   else
   begin
+    // the old order decides ties ("second sort column")
+    FSort2Column := FSortColumn;
+    FSort2Descending := FSortDescending;
     FSortColumn := Column.Index;
     FSortDescending := False;
   end;
@@ -1560,6 +1644,7 @@ begin
     FreeAndNil(FScanner);
     TimerPoll.Enabled := False;
     SortItems;
+    if FActAutoFitAfterScan.Checked then AutoFitColumns;
     SelectionChanged;
   end
   else
@@ -2349,7 +2434,7 @@ end;
 
 procedure TFormMain.ButtonFilterApplyClick(Sender: TObject);
 begin
-  FFilterText := UTF8LowerCase(Trim(EditFilter.Text));
+  FFilterText := Trim(EditFilter.Text);
   FFilterField := ComboFilterField.ItemIndex;
   RebuildView;
 end;
@@ -2794,6 +2879,121 @@ begin
     rsEnterDobbeltklikRedigerTagFor, mtInformation, [mbOK], 0);
 end;
 
+procedure TFormMain.BuildFilterExtras;
+var
+  L: TLabel;
+  X, I: Integer;
+  Bmp: TBitmap;
+
+  function TextW(const T: string): Integer;
+  begin
+    Result := Bmp.Canvas.TextWidth(T);
+  end;
+
+  function Check(const Caption: string): TCheckBox;
+  begin
+    Result := TCheckBox.Create(Self);
+    Result.Parent := PanelFilter;
+    Result.Caption := Caption;
+    Result.Left := X;
+    Result.Top := ButtonShowAll.Top + Scale96ToForm(3);
+    Result.OnClick := @FilterOptionChange;
+    X := X + TextW(Caption) + Scale96ToForm(32);
+  end;
+
+begin
+  Bmp := TBitmap.Create;
+  try
+    Bmp.Canvas.Font.Assign(PanelFilter.Font);
+    // filter bar: narrower text box, then the two options after the buttons
+    EditFilter.Width := Scale96ToForm(200);
+    ButtonFilterApply.Left := EditFilter.Left + EditFilter.Width + Scale96ToForm(8);
+    ButtonHideSelected.Left := ButtonFilterApply.Left + ButtonFilterApply.Width + Scale96ToForm(6);
+    ButtonShowAll.Left := ButtonHideSelected.Left + ButtonHideSelected.Width + Scale96ToForm(6);
+    X := ButtonShowAll.Left + ButtonShowAll.Width + Scale96ToForm(14);
+    CheckFilterWhole := Check(rsHeleOrd);
+    CheckFilterCase := Check(rsStoreSmaaBogstaver);
+    // tag type: in the address bar, which has room to the right
+    X := ComboAddress.Left + ComboAddress.Width + Scale96ToForm(16);
+    L := TLabel.Create(Self);
+    L.Parent := PanelAddress;
+    L.Caption := rsTagtype;
+    L.Left := X;
+    L.Top := LabelAddress.Top;
+    ComboTagType := TComboBox.Create(Self);
+    ComboTagType.Parent := PanelAddress;
+    ComboTagType.Style := csDropDownList;
+    ComboTagType.Left := X + TextW(rsTagtype) + Scale96ToForm(8);
+    ComboTagType.Top := ComboAddress.Top;
+    ComboTagType.Width := Scale96ToForm(120);
+    ComboTagType.Items.Add(rsAlleTagtyper);
+    for I := 1 to High(TagTypeTokens) - 1 do ComboTagType.Items.Add(TagTypeTokens[I]);
+    ComboTagType.Items.Add(rsIngenTagsFilter);
+    ComboTagType.ItemIndex := 0;
+    ComboTagType.OnChange := @FilterOptionChange;
+  finally
+    Bmp.Free;
+  end;
+end;
+
+procedure TFormMain.FilterOptionChange(Sender: TObject);
+begin
+  FTagTypeFilter := ComboTagType.ItemIndex;
+  if FLoading then Exit;
+  RebuildView;
+end;
+
+procedure TFormMain.AutoFitColumns;
+var
+  C, I, W, Best, Rows: Integer;
+  Bmp: TBitmap;
+begin
+  if FileList.Columns.Count = 0 then Exit;
+  Bmp := TBitmap.Create;
+  try
+    Bmp.Canvas.Font.Assign(FileList.Font);
+    Rows := Min(FView.Count, 1000); // enough to judge the width, quick for big lists
+    for C := 1 to FileList.Columns.Count - 1 do // column 0 is the check mark
+    begin
+      Best := Bmp.Canvas.TextWidth(FileList.Columns[C].Caption) + Scale96ToForm(24);
+      for I := 0 to Rows - 1 do
+      begin
+        W := Bmp.Canvas.TextWidth(CellText(Item(I), C)) + Scale96ToForm(16);
+        if W > Best then Best := W;
+      end;
+      FileList.Columns[C].Width := Min(Best, Scale96ToForm(450));
+    end;
+  finally
+    Bmp.Free;
+  end;
+end;
+
+procedure TFormMain.ActAutoFitExecute(Sender: TObject);
+begin
+  AutoFitColumns;
+end;
+
+procedure TFormMain.ActAutoFitAfterScanExecute(Sender: TObject);
+begin
+  if FActAutoFitAfterScan.Checked then AutoFitColumns;
+end;
+
+procedure TFormMain.ActRandomOrderExecute(Sender: TObject);
+var
+  I, J: Integer;
+begin
+  Randomize;
+  for I := FItems.Count - 1 downto 1 do
+  begin
+    J := Random(I + 1);
+    FItems.Exchange(I, J);
+  end;
+  FSortColumn := -1; // manual order until a column is clicked
+  FSort2Column := -1;
+  RebuildView;
+  SetMessage(rsManuelRaekkefoelgeKlikPaaEn);
+end;
+
 procedure TFormMain.ActNameToolExecute(Sender: TObject);
 begin
   RunNameTool(TNameTool((Sender as TComponent).Tag));
@@ -3011,6 +3211,26 @@ begin
     FAutoYes := True;
     for I := 0 to FItems.Count - 1 do TAudioInfo(FItems[I]).Checked := True;
     Dump('start');
+    // filter: text in all fields, whole words, tag type
+    ComboFilterField.ItemIndex := ComboFilterField.Items.Count - 1;
+    EditFilter.Text := 'rocaz';
+    ButtonFilterApplyClick(nil);
+    FAutoLog.Add(Format('  filter "rocaz" i alle felter: %d filer', [FView.Count]));
+    CheckFilterWhole.Checked := True;
+    ButtonFilterApplyClick(nil);
+    FAutoLog.Add(Format('  ... kun hele ord: %d filer', [FView.Count]));
+    CheckFilterWhole.Checked := False;
+    EditFilter.Text := '';
+    ButtonFilterApplyClick(nil);
+    ComboTagType.ItemIndex := 1; // ID3v2
+    FilterOptionChange(nil);
+    FAutoLog.Add(Format('  tagtype ID3v2: %d filer', [FView.Count]));
+    ComboTagType.ItemIndex := ComboTagType.Items.Count - 1; // no tags
+    FilterOptionChange(nil);
+    FAutoLog.Add(Format('  ingen tags: %d filer', [FView.Count]));
+    ComboTagType.ItemIndex := 0;
+    FilterOptionChange(nil);
+    AutoFitColumns;
     DoCopyField(tfArtist, tfAlbumArtist, True);
     Dump('kopier kunstner -> albumkunstner (kun tomme)');
     SwapFields(tfAlbum, tfTitle);
@@ -3650,6 +3870,9 @@ begin
   try
     Start := Ini.ReadString('Main', 'LastFolder', '');
     FActSubfolders.Checked := Ini.ReadBool('Main', 'Subfolders', False);
+    FActAutoFitAfterScan.Checked := Ini.ReadBool('View', 'AutoFitColumns', False);
+    CheckFilterWhole.Checked := Ini.ReadBool('View', 'FilterWholeWord', False);
+    CheckFilterCase.Checked := Ini.ReadBool('View', 'FilterMatchCase', False);
     FKeepTimestamp := Ini.ReadBool('Editor', 'KeepTimestamp', False);
     FActKeepDate.Checked := FKeepTimestamp;
     // Stored at 96 DPI; FormCreate runs before LCL scales the form to the screen DPI.
@@ -3703,6 +3926,9 @@ begin
   try
     Ini.WriteString('Main', 'LastFolder', FFolder);
     Ini.WriteBool('Main', 'Subfolders', FActSubfolders.Checked);
+    Ini.WriteBool('View', 'AutoFitColumns', FActAutoFitAfterScan.Checked);
+    Ini.WriteBool('View', 'FilterWholeWord', CheckFilterWhole.Checked);
+    Ini.WriteBool('View', 'FilterMatchCase', CheckFilterCase.Checked);
     Ini.WriteBool('Editor', 'KeepTimestamp', FKeepTimestamp);
     Ini.WriteInteger('Main', 'TreeWidth', ScaleFormTo96(PanelFolders.Width));
     Ini.WriteBool('View', 'ToolsPanel', FActToolsPanel.Checked);
