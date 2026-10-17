@@ -3,7 +3,7 @@
 A tag editor and music organizer for Windows, written in Lazarus / Free Pascal. It is inspired by
 the feature set of Tag&Rename 3.9.15, which is no longer maintained. TidyTag is an independent
 clean-room implementation that contains no code or artwork from Tag&Rename, and it is not affiliated
-with Softpointer.
+with Softpointer. See [docs/missing-features.md](docs/missing-features.md) for how the two compare.
 
 The user interface is available in English, Danish, German, French, Italian, Swedish and Spanish.
 The source code comments are in English; the source language of the UI texts is Danish (see
@@ -205,7 +205,7 @@ To add a language, add its code in `src\language.pas`, add translations to the J
 | `tools/` | Test and helper tools (see above) |
 | `res/icons/`, `res/icons.rc` | Toolbar icons (Lazarus general_purpose set by Roland Hahn, CC0) |
 | `TidyTag.ico`, `res/logo/tidytag.png` | Program icon |
-| `docs/` | Feature overview and gap list compared with Tag&Rename (in Danish) |
+| `docs/` | [Feature overview](docs/feature-overview.md) of Tag&Rename and the [list of its features and their state in TidyTag](docs/missing-features.md) |
 
 ## Roadmap
 1. Rating (POPM) and more picture types in the editor
