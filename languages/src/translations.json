@@ -1505,16 +1505,16 @@
  },
  "Gem afkrydsede/markerede filer som playliste...": {
   "en": "Save checked/selected files as playlist...",
-  "de": "Abgehakte/markierte Dateien als Wiedergabeliste speichern...",
-  "fr": "Enregistrer les fichiers cochés/sélectionnés comme liste de lecture...",
+  "de": "Abgehakte/markierte Dateien als Playlist speichern...",
+  "fr": "Enregistrer les fichiers cochés/sélectionnés comme playlist...",
   "it": "Salva i file spuntati/selezionati come playlist...",
   "sv": "Spara förbockade/markerade filer som spellista...",
   "es": "Guardar los archivos marcados/seleccionados como lista de reproducción..."
  },
  "Gem alle filer som playliste...": {
   "en": "Save all files as playlist...",
-  "de": "Alle Dateien als Wiedergabeliste speichern...",
-  "fr": "Enregistrer tous les fichiers comme liste de lecture...",
+  "de": "Alle Dateien als Playlist speichern...",
+  "fr": "Enregistrer tous les fichiers comme playlist...",
   "it": "Salva tutti i file come playlist...",
   "sv": "Spara alla filer som spellista...",
   "es": "Guardar todos los archivos como lista de reproducción..."
@@ -1721,11 +1721,11 @@
  },
  "&Playliste": {
   "en": "&Playlist",
-  "de": "&Wiedergabeliste",
-  "fr": "&Liste de lecture",
+  "de": "&Playlist",
+  "fr": "&Playlist",
   "it": "&Playlist",
   "sv": "S&pellista",
-  "es": "&Lista"
+  "es": "Lista de &reproducción"
  },
  "Vær&ktøjer": {
   "en": "&Tools",
@@ -2225,24 +2225,24 @@
  },
  "Gem playliste": {
   "en": "Save playlist",
-  "de": "Wiedergabeliste speichern",
-  "fr": "Enregistrer la liste de lecture",
+  "de": "Playlist speichern",
+  "fr": "Enregistrer la playlist",
   "it": "Salva playlist",
   "sv": "Spara spellista",
   "es": "Guardar lista de reproducción"
  },
  "Playliste (UTF-8) (*.m3u8)|*.m3u8|Playliste (*.m3u)|*.m3u": {
   "en": "Playlist (UTF-8) (*.m3u8)|*.m3u8|Playlist (*.m3u)|*.m3u",
-  "de": "Wiedergabeliste (UTF-8) (*.m3u8)|*.m3u8|Wiedergabeliste (*.m3u)|*.m3u",
-  "fr": "Liste de lecture (UTF-8) (*.m3u8)|*.m3u8|Liste de lecture (*.m3u)|*.m3u",
+  "de": "Playlist (UTF-8) (*.m3u8)|*.m3u8|Playlist (*.m3u)|*.m3u",
+  "fr": "Playlist (UTF-8) (*.m3u8)|*.m3u8|Playlist (*.m3u)|*.m3u",
   "it": "Playlist (UTF-8) (*.m3u8)|*.m3u8|Playlist (*.m3u)|*.m3u",
   "sv": "Spellista (UTF-8) (*.m3u8)|*.m3u8|Spellista (*.m3u)|*.m3u",
   "es": "Lista de reproducción (UTF-8) (*.m3u8)|*.m3u8|Lista de reproducción (*.m3u)|*.m3u"
  },
  "Playliste med %d filer gemt: %s": {
   "en": "Playlist with %d files saved: %s",
-  "de": "Wiedergabeliste mit %d Dateien gespeichert: %s",
-  "fr": "Liste de lecture de %d fichiers enregistrée : %s",
+  "de": "Playlist mit %d Dateien gespeichert: %s",
+  "fr": "Playlist de %d fichiers enregistrée : %s",
   "it": "Playlist con %d file salvata: %s",
   "sv": "Spellista med %d filer sparad: %s",
   "es": "Lista de reproducción con %d archivos guardada: %s"
@@ -4145,7 +4145,7 @@
  },
  "Op": {
   "en": "Up",
-  "de": "Auf",
+  "de": "Nach oben",
   "fr": "Haut",
   "it": "Su",
   "sv": "Upp",
@@ -4153,7 +4153,7 @@
  },
  "Ned": {
   "en": "Down",
-  "de": "Ab",
+  "de": "Nach unten",
   "fr": "Bas",
   "it": "Giù",
   "sv": "Ned",
@@ -4985,11 +4985,11 @@
  },
  "Store/små bogstaver": {
   "en": "Match case",
-  "de": "Groß/klein",
+  "de": "Groß-/Kleinschreibung",
   "fr": "Respecter la casse",
   "it": "Maiuscole/minuscole",
   "sv": "Skiftläge",
-  "es": "Mayús./minús."
+  "es": "Mayúsculas/minúsculas"
  },
  "Tagtype:": {
   "en": "Tag type:",
@@ -5041,8 +5041,8 @@
  },
  "Bland filerne i listen (fx før nummerering eller en playliste)": {
   "en": "Shuffle the files in the list (e.g. before numbering or a playlist)",
-  "de": "Dateien in der Liste mischen (z. B. vor dem Nummerieren oder einer Wiedergabeliste)",
-  "fr": "Mélanger les fichiers de la liste (p. ex. avant la numérotation ou une liste de lecture)",
+  "de": "Dateien in der Liste mischen (z. B. vor dem Nummerieren oder einer Playlist)",
+  "fr": "Mélanger les fichiers de la liste (p. ex. avant la numérotation ou une playlist)",
   "it": "Mescola i file dell'elenco (es. prima della numerazione o di una playlist)",
   "sv": "Blanda filerna i listan (t.ex. före numrering eller en spellista)",
   "es": "Mezclar los archivos de la lista (p. ej. antes de numerar o de una lista de reproducción)"
@@ -5949,7 +5949,7 @@
   "fr": "Lire tous les fichiers de la liste comme une seule playlist",
   "it": "Riproduci tutti i file dell'elenco come un'unica playlist",
   "sv": "Spela upp alla filer i listan som en spellista",
-  "es": "Reproducir todos los archivos de la lista como una lista"
+  "es": "Reproducir todos los archivos de la lista como una lista de reproducción"
  },
  "Seneste mapper": {
   "en": "Recent folders",
@@ -5965,7 +5965,7 @@
   "fr": "Enregistrement rapide de la playlist",
   "it": "Salvataggio rapido playlist",
   "sv": "Snabbspara spellista",
-  "es": "Guardar lista rápida"
+  "es": "Guardado rápido de lista de reproducción"
  },
  "Gem de afkrydsede (ellers markerede) filer som playliste uden dialog (navn og mappe fra Indstillinger)": {
   "en": "Save the checked (otherwise selected) files as a playlist without a dialog (name and folder from Options)",
@@ -5973,7 +5973,7 @@
   "fr": "Enregistrer les fichiers cochés (sinon sélectionnés) en playlist sans dialogue (nom et dossier des Options)",
   "it": "Salva i file spuntati (altrimenti selezionati) come playlist senza finestra (nome e cartella dalle Impostazioni)",
   "sv": "Spara de markerade (annars valda) filerna som spellista utan dialog (namn och mapp från Inställningar)",
-  "es": "Guardar los archivos marcados (si no, los seleccionados) como lista sin diálogo (nombre y carpeta de Opciones)"
+  "es": "Guardar los archivos marcados (si no, los seleccionados) como lista de reproducción sin diálogo (nombre y carpeta de Opciones)"
  },
  "%s findes allerede. Overskriv?": {
   "en": "%s already exists. Overwrite?",
@@ -6101,7 +6101,7 @@
   "fr": "Playlists",
   "it": "Playlist",
   "sv": "Spellistor",
-  "es": "Listas"
+  "es": "Listas de reproducción"
  },
  "Skriv #EXTINF-linjer (spilletid og titel)": {
   "en": "Write #EXTINF lines (play time and title)",
@@ -6125,7 +6125,7 @@
   "fr": "Chemins complets (sinon relatifs à la playlist)",
   "it": "Percorsi completi (altrimenti relativi alla playlist)",
   "sv": "Fullständiga sökvägar (annars relativa till spellistan)",
-  "es": "Rutas completas (si no, relativas a la lista)"
+  "es": "Rutas completas (si no, relativas a la lista de reproducción)"
  },
  "Playliste-mappe (tom = filernes mappe):": {
   "en": "Playlist folder (empty = the files' folder):",
@@ -6133,7 +6133,7 @@
   "fr": "Dossier des playlists (vide = dossier des fichiers) :",
   "it": "Cartella playlist (vuota = cartella dei file):",
   "sv": "Mapp för spellistor (tom = filernas mapp):",
-  "es": "Carpeta de listas (vacía = carpeta de los archivos):"
+  "es": "Carpeta de listas de reproducción (vacía = carpeta de los archivos):"
  },
  "Filnavn ved hurtig gem:": {
   "en": "File name for quick save:",
@@ -6177,7 +6177,7 @@
  },
  "Eksempel på resultat:": {
   "en": "Result preview:",
-  "de": "Vorschau des Ergebnisses:",
+  "de": "Ergebnisvorschau:",
   "fr": "Aperçu du résultat :",
   "it": "Anteprima del risultato:",
   "sv": "Förhandsvisning av resultat:",
@@ -6185,7 +6185,7 @@
  },
  "Eksempel på filnavn:": {
   "en": "File name preview:",
-  "de": "Vorschau des Dateinamens:",
+  "de": "Dateinamen-Vorschau:",
   "fr": "Aperçu du nom de fichier :",
   "it": "Anteprima del nome file:",
   "sv": "Förhandsvisning av filnamn:",

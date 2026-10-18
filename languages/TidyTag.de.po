@@ -1037,7 +1037,7 @@ msgstr "Ganze Wörter"
 
 #: mainform.rsstoresmaabogstaver
 msgid "Store/små bogstaver"
-msgstr "Groß/klein"
+msgstr "Groß-/Kleinschreibung"
 
 #: mainform.rstagtype
 msgid "Tagtype:"
@@ -1070,7 +1070,7 @@ msgstr "Zufällige Reihenfolge"
 
 #: mainform.rstilfaeldigraekkefoelgehint
 msgid "Bland filerne i listen (fx før nummerering eller en playliste)"
-msgstr "Dateien in der Liste mischen (z. B. vor dem Nummerieren oder einer Wiedergabeliste)"
+msgstr "Dateien in der Liste mischen (z. B. vor dem Nummerieren oder einer Playlist)"
 
 #: mainform.rskunstnervaerktoejer
 msgid "Kunstner-værktøjer"
@@ -1150,7 +1150,7 @@ msgstr "Discogs-Token..."
 #: mainform.rsopmenu
 msgctxt "mainform.rsopmenu"
 msgid "Op"
-msgstr "Auf"
+msgstr "Nach oben"
 
 #: mainform.rstagvaerktoejer
 msgid "Tag-værktøjer"
@@ -1758,11 +1758,11 @@ msgstr "Dateien in Unterordnern einbeziehen"
 
 #: mainform.rsgemafkrydsedemarkeredefilersom
 msgid "Gem afkrydsede/markerede filer som playliste..."
-msgstr "Abgehakte/markierte Dateien als Wiedergabeliste speichern..."
+msgstr "Abgehakte/markierte Dateien als Playlist speichern..."
 
 #: mainform.rsgemallefilersomplayliste
 msgid "Gem alle filer som playliste..."
-msgstr "Alle Dateien als Wiedergabeliste speichern..."
+msgstr "Alle Dateien als Playlist speichern..."
 
 #: mainform.rsomdoebfiler
 msgctxt "mainform.rsomdoebfiler"
@@ -1868,7 +1868,7 @@ msgstr "&Ansicht"
 
 #: mainform.rsplayliste
 msgid "&Playliste"
-msgstr "&Wiedergabeliste"
+msgstr "&Playlist"
 
 #: mainform.rsvaerktoejer
 msgid "Vær&ktøjer"
@@ -2145,15 +2145,15 @@ msgstr "Es gibt keine Dateien zum Speichern."
 
 #: mainform.rsgemplayliste
 msgid "Gem playliste"
-msgstr "Wiedergabeliste speichern"
+msgstr "Playlist speichern"
 
 #: mainform.rsplaylisteutfmum
 msgid "Playliste (UTF-8) (*.m3u8)|*.m3u8|Playliste (*.m3u)|*.m3u"
-msgstr "Wiedergabeliste (UTF-8) (*.m3u8)|*.m3u8|Wiedergabeliste (*.m3u)|*.m3u"
+msgstr "Playlist (UTF-8) (*.m3u8)|*.m3u8|Playlist (*.m3u)|*.m3u"
 
 #: mainform.rsplaylistemeddfilergemt
 msgid "Playliste med %d filer gemt: %s"
-msgstr "Wiedergabeliste mit %d Dateien gespeichert: %s"
+msgstr "Playlist mit %d Dateien gespeichert: %s"
 
 #: mainform.rslavetpersonligttokenpaa
 msgctxt "mainform.rslavetpersonligttokenpaa"
@@ -3311,7 +3311,7 @@ msgstr "Variablen ▾"
 
 #: tformmain.paneltools.pagetools.tabrename.labelrenameresult.caption
 msgid "Eksempel på resultat:"
-msgstr "Vorschau des Ergebnisses:"
+msgstr "Ergebnisvorschau:"
 
 #: tformmain.paneltools.pagetools.tabrename.checkrenameunderscores.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.checkrenameunderscores.caption"
@@ -3443,7 +3443,7 @@ msgstr "Variablen ▾"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.labelf2tresult.caption
 msgid "Eksempel på filnavn:"
-msgstr "Vorschau des Dateinamens:"
+msgstr "Dateinamen-Vorschau:"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.checkf2tunderscores.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.checkf2tunderscores.caption"
@@ -3989,11 +3989,11 @@ msgstr "Länge"
 #: tformweblookup.buttonup.caption
 msgctxt "tformweblookup.buttonup.caption"
 msgid "Op"
-msgstr "Auf"
+msgstr "Nach oben"
 
 #: tformweblookup.buttondown.caption
 msgid "Ned"
-msgstr "Ab"
+msgstr "Nach unten"
 
 #: tformweblookup.groupoptions.caption
 msgid "Skriv"

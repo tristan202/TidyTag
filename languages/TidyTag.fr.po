@@ -1070,7 +1070,7 @@ msgstr "Ordre aléatoire"
 
 #: mainform.rstilfaeldigraekkefoelgehint
 msgid "Bland filerne i listen (fx før nummerering eller en playliste)"
-msgstr "Mélanger les fichiers de la liste (p. ex. avant la numérotation ou une liste de lecture)"
+msgstr "Mélanger les fichiers de la liste (p. ex. avant la numérotation ou une playlist)"
 
 #: mainform.rskunstnervaerktoejer
 msgid "Kunstner-værktøjer"
@@ -1758,11 +1758,11 @@ msgstr "Inclure les fichiers des sous-dossiers"
 
 #: mainform.rsgemafkrydsedemarkeredefilersom
 msgid "Gem afkrydsede/markerede filer som playliste..."
-msgstr "Enregistrer les fichiers cochés/sélectionnés comme liste de lecture..."
+msgstr "Enregistrer les fichiers cochés/sélectionnés comme playlist..."
 
 #: mainform.rsgemallefilersomplayliste
 msgid "Gem alle filer som playliste..."
-msgstr "Enregistrer tous les fichiers comme liste de lecture..."
+msgstr "Enregistrer tous les fichiers comme playlist..."
 
 #: mainform.rsomdoebfiler
 msgctxt "mainform.rsomdoebfiler"
@@ -1868,7 +1868,7 @@ msgstr "&Affichage"
 
 #: mainform.rsplayliste
 msgid "&Playliste"
-msgstr "&Liste de lecture"
+msgstr "&Playlist"
 
 #: mainform.rsvaerktoejer
 msgid "Vær&ktøjer"
@@ -2145,15 +2145,15 @@ msgstr "Il n'y a aucun fichier à enregistrer."
 
 #: mainform.rsgemplayliste
 msgid "Gem playliste"
-msgstr "Enregistrer la liste de lecture"
+msgstr "Enregistrer la playlist"
 
 #: mainform.rsplaylisteutfmum
 msgid "Playliste (UTF-8) (*.m3u8)|*.m3u8|Playliste (*.m3u)|*.m3u"
-msgstr "Liste de lecture (UTF-8) (*.m3u8)|*.m3u8|Liste de lecture (*.m3u)|*.m3u"
+msgstr "Playlist (UTF-8) (*.m3u8)|*.m3u8|Playlist (*.m3u)|*.m3u"
 
 #: mainform.rsplaylistemeddfilergemt
 msgid "Playliste med %d filer gemt: %s"
-msgstr "Liste de lecture de %d fichiers enregistrée : %s"
+msgstr "Playlist de %d fichiers enregistrée : %s"
 
 #: mainform.rslavetpersonligttokenpaa
 msgctxt "mainform.rslavetpersonligttokenpaa"
