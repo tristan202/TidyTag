@@ -8,3 +8,4 @@ backup/
 # Forms extracted from the original Tag&Rename (Softpointer) - reference only, not ours to share
 reference/
 release/
+!res/icons.res

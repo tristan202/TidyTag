@@ -10,7 +10,7 @@ uses
   Forms, Language, LayoutFit, MainForm, LayoutCheck;
 
 {$R *.res}
-{$R res/icons.rc}
+{$R res/icons.res} // precompiled from res/icons.rc by tools/make-icons-res.ps1 (FPC cannot compile .rc in paths with spaces)
 
 begin
   RequireDerivedFormResource := True;

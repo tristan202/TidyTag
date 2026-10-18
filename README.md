@@ -132,6 +132,10 @@ The program finds its `languages\` folder next to the exe or in `..\languages`.
 Note: `lazbuild` does not rebuild a form when only its `.lfm` file has changed. Save the matching
 `.pas` file as well.
 
+The toolbar icons are linked from the precompiled `res\icons.res`. After changing `res\icons.rc` or the
+PNG files in `res\icons`, run `powershell -ExecutionPolicy Bypass -File tools\make-icons-res.ps1`
+(FPC 3.2.2 cannot compile `.rc` files when the project path contains spaces).
+
 ## Making a release
 1. Set the new version in Lazarus under *Project > Project Options > Version Info* (the numbers and
    the *Product version* string must match), or edit `VersionInfo` in `TidyTag.lpi`.
@@ -143,8 +147,10 @@ Note: `lazbuild` does not rebuild a form when only its `.lfm` file has changed. 
    and publish.
 
 ## Development and test tools
-The console tools in `tools\` are built with the Free Pascal compiler directly:
+The console tools in `tools\` are built with the Free Pascal compiler directly (create `lib\tools`
+first; the compiler does not create its output folder):
 ```
+mkdir lib\tools
 C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe -Mobjfpc -Sh -Fusrc -FUlib\tools -FEbin tools\tagtest.lpr
 ```
 
