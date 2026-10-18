@@ -264,3 +264,5 @@ and the toolbar icons from the Lazarus general_purpose set by Roland Hahn (CC0 1
 2. ReplayGain for Ogg Vorbis and Opus without a Windows codec
 3. Ogg FLAC writing and DSF (ID3 in DSD files)
 4. A setting for contact info in the MusicBrainz User-Agent (recommended by MusicBrainz)
+5. Direct access to Android phones over USB (MTP, through Windows Portable Devices): today the music
+   has to be copied to the PC, put on an SD card in a card reader, or shared as a network drive
