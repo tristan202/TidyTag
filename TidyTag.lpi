@@ -16,7 +16,8 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="9"/>
-      <StringTable CompanyName="tristan202" FileDescription="TidyTag - tag editor and music organizer" InternalName="TidyTag" LegalCopyright="Copyright (C) 2026 tristan202, GPL-3.0-or-later" OriginalFilename="TidyTag.exe" ProductName="TidyTag" ProductVersion="0.9.0"/>
+      <RevisionNr Value="1"/>
+      <StringTable CompanyName="tristan202" FileDescription="TidyTag - tag editor and music organizer" InternalName="TidyTag" LegalCopyright="Copyright (C) 2026 tristan202, GPL-3.0-or-later" OriginalFilename="TidyTag.exe" ProductName="TidyTag" ProductVersion="0.9.1"/>
     </VersionInfo>
     <BuildModes>
       <Item Name="Default" Default="True"/>
