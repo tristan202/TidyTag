@@ -6246,5 +6246,77 @@
   "it": "Versione %s - software libero con licenza GPL-3.0",
   "sv": "Version %s - fri programvara under GPL-3.0",
   "es": "Versión %s - software libre bajo GPL-3.0"
+ },
+ "%d filer i %d mappe(r); %d har et albumnavn (%d forskellige).": {
+  "en": "%d files in %d folder(s); %d have an album name (%d different).",
+  "de": "%d Dateien in %d Ordner(n); %d haben einen Albumnamen (%d verschiedene).",
+  "fr": "%d fichiers dans %d dossier(s) ; %d ont un nom d'album (%d différents).",
+  "it": "%d file in %d cartella/e; %d hanno un nome di album (%d diversi).",
+  "sv": "%d filer i %d mapp(ar); %d har ett albumnamn (%d olika).",
+  "es": "%d archivos en %d carpeta(s); %d tienen nombre de álbum (%d distintos)."
+ },
+ "Web-opslag: %d gemt, %d sprunget over af %d": {
+  "en": "Web lookup: %d saved, %d skipped of %d",
+  "de": "Web-Suche: %d gespeichert, %d übersprungen von %d",
+  "fr": "Recherche web : %d enregistrés, %d ignorés sur %d",
+  "it": "Ricerca web: %d salvati, %d saltati su %d",
+  "sv": "Webbsökning: %d sparade, %d överhoppade av %d",
+  "es": "Búsqueda web: %d guardados, %d omitidos de %d"
+ },
+ "Er filerne et album eller løse sange?": {
+  "en": "Are the files an album or loose songs?",
+  "de": "Sind die Dateien ein Album oder einzelne Songs?",
+  "fr": "Les fichiers forment-ils un album ou des chansons isolées ?",
+  "it": "I file sono un album o brani singoli?",
+  "sv": "Är filerna ett album eller lösa låtar?",
+  "es": "¿Los archivos son un álbum o canciones sueltas?"
+ },
+ "Album - ét opslag pr. album (filer i samme mappe med samme albumnavn)": {
+  "en": "Album - one lookup per album (files in the same folder with the same album name)",
+  "de": "Album - eine Suche pro Album (Dateien im selben Ordner mit gleichem Albumnamen)",
+  "fr": "Album - une recherche par album (fichiers du même dossier avec le même nom d'album)",
+  "it": "Album - una ricerca per album (file nella stessa cartella con lo stesso nome di album)",
+  "sv": "Album - en sökning per album (filer i samma mapp med samma albumnamn)",
+  "es": "Álbum - una búsqueda por álbum (archivos de la misma carpeta con el mismo nombre de álbum)"
+ },
+ "Løse sange - ét opslag pr. fil (albummet findes ud fra kunstner og titel)": {
+  "en": "Loose songs - one lookup per file (the album is found from artist and title)",
+  "de": "Einzelne Songs - eine Suche pro Datei (das Album wird über Interpret und Titel gefunden)",
+  "fr": "Chansons isolées - une recherche par fichier (l'album est trouvé via l'artiste et le titre)",
+  "it": "Brani singoli - una ricerca per file (l'album si trova da artista e titolo)",
+  "sv": "Lösa låtar - en sökning per fil (albumet hittas utifrån artist och titel)",
+  "es": "Canciones sueltas - una búsqueda por archivo (el álbum se encuentra por artista y título)"
+ },
+ "Opslagene vises ét ad gangen og søger selv. Når du trykker \"Skriv tags\", går den videre til det næste; \"Spring over\" springer det over, og \"Stop\" afslutter.": {
+  "en": "The lookups are shown one at a time and search by themselves. When you press \"Write tags\" it moves on to the next; \"Skip\" skips one and \"Stop\" ends.",
+  "de": "Die Suchen werden nacheinander angezeigt und starten von selbst. Mit \"Tags schreiben\" geht es zur nächsten; \"Überspringen\" überspringt, \"Stopp\" beendet.",
+  "fr": "Les recherches s'affichent une par une et se lancent seules. « Écrire les tags » passe à la suivante ; « Ignorer » en saute une et « Arrêter » termine.",
+  "it": "Le ricerche vengono mostrate una alla volta e partono da sole. \"Scrivi tag\" passa alla successiva; \"Salta\" salta e \"Ferma\" termina.",
+  "sv": "Sökningarna visas en i taget och söker själva. När du trycker \"Skriv taggar\" går den vidare till nästa; \"Hoppa över\" hoppar över och \"Stopp\" avslutar.",
+  "es": "Las búsquedas se muestran de una en una y buscan solas. Al pulsar \"Escribir etiquetas\" pasa a la siguiente; \"Omitir\" la salta y \"Detener\" termina."
+ },
+ "Web-opslag %d af %d - %d filer": {
+  "en": "Web lookup %d of %d - %d files",
+  "de": "Web-Suche %d von %d - %d Dateien",
+  "fr": "Recherche web %d sur %d - %d fichiers",
+  "it": "Ricerca web %d di %d - %d file",
+  "sv": "Webbsökning %d av %d - %d filer",
+  "es": "Búsqueda web %d de %d - %d archivos"
+ },
+ "Spring over": {
+  "en": "Skip",
+  "de": "Überspringen",
+  "fr": "Ignorer",
+  "it": "Salta",
+  "sv": "Hoppa över",
+  "es": "Omitir"
+ },
+ "Stop": {
+  "en": "Stop",
+  "de": "Stopp",
+  "fr": "Arrêter",
+  "it": "Ferma",
+  "sv": "Stopp",
+  "es": "Detener"
  }
 }

@@ -599,6 +599,14 @@ msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr ""
 
+#: mainform.rswebbatchoversigt
+msgid "%d filer i %d mappe(r); %d har et albumnavn (%d forskellige)."
+msgstr ""
+
+#: mainform.rswebbatchresultat
+msgid "Web-opslag: %d gemt, %d sprunget over af %d"
+msgstr ""
+
 #: mainform.rsomdoebfilmanuelt
 msgid "Omdøb fil..."
 msgstr ""
@@ -2684,6 +2692,27 @@ msgctxt "tagwriter.rsskrivningafdennefiltypeunderstoettes"
 msgid "Skrivning af denne filtype understøttes ikke endnu"
 msgstr ""
 
+#: tooldialogs.rswebopslagtitel
+msgctxt "tooldialogs.rswebopslagtitel"
+msgid "Web-opslag"
+msgstr ""
+
+#: tooldialogs.rsalbumellerloesesange
+msgid "Er filerne et album eller løse sange?"
+msgstr ""
+
+#: tooldialogs.rsopslagpralbum
+msgid "Album - ét opslag pr. album (filer i samme mappe med samme albumnavn)"
+msgstr ""
+
+#: tooldialogs.rsopslagprfil
+msgid "Løse sange - ét opslag pr. fil (albummet findes ud fra kunstner og titel)"
+msgstr ""
+
+#: tooldialogs.rsopslaghjaelp
+msgid "Opslagene vises ét ad gangen og søger selv. Når du trykker \"Skriv tags\", går den videre til det næste; \"Spring over\" springer det over, og \"Stop\" afslutter."
+msgstr ""
+
 #: tooldialogs.rsgenrelistetitel
 msgid "Genreliste"
 msgstr ""
@@ -3094,6 +3123,18 @@ msgstr ""
 
 #: weblookupform.rsbemaerk
 msgid "Bemærk"
+msgstr ""
+
+#: weblookupform.rswebopslagbatch
+msgid "Web-opslag %d af %d - %d filer"
+msgstr ""
+
+#: weblookupform.rsspringover
+msgid "Spring over"
+msgstr ""
+
+#: weblookupform.rsstop
+msgid "Stop"
 msgstr ""
 
 #: tformexportimport.caption
@@ -3846,6 +3887,7 @@ msgid "Luk"
 msgstr ""
 
 #: tformweblookup.caption
+msgctxt "tformweblookup.caption"
 msgid "Web-opslag"
 msgstr ""
 

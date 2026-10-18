@@ -599,6 +599,14 @@ msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr "Scegli i campi da incollare in %d file:"
 
+#: mainform.rswebbatchoversigt
+msgid "%d filer i %d mappe(r); %d har et albumnavn (%d forskellige)."
+msgstr "%d file in %d cartella/e; %d hanno un nome di album (%d diversi)."
+
+#: mainform.rswebbatchresultat
+msgid "Web-opslag: %d gemt, %d sprunget over af %d"
+msgstr "Ricerca web: %d salvati, %d saltati su %d"
+
 #: mainform.rsomdoebfilmanuelt
 msgid "Omdøb fil..."
 msgstr "Rinomina file..."
@@ -2684,6 +2692,27 @@ msgctxt "tagwriter.rsskrivningafdennefiltypeunderstoettes"
 msgid "Skrivning af denne filtype understøttes ikke endnu"
 msgstr "La scrittura di questo tipo di file non è ancora supportata"
 
+#: tooldialogs.rswebopslagtitel
+msgctxt "tooldialogs.rswebopslagtitel"
+msgid "Web-opslag"
+msgstr "Ricerca web"
+
+#: tooldialogs.rsalbumellerloesesange
+msgid "Er filerne et album eller løse sange?"
+msgstr "I file sono un album o brani singoli?"
+
+#: tooldialogs.rsopslagpralbum
+msgid "Album - ét opslag pr. album (filer i samme mappe med samme albumnavn)"
+msgstr "Album - una ricerca per album (file nella stessa cartella con lo stesso nome di album)"
+
+#: tooldialogs.rsopslagprfil
+msgid "Løse sange - ét opslag pr. fil (albummet findes ud fra kunstner og titel)"
+msgstr "Brani singoli - una ricerca per file (l'album si trova da artista e titolo)"
+
+#: tooldialogs.rsopslaghjaelp
+msgid "Opslagene vises ét ad gangen og søger selv. Når du trykker \"Skriv tags\", går den videre til det næste; \"Spring over\" springer det over, og \"Stop\" afslutter."
+msgstr "Le ricerche vengono mostrate una alla volta e partono da sole. \"Scrivi tag\" passa alla successiva; \"Salta\" salta e \"Ferma\" termina."
+
 #: tooldialogs.rsgenrelistetitel
 msgid "Genreliste"
 msgstr "Elenco generi"
@@ -3095,6 +3124,18 @@ msgstr "   ·   copertina salvata in %d cartelle"
 #: weblookupform.rsbemaerk
 msgid "Bemærk"
 msgstr "Nota"
+
+#: weblookupform.rswebopslagbatch
+msgid "Web-opslag %d af %d - %d filer"
+msgstr "Ricerca web %d di %d - %d file"
+
+#: weblookupform.rsspringover
+msgid "Spring over"
+msgstr "Salta"
+
+#: weblookupform.rsstop
+msgid "Stop"
+msgstr "Ferma"
 
 #: tformexportimport.caption
 msgid "Eksportér / importér tags"
@@ -3846,6 +3887,7 @@ msgid "Luk"
 msgstr "Chiudi"
 
 #: tformweblookup.caption
+msgctxt "tformweblookup.caption"
 msgid "Web-opslag"
 msgstr "Ricerca web"
 

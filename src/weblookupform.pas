@@ -14,6 +14,8 @@ uses
 
 type
   TWebJobKind = (wjSearch, wjDetail, wjCover);
+  { Outcome of one lookup in a batch. }
+  TLookupResult = (lrWritten, lrSkipped, lrStopped);
   TWebSource = (wsMusicBrainz, wsDiscogs);
 
   { Runs one blocking web call off the main thread. }
@@ -88,6 +90,11 @@ type
     FBusy: Boolean;
     FChanged: Boolean;
     FToken: string;
+    FBatch: Boolean;              // one of several lookups: write closes, Skip/Stop buttons
+    ButtonSkip: TButton;
+    procedure FormShowBatch(Sender: TObject);
+    procedure AutoSearch(Data: PtrInt);
+    procedure ButtonSkipClick(Sender: TObject);
     function Source: TWebSource;
     function SourceName: string;
     function NewJob(Kind: TWebJobKind): TWebJob;
@@ -101,6 +108,10 @@ type
     procedure SaveOptions;
   public
     class function Execute(const Items: TAudioInfoArray; var KeepTimestamp: Boolean): Boolean;
+    { Lookup number Pos of Count: searches at once; "Skriv tags" writes and closes, so the
+      caller can go on with the next files. Returns True if files were changed. }
+    class function ExecuteBatch(const Items: TAudioInfoArray; var KeepTimestamp: Boolean;
+      Pos, Count: Integer; out Res: TLookupResult): Boolean;
   end;
 
 implementation
@@ -139,6 +150,9 @@ resourcestring
   rsGemtIDFilerD = 'Gemt i %d filer   ·   %d fejl   ·   %d sprunget over (filtype)';
   rsCoverGemtIDMapper = '   ·   cover gemt i %d mapper';
   rsBemaerk = 'Bemærk';
+  rsWebOpslagBatch = 'Web-opslag %d af %d - %d filer';
+  rsSpringOver = 'Spring over';
+  rsStop = 'Stop';
 
 
 { TWebJob }
@@ -200,11 +214,21 @@ end;
 
 class function TFormWebLookup.Execute(const Items: TAudioInfoArray; var KeepTimestamp: Boolean): Boolean;
 var
+  Res: TLookupResult;
+begin
+  Result := ExecuteBatch(Items, KeepTimestamp, 0, 0, Res);
+end;
+
+class function TFormWebLookup.ExecuteBatch(const Items: TAudioInfoArray; var KeepTimestamp: Boolean;
+  Pos, Count: Integer; out Res: TLookupResult): Boolean;
+var
   F: TFormWebLookup;
   Artist: string;
 begin
+  Res := lrStopped;
   F := TFormWebLookup.Create(Application);
   try
+    F.FBatch := Count > 1;
     F.FItems := Items;
     F.LoadOptions;
     F.ButtonToken.Visible := F.Source = wsDiscogs;
@@ -218,12 +242,54 @@ begin
     F.Caption := Format(rsWebOpslagDFiler, [Length(Items)]);
     F.LabelStatus.Caption := rsSkrivKunstnerOgAlbumOg;
     F.ShowTracks;
-    F.ShowModal;
+    if F.FBatch then
+    begin
+      F.Caption := Format(rsWebOpslagBatch, [Pos, Count, Length(Items)]);
+      F.ButtonClose.Caption := rsStop;
+      F.ButtonSkip := TButton.Create(F);
+      F.ButtonSkip.Parent := F;
+      F.ButtonSkip.Caption := rsSpringOver;
+      // anchored left of "Skriv tags", so it follows DPI scaling and resizing
+      F.ButtonSkip.Width := F.ButtonWrite.Width;
+      F.ButtonSkip.AnchorSide[akRight].Control := F.ButtonWrite;
+      F.ButtonSkip.AnchorSide[akRight].Side := asrLeft;
+      F.ButtonSkip.AnchorSide[akTop].Control := F.ButtonWrite;
+      F.ButtonSkip.AnchorSide[akTop].Side := asrTop;
+      F.ButtonSkip.AnchorSide[akBottom].Control := F.ButtonWrite;
+      F.ButtonSkip.AnchorSide[akBottom].Side := asrBottom;
+      F.ButtonSkip.BorderSpacing.Right := F.Scale96ToForm(8);
+      F.ButtonSkip.Anchors := [akRight, akTop, akBottom];
+      F.ButtonSkip.OnClick := @F.ButtonSkipClick;
+      F.OnShow := @F.FormShowBatch;
+    end;
+    case F.ShowModal of
+      mrOK: Res := lrWritten;
+      mrIgnore: Res := lrSkipped;
+    else
+      Res := lrStopped;
+    end;
     KeepTimestamp := F.CheckKeepTimestamp.Checked;
     Result := F.FChanged;
   finally
     F.Free;
   end;
+end;
+
+procedure TFormWebLookup.FormShowBatch(Sender: TObject);
+begin
+  // search right away when there is something to search for; the window shows first
+  if (Trim(EditArtist.Text) <> '') and ((Trim(EditTitle.Text) <> '') or (Trim(EditAlbum.Text) <> '')) then
+    Application.QueueAsyncCall(@AutoSearch, 0);
+end;
+
+procedure TFormWebLookup.AutoSearch(Data: PtrInt);
+begin
+  ButtonSearchClick(nil);
+end;
+
+procedure TFormWebLookup.ButtonSkipClick(Sender: TObject);
+begin
+  if not FBusy then ModalResult := mrIgnore;
 end;
 
 procedure TFormWebLookup.LoadOptions;
@@ -657,8 +723,9 @@ begin
     MessageDlg(rsVaelgHvadDerSkalSkrives, mtInformation, [mbOK], 0);
     Exit;
   end;
-  if MessageDlg(rsSkrivTags, Format(rsSkrivOplysningerFraSI,
-    [FDetail.Release.Title, Pairs]), mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
+  // in a batch the button itself is the decision; asking again for every song is just a click more
+  if not FBatch and (MessageDlg(rsSkrivTags, Format(rsSkrivOplysningerFraSI,
+    [FDetail.Release.Title, Pairs]), mtConfirmation, [mbYes, mbNo], 0) <> mrYes) then Exit;
   SaveOptions;
 
   Saved := 0;
@@ -751,6 +818,7 @@ begin
   end;
   Errors.Free;
   DoneDirs.Free;
+  if FBatch and (Saved > 0) then ModalResult := mrOK; // on to the next files
 end;
 
 procedure TFormWebLookup.ButtonCloseClick(Sender: TObject);

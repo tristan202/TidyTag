@@ -280,6 +280,7 @@ type
     procedure ActReplayGainExecute(Sender: TObject);
     procedure ActRemoveReplayGainExecute(Sender: TObject);
     procedure RunReplayGain(Album, SkipExisting: Boolean);
+    procedure RunWebBatch(const Items: TAudioInfoArray);
     procedure ActRenameManualExecute(Sender: TObject);
     procedure RenameFileDialog;
     procedure RenameFolderManual;
@@ -392,6 +393,8 @@ uses
   ReplayGain, ID3Writer, ProgOptions, FileInfo;
 
 resourcestring
+  rsWebBatchOversigt = '%d filer i %d mappe(r); %d har et albumnavn (%d forskellige).';
+  rsWebBatchResultat = 'Web-opslag: %d gemt, %d sprunget over af %d';
   rsOmdoebFilManuelt = 'Omdøb fil...';
   rsOmdoebFilManueltHint = 'Ret navnet på den markerede fil (eller mappen, når mappetræet er aktivt)';
   rsOmdoebFilTitel = 'Omdøb fil (%d af %d)';
@@ -2881,6 +2884,11 @@ var
 begin
   if not CanStartBatch or (FView.Count = 0) then Exit;
   Items := TargetItems(ScopeCaption, Prefer);
+  if Length(Items) > 1 then
+  begin
+    RunWebBatch(Items);
+    Exit;
+  end;
   if Length(Items) = 0 then
   begin
     // Nothing ticked or selected: take the whole list if it is one album folder.
@@ -2900,6 +2908,94 @@ begin
   FCoverFile := '';
   FileList.Invalidate;
   SelectionChanged;
+end;
+
+{ Web lookup of several files: asks whether they are albums or loose songs, then shows one
+  lookup per album (folder + album name) or per file, one after the other. }
+procedure TFormMain.RunWebBatch(const Items: TAudioInfoArray);
+var
+  Keys, Folders, Albums: TStringList;
+  Groups: array of TAudioInfoArray;
+  AlbumMode, AllTagged: Boolean;
+  I, G, Written, Skipped: Integer;
+  Key: string;
+  Res: TLookupResult;
+  Summary: string;
+begin
+  Keys := TStringList.Create;
+  Folders := TStringList.Create;
+  Albums := TStringList.Create;
+  try
+    Folders.Sorted := True;
+    Folders.Duplicates := dupIgnore;
+    Albums.Sorted := True;
+    Albums.Duplicates := dupIgnore;
+    Groups := nil;
+    AllTagged := True;
+    for I := 0 to High(Items) do
+    begin
+      Folders.Add(LowerCase(ExtractFileDir(Items[I].FileName)));
+      if Trim(Items[I].Fields[tfAlbum]) = '' then AllTagged := False
+      else Albums.Add(LowerCase(Trim(Items[I].Fields[tfAlbum])));
+      Key := LowerCase(ExtractFileDir(Items[I].FileName)) + '|' + LowerCase(Trim(Items[I].Fields[tfAlbum]));
+      G := Keys.IndexOf(Key);
+      if G < 0 then
+      begin
+        G := Keys.Add(Key);
+        SetLength(Groups, Length(Groups) + 1);
+      end;
+      SetLength(Groups[G], Length(Groups[G]) + 1);
+      Groups[G][High(Groups[G])] := Items[I];
+    end;
+    // an album guess: every file has an album name and no album has just one file
+    AlbumMode := AllTagged;
+    for G := 0 to High(Groups) do
+      if Length(Groups[G]) < 2 then AlbumMode := False;
+    G := 0;
+    for I := 0 to High(Items) do
+      if Trim(Items[I].Fields[tfAlbum]) <> '' then Inc(G);
+    Summary := Format(rsWebBatchOversigt, [Length(Items), Folders.Count, G, Albums.Count]);
+    if not AskLookupMode(Summary, AlbumMode) then Exit;
+    if not AlbumMode then
+    begin
+      SetLength(Groups, Length(Items));
+      for I := 0 to High(Items) do
+      begin
+        Groups[I] := nil;
+        SetLength(Groups[I], 1);
+        Groups[I][0] := Items[I];
+      end;
+    end;
+  finally
+    Keys.Free;
+    Folders.Free;
+    Albums.Free;
+  end;
+  Written := 0;
+  Skipped := 0;
+  for G := 0 to High(Groups) do
+  begin
+    if Length(Groups) = 1 then
+    begin
+      TFormWebLookup.Execute(Groups[G], FKeepTimestamp);
+      Res := lrWritten;
+    end
+    else
+      TFormWebLookup.ExecuteBatch(Groups[G], FKeepTimestamp, G + 1, Length(Groups), Res);
+    FileList.Invalidate;
+    Application.ProcessMessages;
+    case Res of
+      lrWritten: Inc(Written);
+      lrSkipped: Inc(Skipped);
+    else
+      Break;
+    end;
+  end;
+  FActKeepDate.Checked := FKeepTimestamp;
+  FCoverFile := '';
+  FileList.Invalidate;
+  SelectionChanged;
+  if Length(Groups) > 1 then SetMessage(Format(rsWebBatchResultat, [Written, Skipped, Length(Groups)]));
 end;
 
 procedure TFormMain.PlayWith(const FileName: string);

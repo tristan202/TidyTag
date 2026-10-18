@@ -26,6 +26,8 @@ function AskReplayGain(var Album, SkipExisting: Boolean): Boolean;
 function RunReplayGainBatch(const Title: string; Batch: TRGBatch): Boolean;
 { Standard genres to show (ticked) and own genres. }
 function EditGenreList(var Custom, Hidden: TStringArray): Boolean;
+{ Web lookup of several files: one lookup per album (True) or per file (False). }
+function AskLookupMode(const Summary: string; var AlbumMode: Boolean): Boolean;
 
 type
   { Example result of a mask, shown live in the mask editor. }
@@ -43,6 +45,12 @@ uses
   IniFiles, ComCtrls, TagUtils;
 
 resourcestring
+  rsWebOpslagTitel = 'Web-opslag';
+  rsAlbumEllerLoeseSange = 'Er filerne et album eller løse sange?';
+  rsOpslagPrAlbum = 'Album - ét opslag pr. album (filer i samme mappe med samme albumnavn)';
+  rsOpslagPrFil = 'Løse sange - ét opslag pr. fil (albummet findes ud fra kunstner og titel)';
+  rsOpslagHjaelp = 'Opslagene vises ét ad gangen og søger selv. Når du trykker "Skriv tags", går den ' +
+    'videre til det næste; "Spring over" springer det over, og "Stop" afslutter.';
   rsGenrelisteTitel = 'Genreliste';
   rsStandardgenrer = 'Standardgenrer (fjern fluebenet for at skjule en genre):';
   rsEgneGenrer = 'Egne genrer (én pr. linje):';
@@ -922,6 +930,37 @@ begin
     end;
   finally
     H.Free;
+    F.Free;
+  end;
+end;
+
+function AskLookupMode(const Summary: string; var AlbumMode: Boolean): Boolean;
+var
+  F: TForm;
+  R: TRadioGroup;
+begin
+  F := NewDialog(rsWebOpslagTitel, 520, 250);
+  try
+    AddLabel(F, Summary, 12, 10);
+    R := TRadioGroup.Create(F);
+    R.Parent := F;
+    R.Caption := rsAlbumEllerLoeseSange;
+    R.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(34), F.Scale96ToForm(496), F.Scale96ToForm(82));
+    R.Items.Add(rsOpslagPrAlbum);
+    R.Items.Add(rsOpslagPrFil);
+    if AlbumMode then R.ItemIndex := 0 else R.ItemIndex := 1;
+    with AddLabel(F, rsOpslagHjaelp, 12, 126) do
+    begin
+      WordWrap := True;
+      AutoSize := False;
+      Width := F.Scale96ToForm(496);
+      Height := F.Scale96ToForm(60);
+      Font.Color := clGrayText;
+    end;
+    AddButtons(F);
+    Result := F.ShowModal = mrOK;
+    if Result then AlbumMode := R.ItemIndex = 0;
+  finally
     F.Free;
   end;
 end;

@@ -73,6 +73,9 @@ Windows SmartScreen may warn about an unknown publisher the first time.
 - **Find the album of a single song**: enter artist and song instead of album. The results show one
   row per album with the original studio album first (then singles, compilations, live), and the
   file is matched to the right track by its title.
+- **Batch lookup**: select several files and press Ctrl+W. TidyTag asks whether they are albums or
+  loose songs and shows one lookup per album or per file. Each lookup searches by itself; "Write
+  tags" saves and moves on to the next, with "Skip" and "Stop" in between.
 - **Discogs** as a second source in the same dialog. Searching needs a personal token
   (discogs.com > Settings > Developers), which is stored only in the local settings file.
 - Networking uses Windows' WinInet, so no OpenSSL DLLs are needed.

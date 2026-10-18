@@ -227,6 +227,8 @@ begin
     GHidden := ['Blues'];
     Arm;
     EditGenreList(GCustom, GHidden);
+    Arm;
+    AskLookupMode('12 filer i 3 mappe(r); 12 har et albumnavn (3 forskellige).', RGAlbum);
     MaskText := '%1 - %2';
     Arm;
     EditMask(rsMaskeEditor, MaskText, ['%1|' + TagFieldCaptions[tfArtist], '%2|' + TagFieldCaptions[tfTitle],
