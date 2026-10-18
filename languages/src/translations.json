@@ -6174,5 +6174,21 @@
   "it": "Generi personali (uno per riga):",
   "sv": "Egna genrer (en per rad):",
   "es": "Géneros propios (uno por línea):"
+ },
+ "Eksempel på resultat:": {
+  "en": "Result preview:",
+  "de": "Vorschau des Ergebnisses:",
+  "fr": "Aperçu du résultat :",
+  "it": "Anteprima del risultato:",
+  "sv": "Förhandsvisning av resultat:",
+  "es": "Vista previa del resultado:"
+ },
+ "Eksempel på filnavn:": {
+  "en": "File name preview:",
+  "de": "Vorschau des Dateinamens:",
+  "fr": "Aperçu du nom de fichier :",
+  "it": "Anteprima del nome file:",
+  "sv": "Förhandsvisning av filnamn:",
+  "es": "Vista previa del nombre de archivo:"
  }
 }

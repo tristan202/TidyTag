@@ -67,14 +67,19 @@ object FormMain: TFormMain
           Height = 15
           Top = 40
           Width = 47
-          Caption = 'Resultat:'
+          Caption = 'Eksempel p'#229' resultat:'
         end
         object PanelRenamePreview: TPanel
           Left = 8
           Height = 24
           Top = 58
           Width = 420
-          BevelOuter = bvLowered
+          BevelOuter = bvNone
+          Color = 15132390
+          ParentBackground = False
+          ParentColor = False
+          ParentShowHint = False
+          ShowHint = True
           ClientHeight = 24
           ClientWidth = 420
           TabOrder = 2
@@ -375,14 +380,19 @@ object FormMain: TFormMain
           Height = 15
           Top = 40
           Width = 47
-          Caption = 'Resultat:'
+          Caption = 'Eksempel p'#229' filnavn:'
         end
         object PanelF2TPreview: TPanel
           Left = 8
           Height = 24
           Top = 58
           Width = 420
-          BevelOuter = bvLowered
+          BevelOuter = bvNone
+          Color = 15132390
+          ParentBackground = False
+          ParentColor = False
+          ParentShowHint = False
+          ShowHint = True
           ClientHeight = 24
           ClientWidth = 420
           TabOrder = 2

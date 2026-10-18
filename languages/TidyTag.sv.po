@@ -3253,9 +3253,8 @@ msgid "Variabler ▾"
 msgstr "Variabler ▾"
 
 #: tformmain.paneltools.pagetools.tabrename.labelrenameresult.caption
-msgctxt "tformmain.paneltools.pagetools.tabrename.labelrenameresult.caption"
-msgid "Resultat:"
-msgstr "Resultat:"
+msgid "Eksempel på resultat:"
+msgstr "Förhandsvisning av resultat:"
 
 #: tformmain.paneltools.pagetools.tabrename.checkrenameunderscores.caption
 msgctxt "tformmain.paneltools.pagetools.tabrename.checkrenameunderscores.caption"
@@ -3386,9 +3385,8 @@ msgid "Variabler ▾"
 msgstr "Variabler ▾"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.labelf2tresult.caption
-msgctxt "tformmain.paneltools.pagetools.tabfiletotag.labelf2tresult.caption"
-msgid "Resultat:"
-msgstr "Resultat:"
+msgid "Eksempel på filnavn:"
+msgstr "Förhandsvisning av filnamn:"
 
 #: tformmain.paneltools.pagetools.tabfiletotag.checkf2tunderscores.caption
 msgctxt "tformmain.paneltools.pagetools.tabfiletotag.checkf2tunderscores.caption"

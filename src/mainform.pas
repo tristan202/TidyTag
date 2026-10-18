@@ -2131,37 +2131,87 @@ begin
   UpdateInlinePreviews;
 end;
 
+{ The mask with every variable shown as <Field>, e.g. '%1 - %2' -> '<Kunstner> - <Titel>.mp3'.
+  Vars are the 'code|caption' lists; the longest matching code wins (%aa before %a...). }
+function MaskTemplate(const Mask, Ext: string; const Vars: array of string; SpacesTo: Char): string;
+var
+  I, J, Best: Integer;
+  Code, Cap, BestCode, BestCap, Lit: string;
+begin
+  Result := '';
+  I := 1;
+  while I <= Length(Mask) do
+  begin
+    BestCode := '';
+    if Mask[I] = '%' then
+      for J := 0 to High(Vars) do
+      begin
+        Code := Copy(Vars[J], 1, Pos('|', Vars[J]) - 1);
+        // variables only: '%' plus letters/digits (not the examples such as '%6 - %1 - %2')
+        if (Length(Code) < 2) or (Code[1] <> '%') or (Pos(' ', Code) > 0) or (Pos('%', Code, 2) > 0) then
+          Continue;
+        if (Length(Code) > Length(BestCode)) and (Copy(Mask, I, Length(Code)) = Code) then
+        begin
+          BestCode := Code;
+          BestCap := Copy(Vars[J], Pos('|', Vars[J]) + 1, MaxInt);
+        end;
+      end;
+    if BestCode <> '' then
+    begin
+      Best := Pos(' (', BestCap); // 'Udgivelsesdato (hele datoen)' -> 'Udgivelsesdato'
+      if Best > 0 then BestCap := Copy(BestCap, 1, Best - 1);
+      Result := Result + '<' + BestCap + '>';
+      Inc(I, Length(BestCode));
+    end
+    else
+    begin
+      Lit := Mask[I];
+      if (Lit = ' ') and (SpacesTo <> ' ') then Lit := SpacesTo;
+      Result := Result + Lit;
+      Inc(I);
+    end;
+  end;
+  if Result <> '' then Result := Result + Ext;
+end;
+
 procedure TFormMain.UpdateInlinePreviews;
 var
   Info: TAudioInfo;
-  NewName, Missing, S: string;
+  NewName, Missing, S, Ext: string;
   M: TFileNameMatch;
   F: TTagField;
+  Spaces: Char;
 begin
   PanelRenameCase.Enabled := CheckRenameCase.Checked;
   PanelF2TCase.Enabled := CheckF2TCase.Checked;
   Info := FocusedInfo;
   if (Info = nil) and (FView.Count > 0) then Info := Item(0);
+  // The boxes show the mask with field names; the focused file's actual result is the hint.
+  if Info <> nil then Ext := ExtractFileExt(Info.FileName) else Ext := '.mp3';
+  if CheckRenameUnderscores.Checked then Spaces := '_' else Spaces := ' ';
+  LabelRenamePreview.Caption := MaskTemplate(ComboRenameMask.Text, Ext, RenameVars, Spaces);
+  LabelF2TPreview.Caption := MaskTemplate(ComboF2TMask.Text, Ext, F2TVars, ' ');
   if Info = nil then
   begin
-    LabelRenamePreview.Caption := '';
-    LabelF2TPreview.Caption := '';
+    PanelRenamePreview.Hint := '';
+    PanelF2TPreview.Hint := '';
     Exit;
   end;
   // Rename: the new name of the focused file
   NewName := ExpandRenameMask(ComboRenameMask.Text, Info, 1, 2, RenameOptions, Missing);
   if Missing <> '' then
-    LabelRenamePreview.Caption := rsMangler + Missing
+    S := rsMangler + Missing
   else if NewName = '' then
-    LabelRenamePreview.Caption := rsUgyldigMaske
+    S := rsUgyldigMaske
   else if SameFileName(ExtractFileDir(NewName), ExtractFileDir(Info.FileName)) then
-    LabelRenamePreview.Caption := ExtractFileName(NewName)
+    S := ExtractFileName(NewName)
   else
-    LabelRenamePreview.Caption := ExtractRelativePath(IncludeTrailingPathDelimiter(ExtractFileDir(Info.FileName)), NewName);
+    S := ExtractRelativePath(IncludeTrailingPathDelimiter(ExtractFileDir(Info.FileName)), NewName);
+  PanelRenamePreview.Hint := ExtractFileName(Info.FileName) + '  →  ' + S;
   // Tags from file name: what is read out of the focused file's name
   M := MatchFileName(ComboF2TMask.Text, Info.FileName, CheckF2TUnderscores.Checked, F2TCaseMode);
   if not M.Ok then
-    LabelF2TPreview.Caption := rsFilnavnetPasserIkkeTilMasken
+    S := rsFilnavnetPasserIkkeTilMasken
   else
   begin
     S := '';
@@ -2171,8 +2221,8 @@ begin
         if S <> '' then S := S + '   ';
         S := S + TagFieldCaptions[F] + ': ' + M.Values[F];
       end;
-    LabelF2TPreview.Caption := S;
   end;
+  PanelF2TPreview.Hint := ExtractFileName(Info.FileName) + '  →  ' + S;
 end;
 
 procedure TFormMain.ButtonVarsClick(Sender: TObject);
