@@ -17,7 +17,11 @@ type
   TMBRelease = record
     Id, Title, Artist, Date, Country, Formats, LabelName, CatalogNo: string;
     ReleaseGroupId, Disambiguation, Status: string;
+    ReleaseType: string;        // 'Album', 'Single', 'Compilation', 'Live', ...
     TrackCount, Score: Integer;
+    // song search: where the song is on this release (0 = unknown)
+    HitTitle: string;
+    HitDisc, HitPosition: Integer;
   end;
   TMBReleases = array of TMBRelease;
 
@@ -49,16 +53,24 @@ const
 function HttpGet(const Url: string; out Data: TBytes; const ExtraHeaders: string = ''): Integer;
 function BytesToString(const B: TBytes): string;
 function SearchReleases(const Artist, Album: string): TMBReleases;
+{ Releases that contain a song (recording search). Album may be '' or narrow the search.
+  One row per album (release group: its earliest official release); the original studio
+  album comes first, then singles/EPs, compilations/live, unofficial; earliest first. }
+function SearchRecordings(const Artist, Title, Album: string): TMBReleases;
 function GetReleaseDetail(const ReleaseId: string): TMBReleaseDetail;
 { Front cover (Size 250, 500 or 1200 px) from the release, else its release group.
   Returns nil if there is none. }
 function GetFrontCover(const ReleaseId, ReleaseGroupId: string; Size: Integer): TBytes;
 { The query text MusicBrainz' search expects, e.g. release:"Gas 5" AND artist:"Gasolin'". }
 function BuildReleaseQuery(const Artist, Album: string): string;
+function BuildRecordingQuery(const Artist, Title, Album: string): string;
 function UrlEncode(const S: string): string;
 { Parsers, separate from the network for testing. }
 function ParseSearchJson(const Json: string): TMBReleases;
 function ParseReleaseJson(const Json: string): TMBReleaseDetail;
+function ParseRecordingSearchJson(const Json: string): TMBReleases;
+{ Groups and sorts song search results as described at SearchRecordings. }
+procedure SortSongReleases(var R: TMBReleases);
 
 implementation
 
@@ -77,6 +89,7 @@ resourcestring
   rsBlandet = 'Blandet';
   rsUventetSvarFraMusicbrainz = 'Uventet svar fra MusicBrainz';
   rsSkrivKunstnerOgEllerAlbum = 'Skriv kunstner og/eller album';
+  rsSkrivSangensTitel = 'Skriv sangens titel';
 
 
 var
@@ -219,6 +232,22 @@ begin
   end;
 end;
 
+function BuildRecordingQuery(const Artist, Title, Album: string): string;
+begin
+  Result := '';
+  if Trim(Title) <> '' then Result := 'recording:' + QuoteTerm(Title);
+  if Trim(Artist) <> '' then
+  begin
+    if Result <> '' then Result := Result + ' AND ';
+    Result := Result + 'artist:' + QuoteTerm(Artist);
+  end;
+  if Trim(Album) <> '' then
+  begin
+    if Result <> '' then Result := Result + ' AND ';
+    Result := Result + 'release:' + QuoteTerm(Album);
+  end;
+end;
+
 { ---------- JSON helpers ---------- }
 
 function JStr(O: TJSONObject; const Key: string): string;
@@ -290,6 +319,24 @@ begin
   end;
 end;
 
+{ 'Compilation', 'Live, Compilation', 'Single' ... from a release group. }
+function ReleaseTypeText(G: TJSONObject): string;
+var
+  A: TJSONArray;
+  I: Integer;
+begin
+  Result := '';
+  A := JArr(G, 'secondary-types');
+  if A <> nil then
+    for I := 0 to A.Count - 1 do
+      if A.Items[I].JSONType = jtString then
+      begin
+        if Result <> '' then Result := Result + ', ';
+        Result := Result + A.Items[I].AsString;
+      end;
+  if Result = '' then Result := JStr(G, 'primary-type');
+end;
+
 procedure FillRelease(O: TJSONObject; var R: TMBRelease);
 var
   Media, Labels: TJSONArray;
@@ -307,6 +354,10 @@ begin
   R.Score := JInt(O, 'score');
   R.TrackCount := JInt(O, 'track-count');
   R.ReleaseGroupId := JStr(JObj(O, 'release-group'), 'id');
+  R.ReleaseType := ReleaseTypeText(JObj(O, 'release-group'));
+  R.HitTitle := '';
+  R.HitDisc := 0;
+  R.HitPosition := 0;
   R.Formats := '';
   Media := JArr(O, 'media');
   if Media <> nil then
@@ -450,6 +501,180 @@ begin
   finally
     Root.Free;
   end;
+end;
+
+function SongRank(const R: TMBRelease): Integer;
+begin
+  if (R.Status <> '') and (R.Status <> 'Official') then Exit(3);
+  if R.ReleaseType = 'Album' then Exit(0);
+  if (R.ReleaseType = 'Single') or (R.ReleaseType = 'EP') then Exit(1);
+  Result := 2; // compilations, live, soundtracks, ...
+end;
+
+procedure SortSongReleases(var R: TMBReleases);
+var
+  I, J, K, Found: Integer;
+  T: TMBRelease;
+
+  { '1975' sorts after '1975-11-21': a full date is the better known release. }
+  function DateKey(const D: string): string;
+  begin
+    if D = '' then Result := '9999' else Result := D;
+    if Length(Result) = 4 then Result := Result + '-99-99'
+    else if Length(Result) = 7 then Result := Result + '-99';
+  end;
+
+  { Representative of a release group: official, then dated earliest. }
+  function Better(const A, B: TMBRelease): Boolean;
+  begin
+    if (A.Status = 'Official') <> (B.Status = 'Official') then Exit(A.Status = 'Official');
+    Result := DateKey(A.Date) < DateKey(B.Date);
+  end;
+
+  function Before(const A, B: TMBRelease): Boolean;
+  var
+    DA, DB: string;
+  begin
+    if SongRank(A) <> SongRank(B) then Exit(SongRank(A) < SongRank(B));
+    DA := DateKey(A.Date);
+    DB := DateKey(B.Date);
+    Result := DA < DB;
+  end;
+
+begin
+  // one release per release group: official before other, then the earliest
+  J := 0;
+  for I := 0 to High(R) do
+  begin
+    T := R[I];
+    Found := -1;
+    for K := 0 to J - 1 do
+      if ((T.ReleaseGroupId <> '') and (R[K].ReleaseGroupId = T.ReleaseGroupId)) or (R[K].Id = T.Id) then
+        begin
+          Found := K;
+          Break;
+        end;
+    if Found < 0 then
+    begin
+      R[J] := T;
+      Inc(J);
+    end
+    else if Better(T, R[Found]) then
+      R[Found] := T;
+  end;
+  SetLength(R, J);
+  // insertion sort: stable, and the lists are short
+  for I := 1 to High(R) do
+  begin
+    T := R[I];
+    J := I - 1;
+    while (J >= 0) and Before(T, R[J]) do
+    begin
+      R[J + 1] := R[J];
+      Dec(J);
+    end;
+    R[J + 1] := T;
+  end;
+end;
+
+function ParseRecordingsRaw(const Json: string; out Earliest: string): TMBReleases;
+var
+  Root: TJSONData;
+  Recs, Rels, Media, Tracks: TJSONArray;
+  Rec, Rel, Medium: TJSONObject;
+  I, J, N, Best, Score: Integer;
+  Seen: TStringList;
+  R: TMBRelease;
+begin
+  Result := nil;
+  Earliest := '';
+  Root := GetJSON(Json);
+  Seen := TStringList.Create;
+  try
+    Seen.Sorted := True;
+    if Root.JSONType <> jtObject then Exit;
+    Recs := JArr(TJSONObject(Root), 'recordings');
+    if Recs = nil then Exit;
+    Best := 0;
+    for I := 0 to Recs.Count - 1 do
+      if JInt(ArrObj(Recs, I), 'score') > Best then Best := JInt(ArrObj(Recs, I), 'score');
+    N := 0;
+    for I := 0 to Recs.Count - 1 do
+    begin
+      Rec := ArrObj(Recs, I);
+      Score := JInt(Rec, 'score');
+      // weaker hits are other songs with similar words
+      if (Score < Best - 10) or (Score < 60) then Continue;
+      if (JStr(Rec, 'first-release-date') <> '') and
+        ((Earliest = '') or (JStr(Rec, 'first-release-date') < Earliest)) then
+        Earliest := JStr(Rec, 'first-release-date');
+      Rels := JArr(Rec, 'releases');
+      if Rels = nil then Continue;
+      for J := 0 to Rels.Count - 1 do
+      begin
+        Rel := ArrObj(Rels, J);
+        if (Rel = nil) or (Seen.IndexOf(JStr(Rel, 'id')) >= 0) then Continue;
+        Seen.Add(JStr(Rel, 'id'));
+        FillRelease(Rel, R);
+        R.Score := Score;
+        if R.Artist = '' then R.Artist := CreditText(Rec);
+        Media := JArr(Rel, 'media');
+        if (Media <> nil) and (Media.Count > 0) then
+        begin
+          Medium := ArrObj(Media, 0);
+          Tracks := JArr(Medium, 'track');
+          if (Tracks <> nil) and (Tracks.Count > 0) then
+          begin
+            R.HitDisc := JInt(Medium, 'position');
+            R.HitPosition := JInt(Medium, 'track-offset') + 1;
+            R.HitTitle := JStr(ArrObj(Tracks, 0), 'title');
+          end;
+          // the media of a song hit only list that one disc; the release's count is the total
+          R.TrackCount := JInt(Rel, 'track-count');
+          R.Formats := JStr(Medium, 'format');
+          if Media.Count > 1 then R.Formats := R.Formats + '…';
+        end;
+        if R.HitTitle = '' then R.HitTitle := JStr(Rec, 'title');
+        SetLength(Result, N + 1);
+        Result[N] := R;
+        Inc(N);
+      end;
+    end;
+  finally
+    Seen.Free;
+    Root.Free;
+  end;
+end;
+
+function ParseRecordingSearchJson(const Json: string): TMBReleases;
+var
+  Earliest: string;
+begin
+  Result := ParseRecordingsRaw(Json, Earliest);
+  SortSongReleases(Result);
+end;
+
+function SearchRecordings(const Artist, Title, Album: string): TMBReleases;
+var
+  Q, Earliest, Dummy: string;
+  More: TMBReleases;
+  I, N: Integer;
+begin
+  if Trim(Title) = '' then raise EWebError.Create(rsSkrivSangensTitel);
+  Q := BuildRecordingQuery(Artist, Title, Album);
+  Result := ParseRecordingsRaw(MBGet('recording/?query=' + UrlEncode(Q) + '&fmt=json&limit=100'), Earliest);
+  // Famous songs have hundreds of recordings with the same score, and the original need
+  // not be among the first 100: ask once more for recordings released no later than the
+  // earliest one found.
+  if Earliest <> '' then
+  begin
+    More := ParseRecordingsRaw(MBGet('recording/?query=' + UrlEncode(Q + ' AND firstreleasedate:[* TO ' +
+      Earliest + ']') + '&fmt=json&limit=25'), Dummy);
+    N := Length(Result);
+    SetLength(Result, N + Length(More));
+    for I := 0 to High(More) do Result[N + I] := More[I];
+  end;
+  SortSongReleases(Result);
 end;
 
 function SearchReleases(const Artist, Album: string): TMBReleases;

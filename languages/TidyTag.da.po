@@ -2382,6 +2382,10 @@ msgstr ""
 msgid "Skriv kunstner og/eller album"
 msgstr ""
 
+#: musicbrainz.rsskrivsangenstitel
+msgid "Skriv sangens titel"
+msgstr ""
+
 #: oggwriter.rsugyldigoggsidefilener
 msgid "Ugyldig Ogg-side (filen er beskadiget eller ikke Ogg)"
 msgstr ""
@@ -2978,7 +2982,7 @@ msgid "Web-opslag - %d filer"
 msgstr ""
 
 #: weblookupform.rsskrivkunstnerogalbumog
-msgid "Skriv kunstner og album, og tryk Søg."
+msgid "Skriv kunstner og album - eller kunstner og sang for at finde albummet - og tryk Søg."
 msgstr ""
 
 #: weblookupform.rsdiscogskraeveretpersonligttoken
@@ -3025,6 +3029,14 @@ msgstr ""
 
 #: weblookupform.rsfilerneerparretefterderes
 msgid "Filerne er parret efter deres spornumre. Henter cover..."
+msgstr ""
+
+#: weblookupform.rsfilerneerparreteftertitler
+msgid "Filerne er parret efter deres titler. Henter cover..."
+msgstr ""
+
+#: weblookupform.rsfilenerparretmedsangen
+msgid "Filen er parret med sangen fra søgningen. Henter cover..."
 msgstr ""
 
 #: weblookupform.rsfilerneerparretilistens
@@ -3842,6 +3854,10 @@ msgstr ""
 msgid "Kunstner:"
 msgstr ""
 
+#: tformweblookup.labeltitle.caption
+msgid "Sang:"
+msgstr ""
+
 #: tformweblookup.labelalbum.caption
 msgid "Album:"
 msgstr ""
@@ -3886,6 +3902,10 @@ msgstr ""
 #: tformweblookup.listreleases.item7.caption
 msgctxt "tformweblookup.listreleases.item7.caption"
 msgid "Katalognr."
+msgstr ""
+
+#: tformweblookup.listreleases.item8.caption
+msgid "Type"
 msgstr ""
 
 #: tformweblookup.labeltracks.caption

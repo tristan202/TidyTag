@@ -17,7 +17,8 @@ interface
 uses
   Classes, SysUtils, MusicBrainz;
 
-function DiscogsSearch(const Artist, Album, Token: string): TMBReleases;
+{ Track: a song title; the search then finds releases with that track. }
+function DiscogsSearch(const Artist, Album, Token: string; const Track: string = ''): TMBReleases;
 function DiscogsRelease(const ReleaseId, Token: string): TMBReleaseDetail;
 { Downloads the release's primary image (Detail.CoverUrl); nil if there is none. }
 function DiscogsCover(const Url, Token: string): TBytes;
@@ -363,7 +364,7 @@ begin
   end;
 end;
 
-function DiscogsSearch(const Artist, Album, Token: string): TMBReleases;
+function DiscogsSearch(const Artist, Album, Token: string; const Track: string): TMBReleases;
 var
   Q: string;
 begin
@@ -372,6 +373,7 @@ begin
   Q := 'type=release&per_page=50';
   if Trim(Artist) <> '' then Q := Q + '&artist=' + UrlEncode(Trim(Artist));
   if Trim(Album) <> '' then Q := Q + '&release_title=' + UrlEncode(Trim(Album));
+  if Trim(Track) <> '' then Q := Q + '&track=' + UrlEncode(Trim(Track));
   Result := ParseDiscogsSearchJson(DiscogsGet('database/search?' + Q, Token));
 end;
 

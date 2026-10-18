@@ -2382,6 +2382,10 @@ msgstr "Unexpected response from MusicBrainz"
 msgid "Skriv kunstner og/eller album"
 msgstr "Enter artist and/or album"
 
+#: musicbrainz.rsskrivsangenstitel
+msgid "Skriv sangens titel"
+msgstr "Enter the song title"
+
 #: oggwriter.rsugyldigoggsidefilener
 msgid "Ugyldig Ogg-side (filen er beskadiget eller ikke Ogg)"
 msgstr "Invalid Ogg page (the file is damaged or not Ogg)"
@@ -2978,8 +2982,8 @@ msgid "Web-opslag - %d filer"
 msgstr "Web lookup - %d files"
 
 #: weblookupform.rsskrivkunstnerogalbumog
-msgid "Skriv kunstner og album, og tryk Søg."
-msgstr "Enter artist and album, and press Search."
+msgid "Skriv kunstner og album - eller kunstner og sang for at finde albummet - og tryk Søg."
+msgstr "Enter artist and album - or artist and song to find the album - and press Search."
 
 #: weblookupform.rsdiscogskraeveretpersonligttoken
 msgid "Discogs kræver et personligt token til søgning - tryk \"Discogs-token...\"."
@@ -3026,6 +3030,14 @@ msgstr "Fetching track list..."
 #: weblookupform.rsfilerneerparretefterderes
 msgid "Filerne er parret efter deres spornumre. Henter cover..."
 msgstr "The files are paired by their track numbers. Fetching cover..."
+
+#: weblookupform.rsfilerneerparreteftertitler
+msgid "Filerne er parret efter deres titler. Henter cover..."
+msgstr "The files are matched by their titles. Getting cover..."
+
+#: weblookupform.rsfilenerparretmedsangen
+msgid "Filen er parret med sangen fra søgningen. Henter cover..."
+msgstr "The file is matched with the song from the search. Getting cover..."
 
 #: weblookupform.rsfilerneerparretilistens
 msgid "Filerne er parret i listens rækkefølge - ret med Op/Ned. Henter cover..."
@@ -3842,6 +3854,10 @@ msgstr "Discogs token..."
 msgid "Kunstner:"
 msgstr "Artist:"
 
+#: tformweblookup.labeltitle.caption
+msgid "Sang:"
+msgstr "Song:"
+
 #: tformweblookup.labelalbum.caption
 msgid "Album:"
 msgstr "Album:"
@@ -3887,6 +3903,10 @@ msgstr "Label"
 msgctxt "tformweblookup.listreleases.item7.caption"
 msgid "Katalognr."
 msgstr "Catalog no."
+
+#: tformweblookup.listreleases.item8.caption
+msgid "Type"
+msgstr "Type"
 
 #: tformweblookup.labeltracks.caption
 msgid "Spor på den valgte udgivelse og de filer, der får dem (flyt filer med Op/Ned):"

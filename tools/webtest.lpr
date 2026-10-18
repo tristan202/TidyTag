@@ -36,6 +36,25 @@ const
     ']}';
 
 const
+  RecordingJson =
+    '{"count":3,"recordings":[' +
+    ' {"id":"rec1","score":100,"title":"Sangen","artist-credit":[{"name":"Bandet","joinphrase":""}],"releases":[' +
+    '   {"id":"comp","title":"De bedste","status":"Official","date":"2002-07-01","country":"DK","track-count":21,' +
+    '    "release-group":{"id":"g1","primary-type":"Album","secondary-types":["Compilation"]},' +
+    '    "media":[{"position":1,"format":"CD","track-offset":8,"track":[{"number":"9","title":"Sangen"}],"track-count":10}]},' +
+    '   {"id":"alb","title":"Debut","status":"Official","date":"1975-10-14","country":"DK","track-count":10,' +
+    '    "artist-credit":[{"name":"Bandet","joinphrase":""}],' +
+    '    "release-group":{"id":"g2","primary-type":"Album"},' +
+    '    "media":[{"position":1,"format":"12\" Vinyl","track-offset":2,"track":[{"number":"A3","title":"Sangen"}],"track-count":10}]}]},' +
+    ' {"id":"rec2","score":98,"title":"Sangen","releases":[' +
+    '   {"id":"alb","title":"Debut","status":"Official","date":"1975-10-14"},' +
+    '   {"id":"single","title":"Sangen","status":"Official","date":"1975-09-01","track-count":2,' +
+    '    "release-group":{"id":"g3","primary-type":"Single"},' +
+    '    "media":[{"position":1,"format":"7\" Vinyl","track-offset":0,"track":[{"number":"A","title":"Sangen"}]}]},' +
+    '   {"id":"boot","title":"Live bootleg","status":"Bootleg","date":"1970","release-group":{"primary-type":"Album"}}]},' +
+    ' {"id":"rec3","score":45,"title":"En helt anden sang","releases":[{"id":"other","title":"Andet"}]}' +
+    ']}';
+
   DiscogsSearchJson =
     '{"pagination":{"items":2},"results":[' +
     ' {"id":1234,"type":"release","title":"Gasolin'' (2) - Gas 5","year":"1975","country":"Denmark",' +
@@ -95,7 +114,7 @@ var
   D: TMBReleaseDetail;
   Files: array of TAudioInfo;
   Rows: TMatchRows;
-  ByNumber: Boolean;
+  Method: TMatchMethod;
   Opt: TWebWriteOptions;
   I: Integer;
 begin
@@ -128,21 +147,61 @@ begin
   Files[0] := MakeFile('c.mp3', '1', '2');
   Files[1] := MakeFile('a.mp3', '1/2', '1/2');
   Files[2] := MakeFile('b.mp3', '02', '');
-  Rows := MatchFilesToTracks(Files, D, ByNumber);
-  Check(ByNumber, 'matchet efter numre');
+  Rows := MatchFilesToTracks(Files, D, Method);
+  Check(Method = mmNumber, 'matchet efter numre');
   Check((Rows[0].FileIdx = 1) and (Rows[1].FileIdx = 2) and (Rows[2].FileIdx = 0), 'rigtige par efter disk/spor');
 
   Files[2].Fields[tfTrack] := '';
-  Rows := MatchFilesToTracks(Files, D, ByNumber);
-  Check(not ByNumber, 'falder tilbage til rækkefølge');
+  Rows := MatchFilesToTracks(Files, D, Method);
+  Check(Method = mmOrder, 'falder tilbage til rækkefølge');
   Check((Rows[0].FileIdx = 0) and (Rows[1].FileIdx = 1) and (Rows[2].FileIdx = 2), 'rækkefølge');
   MoveFile(Rows, 0, 1);
   Check((Rows[0].FileIdx = 1) and (Rows[1].FileIdx = 0), 'flyt ned');
 
   SetLength(Files, 4);
   Files[3] := MakeFile('ekstra.mp3', '', '');
-  Rows := MatchFilesToTracks(Files, D, ByNumber);
+  Rows := MatchFilesToTracks(Files, D, Method);
   Check((Length(Rows) = 4) and (Rows[3].TrackIdx = -1) and (Rows[3].FileIdx = 3), 'ekstra fil uden spor');
+
+  WriteLn('-- matchning efter titel og sangsøgning');
+  SetLength(Files, 2);
+  Files[0].Fields[tfTitle] := 'SANG b!';
+  Files[1].Fields[tfTitle] := 'Sang C (Remastered 2011)';
+  Rows := MatchFilesToTracks(Files, D, Method);
+  Check(Method = mmTitle, 'matchet efter titler');
+  Check((Rows[1].FileIdx = 0) and (Rows[2].FileIdx = 1), 'titel uden store/små og tegn; parentes ignoreres');
+  Files[1].Fields[tfTitle] := 'Sang A';
+  Files[1].Fields[tfTrack] := '7';
+  Rows := MatchFilesToTracks(Files, D, Method);
+  Check((Method = mmTitle) and (Rows[0].FileIdx = 1), 'titel slår et forkert spornummer');
+  SetLength(Files, 1);
+  Files[0].Fields[tfTitle] := 'Ukendt titel';
+  Files[0].Fields[tfTrack] := '1';
+  Rows := MatchFilesToTracks(Files, D, Method, 2, 1);
+  Check((Method = mmHit) and (Rows[2].FileIdx = 0), 'én fil: sporet fra sangsøgningen (disk 2 spor 1)');
+  Rows := MatchFilesToTracks(Files, D, Method);
+  Check((Method = mmNumber) and (Rows[2].FileIdx = 0), 'uden søgehit: disk/spornummer (disk 2 spor 1)');
+  Eq(NormTitle('Rock''n''Roll [Live] (1975)', True), 'rocknroll', 'normaliseret titel');
+  SetLength(Files, 4);
+  Files[1] := MakeFile('a.mp3', '1/2', '1/2');
+  Files[2] := MakeFile('b.mp3', '02', '');
+  Files[3] := MakeFile('ekstra.mp3', '', '');
+
+  WriteLn('-- sangsøgning');
+  R := ParseRecordingSearchJson(RecordingJson);
+  Check(Length(R) = 4, Format('4 udgivelser (dubletter og svage hits fjernet): %d', [Length(R)]));
+  if Length(R) = 4 then
+  begin
+    Eq(R[0].Id + ' ' + R[1].Id + ' ' + R[2].Id + ' ' + R[3].Id, 'alb single comp boot',
+      'album først, så single, opsamling, bootleg');
+    Eq(R[0].ReleaseType, 'Album', 'type album');
+    Eq(R[2].ReleaseType, 'Compilation', 'type opsamling');
+    Check((R[0].HitDisc = 1) and (R[0].HitPosition = 3), 'sangens plads på albummet (track-offset + 1)');
+    Eq(R[2].Artist, 'Bandet', 'kunstner fra optagelsen, når udgivelsen ikke har en');
+    Check(R[2].TrackCount = 21, 'sporantal for hele udgivelsen');
+  end;
+  Eq(BuildRecordingQuery('Gasolin''', 'Rabalderstræde', ''), 'recording:"Rabalderstræde" AND artist:"Gasolin''"',
+    'forespørgsel for sang');
 
   WriteLn('-- anvend spor');
   Opt.Fields := [tfTitle, tfArtist, tfAlbum, tfAlbumArtist, tfYear, tfTrack, tfDisc, tfGenre];

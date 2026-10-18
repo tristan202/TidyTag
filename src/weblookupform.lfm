@@ -44,32 +44,47 @@ object FormWebLookup: TFormWebLookup
     Left = 196
     Height = 23
     Top = 12
-    Width = 250
+    Width = 220
     TabOrder = 0
     OnKeyPress = EditKeyPress
   end
+  object LabelTitle: TLabel
+    Left = 428
+    Height = 15
+    Top = 16
+    Width = 30
+    Caption = 'Sang:'
+  end
+  object EditTitle: TEdit
+    Left = 470
+    Height = 23
+    Top = 12
+    Width = 220
+    TabOrder = 1
+    OnKeyPress = EditKeyPress
+  end
   object LabelAlbum: TLabel
-    Left = 458
+    Left = 702
     Height = 15
     Top = 16
     Width = 39
     Caption = 'Album:'
   end
   object EditAlbum: TEdit
-    Left = 506
+    Left = 750
     Height = 23
     Top = 12
-    Width = 250
-    TabOrder = 1
+    Width = 200
+    TabOrder = 2
     OnKeyPress = EditKeyPress
   end
   object ButtonSearch: TButton
-    Left = 768
+    Left = 960
     Height = 27
     Top = 10
-    Width = 90
+    Width = 88
     Caption = 'S'#248'g'
-    TabOrder = 2
+    TabOrder = 3
     OnClick = ButtonSearchClick
   end
   object ListReleases: TListView
@@ -110,6 +125,10 @@ object FormWebLookup: TFormWebLookup
       item
         Caption = 'Katalognr.'
         Width = 120
+      end
+      item
+        Caption = 'Type'
+        Width = 110
       end>
     HideSelection = False
     ReadOnly = True

@@ -60,6 +60,9 @@ The source code comments are in English; the source language of the UI texts is 
 - **MusicBrainz**: search by artist and album, pick a release (date, country, format, label, catalog
   number). Files are matched by disc/track number or by order, and the chosen fields plus the front
   cover from the Cover Art Archive are written. The 1-request-per-second limit is respected.
+- **Find the album of a single song**: enter artist and song instead of album. The results show one
+  row per album with the original studio album first (then singles, compilations, live), and the
+  file is matched to the right track by its title.
 - **Discogs** as a second source in the same dialog. Searching needs a personal token
   (discogs.com > Settings > Developers), which is stored only in the local settings file.
 - Networking uses Windows' WinInet, so no OpenSSL DLLs are needed.

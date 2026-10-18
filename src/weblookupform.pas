@@ -23,7 +23,7 @@ type
   public
     Kind: TWebJobKind;
     Source: TWebSource;
-    Artist, Album, ReleaseId, GroupId, CoverUrl, Token: string;
+    Artist, Album, Title, ReleaseId, GroupId, CoverUrl, Token: string;
     Releases: TMBReleases;
     Detail: TMBReleaseDetail;
     Cover: TBytes;
@@ -57,10 +57,12 @@ type
     ComboSource: TComboBox;
     EditAlbum: TEdit;
     EditArtist: TEdit;
+    EditTitle: TEdit;
     GroupOptions: TGroupBox;
     ImageCover: TImage;
     LabelAlbum: TLabel;
     LabelArtist: TLabel;
+    LabelTitle: TLabel;
     LabelCover: TLabel;
     LabelStatus: TLabel;
     LabelTracks: TLabel;
@@ -110,7 +112,7 @@ uses
 
 resourcestring
   rsWebOpslagDFiler = 'Web-opslag - %d filer';
-  rsSkrivKunstnerOgAlbumOg = 'Skriv kunstner og album, og tryk Søg.';
+  rsSkrivKunstnerOgAlbumOg = 'Skriv kunstner og album - eller kunstner og sang for at finde albummet - og tryk Søg.';
   rsDiscogsKraeverEtPersonligtToken = 'Discogs kræver et personligt token til søgning - tryk "Discogs-token...".';
   rsTrykSoeg = 'Tryk Søg.';
   rsLavEtPersonligtTokenPaa = 'Lav et personligt token på discogs.com: Settings > Developers > Generate new token.'#13#10'Indsæt det her (det gemmes kun på denne computer, i TidyTags indstillingsfil):';
@@ -122,6 +124,8 @@ resourcestring
   rsDUdgivelserFundetPaaS = '%d udgivelser fundet på %s. Vælg den rigtige (dato, format og katalognummer hjælper).';
   rsHenterSporliste = 'Henter sporliste...';
   rsFilerneErParretEfterDeres = 'Filerne er parret efter deres spornumre. Henter cover...';
+  rsFilerneErParretEfterTitler = 'Filerne er parret efter deres titler. Henter cover...';
+  rsFilenErParretMedSangen = 'Filen er parret med sangen fra søgningen. Henter cover...';
   rsFilerneErParretIListens = 'Filerne er parret i listens rækkefølge - ret med Op/Ned. Henter cover...';
   rsHenterCover = ' Henter cover...';
   rsIntetCoverFundet = 'Intet cover fundet';
@@ -149,7 +153,21 @@ end;
 procedure TWebJob.Execute;
 begin
   try
-    if Source = wsDiscogs then
+    if (Kind = wjSearch) and (Title <> '') then
+    begin
+      // song search; a wrong album tag should not hide the song, so retry without it
+      if Source = wsDiscogs then
+      begin
+        Releases := DiscogsSearch(Artist, Album, Token, Title);
+        if (Length(Releases) = 0) and (Album <> '') then Releases := DiscogsSearch(Artist, '', Token, Title);
+      end
+      else
+      begin
+        Releases := SearchRecordings(Artist, Title, Album);
+        if (Length(Releases) = 0) and (Album <> '') then Releases := SearchRecordings(Artist, Title, '');
+      end;
+    end
+    else if Source = wsDiscogs then
       case Kind of
         wjSearch: Releases := DiscogsSearch(Artist, Album, Token);
         wjDetail: Detail := DiscogsRelease(ReleaseId, Token);
@@ -194,6 +212,8 @@ begin
     if Artist = '' then Artist := CommonValue(Items, tfArtist);
     F.EditArtist.Text := Artist;
     F.EditAlbum.Text := CommonValue(Items, tfAlbum);
+    // one song: search for the song, which finds the album it is on
+    if Length(Items) = 1 then F.EditTitle.Text := Items[0].Fields[tfTitle];
     F.Caption := Format(rsWebOpslagDFiler, [Length(Items)]);
     F.LabelStatus.Caption := rsSkrivKunstnerOgAlbumOg;
     F.ShowTracks;
@@ -361,6 +381,7 @@ begin
   try
     Job.Artist := Trim(EditArtist.Text);
     Job.Album := Trim(EditAlbum.Text);
+    Job.Title := Trim(EditTitle.Text);
     if not RunJob(Job, rsSoegerPaa + SourceName + '...') then Exit;
     FReleases := Job.Releases;
   finally
@@ -381,6 +402,7 @@ begin
       Item.SubItems.Add(FReleases[I].Formats);
       Item.SubItems.Add(FReleases[I].LabelName);
       Item.SubItems.Add(FReleases[I].CatalogNo);
+      Item.SubItems.Add(FReleases[I].ReleaseType);
     end;
   finally
     ListReleases.Items.EndUpdate;
@@ -390,6 +412,12 @@ begin
   else
   begin
     LabelStatus.Caption := Format(rsDUdgivelserFundetPaaS, [Length(FReleases), SourceName]);
+    if Trim(EditTitle.Text) <> '' then
+    begin
+      // song search: the list is sorted with the original album first
+      ListReleases.Items[0].Selected := True;
+      Exit;
+    end;
     // Preselect the first release with as many tracks as there are files, else the best hit.
     for I := 0 to High(FReleases) do
       if FReleases[I].TrackCount = Length(FItems) then
@@ -410,7 +438,7 @@ end;
 procedure TFormWebLookup.LoadRelease(Index: Integer);
 var
   Job: TWebJob;
-  ByNumber: Boolean;
+  Method: TMatchMethod;
 begin
   if (Index < 0) or (Index > High(FReleases)) then Exit;
   FHaveDetail := False;
@@ -425,12 +453,16 @@ begin
     Job.Free;
   end;
   FHaveDetail := True;
-  FRows := MatchFilesToTracks(FItems, FDetail, ByNumber);
+  FRows := MatchFilesToTracks(FItems, FDetail, Method, FReleases[Index].HitDisc,
+    FReleases[Index].HitPosition);
   ShowTracks;
-  if ByNumber then
-    LabelStatus.Caption := rsFilerneErParretEfterDeres
+  case Method of
+    mmTitle: LabelStatus.Caption := rsFilerneErParretEfterTitler;
+    mmHit: LabelStatus.Caption := rsFilenErParretMedSangen;
+    mmNumber: LabelStatus.Caption := rsFilerneErParretEfterDeres;
   else
     LabelStatus.Caption := rsFilerneErParretIListens;
+  end;
 
   Job := NewJob(wjCover);
   try

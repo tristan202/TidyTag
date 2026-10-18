@@ -6190,5 +6190,53 @@
   "it": "Anteprima del nome file:",
   "sv": "Förhandsvisning av filnamn:",
   "es": "Vista previa del nombre de archivo:"
+ },
+ "Skriv sangens titel": {
+  "en": "Enter the song title",
+  "de": "Songtitel eingeben",
+  "fr": "Saisissez le titre de la chanson",
+  "it": "Inserisci il titolo del brano",
+  "sv": "Skriv låtens titel",
+  "es": "Escriba el título de la canción"
+ },
+ "Skriv kunstner og album - eller kunstner og sang for at finde albummet - og tryk Søg.": {
+  "en": "Enter artist and album - or artist and song to find the album - and press Search.",
+  "de": "Interpret und Album eingeben - oder Interpret und Song, um das Album zu finden - und Suchen drücken.",
+  "fr": "Saisissez l'artiste et l'album - ou l'artiste et la chanson pour trouver l'album - puis cliquez sur Rechercher.",
+  "it": "Inserisci artista e album - o artista e brano per trovare l'album - e premi Cerca.",
+  "sv": "Skriv artist och album - eller artist och låt för att hitta albumet - och tryck Sök.",
+  "es": "Escriba artista y álbum - o artista y canción para encontrar el álbum - y pulse Buscar."
+ },
+ "Filerne er parret efter deres titler. Henter cover...": {
+  "en": "The files are matched by their titles. Getting cover...",
+  "de": "Die Dateien sind nach ihren Titeln zugeordnet. Cover wird geladen...",
+  "fr": "Les fichiers sont associés par leur titre. Récupération de la pochette...",
+  "it": "I file sono abbinati in base ai titoli. Recupero copertina...",
+  "sv": "Filerna är parade efter sina titlar. Hämtar omslag...",
+  "es": "Los archivos se emparejan por sus títulos. Obteniendo portada..."
+ },
+ "Filen er parret med sangen fra søgningen. Henter cover...": {
+  "en": "The file is matched with the song from the search. Getting cover...",
+  "de": "Die Datei ist dem gesuchten Song zugeordnet. Cover wird geladen...",
+  "fr": "Le fichier est associé à la chanson trouvée. Récupération de la pochette...",
+  "it": "Il file è abbinato al brano trovato. Recupero copertina...",
+  "sv": "Filen är parad med låten från sökningen. Hämtar omslag...",
+  "es": "El archivo se empareja con la canción de la búsqueda. Obteniendo portada..."
+ },
+ "Sang:": {
+  "en": "Song:",
+  "de": "Song:",
+  "fr": "Chanson :",
+  "it": "Brano:",
+  "sv": "Låt:",
+  "es": "Canción:"
+ },
+ "Type": {
+  "en": "Type",
+  "de": "Typ",
+  "fr": "Type",
+  "it": "Tipo",
+  "sv": "Typ",
+  "es": "Tipo"
  }
 }
