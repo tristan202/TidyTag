@@ -2168,6 +2168,10 @@ msgstr "Enter / Doppelklick\tTag der markierten Datei bearbeiten\nLeertaste\t\tM
 msgid "Om TidyTag"
 msgstr "Über TidyTag"
 
+#: mainform.rsversion
+msgid "Version %s - fri software under GPL-3.0"
+msgstr "Version %s - freie Software unter GPL-3.0"
+
 #: mainform.rstidytagtageditorogmusikorganisator
 msgid "TidyTag - tag-editor og musikorganisator\nLavet i Lazarus / Free Pascal."
 msgstr "TidyTag - Tag-Editor und Musikorganisator\nErstellt mit Lazarus / Free Pascal."

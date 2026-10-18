@@ -6238,5 +6238,13 @@
   "it": "Tipo",
   "sv": "Typ",
   "es": "Tipo"
+ },
+ "Version %s - fri software under GPL-3.0": {
+  "en": "Version %s - free software under GPL-3.0",
+  "de": "Version %s - freie Software unter GPL-3.0",
+  "fr": "Version %s - logiciel libre sous GPL-3.0",
+  "it": "Versione %s - software libero con licenza GPL-3.0",
+  "sv": "Version %s - fri programvara under GPL-3.0",
+  "es": "Versión %s - software libre bajo GPL-3.0"
  }
 }

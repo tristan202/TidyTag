@@ -2168,6 +2168,10 @@ msgstr "Entrée / double-clic\tModifier le tag du fichier sélectionné\nEspace\
 msgid "Om TidyTag"
 msgstr "À propos de TidyTag"
 
+#: mainform.rsversion
+msgid "Version %s - fri software under GPL-3.0"
+msgstr "Version %s - logiciel libre sous GPL-3.0"
+
 #: mainform.rstidytagtageditorogmusikorganisator
 msgid "TidyTag - tag-editor og musikorganisator\nLavet i Lazarus / Free Pascal."
 msgstr "TidyTag - éditeur de tags et organiseur de musique\nRéalisé avec Lazarus / Free Pascal."

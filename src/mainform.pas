@@ -389,7 +389,7 @@ uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
   Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage, Spin, ButtonPanel,
-  ReplayGain, ID3Writer, ProgOptions;
+  ReplayGain, ID3Writer, ProgOptions, FileInfo;
 
 resourcestring
   rsOmdoebFilManuelt = 'Omdøb fil...';
@@ -778,6 +778,7 @@ resourcestring
   rsDiscogsTokenGemt = 'Discogs-token gemt';
   rsEnterDobbeltklikRedigerTagFor = 'Enter / dobbeltklik	Rediger tag for den markerede fil'#13#10'Mellemrum		Afkryds/fjern afkrydsning på markerede filer'#13#10'F4			Omdøb filer'#13#10'Ctrl+F4		Multi-fil-tag-editor'#13#10'Shift+F4		Tags fra filnavn'#13#10'F8			Vis/skjul værktøjspanelet'#13#10'F5			Opdater fillisten'#13#10'Ctrl+E		Rediger flere filer'#13#10'Ctrl+T		Spornumre'#13#10'Ctrl+W		Web-opslag'#13#10'Ctrl+Z		Fortryd omdøbning'#13#10'Ctrl+Shift+C / V	Kopiér / indsæt tag'#13#10'Ctrl+Op / Ned	Flyt markerede filer op / ned'#13#10'Ctrl+Shift+X	Eksportér / importér tags'#13#10'Ctrl+F		Filtrér listen (Esc rydder filteret)'#13#10'Ctrl+O		Åbn mappe'#13#10'Alt+Backspace	Mappe op';
   rsOmTidytag2 = 'Om TidyTag';
+  rsVersion = 'Version %s - fri software under GPL-3.0';
   rsTidytagTagEditorOgMusikorganisator = 'TidyTag - tag-editor og musikorganisator'#13#10'Lavet i Lazarus / Free Pascal.';
   rsWebDataMusicbrainzMusicbrainzOrg = 'Web-data: MusicBrainz (musicbrainz.org), Cover Art Archive og Discogs.'#13#10'Ikoner: Lazarus "general_purpose" af Roland Hahn (CC0).';
   rsIndstillinger2 = 'Indstillinger: ';
@@ -5491,10 +5492,30 @@ begin
   Close;
 end;
 
+{ The product version from the exe's version resource ('0.9.0'), '' if there is none. }
+function AppVersion: string;
+var
+  V: TFileVersionInfo;
+begin
+  Result := '';
+  V := TFileVersionInfo.Create(nil);
+  try
+    try
+      V.ReadFileInfo;
+      Result := V.VersionStrings.Values['ProductVersion'];
+    except
+      Result := '';
+    end;
+  finally
+    V.Free;
+  end;
+end;
+
 procedure TFormMain.ActAboutExecute(Sender: TObject);
 begin
   MessageDlg(rsOmTidytag2,
-    rsTidytagTagEditorOgMusikorganisator + LineEnding + LineEnding +
+    rsTidytagTagEditorOgMusikorganisator + LineEnding + Format(rsVersion, [AppVersion]) +
+    LineEnding + 'https://github.com/tristan202/TidyTag' + LineEnding + LineEnding +
     rsWebDataMusicbrainzMusicbrainzOrg + LineEnding + LineEnding +
     rsIndstillinger2 + SettingsFileName, mtInformation, [mbOK], 0);
 end;

@@ -9,6 +9,16 @@ The user interface is available in English, Danish, German, French, Italian, Swe
 The source code comments are in English; the source language of the UI texts is Danish (see
 [Translations](#translations)).
 
+## Download
+Get the latest version from [Releases](https://github.com/tristan202/TidyTag/releases):
+- `TidyTag-<version>-setup.exe` installs TidyTag (for you only, or for all users) with a Start menu
+  entry and an uninstaller.
+- `TidyTag-<version>-portable.zip` runs without installation: unpack it anywhere and start
+  `TidyTag.exe`.
+
+Settings are kept in `%LOCALAPPDATA%\TidyTag` in both cases. The program is not code-signed, so
+Windows SmartScreen may warn about an unknown publisher the first time.
+
 ## Features
 
 ### File list and browsing
@@ -118,6 +128,16 @@ The program finds its `languages\` folder next to the exe or in `..\languages`.
 
 Note: `lazbuild` does not rebuild a form when only its `.lfm` file has changed. Save the matching
 `.pas` file as well.
+
+## Making a release
+1. Set the new version in Lazarus under *Project > Project Options > Version Info* (the numbers and
+   the *Product version* string must match), or edit `VersionInfo` in `TidyTag.lpi`.
+2. Run `powershell -ExecutionPolicy Bypass -File tools\make-release.ps1`. It builds the optimized
+   *Release* build mode, the installer with [Inno Setup 6](https://jrsoftware.org/isinfo.php)
+   (`installer	idytag.iss`) and a portable zip, and prints their SHA-256 checksums. The files end
+   up in `release\`.
+3. On GitHub: *Releases > Draft a new release*, create the tag (e.g. `v0.9.0`), attach the two files
+   and publish.
 
 ## Development and test tools
 The console tools in `tools\` are built with the Free Pascal compiler directly:

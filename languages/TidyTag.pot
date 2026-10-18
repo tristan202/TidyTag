@@ -2167,6 +2167,10 @@ msgstr ""
 msgid "Om TidyTag"
 msgstr ""
 
+#: mainform.rsversion
+msgid "Version %s - fri software under GPL-3.0"
+msgstr ""
+
 #: mainform.rstidytagtageditorogmusikorganisator
 msgid "TidyTag - tag-editor og musikorganisator\nLavet i Lazarus / Free Pascal."
 msgstr ""
