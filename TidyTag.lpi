@@ -301,6 +301,16 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ReplayGain"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\src/settingsfile.pas.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="SettingsFile"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\src/progoptions.pas.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ProgOptions"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

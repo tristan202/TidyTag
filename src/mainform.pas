@@ -167,6 +167,7 @@ type
     FSyncDir: TSyncDirection;
     FSyncExisting: TSyncExisting;
     FRGAlbum, FRGSkip: Boolean;
+    FRecentMenu: TMenuItem;
     FAutoLog: TStringList;
     FSortColumn: Integer;
     FSortDescending: Boolean;
@@ -279,6 +280,24 @@ type
     procedure ActReplayGainExecute(Sender: TObject);
     procedure ActRemoveReplayGainExecute(Sender: TObject);
     procedure RunReplayGain(Album, SkipExisting: Boolean);
+    procedure ActRenameManualExecute(Sender: TObject);
+    procedure RenameFileDialog;
+    procedure RenameFolderManual;
+    function RenamePaths(Info: TAudioInfo; const OldName, NewName: string; var Log: TRenameLog): Boolean;
+    procedure ActPropertiesExecute(Sender: TObject);
+    procedure ActChangeExtExecute(Sender: TObject);
+    procedure ActExpandFoldersExecute(Sender: TObject);
+    procedure ActCollapseFoldersExecute(Sender: TObject);
+    procedure ActPlayFolderExecute(Sender: TObject);
+    procedure ActQuickPlaylistExecute(Sender: TObject);
+    procedure ActGenresExecute(Sender: TObject);
+    procedure RecentFolderClick(Sender: TObject);
+    procedure RebuildRecentMenu;
+    procedure ApplyViewOptions;
+    procedure RefreshGenreCombos;
+    procedure PlayWith(const FileName: string);
+    procedure FileListCustomDrawSubItem(Sender: TCustomListView; Item: TListItem; SubItem: Integer;
+      State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure AddAlbumArtistMenu(ParentItem: TMenuItem);
     procedure AlbumArtistClick(Sender: TObject);
     function LoadPasteFields: TTagFieldSet;
@@ -370,9 +389,58 @@ uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
   Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage, Spin, ButtonPanel,
-  ReplayGain;
+  ReplayGain, ID3Writer, ProgOptions;
 
 resourcestring
+  rsOmdoebFilManuelt = 'Omdøb fil...';
+  rsOmdoebFilManueltHint = 'Ret navnet på den markerede fil (eller mappen, når mappetræet er aktivt)';
+  rsOmdoebFilTitel = 'Omdøb fil (%d af %d)';
+  rsNytNavn = 'Nyt navn:';
+  rsForrige = '< Forrige';
+  rsNaeste = 'Næste >';
+  rsUgyldigtNavn = 'Navnet må ikke være tomt eller indeholde \ / : * ? " < > |';
+  rsKunneIkkeOmdoebe = 'Kunne ikke omdøbe';
+  rsManuelOmdoebning = 'manuel omdøbning';
+  rsOmdoebMappeTitel = 'Omdøb mappe';
+  rsEgenskaber = 'Egenskaber';
+  rsEgenskaberHint = 'Vis Windows-egenskaber for den markerede fil';
+  rsSkiftFiltype = 'Skift filtype';
+  rsMp4TilM4a = '.mp4 → .m4a';
+  rsTilM4b = '.mp4/.m4a/.m4p → .m4b (lydbog)';
+  rsM4bTilM4a = '.m4b → .m4a';
+  rsIngenFilerMedFiltypen = 'Ingen af filerne har den filtype.';
+  rsFiltypeSkiftet = 'Filtype skiftet for %d filer';
+  rsFiltypeFindes = '%s: findes allerede';
+  rsUdvidUndermapper = 'Udvid undermapper';
+  rsFoldMapperSammen = 'Fold alle mapper sammen';
+  rsAfspilMappen = 'Afspil mappen';
+  rsAfspilMappenHint = 'Afspil alle filer i listen som én playliste';
+  rsSenesteMapper = 'Seneste mapper';
+  rsGemPlaylisteHurtigt = 'Gem playliste hurtigt';
+  rsGemPlaylisteHurtigtHint = 'Gem de afkrydsede (ellers markerede) filer som playliste uden dialog (navn og mappe fra Indstillinger)';
+  rsPlaylisteFindesOverskriv = '%s findes allerede. Overskriv?';
+  rsGenreliste = 'Genreliste...';
+  rsGenrelisteHint = 'Vælg hvilke standardgenrer der vises, og tilføj dine egne';
+  rsMarkerLavBitrate = 'Vis lav bitrate med rødt';
+  rsGraenseKbit = 'Grænse (kbit/s):';
+  rsMarkerUdenID3v1 = 'Vis MP3-filer uden ID3v1 med orange filnavn';
+  rsSkjulFiltypenavne = 'Skjul filtypenavne';
+  rsGitterlinjer = 'Gitterlinjer';
+  rsSkriftstoerrelse = 'Skriftstørrelse (0 = standard):';
+  rsStartmappe = 'Startmappe';
+  rsSidsteMappe = 'Den sidste mappe';
+  rsFastMappe = 'Fast mappe:';
+  rsID3Unicode = 'ID3v2.3: gem altid tekst som Unicode (UTF-16)';
+  rsAfspillereFane = 'Afspillere';
+  rsAfspillereHjaelp = 'Ét program pr. linje: filtype=program, fx  flac=C:\Program Files\foobar2000\foobar2000.exe' +
+    #13#10'"*" gælder alle andre filtyper, m3u8 bruges til "Afspil mappen". Uden linje bruges Windows'' standardprogram.';
+  rsPlaylisterFane = 'Playlister';
+  rsSkrivExtinf = 'Skriv #EXTINF-linjer (spilletid og titel)';
+  rsExtinfTekst = 'Titel i #EXTINF:';
+  rsFuldeStier = 'Fulde stier (ellers relative til playlisten)';
+  rsPlaylisteMappe = 'Playliste-mappe (tom = filernes mappe):';
+  rsHurtigGemNavn = 'Filnavn ved hurtig gem:';
+  rsPlaylisteVarHjaelp = 'Masker som ved omdøbning, fx %1 - %2; %f er mappens navn.';
   rsBeregnReplayGain = 'Beregn ReplayGain...';
   rsBeregnReplayGainHint = 'Mål lydstyrken (EBU R128) og skriv ReplayGain-værdier i de afkrydsede filer';
   rsFjernReplayGain = 'Fjern ReplayGain...';
@@ -940,8 +1008,7 @@ begin
     BuildFilterExtras;
     ComboMultiGenre.Items.BeginUpdate;
     try
-      for I := 0 to ID3GenreCount - 1 do
-        ComboMultiGenre.Items.Add(ID3GenreName(I));
+      for S in GenreList do ComboMultiGenre.Items.Add(S);
     finally
       ComboMultiGenre.Items.EndUpdate;
     end;
@@ -1022,7 +1089,8 @@ var
     aMoveUp, aMoveDown, aExport, aSwapAT, aSwapAA, aSwapLT, aSwap, aCopyField, aClean,
     aRemoveTags, aCoverIn, aCoverOut, aWords, aSync, aAutoFit, aRandom, aCopyTo, aMoveTo,
     aDelFolderCover, aResizeFiles, aResizeFolders, aCoverAsFolder, aSettings,
-    aReplayGain, aRemoveRG: TAction;
+    aReplayGain, aRemoveRG, aRenameManual, aProperties, aExtM4A, aExtM4B, aExtM4BBack,
+    aExpandFolders, aCollapseFolders, aPlayFolder, aQuickPlaylist, aGenres: TAction;
   CoverPopup: TPopupMenu;
   PM: TMenuItem;
   NameTools: array[TNameTool] of TAction;
@@ -1165,6 +1233,19 @@ begin
   aSync := NewAction(rsMpTagSynkroniseringMenu, rsMpTagSynkroniseringHint, 0, -1, @ActID3SyncExecute);
   aReplayGain := NewAction(rsBeregnReplayGain, rsBeregnReplayGainHint, 0, -1, @ActReplayGainExecute);
   aRemoveRG := NewAction(rsFjernReplayGain, rsFjernReplayGainHint, 0, -1, @ActRemoveReplayGainExecute);
+  aRenameManual := NewAction(rsOmdoebFilManuelt, rsOmdoebFilManueltHint, ShortCut(VK_F6, []), -1, @ActRenameManualExecute);
+  aProperties := NewAction(rsEgenskaber, rsEgenskaberHint, ShortCut(VK_RETURN, [ssAlt]), -1, @ActPropertiesExecute);
+  aExtM4A := NewAction(rsMp4TilM4a, '', 0, -1, @ActChangeExtExecute);
+  aExtM4A.Tag := 0;
+  aExtM4B := NewAction(rsTilM4b, '', 0, -1, @ActChangeExtExecute);
+  aExtM4B.Tag := 1;
+  aExtM4BBack := NewAction(rsM4bTilM4a, '', 0, -1, @ActChangeExtExecute);
+  aExtM4BBack.Tag := 2;
+  aExpandFolders := NewAction(rsUdvidUndermapper, '', 0, -1, @ActExpandFoldersExecute);
+  aCollapseFolders := NewAction(rsFoldMapperSammen, '', 0, -1, @ActCollapseFoldersExecute);
+  aPlayFolder := NewAction(rsAfspilMappen, rsAfspilMappenHint, ShortCut(VK_P, [ssCtrl, ssShift]), -1, @ActPlayFolderExecute);
+  aQuickPlaylist := NewAction(rsGemPlaylisteHurtigt, rsGemPlaylisteHurtigtHint, ShortCut(VK_P, [ssCtrl, ssAlt]), -1, @ActQuickPlaylistExecute);
+  aGenres := NewAction(rsGenreliste, rsGenrelisteHint, 0, -1, @ActGenresExecute);
   aDelFolderCover := NewAction(rsSletMappeCover, rsSletMappeCoverHint, 0, -1, @ActDeleteFolderCoversExecute);
   aResizeFiles := NewAction(rsSkalerCoverIFilerne, rsSkalerCoverIFilerneHint, 0, -1, @ActResizeFileCoversExecute);
   aResizeFolders := NewAction(rsSkalerMappeCover, rsSkalerMappeCoverHint, 0, -1, @ActResizeFolderCoversExecute);
@@ -1191,8 +1272,10 @@ begin
   TopMenu := Menu(rsFiler);
   Add(TopMenu, aOpen); Add(TopMenu, aRefresh); Add(TopMenu, nil);
   Add(TopMenu, aEdit); Add(TopMenu, aMulti); Add(TopMenu, aRenameFolder); Add(TopMenu, nil);
-  Add(TopMenu, aPlay); Add(TopMenu, aExplorer); Add(TopMenu, nil);
-  Add(TopMenu, aCopyTo); Add(TopMenu, aMoveTo); Add(TopMenu, FActDeleteFiles); Add(TopMenu, nil);
+  Add(TopMenu, aPlay); Add(TopMenu, aPlayFolder); Add(TopMenu, aExplorer); Add(TopMenu, aProperties); Add(TopMenu, nil);
+  Add(TopMenu, aRenameManual); Add(TopMenu, aCopyTo); Add(TopMenu, aMoveTo); Add(TopMenu, FActDeleteFiles); Add(TopMenu, nil);
+  FRecentMenu := Sub(TopMenu, rsSenesteMapper);
+  Add(TopMenu, nil);
   Add(TopMenu, aExit);
   TopMenu := Menu(rsRediger);
   Add(TopMenu, aSelAll); Add(TopMenu, aSelNone); Add(TopMenu, nil);
@@ -1201,11 +1284,12 @@ begin
   Add(TopMenu, nil); Add(TopMenu, aMoveUp); Add(TopMenu, aMoveDown); Add(TopMenu, nil); Add(TopMenu, aFind);
   TopMenu := Menu(rsVis);
   Add(TopMenu, FActToolsPanel); Add(TopMenu, FActFolders); Add(TopMenu, FActAddress); Add(TopMenu, FActFilter);
-  Add(TopMenu, nil); Add(TopMenu, FActSubfolders); Add(TopMenu, nil);
+  Add(TopMenu, nil); Add(TopMenu, FActSubfolders); Add(TopMenu, aExpandFolders); Add(TopMenu, aCollapseFolders);
+  Add(TopMenu, nil);
   Add(TopMenu, aAutoFit); Add(TopMenu, FActAutoFitAfterScan); Add(TopMenu, aRandom); Add(TopMenu, nil);
   Add(TopMenu, aRefresh);
   TopMenu := Menu(rsPlayliste);
-  Add(TopMenu, aPlChecked); Add(TopMenu, aPlAll);
+  Add(TopMenu, aPlChecked); Add(TopMenu, aPlAll); Add(TopMenu, aQuickPlaylist);
   TopMenu := Menu(rsVaerKtoejer);
   Add(TopMenu, aTabRename); Add(TopMenu, aTabMulti); Add(TopMenu, aTabF2T); Add(TopMenu, nil);
   Add(TopMenu, aRenameDlg); Add(TopMenu, aF2TDlg); Add(TopMenu, aRenameFolder); Add(TopMenu, aTracks); Add(TopMenu, aWeb);
@@ -1223,6 +1307,8 @@ begin
   Add(SubMenu, aResizeFiles); Add(SubMenu, aResizeFolders); Add(SubMenu, nil); Add(SubMenu, aDelFolderCover);
   SubMenu := Sub(TopMenu, rsReplayGainTitel);
   Add(SubMenu, aReplayGain); Add(SubMenu, nil); Add(SubMenu, aRemoveRG);
+  SubMenu := Sub(TopMenu, rsSkiftFiltype);
+  Add(SubMenu, aExtM4A); Add(SubMenu, aExtM4B); Add(SubMenu, aExtM4BBack);
   // right click on the file cover
   CoverPopup := TPopupMenu.Create(Self);
   PM := TMenuItem.Create(CoverPopup);
@@ -1233,7 +1319,7 @@ begin
   RebuildActionsMenu;
   Add(TopMenu, nil); Add(TopMenu, FActUndo);
   TopMenu := Menu(rsIndstillinger);
-  Add(TopMenu, aSettings); Add(TopMenu, nil);
+  Add(TopMenu, aSettings); Add(TopMenu, aGenres); Add(TopMenu, nil);
   Add(TopMenu, FActKeepDate); Add(TopMenu, FActAutoResize); AddAlbumArtistMenu(TopMenu); Add(TopMenu, aWords); Add(TopMenu, aToken);
   Add(TopMenu, nil);
   AddLanguageMenu(TopMenu);
@@ -1244,7 +1330,7 @@ begin
   AddPopup(aEdit); AddPopup(aMulti); AddPopup(nil);
   AddPopup(aChkSel); AddPopup(aUnchkSel); AddPopup(aChkAll); AddPopup(aUnchkAll); AddPopup(aInvert);
   AddPopup(nil); AddPopup(aCopy); AddPopup(FActPaste); AddPopup(nil); AddPopup(aMoveUp); AddPopup(aMoveDown);
-  AddPopup(nil); AddPopup(aPlay); AddPopup(aExplorer);
+  AddPopup(nil); AddPopup(aPlay); AddPopup(aExplorer); AddPopup(aProperties); AddPopup(aRenameManual);
   AddPopup(nil); AddPopup(aCopyTo); AddPopup(aMoveTo); AddPopup(FActDeleteFiles);
 
   // ---- toolbars
@@ -1379,7 +1465,9 @@ function TFormMain.CellText(Info: TAudioInfo; Col: Integer): string;
 begin
   case Columns[Col].Kind of
     ckCheck: if Info.Checked then Result := CheckOn else Result := CheckOff;
-    ckFileName: Result := ExtractFileName(Info.FileName);
+    ckFileName:
+      if AppOptions.HideExtensions then Result := ChangeFileExt(ExtractFileName(Info.FileName), '')
+      else Result := ExtractFileName(Info.FileName);
     ckField: Result := Info.Fields[Columns[Col].Field];
     ckDuration: Result := FormatDuration(Info.Duration);
     ckBitrate: if Info.Bitrate > 0 then Result := IntToStr(Info.Bitrate) else Result := '';
@@ -1715,6 +1803,7 @@ begin
   ComboAddress.Items.Insert(0, Dir);
   while ComboAddress.Items.Count > 20 do ComboAddress.Items.Delete(ComboAddress.Items.Count - 1);
   ComboAddress.Text := Dir;
+  RebuildRecentMenu;
 end;
 
 procedure TFormMain.ComboAddressKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -2762,12 +2851,38 @@ begin
   SelectionChanged;
 end;
 
+procedure TFormMain.PlayWith(const FileName: string);
+var
+  Prog: string;
+  P: TProcess;
+begin
+  Prog := PlayerFor(FileName);
+  if Prog = '' then
+  begin
+    OpenDocument(FileName);
+    Exit;
+  end;
+  P := TProcess.Create(nil);
+  try
+    P.Executable := Prog;
+    P.Parameters.Add(FileName);
+    P.Options := [];
+    try
+      P.Execute;
+    except
+      on E: Exception do Inform(rsAfspilFil, Prog + ': ' + E.Message, mtWarning);
+    end;
+  finally
+    P.Free; // the player keeps running
+  end;
+end;
+
 procedure TFormMain.ActPlayExecute(Sender: TObject);
 var
   Info: TAudioInfo;
 begin
   Info := FocusedInfo;
-  if Info <> nil then OpenDocument(Info.FileName);
+  if Info <> nil then PlayWith(Info.FileName);
 end;
 
 procedure TFormMain.ActShowInExplorerExecute(Sender: TObject);
@@ -2934,7 +3049,18 @@ begin
   ShowTool(2);
 end;
 
-procedure WritePlaylist(const FileName: string; const Items: TAudioInfoArray);
+{ A mask expanded for one file as plain text (no folders, no extension); '' when a field is missing. }
+function MaskText(const Mask: string; Info: TAudioInfo): string;
+var
+  Opt: TRenameOptions;
+  Missing: string;
+begin
+  Opt := Default(TRenameOptions);
+  Result := ExpandRenameMask(Mask, Info, 1, 2, Opt, Missing);
+  if Result <> '' then Result := ChangeFileExt(ExtractFileName(Result), '');
+end;
+
+procedure WritePlaylist(const FileName: string; const Items: TAudioInfoArray; FullPaths: Boolean = False);
 var
   L: TStringList;
   Info: TAudioInfo;
@@ -2946,13 +3072,16 @@ begin
     L.Add('#EXTM3U');
     for Info in Items do
     begin
-      Name := Info.Fields[tfTitle];
-      if Info.Fields[tfArtist] <> '' then Name := Info.Fields[tfArtist] + ' - ' + Name;
-      if Info.Fields[tfTitle] = '' then Name := ChangeFileExt(ExtractFileName(Info.FileName), '');
-      L.Add(Format('#EXTINF:%d,%s', [Round(Info.Duration), Name]));
+      if AppOptions.PlExtInf then
+      begin
+        Name := MaskText(AppOptions.PlInfoMask, Info);
+        if Name = '' then Name := ChangeFileExt(ExtractFileName(Info.FileName), '');
+        L.Add(Format('#EXTINF:%d,%s', [Round(Info.Duration), Name]));
+      end;
       Path := Info.FileName;
       // relative paths keep the playlist working when the music folder moves
-      if SameFileName(Copy(Path, 1, Length(Dir)), Dir) then Path := Copy(Path, Length(Dir) + 1, MaxInt);
+      if not FullPaths and not AppOptions.PlFullPaths and SameFileName(Copy(Path, 1, Length(Dir)), Dir) then
+        Path := Copy(Path, Length(Dir) + 1, MaxInt);
       L.Add(Path);
     end;
     L.WriteBOM := False;
@@ -2977,6 +3106,7 @@ begin
     D.Filter := rsPlaylisteUtfMUM;
     D.DefaultExt := 'm3u8';
     D.InitialDir := ExtractFileDir(Items[0].FileName);
+    if (AppOptions.PlFolder <> '') and DirectoryExists(AppOptions.PlFolder) then D.InitialDir := AppOptions.PlFolder;
     D.FileName := ExtractFileName(ExtractFileDir(Items[0].FileName)) + '.m3u8';
     D.Options := D.Options + [ofOverwritePrompt];
     if D.Execute then
@@ -3417,7 +3547,13 @@ type
     procedure WordsClick(Sender: TObject);
     procedure ActionsClick(Sender: TObject);
     procedure TokenClick(Sender: TObject);
+    procedure GenresClick(Sender: TObject);
   end;
+
+procedure TSettingsButtons.GenresClick(Sender: TObject);
+begin
+  Main.ActGenresExecute(nil);
+end;
 
 procedure TSettingsButtons.WordsClick(Sender: TObject);
 begin
@@ -3440,8 +3576,12 @@ var
   Pages: TPageControl;
   Tab: TTabSheet;
   RLang, RAlbum: TRadioGroup;
-  CKeep, CAuto, CJpeg, CFit, CSub: TCheckBox;
-  ESide, EQual: TSpinEdit;
+  CKeep, CAuto, CJpeg, CFit, CSub, CLow, CNoV1, CHideExt, CGrid, CUni, CExtInf, CFull: TCheckBox;
+  ESide, EQual, ELow, EFont: TSpinEdit;
+  RStart: TRadioGroup;
+  EStart, EInfo, EPlFolder, EPlName: TEdit;
+  MPlayers: TMemo;
+  L: TLabel;
   BP: TButtonPanel;
   Btns: TSettingsButtons;
   I, Y: Integer;
@@ -3486,6 +3626,15 @@ var
     Inc(Y, 32);
   end;
 
+  function Ed(Parent_: TWinControl; const Value: string): TEdit;
+  begin
+    Result := TEdit.Create(F);
+    Result.Parent := Parent_;
+    Result.Text := Value;
+    Result.SetBounds(F.Scale96ToForm(260), F.Scale96ToForm(Y), F.Scale96ToForm(332), F.Scale96ToForm(23));
+    Inc(Y, 32);
+  end;
+
   function Btn(Parent_: TWinControl; const ACaption: string; Handler: TNotifyEvent): TButton;
   begin
     Result := TButton.Create(F);
@@ -3504,8 +3653,8 @@ begin
     F.Caption := rsIndstillingerTitel;
     F.BorderStyle := bsDialog;
     F.Position := poMainFormCenter;
-    F.ClientWidth := F.Scale96ToForm(560);
-    F.ClientHeight := F.Scale96ToForm(430);
+    F.ClientWidth := F.Scale96ToForm(620);
+    F.ClientHeight := F.Scale96ToForm(480);
     BP := TButtonPanel.Create(F);
     BP.Parent := F;
     BP.ShowButtons := [pbOK, pbCancel];
@@ -3528,13 +3677,15 @@ begin
     RAlbum := TRadioGroup.Create(F);
     RAlbum.Parent := Tab;
     RAlbum.Caption := rsAlbumkunstnerVedGem;
-    RAlbum.SetBounds(F.Scale96ToForm(264), F.Scale96ToForm(8), F.Scale96ToForm(280), F.Scale96ToForm(130));
+    RAlbum.SetBounds(F.Scale96ToForm(264), F.Scale96ToForm(8), F.Scale96ToForm(340), F.Scale96ToForm(130));
     RAlbum.Items.Add(rsAlbumkunstnerIngen);
     RAlbum.Items.Add(rsAlbumkunstnerHvisTom);
     RAlbum.Items.Add(rsAlbumkunstnerAltid);
     RAlbum.ItemIndex := Ord(AlbumArtistRule);
     Y := 250;
     CKeep := Chk(Tab, rsBevarFilernesDatoVedGem, FKeepTimestamp);
+    CUni := Chk(Tab, rsID3Unicode, AppOptions.ID3Unicode);
+    Btn(Tab, rsGenreliste, @Btns.GenresClick);
 
     // covers
     Tab := NewTab(rsCoverFane);
@@ -3549,12 +3700,62 @@ begin
     Tab := NewTab(rsFillisteFane);
     CFit := Chk(Tab, rsTilpasKolonnerEfterMappeskift, FActAutoFitAfterScan.Checked);
     CSub := Chk(Tab, rsSoegIUndermapper, FActSubfolders.Checked);
+    CLow := Chk(Tab, rsMarkerLavBitrate, AppOptions.MarkLowBitrate);
+    Lbl(Tab, rsGraenseKbit);
+    ELow := Spin(Tab, 8, 1000, AppOptions.LowBitrate);
+    CNoV1 := Chk(Tab, rsMarkerUdenID3v1, AppOptions.MarkNoID3v1);
+    CHideExt := Chk(Tab, rsSkjulFiltypenavne, AppOptions.HideExtensions);
+    CGrid := Chk(Tab, rsGitterlinjer, AppOptions.GridLines);
+    Lbl(Tab, rsSkriftstoerrelse).Left := F.Scale96ToForm(12);
+    EFont := Spin(Tab, 0, 24, AppOptions.ListFontSize);
+    RStart := TRadioGroup.Create(F);
+    RStart.Parent := Tab;
+    RStart.Caption := rsStartmappe;
+    RStart.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(Y), F.Scale96ToForm(236), F.Scale96ToForm(64));
+    RStart.Items.Add(rsSidsteMappe);
+    RStart.Items.Add(rsFastMappe);
+    if AppOptions.FixedStartFolder then RStart.ItemIndex := 1 else RStart.ItemIndex := 0;
+    Inc(Y, 32);
+    EStart := Ed(Tab, AppOptions.StartFolder);
+    if EStart.Text = '' then EStart.Text := FFolder;
 
     // rename and web
     Tab := NewTab(rsOmdoebningOgWeb);
     Btn(Tab, rsOrdudskiftningerMenu, @Btns.WordsClick);
     Btn(Tab, rsAdministrerHandlinger, @Btns.ActionsClick);
     Btn(Tab, rsDiscogsTokenMenu, @Btns.TokenClick);
+
+    // players
+    Tab := NewTab(rsAfspillereFane);
+    L := TLabel.Create(F);
+    L.Parent := Tab;
+    L.WordWrap := True;
+    L.AutoSize := False;
+    L.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(8), F.Scale96ToForm(580), F.Scale96ToForm(64));
+    L.Caption := rsAfspillereHjaelp;
+    MPlayers := TMemo.Create(F);
+    MPlayers.Parent := Tab;
+    MPlayers.ScrollBars := ssAutoBoth;
+    MPlayers.WordWrap := False;
+    MPlayers.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(78), F.Scale96ToForm(580), F.Scale96ToForm(300));
+    for I := 0 to High(AppOptions.Players) do MPlayers.Lines.Add(AppOptions.Players[I]);
+
+    // playlists
+    Tab := NewTab(rsPlaylisterFane);
+    CExtInf := Chk(Tab, rsSkrivExtinf, AppOptions.PlExtInf);
+    Lbl(Tab, rsExtinfTekst);
+    EInfo := Ed(Tab, AppOptions.PlInfoMask);
+    CFull := Chk(Tab, rsFuldeStier, AppOptions.PlFullPaths);
+    Lbl(Tab, rsPlaylisteMappe).Left := F.Scale96ToForm(12);
+    Inc(Y, 22);
+    EPlFolder := Ed(Tab, AppOptions.PlFolder);
+    EPlFolder.Left := F.Scale96ToForm(12);
+    EPlFolder.Width := F.Scale96ToForm(580);
+    Lbl(Tab, rsHurtigGemNavn).Left := F.Scale96ToForm(12);
+    EPlName := Ed(Tab, AppOptions.PlNameMask);
+    L := Lbl(Tab, rsPlaylisteVarHjaelp);
+    L.Left := F.Scale96ToForm(12);
+    L.Font.Color := clGrayText;
 
     Pages.ActivePageIndex := 0;
     if F.ShowModal <> mrOK then Exit;
@@ -3573,6 +3774,31 @@ begin
     FActAutoResize.Checked := CAuto.Checked;
     ActAutoResizeExecute(nil);
     FActAutoFitAfterScan.Checked := CFit.Checked;
+    AppOptions.ID3Unicode := CUni.Checked;
+    AppOptions.MarkLowBitrate := CLow.Checked;
+    AppOptions.LowBitrate := ELow.Value;
+    AppOptions.MarkNoID3v1 := CNoV1.Checked;
+    AppOptions.HideExtensions := CHideExt.Checked;
+    AppOptions.GridLines := CGrid.Checked;
+    AppOptions.ListFontSize := EFont.Value;
+    AppOptions.FixedStartFolder := RStart.ItemIndex = 1;
+    AppOptions.StartFolder := Trim(EStart.Text);
+    AppOptions.Players := nil;
+    for I := 0 to MPlayers.Lines.Count - 1 do
+      if Pos('=', MPlayers.Lines[I]) > 1 then
+      begin
+        SetLength(AppOptions.Players, Length(AppOptions.Players) + 1);
+        AppOptions.Players[High(AppOptions.Players)] := Trim(MPlayers.Lines[I]);
+      end;
+    AppOptions.PlExtInf := CExtInf.Checked;
+    AppOptions.PlInfoMask := Trim(EInfo.Text);
+    if AppOptions.PlInfoMask = '' then AppOptions.PlInfoMask := '%1 - %2';
+    AppOptions.PlFullPaths := CFull.Checked;
+    AppOptions.PlFolder := Trim(EPlFolder.Text);
+    AppOptions.PlNameMask := Trim(EPlName.Text);
+    if AppOptions.PlNameMask = '' then AppOptions.PlNameMask := '%f';
+    SaveAppOptions;
+    ApplyViewOptions;
     if CSub.Checked <> FActSubfolders.Checked then FActSubfolders.Execute; // rescans
     SaveSettings;
     if RLang.ItemIndex <= 0 then NewLang := '' else NewLang := LanguageCodes[RLang.ItemIndex - 1];
@@ -4014,6 +4240,365 @@ begin
   WriteFieldsBatch(Todo, PerItem, PerFields, nil, rsReplayGainTitel);
 end;
 
+const
+  SHOP_FILEPATH = 2;
+
+function SHObjectProperties(Wnd: THandle; ObjectType: Cardinal; ObjectName, PropertyPage: PWideChar): LongBool;
+  stdcall; external 'shell32.dll';
+
+procedure TFormMain.ApplyViewOptions;
+begin
+  ID3AlwaysUnicode := AppOptions.ID3Unicode;
+  FileList.GridLines := AppOptions.GridLines;
+  FileList.Font.Size := AppOptions.ListFontSize;
+  ShellTree.Font.Size := AppOptions.ListFontSize;
+  FileList.Invalidate;
+end;
+
+procedure TFormMain.FileListCustomDrawSubItem(Sender: TCustomListView; Item: TListItem;
+  SubItem: Integer; State: TCustomDrawState; var DefaultDraw: Boolean);
+var
+  Info: TAudioInfo;
+  Col: TColor;
+begin
+  DefaultDraw := True;
+  Col := clWindowText;
+  if (Item <> nil) and (Item.Index < FView.Count) and (SubItem <= High(Columns)) then
+  begin
+    Info := TAudioInfo(FView[Item.Index]);
+    case Columns[SubItem].Kind of
+      ckBitrate:
+        if AppOptions.MarkLowBitrate and (Info.Bitrate > 0) and (Info.Bitrate < AppOptions.LowBitrate) then
+          Col := clRed;
+      ckFileName:
+        if AppOptions.MarkNoID3v1 and SameText(ExtractFileExt(Info.FileName), '.mp3') and
+          (Pos('ID3v1', Info.TagTypes) = 0) then
+          Col := RGBToColor(205, 102, 0);
+    end;
+  end;
+  Sender.Canvas.Font.Color := Col;
+end;
+
+procedure TFormMain.RebuildRecentMenu;
+var
+  I: Integer;
+  M: TMenuItem;
+begin
+  if FRecentMenu = nil then Exit;
+  FRecentMenu.Clear;
+  for I := 0 to Min(ComboAddress.Items.Count, 15) - 1 do
+  begin
+    M := TMenuItem.Create(FRecentMenu);
+    M.Caption := StringReplace(ComboAddress.Items[I], '&', '&&', [rfReplaceAll]);
+    M.Hint := ComboAddress.Items[I];
+    M.Tag := I;
+    M.OnClick := @RecentFolderClick;
+    FRecentMenu.Add(M);
+  end;
+  FRecentMenu.Enabled := FRecentMenu.Count > 0;
+end;
+
+procedure TFormMain.RecentFolderClick(Sender: TObject);
+begin
+  Navigate(TMenuItem(Sender).Hint);
+end;
+
+procedure TFormMain.ActExpandFoldersExecute(Sender: TObject);
+begin
+  if ShellTree.Selected <> nil then
+  begin
+    Screen.Cursor := crHourGlass;
+    try
+      ShellTree.Selected.Expand(True);
+    finally
+      Screen.Cursor := crDefault;
+    end;
+  end;
+end;
+
+procedure TFormMain.ActCollapseFoldersExecute(Sender: TObject);
+begin
+  ShellTree.FullCollapse;
+  try
+    ShellTree.Path := FFolder; // keep the open folder visible
+  except
+  end;
+end;
+
+procedure TFormMain.ActPlayFolderExecute(Sender: TObject);
+var
+  Items: TAudioInfoArray;
+  PlName: string;
+begin
+  Items := AllItems;
+  if Length(Items) = 0 then Exit;
+  PlName := GetTempDir + 'TidyTag-afspil.m3u8';
+  WritePlaylist(PlName, Items, True);
+  PlayWith(PlName);
+end;
+
+procedure TFormMain.ActQuickPlaylistExecute(Sender: TObject);
+var
+  Items: TAudioInfoArray;
+  ScopeCaption, Dir, PlName: string;
+  Prefer: Boolean;
+begin
+  Items := TargetItems(ScopeCaption, Prefer);
+  if Length(Items) = 0 then
+  begin
+    Inform(rsGemPlaylisteHurtigt, rsDerErIngenFilerAt);
+    Exit;
+  end;
+  Dir := AppOptions.PlFolder;
+  if (Dir = '') or not DirectoryExists(Dir) then Dir := ExtractFileDir(Items[0].FileName);
+  PlName := MaskText(AppOptions.PlNameMask, Items[0]);
+  if PlName = '' then PlName := ExtractFileName(ExtractFileDir(Items[0].FileName));
+  PlName := IncludeTrailingPathDelimiter(Dir) + PlName + '.m3u8';
+  if FileExists(PlName) and not AskYes(rsGemPlaylisteHurtigt, Format(rsPlaylisteFindesOverskriv,
+    [ExtractFileName(PlName)])) then Exit;
+  WritePlaylist(PlName, Items);
+  SetMessage(Format(rsPlaylisteMedDFilerGemt, [Length(Items), PlName]));
+end;
+
+procedure TFormMain.RefreshGenreCombos;
+var
+  S, Keep: string;
+begin
+  Keep := ComboMultiGenre.Text;
+  ComboMultiGenre.Items.BeginUpdate;
+  try
+    ComboMultiGenre.Items.Clear;
+    for S in GenreList do ComboMultiGenre.Items.Add(S);
+  finally
+    ComboMultiGenre.Items.EndUpdate;
+  end;
+  ComboMultiGenre.Text := Keep;
+end;
+
+procedure TFormMain.ActGenresExecute(Sender: TObject);
+begin
+  if not EditGenreList(AppOptions.CustomGenres, AppOptions.HiddenGenres) then Exit;
+  SaveAppOptions;
+  RefreshGenreCombos;
+end;
+
+procedure TFormMain.ActPropertiesExecute(Sender: TObject);
+var
+  Info: TAudioInfo;
+  W: UnicodeString;
+begin
+  Info := FocusedInfo;
+  if Info <> nil then W := UnicodeString(Info.FileName)
+  else if FFolder <> '' then W := UnicodeString(FFolder)
+  else Exit;
+  SHObjectProperties(Handle, SHOP_FILEPATH, PWideChar(W), nil);
+end;
+
+function ValidFileName(const S: string): Boolean;
+var
+  C: Char;
+begin
+  Result := (Trim(S) <> '') and (S <> '.') and (S <> '..');
+  for C in S do
+    if C in ['\', '/', ':', '*', '?', '"', '<', '>', '|'] then Exit(False);
+end;
+
+function TFormMain.RenamePaths(Info: TAudioInfo; const OldName, NewName: string; var Log: TRenameLog): Boolean;
+var
+  Plan: TRenamePlan;
+  Done: TRenameLog;
+begin
+  SetLength(Plan, 1);
+  Plan[0].Info := Info;
+  Plan[0].OldName := OldName;
+  Plan[0].NewName := NewName;
+  Plan[0].Status := rsOk;
+  Plan[0].Detail := '';
+  Done := ExecuteRename(Plan);
+  Result := Length(Done) = 1;
+  if Result then
+  begin
+    SetLength(Log, Length(Log) + 1);
+    Log[High(Log)] := Done[0];
+  end
+  else if Plan[0].Status = rsExists then
+    Inform(rsKunneIkkeOmdoebe, Format(rsFiltypeFindes, [ExtractFileName(NewName)]), mtWarning)
+  else
+    Inform(rsKunneIkkeOmdoebe, Plan[0].Detail, mtWarning);
+end;
+
+procedure TFormMain.RenameFileDialog;
+var
+  F: TForm;
+  E: TEdit;
+  LExt, LDir: TLabel;
+  BP: TButtonPanel;
+  BPrev, BNext: TButton;
+  Idx, R: Integer;
+  Info: TAudioInfo;
+  Log: TRenameLog;
+  NewName: string;
+begin
+  if FileList.ItemIndex < 0 then Exit;
+  Idx := FileList.ItemIndex;
+  Log := nil;
+  F := TForm.CreateNew(Self);
+  try
+    F.BorderStyle := bsDialog;
+    F.Position := poMainFormCenter;
+    F.ClientWidth := F.Scale96ToForm(560);
+    F.ClientHeight := F.Scale96ToForm(140);
+    LDir := TLabel.Create(F);
+    LDir.Parent := F;
+    LDir.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(10), F.Scale96ToForm(536), F.Scale96ToForm(17));
+    LDir.AutoSize := False;
+    LDir.Font.Color := clGrayText;
+    with TLabel.Create(F) do
+    begin
+      Parent := F;
+      Caption := rsNytNavn;
+      Left := F.Scale96ToForm(12);
+      Top := F.Scale96ToForm(40);
+    end;
+    E := TEdit.Create(F);
+    E.Parent := F;
+    E.SetBounds(F.Scale96ToForm(90), F.Scale96ToForm(36), F.Scale96ToForm(390), F.Scale96ToForm(23));
+    LExt := TLabel.Create(F);
+    LExt.Parent := F;
+    LExt.Left := F.Scale96ToForm(486);
+    LExt.Top := F.Scale96ToForm(40);
+    BP := TButtonPanel.Create(F);
+    BP.Parent := F;
+    BP.ShowButtons := [pbOK, pbCancel];
+    BPrev := TButton.Create(F);
+    BPrev.Parent := F;
+    BPrev.Caption := rsForrige;
+    BPrev.ModalResult := mrRetry;
+    BPrev.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(72), F.Scale96ToForm(110), F.Scale96ToForm(26));
+    BNext := TButton.Create(F);
+    BNext.Parent := F;
+    BNext.Caption := rsNaeste;
+    BNext.ModalResult := mrIgnore;
+    BNext.SetBounds(F.Scale96ToForm(130), F.Scale96ToForm(72), F.Scale96ToForm(110), F.Scale96ToForm(26));
+    repeat
+      Info := TAudioInfo(FView[Idx]);
+      F.Caption := Format(rsOmdoebFilTitel, [Idx + 1, FView.Count]);
+      LDir.Caption := ExtractFileDir(Info.FileName);
+      E.Text := ChangeFileExt(ExtractFileName(Info.FileName), '');
+      LExt.Caption := ExtractFileExt(Info.FileName);
+      BPrev.Enabled := Idx > 0;
+      BNext.Enabled := Idx < FView.Count - 1;
+      F.ActiveControl := E;
+      E.SelectAll;
+      R := F.ShowModal;
+      if R = mrCancel then Break;
+      NewName := Trim(E.Text);
+      if NewName <> ChangeFileExt(ExtractFileName(Info.FileName), '') then
+      begin
+        if not ValidFileName(NewName) then
+        begin
+          Inform(rsKunneIkkeOmdoebe, rsUgyldigtNavn, mtWarning);
+          Continue;
+        end;
+        RenamePaths(Info, Info.FileName,
+          IncludeTrailingPathDelimiter(ExtractFileDir(Info.FileName)) + NewName + ExtractFileExt(Info.FileName), Log);
+        FileList.Invalidate;
+      end;
+      if R = mrRetry then Dec(Idx)
+      else if R = mrIgnore then Inc(Idx)
+      else Break;
+      FileList.ClearSelection;
+      FileList.ItemIndex := Idx;
+      FileList.Items[Idx].MakeVisible(False);
+    until False;
+  finally
+    F.Free;
+  end;
+  if Length(Log) > 0 then SetUndoLog(Log, rsManuelOmdoebning);
+  SelectionChanged;
+end;
+
+procedure TFormMain.RenameFolderManual;
+var
+  Dir, NewName: string;
+  Log: TRenameLog;
+begin
+  Dir := ExcludeTrailingPathDelimiter(ShellTree.Path);
+  if (Dir = '') or not DirectoryExists(Dir) or (ExtractFileName(Dir) = '') then Exit;
+  NewName := ExtractFileName(Dir);
+  if not InputQuery(rsOmdoebMappeTitel, rsNytNavn, NewName) then Exit;
+  NewName := Trim(NewName);
+  if NewName = ExtractFileName(Dir) then Exit;
+  if not ValidFileName(NewName) then
+  begin
+    Inform(rsKunneIkkeOmdoebe, rsUgyldigtNavn, mtWarning);
+    Exit;
+  end;
+  Log := nil;
+  if RenamePaths(nil, Dir, IncludeTrailingPathDelimiter(ExtractFileDir(Dir)) + NewName, Log) then
+  begin
+    ApplyRenameLog(Log, False);
+    SetUndoLog(Log, rsManuelOmdoebning);
+  end;
+end;
+
+procedure TFormMain.ActRenameManualExecute(Sender: TObject);
+begin
+  if ShellTree.Focused then RenameFolderManual else RenameFileDialog;
+end;
+
+procedure TFormMain.ActChangeExtExecute(Sender: TObject);
+const
+  FromExt: array[0..2] of string = ('.mp4', '.mp4.m4a.m4p', '.m4b');
+  ToExt: array[0..2] of string = ('.m4a', '.m4b', '.m4a');
+var
+  Items: TAudioInfoArray;
+  Plan: TRenamePlan;
+  Log: TRenameLog;
+  Errors: TStringList;
+  I, K, N: Integer;
+  Ext: string;
+begin
+  if not RequireTargets(Items) then Exit;
+  K := TAction(Sender).Tag;
+  Plan := nil;
+  Errors := TStringList.Create;
+  try
+    for I := 0 to High(Items) do
+    begin
+      Ext := LowerCase(ExtractFileExt(Items[I].FileName));
+      if (Ext = '') or (Pos(Ext, FromExt[K]) = 0) or (Ext = ToExt[K]) then Continue;
+      N := Length(Plan);
+      SetLength(Plan, N + 1);
+      Plan[N].Info := Items[I];
+      Plan[N].OldName := Items[I].FileName;
+      Plan[N].NewName := ChangeFileExt(Items[I].FileName, ToExt[K]);
+      Plan[N].Detail := '';
+      if FileExists(Plan[N].NewName) then
+      begin
+        Plan[N].Status := rsExists;
+        Errors.Add(Format(rsFiltypeFindes, [ExtractFileName(Plan[N].NewName)]));
+      end
+      else
+        Plan[N].Status := rsOk;
+    end;
+    if Length(Plan) = 0 then
+    begin
+      Inform(rsSkiftFiltype, rsIngenFilerMedFiltypen);
+      Exit;
+    end;
+    Log := ExecuteRename(Plan);
+    for I := 0 to High(Plan) do
+      if Plan[I].Status = rsFailed then Errors.Add(ExtractFileName(Plan[I].OldName) + ': ' + Plan[I].Detail);
+    if Length(Log) > 0 then SetUndoLog(Log, rsSkiftFiltype);
+    FileList.Invalidate;
+    SetMessage(Format(rsFiltypeSkiftet, [Length(Log)]));
+    if Errors.Count > 0 then Inform(rsSkiftFiltype, Errors.Text, mtWarning);
+  finally
+    Errors.Free;
+  end;
+end;
+
 procedure TFormMain.AddAlbumArtistMenu(ParentItem: TMenuItem);
 const
   Captions: array[TAlbumArtistRule] of string = (rsAlbumkunstnerIngen, rsAlbumkunstnerHvisTom,
@@ -4142,6 +4727,35 @@ procedure TFormMain.RunSelfTest(const ReportFile: string);
 var
   I, W, H: Integer;
   Act: TRenameAction;
+  ExtAct: TAction;
+  Log: TRenameLog;
+  Info: TAudioInfo;
+  PlFile: string;
+  PlLines: TStringList;
+
+  function FileNamesIn(const Dir: string): string;
+  var
+    SR: TSearchRec;
+    L: TStringList;
+  begin
+    L := TStringList.Create;
+    try
+      L.Sorted := True;
+      if FindFirst(IncludeTrailingPathDelimiter(Dir) + '*', faAnyFile and not faDirectory, SR) = 0 then
+      try
+        repeat
+          if (SR.Attr and faDirectory) = 0 then L.Add(SR.Name);
+        until FindNext(SR) <> 0;
+      finally
+        FindClose(SR);
+      end;
+      L.Delimiter := '|';
+      L.StrictDelimiter := True;
+      Result := L.DelimitedText;
+    finally
+      L.Free;
+    end;
+  end;
 
   procedure Dump(const Step: string);
   var
@@ -4263,6 +4877,57 @@ begin
     ActUndoExecute(nil);
     FAutoLog.Add('  mappe efter fortryd: ' + FFolder);
     Dump('fortryd');
+    // C package: extension change with undo, manual rename with undo, quick playlist,
+    // hidden extensions, recent folders
+    ExtAct := TAction.Create(nil);
+    try
+      ExtAct.Tag := 1; // -> .m4b
+      ActChangeExtExecute(ExtAct);
+      FAutoLog.Add('  filer efter .m4b: ' + FileNamesIn(FFolder));
+      ActUndoExecute(nil);
+      FAutoLog.Add('  filer efter fortryd: ' + FileNamesIn(FFolder));
+      ExtAct.Tag := 0; // .mp4 -> .m4a
+      ActChangeExtExecute(ExtAct);
+      FAutoLog.Add('  filer efter .m4a: ' + FileNamesIn(FFolder));
+    finally
+      ExtAct.Free;
+    end;
+    Log := nil;
+    if FItems.Count > 0 then
+    begin
+      Info := TAudioInfo(FItems[0]);
+      RenamePaths(Info, Info.FileName, ExtractFilePath(Info.FileName) + 'Manuelt navn' +
+        ExtractFileExt(Info.FileName), Log);
+      SetUndoLog(Log, rsManuelOmdoebning);
+      FAutoLog.Add('  filer efter manuel omdøbning: ' + FileNamesIn(FFolder));
+      ActUndoExecute(nil);
+      FAutoLog.Add('  filer efter fortryd: ' + FileNamesIn(FFolder));
+      AppOptions.HideExtensions := True;
+      FAutoLog.Add('  skjult filtype: ' + CellText(Info, 1));
+      AppOptions.HideExtensions := False;
+    end;
+    AppOptions.PlInfoMask := '%2 (%1)';
+    AppOptions.PlNameMask := '%f';
+    AppOptions.PlFolder := '';
+    AppOptions.PlFullPaths := False;
+    AppOptions.PlExtInf := True;
+    ActQuickPlaylistExecute(nil);
+    PlFile := IncludeTrailingPathDelimiter(FFolder) + ExtractFileName(FFolder) + '.m3u8';
+    if FileExists(PlFile) then
+    begin
+      PlLines := TStringList.Create;
+      try
+        PlLines.LoadFromFile(PlFile);
+        FAutoLog.Add('  playliste ' + ExtractFileName(PlFile) + ':');
+        for I := 0 to PlLines.Count - 1 do FAutoLog.Add('    ' + PlLines[I]);
+      finally
+        PlLines.Free;
+      end;
+      SysUtils.DeleteFile(PlFile);
+    end
+    else
+      FAutoLog.Add('  playliste mangler: ' + PlFile);
+    FAutoLog.Add(Format('  seneste mapper i menuen: %d', [FRecentMenu.Count]));
     // ReplayGain: track + album, then skipping (nothing to do), removing, track only
     RunReplayGain(True, False);
     Dump('replaygain');
@@ -4884,6 +5549,8 @@ var
   Start, S: string;
   I: Integer;
 begin
+  LoadAppOptions;
+  ApplyViewOptions;
   Start := '';
   Ini := OpenSettings;
   try
@@ -4923,6 +5590,8 @@ begin
   PanelAddress.Visible := FActAddress.Checked;
   PanelFilter.Visible := FActFilter.Checked;
   ActFoldersExecute(FActFolders);
+  if AppOptions.FixedStartFolder and DirectoryExists(AppOptions.StartFolder) then
+    Start := AppOptions.StartFolder;
   if (ParamCount > 0) and DirectoryExists(ParamStr(1)) then
     Start := ParamStr(1)
   else if (ParamCount >= 2) and (ParamStr(1) = '--selftest') then
@@ -4938,6 +5607,7 @@ begin
   end;
   FFolder := ExcludeTrailingPathDelimiter(Start);
   AddAddressHistory(FFolder);
+  FileList.OnCustomDrawSubItem := @FileListCustomDrawSubItem;
   StartScan;
 end;
 

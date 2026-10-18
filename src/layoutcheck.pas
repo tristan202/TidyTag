@@ -178,6 +178,7 @@ var
   T: TTagField;
   CO: TCoverResize;
   RGAlbum, RGSkip: Boolean;
+  GCustom, GHidden: TStringArray;
   MaskText: string;
 
   procedure Arm;
@@ -222,6 +223,10 @@ begin
     RGSkip := False;
     Arm;
     AskReplayGain(RGAlbum, RGSkip);
+    GCustom := ['Dansktop'];
+    GHidden := ['Blues'];
+    Arm;
+    EditGenreList(GCustom, GHidden);
     MaskText := '%1 - %2';
     Arm;
     EditMask(rsMaskeEditor, MaskText, ['%1|' + TagFieldCaptions[tfArtist], '%2|' + TagFieldCaptions[tfTitle],

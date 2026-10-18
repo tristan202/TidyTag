@@ -5766,5 +5766,413 @@
   "it": "%1 Artista   %2 Titolo   %3 Album   %4 Anno   %5 Genere   %6 Traccia   %# Disco\n%7 Nome file   %8 Numero file   %9 Commento   %0 Bitrate   %b BPM   %t Durata\n%aa Artista album   %cp Compositore   %co Direttore   %lb Etichetta   %cat N. catalogo\n%grp Raggruppamento   %rb Remix di   %md Atmosfera   %key Tonalità   %ext Tipo di file   %khz Campionamento\nUsa \\ per creare cartelle, es.  %1\\%3\\%6 - %2",
   "sv": "%1 Artist   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spår   %# Skiva\n%7 Filnamn   %8 Filnummer   %9 Kommentar   %0 Bithastighet   %b BPM   %t Speltid\n%aa Albumartist   %cp Kompositör   %co Dirigent   %lb Skivbolag   %cat Katalognr\n%grp Gruppering   %rb Remixad av   %md Stämning   %key Tonart   %ext Filtyp   %khz Samplingsfrekvens\nAnvänd \\ för att skapa mappar, t.ex.  %1\\%3\\%6 - %2",
   "es": "%1 Artista   %2 Título   %3 Álbum   %4 Año   %5 Género   %6 Pista   %# Disco\n%7 Nombre de archivo   %8 N.º de archivo   %9 Comentario   %0 Tasa de bits   %b BPM   %t Duración\n%aa Artista del álbum   %cp Compositor   %co Director   %lb Sello   %cat N.º de catálogo\n%grp Agrupación   %rb Remezclado por   %md Estado de ánimo   %key Tonalidad   %ext Tipo de archivo   %khz Frecuencia\nUsa \\ para crear carpetas, p. ej.  %1\\%3\\%6 - %2"
+ },
+ "Omdøb fil...": {
+  "en": "Rename file...",
+  "de": "Datei umbenennen...",
+  "fr": "Renommer le fichier...",
+  "it": "Rinomina file...",
+  "sv": "Byt namn på fil...",
+  "es": "Renombrar archivo..."
+ },
+ "Ret navnet på den markerede fil (eller mappen, når mappetræet er aktivt)": {
+  "en": "Edit the name of the selected file (or the folder when the folder tree is active)",
+  "de": "Namen der markierten Datei ändern (oder des Ordners, wenn der Ordnerbaum aktiv ist)",
+  "fr": "Modifier le nom du fichier sélectionné (ou du dossier si l'arborescence est active)",
+  "it": "Modifica il nome del file selezionato (o della cartella se l'albero delle cartelle è attivo)",
+  "sv": "Ändra namnet på den valda filen (eller mappen när mappträdet är aktivt)",
+  "es": "Editar el nombre del archivo seleccionado (o de la carpeta si el árbol de carpetas está activo)"
+ },
+ "Omdøb fil (%d af %d)": {
+  "en": "Rename file (%d of %d)",
+  "de": "Datei umbenennen (%d von %d)",
+  "fr": "Renommer le fichier (%d sur %d)",
+  "it": "Rinomina file (%d di %d)",
+  "sv": "Byt namn på fil (%d av %d)",
+  "es": "Renombrar archivo (%d de %d)"
+ },
+ "Nyt navn:": {
+  "en": "New name:",
+  "de": "Neuer Name:",
+  "fr": "Nouveau nom :",
+  "it": "Nuovo nome:",
+  "sv": "Nytt namn:",
+  "es": "Nuevo nombre:"
+ },
+ "< Forrige": {
+  "en": "< Previous",
+  "de": "< Zurück",
+  "fr": "< Précédent",
+  "it": "< Precedente",
+  "sv": "< Föregående",
+  "es": "< Anterior"
+ },
+ "Næste >": {
+  "en": "Next >",
+  "de": "Weiter >",
+  "fr": "Suivant >",
+  "it": "Successivo >",
+  "sv": "Nästa >",
+  "es": "Siguiente >"
+ },
+ "Navnet må ikke være tomt eller indeholde \\ / : * ? \" < > |": {
+  "en": "The name must not be empty or contain \\ / : * ? \" < > |",
+  "de": "Der Name darf nicht leer sein oder \\ / : * ? \" < > | enthalten",
+  "fr": "Le nom ne doit pas être vide ni contenir \\ / : * ? \" < > |",
+  "it": "Il nome non può essere vuoto né contenere \\ / : * ? \" < > |",
+  "sv": "Namnet får inte vara tomt eller innehålla \\ / : * ? \" < > |",
+  "es": "El nombre no puede estar vacío ni contener \\ / : * ? \" < > |"
+ },
+ "Kunne ikke omdøbe": {
+  "en": "Could not rename",
+  "de": "Umbenennen nicht möglich",
+  "fr": "Impossible de renommer",
+  "it": "Impossibile rinominare",
+  "sv": "Kunde inte byta namn",
+  "es": "No se pudo renombrar"
+ },
+ "manuel omdøbning": {
+  "en": "manual rename",
+  "de": "manuelle Umbenennung",
+  "fr": "renommage manuel",
+  "it": "rinomina manuale",
+  "sv": "manuellt namnbyte",
+  "es": "cambio de nombre manual"
+ },
+ "Omdøb mappe": {
+  "en": "Rename folder",
+  "de": "Ordner umbenennen",
+  "fr": "Renommer le dossier",
+  "it": "Rinomina cartella",
+  "sv": "Byt namn på mapp",
+  "es": "Renombrar carpeta"
+ },
+ "Egenskaber": {
+  "en": "Properties",
+  "de": "Eigenschaften",
+  "fr": "Propriétés",
+  "it": "Proprietà",
+  "sv": "Egenskaper",
+  "es": "Propiedades"
+ },
+ "Vis Windows-egenskaber for den markerede fil": {
+  "en": "Show the Windows properties of the selected file",
+  "de": "Windows-Eigenschaften der markierten Datei anzeigen",
+  "fr": "Afficher les propriétés Windows du fichier sélectionné",
+  "it": "Mostra le proprietà di Windows del file selezionato",
+  "sv": "Visa Windows-egenskaper för den valda filen",
+  "es": "Mostrar las propiedades de Windows del archivo seleccionado"
+ },
+ "Skift filtype": {
+  "en": "Change file extension",
+  "de": "Dateiendung ändern",
+  "fr": "Changer l'extension",
+  "it": "Cambia estensione",
+  "sv": "Byt filändelse",
+  "es": "Cambiar extensión"
+ },
+ ".mp4 → .m4a": {
+  "en": ".mp4 → .m4a",
+  "de": ".mp4 → .m4a",
+  "fr": ".mp4 → .m4a",
+  "it": ".mp4 → .m4a",
+  "sv": ".mp4 → .m4a",
+  "es": ".mp4 → .m4a"
+ },
+ ".mp4/.m4a/.m4p → .m4b (lydbog)": {
+  "en": ".mp4/.m4a/.m4p → .m4b (audiobook)",
+  "de": ".mp4/.m4a/.m4p → .m4b (Hörbuch)",
+  "fr": ".mp4/.m4a/.m4p → .m4b (livre audio)",
+  "it": ".mp4/.m4a/.m4p → .m4b (audiolibro)",
+  "sv": ".mp4/.m4a/.m4p → .m4b (ljudbok)",
+  "es": ".mp4/.m4a/.m4p → .m4b (audiolibro)"
+ },
+ ".m4b → .m4a": {
+  "en": ".m4b → .m4a",
+  "de": ".m4b → .m4a",
+  "fr": ".m4b → .m4a",
+  "it": ".m4b → .m4a",
+  "sv": ".m4b → .m4a",
+  "es": ".m4b → .m4a"
+ },
+ "Ingen af filerne har den filtype.": {
+  "en": "None of the files have that extension.",
+  "de": "Keine der Dateien hat diese Endung.",
+  "fr": "Aucun des fichiers n'a cette extension.",
+  "it": "Nessuno dei file ha questa estensione.",
+  "sv": "Ingen av filerna har den filändelsen.",
+  "es": "Ninguno de los archivos tiene esa extensión."
+ },
+ "Filtype skiftet for %d filer": {
+  "en": "Extension changed for %d files",
+  "de": "Endung für %d Dateien geändert",
+  "fr": "Extension changée pour %d fichiers",
+  "it": "Estensione cambiata per %d file",
+  "sv": "Filändelsen bytt för %d filer",
+  "es": "Extensión cambiada en %d archivos"
+ },
+ "%s: findes allerede": {
+  "en": "%s: already exists",
+  "de": "%s: existiert bereits",
+  "fr": "%s : existe déjà",
+  "it": "%s: esiste già",
+  "sv": "%s: finns redan",
+  "es": "%s: ya existe"
+ },
+ "Udvid undermapper": {
+  "en": "Expand subfolders",
+  "de": "Unterordner aufklappen",
+  "fr": "Développer les sous-dossiers",
+  "it": "Espandi sottocartelle",
+  "sv": "Expandera undermappar",
+  "es": "Expandir subcarpetas"
+ },
+ "Fold alle mapper sammen": {
+  "en": "Collapse all folders",
+  "de": "Alle Ordner zuklappen",
+  "fr": "Réduire tous les dossiers",
+  "it": "Comprimi tutte le cartelle",
+  "sv": "Fäll ihop alla mappar",
+  "es": "Contraer todas las carpetas"
+ },
+ "Afspil mappen": {
+  "en": "Play folder",
+  "de": "Ordner abspielen",
+  "fr": "Lire le dossier",
+  "it": "Riproduci cartella",
+  "sv": "Spela upp mappen",
+  "es": "Reproducir carpeta"
+ },
+ "Afspil alle filer i listen som én playliste": {
+  "en": "Play all files in the list as one playlist",
+  "de": "Alle Dateien der Liste als eine Playlist abspielen",
+  "fr": "Lire tous les fichiers de la liste comme une seule playlist",
+  "it": "Riproduci tutti i file dell'elenco come un'unica playlist",
+  "sv": "Spela upp alla filer i listan som en spellista",
+  "es": "Reproducir todos los archivos de la lista como una lista"
+ },
+ "Seneste mapper": {
+  "en": "Recent folders",
+  "de": "Letzte Ordner",
+  "fr": "Dossiers récents",
+  "it": "Cartelle recenti",
+  "sv": "Senaste mappar",
+  "es": "Carpetas recientes"
+ },
+ "Gem playliste hurtigt": {
+  "en": "Quick save playlist",
+  "de": "Playlist schnell speichern",
+  "fr": "Enregistrement rapide de la playlist",
+  "it": "Salvataggio rapido playlist",
+  "sv": "Snabbspara spellista",
+  "es": "Guardar lista rápida"
+ },
+ "Gem de afkrydsede (ellers markerede) filer som playliste uden dialog (navn og mappe fra Indstillinger)": {
+  "en": "Save the checked (otherwise selected) files as a playlist without a dialog (name and folder from Options)",
+  "de": "Die angehakten (sonst markierten) Dateien ohne Dialog als Playlist speichern (Name und Ordner aus den Einstellungen)",
+  "fr": "Enregistrer les fichiers cochés (sinon sélectionnés) en playlist sans dialogue (nom et dossier des Options)",
+  "it": "Salva i file spuntati (altrimenti selezionati) come playlist senza finestra (nome e cartella dalle Impostazioni)",
+  "sv": "Spara de markerade (annars valda) filerna som spellista utan dialog (namn och mapp från Inställningar)",
+  "es": "Guardar los archivos marcados (si no, los seleccionados) como lista sin diálogo (nombre y carpeta de Opciones)"
+ },
+ "%s findes allerede. Overskriv?": {
+  "en": "%s already exists. Overwrite?",
+  "de": "%s existiert bereits. Überschreiben?",
+  "fr": "%s existe déjà. Remplacer ?",
+  "it": "%s esiste già. Sovrascrivere?",
+  "sv": "%s finns redan. Skriva över?",
+  "es": "%s ya existe. ¿Sobrescribir?"
+ },
+ "Genreliste...": {
+  "en": "Genre list...",
+  "de": "Genreliste...",
+  "fr": "Liste des genres...",
+  "it": "Elenco generi...",
+  "sv": "Genrelista...",
+  "es": "Lista de géneros..."
+ },
+ "Vælg hvilke standardgenrer der vises, og tilføj dine egne": {
+  "en": "Choose which standard genres are shown and add your own",
+  "de": "Angezeigte Standardgenres wählen und eigene hinzufügen",
+  "fr": "Choisir les genres standard affichés et ajouter les vôtres",
+  "it": "Scegli quali generi standard mostrare e aggiungi i tuoi",
+  "sv": "Välj vilka standardgenrer som visas och lägg till egna",
+  "es": "Elegir qué géneros estándar se muestran y añadir los propios"
+ },
+ "Vis lav bitrate med rødt": {
+  "en": "Show low bitrates in red",
+  "de": "Niedrige Bitrate rot anzeigen",
+  "fr": "Afficher les débits faibles en rouge",
+  "it": "Mostra il bitrate basso in rosso",
+  "sv": "Visa låg bitrate i rött",
+  "es": "Mostrar la tasa de bits baja en rojo"
+ },
+ "Grænse (kbit/s):": {
+  "en": "Limit (kbit/s):",
+  "de": "Grenze (kbit/s):",
+  "fr": "Limite (kbit/s) :",
+  "it": "Limite (kbit/s):",
+  "sv": "Gräns (kbit/s):",
+  "es": "Límite (kbit/s):"
+ },
+ "Vis MP3-filer uden ID3v1 med orange filnavn": {
+  "en": "Show MP3 files without ID3v1 with an orange file name",
+  "de": "MP3-Dateien ohne ID3v1 mit orangem Dateinamen anzeigen",
+  "fr": "Afficher en orange le nom des MP3 sans ID3v1",
+  "it": "Mostra in arancione il nome dei file MP3 senza ID3v1",
+  "sv": "Visa MP3-filer utan ID3v1 med orange filnamn",
+  "es": "Mostrar en naranja el nombre de los MP3 sin ID3v1"
+ },
+ "Skjul filtypenavne": {
+  "en": "Hide file extensions",
+  "de": "Dateiendungen ausblenden",
+  "fr": "Masquer les extensions",
+  "it": "Nascondi le estensioni",
+  "sv": "Dölj filändelser",
+  "es": "Ocultar extensiones"
+ },
+ "Gitterlinjer": {
+  "en": "Grid lines",
+  "de": "Gitternetzlinien",
+  "fr": "Quadrillage",
+  "it": "Linee della griglia",
+  "sv": "Rutnät",
+  "es": "Líneas de cuadrícula"
+ },
+ "Skriftstørrelse (0 = standard):": {
+  "en": "Font size (0 = default):",
+  "de": "Schriftgröße (0 = Standard):",
+  "fr": "Taille de police (0 = défaut) :",
+  "it": "Dimensione carattere (0 = predefinita):",
+  "sv": "Teckenstorlek (0 = standard):",
+  "es": "Tamaño de letra (0 = predeterminado):"
+ },
+ "Startmappe": {
+  "en": "Start folder",
+  "de": "Startordner",
+  "fr": "Dossier de démarrage",
+  "it": "Cartella iniziale",
+  "sv": "Startmapp",
+  "es": "Carpeta inicial"
+ },
+ "Den sidste mappe": {
+  "en": "The last folder",
+  "de": "Der letzte Ordner",
+  "fr": "Le dernier dossier",
+  "it": "L'ultima cartella",
+  "sv": "Den senaste mappen",
+  "es": "La última carpeta"
+ },
+ "Fast mappe:": {
+  "en": "Fixed folder:",
+  "de": "Fester Ordner:",
+  "fr": "Dossier fixe :",
+  "it": "Cartella fissa:",
+  "sv": "Fast mapp:",
+  "es": "Carpeta fija:"
+ },
+ "ID3v2.3: gem altid tekst som Unicode (UTF-16)": {
+  "en": "ID3v2.3: always save text as Unicode (UTF-16)",
+  "de": "ID3v2.3: Text immer als Unicode (UTF-16) speichern",
+  "fr": "ID3v2.3 : toujours enregistrer le texte en Unicode (UTF-16)",
+  "it": "ID3v2.3: salva sempre il testo come Unicode (UTF-16)",
+  "sv": "ID3v2.3: spara alltid text som Unicode (UTF-16)",
+  "es": "ID3v2.3: guardar siempre el texto como Unicode (UTF-16)"
+ },
+ "Afspillere": {
+  "en": "Players",
+  "de": "Player",
+  "fr": "Lecteurs",
+  "it": "Lettori",
+  "sv": "Spelare",
+  "es": "Reproductores"
+ },
+ "Ét program pr. linje: filtype=program, fx  flac=C:\\Program Files\\foobar2000\\foobar2000.exe\n\"*\" gælder alle andre filtyper, m3u8 bruges til \"Afspil mappen\". Uden linje bruges Windows' standardprogram.": {
+  "en": "One program per line: extension=program, e.g.  flac=C:\\Program Files\\foobar2000\\foobar2000.exe\n\"*\" covers all other extensions, m3u8 is used for \"Play folder\". Without a line the Windows default program is used.",
+  "de": "Ein Programm pro Zeile: Endung=Programm, z. B.  flac=C:\\Program Files\\foobar2000\\foobar2000.exe\n\"*\" gilt für alle anderen Endungen, m3u8 für \"Ordner abspielen\". Ohne Zeile wird das Windows-Standardprogramm verwendet.",
+  "fr": "Un programme par ligne : extension=programme, ex.  flac=C:\\Program Files\\foobar2000\\foobar2000.exe\n\"*\" vaut pour les autres extensions, m3u8 sert à « Lire le dossier ». Sans ligne, le programme par défaut de Windows est utilisé.",
+  "it": "Un programma per riga: estensione=programma, es.  flac=C:\\Program Files\\foobar2000\\foobar2000.exe\n\"*\" vale per le altre estensioni, m3u8 per \"Riproduci cartella\". Senza riga si usa il programma predefinito di Windows.",
+  "sv": "Ett program per rad: filändelse=program, t.ex.  flac=C:\\Program Files\\foobar2000\\foobar2000.exe\n\"*\" gäller alla andra filändelser, m3u8 används för \"Spela upp mappen\". Utan rad används Windows standardprogram.",
+  "es": "Un programa por línea: extensión=programa, p. ej.  flac=C:\\Program Files\\foobar2000\\foobar2000.exe\n\"*\" vale para las demás extensiones, m3u8 para \"Reproducir carpeta\". Sin línea se usa el programa predeterminado de Windows."
+ },
+ "Playlister": {
+  "en": "Playlists",
+  "de": "Playlists",
+  "fr": "Playlists",
+  "it": "Playlist",
+  "sv": "Spellistor",
+  "es": "Listas"
+ },
+ "Skriv #EXTINF-linjer (spilletid og titel)": {
+  "en": "Write #EXTINF lines (play time and title)",
+  "de": "#EXTINF-Zeilen schreiben (Spieldauer und Titel)",
+  "fr": "Écrire les lignes #EXTINF (durée et titre)",
+  "it": "Scrivi righe #EXTINF (durata e titolo)",
+  "sv": "Skriv #EXTINF-rader (speltid och titel)",
+  "es": "Escribir líneas #EXTINF (duración y título)"
+ },
+ "Titel i #EXTINF:": {
+  "en": "Title in #EXTINF:",
+  "de": "Titel in #EXTINF:",
+  "fr": "Titre dans #EXTINF :",
+  "it": "Titolo in #EXTINF:",
+  "sv": "Titel i #EXTINF:",
+  "es": "Título en #EXTINF:"
+ },
+ "Fulde stier (ellers relative til playlisten)": {
+  "en": "Full paths (otherwise relative to the playlist)",
+  "de": "Vollständige Pfade (sonst relativ zur Playlist)",
+  "fr": "Chemins complets (sinon relatifs à la playlist)",
+  "it": "Percorsi completi (altrimenti relativi alla playlist)",
+  "sv": "Fullständiga sökvägar (annars relativa till spellistan)",
+  "es": "Rutas completas (si no, relativas a la lista)"
+ },
+ "Playliste-mappe (tom = filernes mappe):": {
+  "en": "Playlist folder (empty = the files' folder):",
+  "de": "Playlist-Ordner (leer = Ordner der Dateien):",
+  "fr": "Dossier des playlists (vide = dossier des fichiers) :",
+  "it": "Cartella playlist (vuota = cartella dei file):",
+  "sv": "Mapp för spellistor (tom = filernas mapp):",
+  "es": "Carpeta de listas (vacía = carpeta de los archivos):"
+ },
+ "Filnavn ved hurtig gem:": {
+  "en": "File name for quick save:",
+  "de": "Dateiname beim Schnellspeichern:",
+  "fr": "Nom de fichier (enregistrement rapide) :",
+  "it": "Nome file per il salvataggio rapido:",
+  "sv": "Filnamn vid snabbsparning:",
+  "es": "Nombre de archivo al guardar rápido:"
+ },
+ "Masker som ved omdøbning, fx %1 - %2; %f er mappens navn.": {
+  "en": "Masks as for renaming, e.g. %1 - %2; %f is the folder name.",
+  "de": "Masken wie beim Umbenennen, z. B. %1 - %2; %f ist der Ordnername.",
+  "fr": "Masques comme pour le renommage, ex. %1 - %2 ; %f est le nom du dossier.",
+  "it": "Maschere come per la rinomina, es. %1 - %2; %f è il nome della cartella.",
+  "sv": "Masker som vid namnbyte, t.ex. %1 - %2; %f är mappens namn.",
+  "es": "Máscaras como al renombrar, p. ej. %1 - %2; %f es el nombre de la carpeta."
+ },
+ "Genreliste": {
+  "en": "Genre list",
+  "de": "Genreliste",
+  "fr": "Liste des genres",
+  "it": "Elenco generi",
+  "sv": "Genrelista",
+  "es": "Lista de géneros"
+ },
+ "Standardgenrer (fjern fluebenet for at skjule en genre):": {
+  "en": "Standard genres (untick to hide a genre):",
+  "de": "Standardgenres (Haken entfernen, um ein Genre auszublenden):",
+  "fr": "Genres standard (décochez pour masquer un genre) :",
+  "it": "Generi standard (togli la spunta per nascondere un genere):",
+  "sv": "Standardgenrer (avmarkera för att dölja en genre):",
+  "es": "Géneros estándar (desmarque para ocultar un género):"
+ },
+ "Egne genrer (én pr. linje):": {
+  "en": "Your own genres (one per line):",
+  "de": "Eigene Genres (eines pro Zeile):",
+  "fr": "Vos genres (un par ligne) :",
+  "it": "Generi personali (uno per riga):",
+  "sv": "Egna genrer (en per rad):",
+  "es": "Géneros propios (uno por línea):"
  }
 }

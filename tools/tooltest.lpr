@@ -9,7 +9,7 @@ program ToolTest;
 uses
   {$IFDEF WINDOWS}Windows,{$ENDIF}
   Classes, SysUtils, AudioTypes, AudioTags, TagWriter, FieldTools, ID3Sync, ID3Writer,
-  TagRemove, Mp3Reader, FileOps;
+  TagRemove, Mp3Reader, FileOps, ProgOptions, TagUtils;
 
 var
   Failures: Integer = 0;
@@ -172,6 +172,100 @@ begin
   end;
 end;
 
+procedure TestOptions;
+var
+  G: TStringArray;
+  S: string;
+  HasBlues, HasOwn: Boolean;
+begin
+  WriteLn('-- afspillere og genreliste');
+  AppOptions.Players := ['mp3=C:\mp3player.exe', '.FLAC = C:\flac.exe ', '*=C:\all.exe'];
+  Eq(PlayerFor('D:\a\b.MP3'), 'C:\mp3player.exe', 'afspiller for mp3');
+  Eq(PlayerFor('x.flac'), 'C:\flac.exe', 'afspiller for flac (punktum og mellemrum)');
+  Eq(PlayerFor('x.ogg'), 'C:\all.exe', 'afspiller for alt andet');
+  AppOptions.Players := nil;
+  Eq(PlayerFor('x.ogg'), '', 'ingen afspiller = Windows');
+  AppOptions.HiddenGenres := ['Blues'];
+  AppOptions.CustomGenres := ['Dansktop', ' ', 'rock'];
+  G := GenreList;
+  HasBlues := False;
+  HasOwn := False;
+  for S in G do
+  begin
+    if S = 'Blues' then HasBlues := True;
+    if S = 'Dansktop' then HasOwn := True;
+  end;
+  Check(not HasBlues, 'skjult standardgenre er væk');
+  Check(HasOwn, 'egen genre er med');
+  Check(Length(G) = ID3GenreCount, Format('antal: %d (standard - 1 + 1, "rock" findes i forvejen)', [Length(G)]));
+  Check((Length(G) > 1) and (CompareText(G[0], G[1]) < 0), 'sorteret');
+end;
+
+function ReadFileBytes(const FileName: string): TBytes;
+var
+  S: TFileStream;
+begin
+  S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyNone);
+  try
+    SetLength(Result, S.Size);
+    if S.Size > 0 then S.ReadBuffer(Result[0], S.Size);
+  finally
+    S.Free;
+  end;
+end;
+
+{ The text encoding byte of the TIT2 frame in an MP3 file (ID3v2.3). }
+function TitleEncoding(const FileName: string): Integer;
+var
+  B: TBytes;
+  I: Integer;
+begin
+  Result := -1;
+  B := ReadFileBytes(FileName);
+  for I := 10 to Length(B) - 12 do
+    if (B[I] = Ord('T')) and (B[I + 1] = Ord('I')) and (B[I + 2] = Ord('T')) and (B[I + 3] = Ord('2')) then
+      Exit(B[I + 10]);
+end;
+
+procedure TestUnicode(const Dir, Src: string);
+var
+  F: string;
+  Info: TAudioInfo;
+begin
+  WriteLn('-- ID3v2.3 altid Unicode');
+  F := Dir + 'unicode.mp3';
+  if not CopyFile(PChar(Src), PChar(F), False) then
+  begin
+    Check(False, 'kopi af ' + Src);
+    Exit;
+  end;
+  RemoveAllTags(F, False);
+  Info := ReadAudioInfo(F, True);
+  try
+    Info.Fields[tfTitle] := 'Plain ASCII';
+    ID3AlwaysUnicode := False;
+    WriteAudioTags(Info, False);
+  finally
+    Info.Free;
+  end;
+  Check(TitleEncoding(F) = 0, 'standard: Latin-1 når teksten kan (' + IntToStr(TitleEncoding(F)) + ')');
+  Info := ReadAudioInfo(F, True);
+  try
+    ID3AlwaysUnicode := True;
+    WriteAudioTags(Info, False);
+  finally
+    Info.Free;
+    ID3AlwaysUnicode := False;
+  end;
+  Check(TitleEncoding(F) = 1, 'altid Unicode: UTF-16 (' + IntToStr(TitleEncoding(F)) + ')');
+  Info := ReadAudioInfo(F, False);
+  try
+    Eq(Info.Fields[tfTitle], 'Plain ASCII', 'titel læses igen');
+  finally
+    Info.Free;
+  end;
+end;
+
 begin
   SetMultiByteConversionCodePage(CP_UTF8);
   SetMultiByteFileSystemCodePage(CP_UTF8);
@@ -179,10 +273,13 @@ begin
   SetTextCodePage(Output, CP_UTF8);
   TestNames;
   TestAlbumArtistRule;
+  TestOptions;
   if ParamCount >= 2 then
   begin
     ForceDirectories(ParamStr(1));
     TestSync(IncludeTrailingPathDelimiter(UTF8Encode(UnicodeString(ParamStr(1)))),
+      UTF8Encode(UnicodeString(ParamStr(2))));
+    TestUnicode(IncludeTrailingPathDelimiter(UTF8Encode(UnicodeString(ParamStr(1)))),
       UTF8Encode(UnicodeString(ParamStr(2))));
     TestRecycle(IncludeTrailingPathDelimiter(UTF8Encode(UnicodeString(ParamStr(1)))));
   end;

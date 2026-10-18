@@ -599,6 +599,198 @@ msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr "Scegli i campi da incollare in %d file:"
 
+#: mainform.rsomdoebfilmanuelt
+msgid "Omdøb fil..."
+msgstr "Rinomina file..."
+
+#: mainform.rsomdoebfilmanuelthint
+msgid "Ret navnet på den markerede fil (eller mappen, når mappetræet er aktivt)"
+msgstr "Modifica il nome del file selezionato (o della cartella se l'albero delle cartelle è attivo)"
+
+#: mainform.rsomdoebfiltitel
+msgid "Omdøb fil (%d af %d)"
+msgstr "Rinomina file (%d di %d)"
+
+#: mainform.rsnytnavn
+msgid "Nyt navn:"
+msgstr "Nuovo nome:"
+
+#: mainform.rsforrige
+msgid "< Forrige"
+msgstr "< Precedente"
+
+#: mainform.rsnaeste
+msgid "Næste >"
+msgstr "Successivo >"
+
+#: mainform.rsugyldigtnavn
+msgid "Navnet må ikke være tomt eller indeholde \\ / : * ? \" < > |"
+msgstr "Il nome non può essere vuoto né contenere \\ / : * ? \" < > |"
+
+#: mainform.rskunneikkeomdoebe
+msgid "Kunne ikke omdøbe"
+msgstr "Impossibile rinominare"
+
+#: mainform.rsmanuelomdoebning
+msgid "manuel omdøbning"
+msgstr "rinomina manuale"
+
+#: mainform.rsomdoebmappetitel
+msgid "Omdøb mappe"
+msgstr "Rinomina cartella"
+
+#: mainform.rsegenskaber
+msgid "Egenskaber"
+msgstr "Proprietà"
+
+#: mainform.rsegenskaberhint
+msgid "Vis Windows-egenskaber for den markerede fil"
+msgstr "Mostra le proprietà di Windows del file selezionato"
+
+#: mainform.rsskiftfiltype
+msgid "Skift filtype"
+msgstr "Cambia estensione"
+
+#: mainform.rsmp4tilm4a
+msgid ".mp4 → .m4a"
+msgstr ".mp4 → .m4a"
+
+#: mainform.rstilm4b
+msgid ".mp4/.m4a/.m4p → .m4b (lydbog)"
+msgstr ".mp4/.m4a/.m4p → .m4b (audiolibro)"
+
+#: mainform.rsm4btilm4a
+msgid ".m4b → .m4a"
+msgstr ".m4b → .m4a"
+
+#: mainform.rsingenfilermedfiltypen
+msgid "Ingen af filerne har den filtype."
+msgstr "Nessuno dei file ha questa estensione."
+
+#: mainform.rsfiltypeskiftet
+msgid "Filtype skiftet for %d filer"
+msgstr "Estensione cambiata per %d file"
+
+#: mainform.rsfiltypefindes
+msgid "%s: findes allerede"
+msgstr "%s: esiste già"
+
+#: mainform.rsudvidundermapper
+msgid "Udvid undermapper"
+msgstr "Espandi sottocartelle"
+
+#: mainform.rsfoldmappersammen
+msgid "Fold alle mapper sammen"
+msgstr "Comprimi tutte le cartelle"
+
+#: mainform.rsafspilmappen
+msgid "Afspil mappen"
+msgstr "Riproduci cartella"
+
+#: mainform.rsafspilmappenhint
+msgid "Afspil alle filer i listen som én playliste"
+msgstr "Riproduci tutti i file dell'elenco come un'unica playlist"
+
+#: mainform.rssenestemapper
+msgid "Seneste mapper"
+msgstr "Cartelle recenti"
+
+#: mainform.rsgemplaylistehurtigt
+msgid "Gem playliste hurtigt"
+msgstr "Salvataggio rapido playlist"
+
+#: mainform.rsgemplaylistehurtigthint
+msgid "Gem de afkrydsede (ellers markerede) filer som playliste uden dialog (navn og mappe fra Indstillinger)"
+msgstr "Salva i file spuntati (altrimenti selezionati) come playlist senza finestra (nome e cartella dalle Impostazioni)"
+
+#: mainform.rsplaylistefindesoverskriv
+msgid "%s findes allerede. Overskriv?"
+msgstr "%s esiste già. Sovrascrivere?"
+
+#: mainform.rsgenreliste
+msgid "Genreliste..."
+msgstr "Elenco generi..."
+
+#: mainform.rsgenrelistehint
+msgid "Vælg hvilke standardgenrer der vises, og tilføj dine egne"
+msgstr "Scegli quali generi standard mostrare e aggiungi i tuoi"
+
+#: mainform.rsmarkerlavbitrate
+msgid "Vis lav bitrate med rødt"
+msgstr "Mostra il bitrate basso in rosso"
+
+#: mainform.rsgraensekbit
+msgid "Grænse (kbit/s):"
+msgstr "Limite (kbit/s):"
+
+#: mainform.rsmarkerudenid3v1
+msgid "Vis MP3-filer uden ID3v1 med orange filnavn"
+msgstr "Mostra in arancione il nome dei file MP3 senza ID3v1"
+
+#: mainform.rsskjulfiltypenavne
+msgid "Skjul filtypenavne"
+msgstr "Nascondi le estensioni"
+
+#: mainform.rsgitterlinjer
+msgid "Gitterlinjer"
+msgstr "Linee della griglia"
+
+#: mainform.rsskriftstoerrelse
+msgid "Skriftstørrelse (0 = standard):"
+msgstr "Dimensione carattere (0 = predefinita):"
+
+#: mainform.rsstartmappe
+msgid "Startmappe"
+msgstr "Cartella iniziale"
+
+#: mainform.rssidstemappe
+msgid "Den sidste mappe"
+msgstr "L'ultima cartella"
+
+#: mainform.rsfastmappe
+msgid "Fast mappe:"
+msgstr "Cartella fissa:"
+
+#: mainform.rsid3unicode
+msgid "ID3v2.3: gem altid tekst som Unicode (UTF-16)"
+msgstr "ID3v2.3: salva sempre il testo come Unicode (UTF-16)"
+
+#: mainform.rsafspillerefane
+msgid "Afspillere"
+msgstr "Lettori"
+
+#: mainform.rsafspillerehjaelp
+msgid "Ét program pr. linje: filtype=program, fx  flac=C:\\Program Files\\foobar2000\\foobar2000.exe\n\"*\" gælder alle andre filtyper, m3u8 bruges til \"Afspil mappen\". Uden linje bruges Windows' standardprogram."
+msgstr "Un programma per riga: estensione=programma, es.  flac=C:\\Program Files\\foobar2000\\foobar2000.exe\n\"*\" vale per le altre estensioni, m3u8 per \"Riproduci cartella\". Senza riga si usa il programma predefinito di Windows."
+
+#: mainform.rsplaylisterfane
+msgid "Playlister"
+msgstr "Playlist"
+
+#: mainform.rsskrivextinf
+msgid "Skriv #EXTINF-linjer (spilletid og titel)"
+msgstr "Scrivi righe #EXTINF (durata e titolo)"
+
+#: mainform.rsextinftekst
+msgid "Titel i #EXTINF:"
+msgstr "Titolo in #EXTINF:"
+
+#: mainform.rsfuldestier
+msgid "Fulde stier (ellers relative til playlisten)"
+msgstr "Percorsi completi (altrimenti relativi alla playlist)"
+
+#: mainform.rsplaylistemappe
+msgid "Playliste-mappe (tom = filernes mappe):"
+msgstr "Cartella playlist (vuota = cartella dei file):"
+
+#: mainform.rshurtiggemnavn
+msgid "Filnavn ved hurtig gem:"
+msgstr "Nome file per il salvataggio rapido:"
+
+#: mainform.rsplaylistevarhjaelp
+msgid "Masker som ved omdøbning, fx %1 - %2; %f er mappens navn."
+msgstr "Maschere come per la rinomina, es. %1 - %2; %f è il nome della cartella."
+
 #: mainform.rsberegnreplaygain
 msgid "Beregn ReplayGain..."
 msgstr "Calcola ReplayGain..."
@@ -2483,6 +2675,18 @@ msgstr "Errore interno: il file è stato letto senza immagini"
 msgctxt "tagwriter.rsskrivningafdennefiltypeunderstoettes"
 msgid "Skrivning af denne filtype understøttes ikke endnu"
 msgstr "La scrittura di questo tipo di file non è ancora supportata"
+
+#: tooldialogs.rsgenrelistetitel
+msgid "Genreliste"
+msgstr "Elenco generi"
+
+#: tooldialogs.rsstandardgenrer
+msgid "Standardgenrer (fjern fluebenet for at skjule en genre):"
+msgstr "Generi standard (togli la spunta per nascondere un genere):"
+
+#: tooldialogs.rsegnegenrer
+msgid "Egne genrer (én pr. linje):"
+msgstr "Generi personali (uno per riga):"
 
 #: tooldialogs.rsreplaygain
 msgctxt "tooldialogs.rsreplaygain"

@@ -21,6 +21,10 @@ procedure UpdateID3v1(const FileName: string; Info: TAudioInfo);
 { Same, but CreateIfMissing appends a new ID3v1 tag when the file has none. }
 procedure WriteID3v1(const FileName: string; Info: TAudioInfo; CreateIfMissing: Boolean);
 
+var
+  { ID3v2.3 text is always UTF-16; otherwise Latin-1 when every text fits (Settings). }
+  ID3AlwaysUnicode: Boolean = False;
+
 implementation
 
 uses
@@ -83,6 +87,7 @@ var
   T: string;
 begin
   if Version = 4 then Exit(3);
+  if ID3AlwaysUnicode then Exit(1);
   for T in Texts do
     if not FitsLatin1(UTF8Decode(T)) then Exit(1);
   Result := 0;

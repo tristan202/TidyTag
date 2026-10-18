@@ -65,7 +65,7 @@ implementation
 {$R *.lfm}
 
 uses
-  AudioTags, TagWriter, TagUtils;
+  AudioTags, TagWriter, TagUtils, ProgOptions;
 
 resourcestring
   rsForskelligeVaerdier = '(forskellige værdier)';
@@ -118,7 +118,8 @@ end;
 
 procedure TFormMultiEdit.BuildRows;
 var
-  I, G: Integer;
+  I: Integer;
+  GName: string;
   Combo: TComboBox;
   RowTop: Integer;
 begin
@@ -146,7 +147,7 @@ begin
       Combo.Top := RowTop;
       Combo.Width := Scale96ToForm(300);
       Combo.Sorted := True;
-      for G := 0 to ID3GenreCount - 1 do Combo.Items.Add(ID3GenreName(G));
+      for GName in GenreList do Combo.Items.Add(GName);
       Combo.OnChange := @ValueChange;
       Combo.TabOrder := I * 2 + 1;
       FRows[I].Edit := Combo;

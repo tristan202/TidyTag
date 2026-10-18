@@ -24,6 +24,8 @@ function AskCoverResize(const Title: string; var Opt: TCoverResize): Boolean;
 function AskReplayGain(var Album, SkipExisting: Boolean): Boolean;
 { Runs the measurement with a progress window; False when cancelled. }
 function RunReplayGainBatch(const Title: string; Batch: TRGBatch): Boolean;
+{ Standard genres to show (ticked) and own genres. }
+function EditGenreList(var Custom, Hidden: TStringArray): Boolean;
 
 type
   { Example result of a mask, shown live in the mask editor. }
@@ -38,9 +40,12 @@ implementation
 
 uses
   Forms, Controls, Graphics, StdCtrls, ExtCtrls, Grids, Dialogs, ButtonPanel, CheckLst, Spin,
-  IniFiles, ComCtrls;
+  IniFiles, ComCtrls, TagUtils;
 
 resourcestring
+  rsGenrelisteTitel = 'Genreliste';
+  rsStandardgenrer = 'Standardgenrer (fjern fluebenet for at skjule en genre):';
+  rsEgneGenrer = 'Egne genrer (én pr. linje):';
   rsReplayGain = 'ReplayGain';
   rsRGSporOgAlbum = 'Beregn sporgain og albumgain';
   rsRGKunSpor = 'Beregn kun sporgain';
@@ -830,6 +835,93 @@ begin
     if Result then Mask := E.Edit.Text;
   finally
     E.Free;
+    F.Free;
+  end;
+end;
+
+function EditGenreList(var Custom, Hidden: TStringArray): Boolean;
+var
+  F: TForm;
+  List: TCheckListBox;
+  Memo: TMemo;
+  H: TCheckAll;
+  B: TButton;
+  I: Integer;
+  G: string;
+  L: TStringList;
+begin
+  F := NewDialog(rsGenrelisteTitel, 540, 470);
+  H := TCheckAll.Create;
+  try
+    with AddLabel(F, rsStandardgenrer, 12, 10) do
+    begin
+      WordWrap := True;
+      AutoSize := False;
+      Width := F.Scale96ToForm(250);
+      Height := F.Scale96ToForm(36);
+    end;
+    List := TCheckListBox.Create(F);
+    List.Parent := F;
+    List.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(48), F.Scale96ToForm(250), F.Scale96ToForm(330));
+    L := TStringList.Create;
+    try
+      L.Sorted := True;
+      L.CaseSensitive := False;
+      for I := 0 to ID3GenreCount - 1 do L.Add(ID3GenreName(I));
+      List.Items.Assign(L);
+    finally
+      L.Free;
+    end;
+    for I := 0 to List.Count - 1 do
+    begin
+      List.Checked[I] := True;
+      for G in Hidden do
+        if SameText(G, List.Items[I]) then List.Checked[I] := False;
+    end;
+    H.List := List;
+    B := TButton.Create(F);
+    B.Parent := F;
+    B.Caption := rsAlle;
+    B.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(384), F.Scale96ToForm(80), F.Scale96ToForm(26));
+    B.OnClick := @H.AllClick;
+    B := TButton.Create(F);
+    B.Parent := F;
+    B.Caption := rsIngen;
+    B.SetBounds(F.Scale96ToForm(100), F.Scale96ToForm(384), F.Scale96ToForm(80), F.Scale96ToForm(26));
+    B.OnClick := @H.NoneClick;
+    with AddLabel(F, rsEgneGenrer, 278, 10) do
+    begin
+      WordWrap := True;
+      AutoSize := False;
+      Width := F.Scale96ToForm(250);
+      Height := F.Scale96ToForm(36);
+    end;
+    Memo := TMemo.Create(F);
+    Memo.Parent := F;
+    Memo.ScrollBars := ssAutoVertical;
+    Memo.SetBounds(F.Scale96ToForm(278), F.Scale96ToForm(48), F.Scale96ToForm(250), F.Scale96ToForm(362));
+    for G in Custom do Memo.Lines.Add(G);
+    AddButtons(F);
+    Result := F.ShowModal = mrOK;
+    if Result then
+    begin
+      Hidden := nil;
+      for I := 0 to List.Count - 1 do
+        if not List.Checked[I] then
+        begin
+          SetLength(Hidden, Length(Hidden) + 1);
+          Hidden[High(Hidden)] := List.Items[I];
+        end;
+      Custom := nil;
+      for I := 0 to Memo.Lines.Count - 1 do
+        if Trim(Memo.Lines[I]) <> '' then
+        begin
+          SetLength(Custom, Length(Custom) + 1);
+          Custom[High(Custom)] := Trim(Memo.Lines[I]);
+        end;
+    end;
+  finally
+    H.Free;
     F.Free;
   end;
 end;

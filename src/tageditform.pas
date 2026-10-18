@@ -116,7 +116,7 @@ implementation
 {$R *.lfm}
 
 uses
-  StrUtils, LCLType, AudioTags, TagWriter, TagUtils;
+  StrUtils, LCLType, AudioTags, TagWriter, TagUtils, ProgOptions;
 
 resourcestring
   rsIngenTags = 'ingen';
@@ -164,12 +164,11 @@ end;
 
 procedure TFormTagEdit.FormCreate(Sender: TObject);
 var
-  I: Integer;
+  S: string;
 begin
   ComboGenre.Items.BeginUpdate;
   try
-    for I := 0 to ID3GenreCount - 1 do
-      ComboGenre.Items.Add(ID3GenreName(I));
+    for S in GenreList do ComboGenre.Items.Add(S);
     ComboGenre.Sorted := True;
   finally
     ComboGenre.Items.EndUpdate;

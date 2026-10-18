@@ -19,8 +19,14 @@ The source code comments are in English; the source language of the UI texts is 
   or all fields ("whole words", "match case"). The status bar shows count and playing time for all,
   selected and checked files.
 - Check boxes (☑ column): most tools work on the checked files, otherwise on the selected ones.
-- Copy/paste tags (Ctrl+Shift+C/V, choose which fields to paste), playlists (.m3u8/.m3u), play file,
-  show in Explorer, move files up/down for a manual order, delete to the Recycle Bin, copy/move to a folder.
+- Copy/paste tags (Ctrl+Shift+C/V, choose which fields to paste), play a file or the whole folder
+  (optionally with a chosen player per file type), show in Explorer, Windows properties (Alt+Enter),
+  move files up/down for a manual order, delete to the Recycle Bin, copy/move to a folder, change the
+  extension (.mp4 → .m4a, → .m4b audiobook and back, with undo).
+- Optional colours: low bitrates in red, MP3 files without ID3v1 in orange; grid lines, hidden file
+  extensions, font size, a fixed start folder, a "Recent folders" menu, expand/collapse folders.
+- Playlists (.m3u8/.m3u) with configurable #EXTINF text, relative or full paths, a playlist folder and
+  a quick save without a dialog.
 
 ### Editing tags
 - **Tag editor** for one file: all common fields plus lyrics, conductor, lyricist, original
@@ -44,6 +50,7 @@ The source code comments are in English; the source language of the UI texts is 
   exists / duplicate), and **undo** (also removes folders that became empty).
 - **Tags from file name** with a mask (`%6 - %1 - %2`, `%d` skips a part, `\` uses folder names).
 - **Rename folders** from tags (`%1 - %4 - %3`, `%f` = current name), with undo.
+- Rename a single file or folder by hand (F6), with "previous/next" and undo.
 - Mask editor with saved masks; around 30 variables, including release date, bit depth, encoder,
   sample rate and a random number.
 - **Rename actions**: named presets with a file mask and/or a folder mask, run from the Tools menu.
@@ -87,8 +94,9 @@ unchanged. Tags are rewritten in place when there is room (padding / `free` atom
 temporary file replaces the original.
 
 ### Other
-- Settings dialog (Ctrl+Alt+O) for language, album artist rule, keeping file dates, cover resizing,
-  the file list, word replacements, rename actions and the Discogs token.
+- Settings dialog (Ctrl+Alt+O) for language, album artist rule, keeping file dates, ID3v2 text
+  encoding, cover resizing, the file list, players, playlists, word replacements, rename actions and
+  the Discogs token. A genre list editor hides standard genres and adds your own.
 - Settings are stored in `%LOCALAPPDATA%\TidyTag\tidytag.ini`. Settings from the program's former
   working name, TagKlon, are copied over automatically on first start.
 - Windows adapt to longer translated texts (wider buttons, fields that move).
@@ -188,7 +196,9 @@ To add a language, add its code in `src\language.pas`, add translations to the J
 | `src/musicbrainz.pas` | HTTP (WinInet), MusicBrainz search/release, Cover Art Archive |
 | `src/discogs.pas` | Discogs search/release/picture (same data structures as MusicBrainz) |
 | `src/exportimport.pas` | Export (CSV/TXT/HTML/XML), CSV/XLSX reading, import plan |
-| `src/appsettings.pas` | Settings file, mask history, word replacements, rename actions |
+| `src/settingsfile.pas` | Location of the settings file (and moving settings from the old TagKlon name) |
+| `src/appsettings.pas` | Mask history, word replacements, rename actions |
+| `src/progoptions.pas` | Options from the Settings dialog: file list look, start folder, genres, players, playlists |
 | `src/language.pas` | Language choice and loading of `.po` files (LCLTranslator) |
 | `src/layoutfit.pas` | Makes room for longer translated texts when a window is shown |
 | `src/layoutcheck.pas` | The `--layoutcheck` developer check |
