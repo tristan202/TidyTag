@@ -2880,9 +2880,9 @@ var
 begin
   if not CanStartBatch or (FView.Count = 0) then Exit;
   Items := TargetItems(ScopeCaption, Prefer);
-  if not Prefer then
+  if Length(Items) = 0 then
   begin
-    // Nothing ticked and at most one file selected: take the whole list if it is one album folder.
+    // Nothing ticked or selected: take the whole list if it is one album folder.
     Items := AllItems;
     OneFolder := True;
     for I := 1 to High(Items) do
