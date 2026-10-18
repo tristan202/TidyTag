@@ -250,6 +250,14 @@ begin
               if Formats <> '' then Formats := Formats + ', ';
               Formats := Formats + ArrStr(Fmt, J);
             end;
+        ReleaseType := '';
+        if Fmt <> nil then
+          for J := 0 to Fmt.Count - 1 do
+            // the format list mixes media and descriptions: 'CD', 'Album', 'Compilation', ...
+            if ArrStr(Fmt, J) = 'Compilation' then ReleaseType := 'Compilation'
+            else if (ReleaseType = '') and ((ArrStr(Fmt, J) = 'Single') or (ArrStr(Fmt, J) = 'EP') or
+              (ArrStr(Fmt, J) = 'Album')) then ReleaseType := ArrStr(Fmt, J)
+            else if (ReleaseType = '') and (ArrStr(Fmt, J) = 'LP') then ReleaseType := 'Album';
         Lab := JArr(O, 'label');
         LabelName := ArrStr(Lab, 0);
         CatalogNo := JStr(O, 'catno');

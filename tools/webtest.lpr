@@ -231,6 +231,7 @@ begin
   Check(Length(R) = 2, '2 søgeresultater');
   Eq(R[0].Artist + ' / ' + R[0].Title, 'Gasolin'' / Gas 5', 'kunstner/titel delt');
   Eq(R[0].Formats, 'Vinyl, LP, Album', 'format (højst 3)');
+  Eq(R[0].ReleaseType, 'Album', 'type fra formatbeskrivelsen');
   Eq(R[0].LabelName + ' ' + R[0].CatalogNo, 'CBS CBS 80993', 'label');
   Eq(R[0].Id, '1234', 'id');
   Eq(R[1].Artist + '|' + R[1].Title, '|Gasolin''', 'titel uden bindestreg');

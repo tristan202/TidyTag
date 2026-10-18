@@ -24,10 +24,11 @@ object FormWebLookup: TFormWebLookup
     OnChange = ComboSourceChange
   end
   object ButtonToken: TButton
-    Left = 866
-    Height = 27
-    Top = 10
-    Width = 120
+    Left = 12
+    Height = 30
+    Top = 678
+    Width = 150
+    Anchors = [akLeft, akBottom]
     Caption = 'Discogs-token...'
     TabOrder = 11
     Visible = False

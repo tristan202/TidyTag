@@ -160,6 +160,7 @@ begin
       begin
         Releases := DiscogsSearch(Artist, Album, Token, Title);
         if (Length(Releases) = 0) and (Album <> '') then Releases := DiscogsSearch(Artist, '', Token, Title);
+        SortSongReleases(Releases); // one row per master release, the original album first
       end
       else
       begin

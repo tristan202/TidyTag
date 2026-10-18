@@ -1328,7 +1328,7 @@ begin
   Add(TopMenu, aKeys); Add(TopMenu, aAbout);
 
   // ---- file list popup
-  AddPopup(aEdit); AddPopup(aMulti); AddPopup(nil);
+  AddPopup(aEdit); AddPopup(aMulti); AddPopup(aWeb); AddPopup(nil);
   AddPopup(aChkSel); AddPopup(aUnchkSel); AddPopup(aChkAll); AddPopup(aUnchkAll); AddPopup(aInvert);
   AddPopup(nil); AddPopup(aCopy); AddPopup(FActPaste); AddPopup(nil); AddPopup(aMoveUp); AddPopup(aMoveDown);
   AddPopup(nil); AddPopup(aPlay); AddPopup(aExplorer); AddPopup(aProperties); AddPopup(aRenameManual);
