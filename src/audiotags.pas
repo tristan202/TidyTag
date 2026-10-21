@@ -13,6 +13,8 @@ uses
 function IsReadableAudioFile(const FileName: string): Boolean;
 { Readable plus formats that are listed but not read yet. }
 function IsAudioFile(const FileName: string): Boolean;
+{ Every extension IsAudioFile accepts ('.mp3', ...). }
+function AudioFileExtensions: TStringArray;
 { Never raises: read problems end up in Result.Error.
   WantPictures keeps cover image data (needed before saving). }
 function ReadAudioInfo(const FileName: string; WantPictures: Boolean = False): TAudioInfo;
@@ -45,6 +47,15 @@ end;
 function IsAudioFile(const FileName: string): Boolean;
 begin
   Result := ExtIn(FileName, ReadableExts) or ExtIn(FileName, OtherExts);
+end;
+
+function AudioFileExtensions: TStringArray;
+var
+  E: string;
+begin
+  Result := nil;
+  for E in ReadableExts do Insert(E, Result, Length(Result));
+  for E in OtherExts do Insert(E, Result, Length(Result));
 end;
 
 function ReadAudioInfo(const FileName: string; WantPictures: Boolean): TAudioInfo;

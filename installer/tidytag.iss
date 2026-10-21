@@ -1,4 +1,4 @@
-; Inno Setup script for TidyTag. Built by tools\make-release.ps1, which passes the version:
+﻿; Inno Setup script for TidyTag. Built by tools\make-release.ps1, which passes the version:
 ;   ISCC.exe /DAppVersion=0.9.0 installer\tidytag.iss
 ; The installer can install for the current user (no administrator rights) or for everyone.
 
@@ -49,6 +49,16 @@ Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "explorermenu"; Description: "{cm:ExplorerMenu}"; GroupDescription: "{cm:AdditionalIcons}"
+
+[CustomMessages]
+danish.ExplorerMenu=Vis "Åbn i TidyTag" i Stifinderens højrekliksmenu
+english.ExplorerMenu=Show "Open in TidyTag" in the Explorer context menu
+german.ExplorerMenu="In TidyTag öffnen" im Explorer-Kontextmenü anzeigen
+french.ExplorerMenu=Afficher « Ouvrir dans TidyTag » dans le menu contextuel de l'Explorateur
+italian.ExplorerMenu=Mostra "Apri in TidyTag" nel menu contestuale di Esplora file
+swedish.ExplorerMenu=Visa "Öppna i TidyTag" i Utforskarens snabbmeny
+spanish.ExplorerMenu=Mostrar "Abrir en TidyTag" en el menú contextual del Explorador
 
 [Files]
 Source: "..\bin\TidyTag.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -66,5 +76,10 @@ Name: "{autodesktop}\TidyTag"; Filename: "{app}\TidyTag.exe"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\TidyTag.exe"; Description: "{cm:LaunchProgram,TidyTag}"; Flags: nowait postinstall skipifsilent
+; the entries are written by TidyTag itself (per user, in the program's language)
+Filename: "{app}\TidyTag.exe"; Parameters: "--explorer-menu=on"; Flags: runhidden waituntilterminated; Tasks: explorermenu
+
+[UninstallRun]
+Filename: "{app}\TidyTag.exe"; Parameters: "--explorer-menu=off"; Flags: runhidden waituntilterminated; RunOnceId: "ExplorerMenu"
 
 ; The settings in %LOCALAPPDATA%\TidyTag are left alone on uninstall, like most programs do.

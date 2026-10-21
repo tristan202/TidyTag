@@ -78,6 +78,7 @@ Priority: **A** = high value in daily use, **B** = useful, **C** = rare / niche,
 | Playlist: EXTINF, full paths, playlist folder, quick save without a dialog | **Done** | Options > Playlists |
 | Start folder, font size | **Done** | Font size applies to the file list and folder tree |
 | Genre list editor (choose standard genres, own genres) | **Done** | Options > Genre list |
+| Shell integration (right-click in Explorer) | **Done** | "Open in TidyTag" for folders and audio files; installer task or Settings > General; one window receives the files |
 
 ## Dropped
 | Feature | Reason |
@@ -86,5 +87,4 @@ Priority: **A** = high value in daily use, **B** = useful, **C** = rare / niche,
 | freedb, Amazon/TrackType.org | The services have shut down – replaced by MusicBrainz/Discogs |
 | Update check, RSS, Buy, Unlock, nag screen | Not relevant |
 | Proxy and Amazon AWS settings | Belonged to the closed services (WinInet uses the Windows proxy) |
-| Shell integration (right-click in Explorer) | Possible later; needs registry changes |
 | Customize toolbars and shortcuts | Large task, small gain |

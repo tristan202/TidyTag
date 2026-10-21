@@ -6318,5 +6318,29 @@
   "it": "Ferma",
   "sv": "Stopp",
   "es": "Detener"
+ },
+ "Åbn i TidyTag": {
+  "en": "Open in TidyTag",
+  "de": "In TidyTag öffnen",
+  "fr": "Ouvrir dans TidyTag",
+  "it": "Apri in TidyTag",
+  "sv": "Öppna i TidyTag",
+  "es": "Abrir en TidyTag"
+ },
+ "Vis \"Åbn i TidyTag\" i Stifinderens højrekliksmenu": {
+  "en": "Show \"Open in TidyTag\" in the Explorer context menu",
+  "de": "\"In TidyTag öffnen\" im Explorer-Kontextmenü anzeigen",
+  "fr": "Afficher « Ouvrir dans TidyTag » dans le menu contextuel de l'Explorateur",
+  "it": "Mostra \"Apri in TidyTag\" nel menu contestuale di Esplora file",
+  "sv": "Visa \"Öppna i TidyTag\" i Utforskarens snabbmeny",
+  "es": "Mostrar \"Abrir en TidyTag\" en el menú contextual del Explorador"
+ },
+ "Stifinder-menuen kunne ikke ændres: %s": {
+  "en": "The Explorer menu could not be changed: %s",
+  "de": "Das Explorer-Menü konnte nicht geändert werden: %s",
+  "fr": "Le menu de l'Explorateur n'a pas pu être modifié : %s",
+  "it": "Impossibile modificare il menu di Esplora file: %s",
+  "sv": "Utforskarmenyn kunde inte ändras: %s",
+  "es": "No se pudo cambiar el menú del Explorador: %s"
  }
 }

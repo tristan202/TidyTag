@@ -599,6 +599,18 @@ msgctxt "layoutcheck.rsvaelgfelterderindsaettes"
 msgid "Vælg de felter, der indsættes i %d filer:"
 msgstr "Felder wählen, die in %d Dateien eingefügt werden:"
 
+#: mainform.rsaabnitidytag
+msgid "Åbn i TidyTag"
+msgstr "In TidyTag öffnen"
+
+#: mainform.rsstifindermenu
+msgid "Vis \"Åbn i TidyTag\" i Stifinderens højrekliksmenu"
+msgstr "\"In TidyTag öffnen\" im Explorer-Kontextmenü anzeigen"
+
+#: mainform.rsstifindermenufejl
+msgid "Stifinder-menuen kunne ikke ændres: %s"
+msgstr "Das Explorer-Menü konnte nicht geändert werden: %s"
+
 #: mainform.rswebbatchoversigt
 msgid "%d filer i %d mappe(r); %d har et albumnavn (%d forskellige)."
 msgstr "%d Dateien in %d Ordner(n); %d haben einen Albumnamen (%d verschiedene)."

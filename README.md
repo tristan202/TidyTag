@@ -37,6 +37,10 @@ Windows SmartScreen may warn about an unknown publisher the first time.
   extensions, font size, a fixed start folder, a "Recent folders" menu, expand/collapse folders.
 - Playlists (.m3u8/.m3u) with configurable #EXTINF text, relative or full paths, a playlist folder and
   a quick save without a dialog.
+- "Open in TidyTag" in the Explorer context menu for folders, drives, folder backgrounds and audio
+  files (chosen in the installer or in Settings, per user). Selected files open in their folder and are
+  selected; when TidyTag is already running, the files go to that window instead of a new one. On
+  Windows 11 the entry is under "Show more options".
 
 ### Editing tags
 - **Tag editor** for one file: all common fields plus lyrics, conductor, lyricist, original
@@ -212,6 +216,7 @@ To add a language, add its code in `src\language.pas`, add translations to the J
 | `src/flacwriter.pas` | FLAC metadata blocks and Vorbis comments |
 | `src/mp4writer.pas` | MP4 atom tree, `ilst`, chunk offsets |
 | `src/oggwriter.pas` | Ogg Vorbis/Opus: comment packet, new paging, CRC |
+| `src/shellintegration.pas` | Explorer context menu entries, hand-over of paths to a running TidyTag |
 | `src/batchwrite.pas` | Saves selected fields/cover in one file (tabs, paste tag, drag and drop) |
 | `src/tagremove.pas` | Remove tags |
 | `src/id3sync.pas` | ID3v1 ↔ ID3v2 sync |

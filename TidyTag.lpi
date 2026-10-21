@@ -345,9 +345,14 @@
         <UnitName Value="SettingsFile"/>
       </Unit>
       <Unit>
-        <Filename Value="src\src/progoptions.pas.pas"/>
+        <Filename Value="src\progoptions.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ProgOptions"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\shellintegration.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ShellIntegration"/>
       </Unit>
     </Units>
   </ProjectOptions>

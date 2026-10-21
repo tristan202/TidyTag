@@ -9,7 +9,7 @@ unit MainForm;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
+  Windows, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
   StdCtrls, ShellCtrls, Menus, ActnList, IniFiles, AudioTypes, ScanThread, RenameCore,
   BatchWrite, FieldTools, AppSettings, ID3Sync;
 
@@ -149,6 +149,17 @@ type
     procedure TimerDebounceTimer(Sender: TObject);
     procedure TimerPollTimer(Sender: TObject);
     procedure TimerSelectionTimer(Sender: TObject);
+  private
+    FIncoming: TStringList;      // paths handed over by another TidyTag process
+    FTimerIncoming: TTimer;      // collects one Explorer selection before opening it
+    FPendingSelect: TStringList; // files to select once the scan of their folder is done
+    FLastOpenDir: string;        // folder and time of the last open from Explorer
+    FLastOpenTick: QWord;
+    procedure PathsReceived(const Paths: TStringArray);
+    procedure TimerIncomingTimer(Sender: TObject);
+    function PrepareOpen(const Paths: TStringArray): string;
+    procedure OpenPaths(const Paths: TStringArray);
+    function ApplyPendingSelect(Extend: Boolean = False): Boolean;
   private
     FItems: TFPList;        // owned TAudioInfo objects, in sort order
     FView: TFPList;         // the visible subset of FItems (filter, hidden files)
@@ -382,6 +393,10 @@ type
 var
   FormMain: TFormMain;
 
+{ "TidyTag.exe --explorer-menu=on|off", used by the installer: adds or removes the
+  "Open in TidyTag" entries in the current language. True when the switch was given. }
+function HandleExplorerMenuSwitch: Boolean;
+
 implementation
 
 {$R *.lfm}
@@ -390,9 +405,12 @@ uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
   Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage, Spin, ButtonPanel,
-  ReplayGain, ID3Writer, ProgOptions, FileInfo;
+  ReplayGain, ID3Writer, ProgOptions, FileInfo, ShellIntegration;
 
 resourcestring
+  rsAabnITidyTag = 'Åbn i TidyTag';
+  rsStifinderMenu = 'Vis "Åbn i TidyTag" i Stifinderens højrekliksmenu';
+  rsStifinderMenuFejl = 'Stifinder-menuen kunne ikke ændres: %s';
   rsWebBatchOversigt = '%d filer i %d mappe(r); %d har et albumnavn (%d forskellige).';
   rsWebBatchResultat = 'Web-opslag: %d gemt, %d sprunget over af %d';
   rsOmdoebFilManuelt = 'Omdøb fil...';
@@ -997,6 +1015,13 @@ begin
   FItems := TFPList.Create;
   FView := TFPList.Create;
   FFavorites := TStringList.Create;
+  FIncoming := TStringList.Create;
+  FPendingSelect := TStringList.Create;
+  FTimerIncoming := TTimer.Create(Self);
+  FTimerIncoming.Enabled := False;
+  FTimerIncoming.Interval := 400;
+  FTimerIncoming.OnTimer := @TimerIncomingTimer;
+  StartReceiving(@PathsReceived);
   FSortColumn := 1; // file name
   FLoading := True;
   try
@@ -1034,6 +1059,7 @@ end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
 begin
+  ReleaseInstance;
   StopScan;
   SaveSettings;
   SaveInlineOptions;
@@ -1041,6 +1067,8 @@ begin
   FItems.Free;
   FView.Free;
   FFavorites.Free;
+  FIncoming.Free;
+  FPendingSelect.Free;
 end;
 
 procedure TFormMain.LoadIcons;
@@ -1778,6 +1806,115 @@ begin
   StartScan;
 end;
 
+{ Paths from Explorer }
+
+function HandleExplorerMenuSwitch: Boolean;
+begin
+  Result := (ParamCount = 1) and ((ParamStr(1) = '--explorer-menu=on') or (ParamStr(1) = '--explorer-menu=off'));
+  if not Result then Exit;
+  try
+    if ParamStr(1) = '--explorer-menu=on' then
+      InstallExplorerMenu(rsAabnITidyTag, AudioFileExtensions)
+    else
+      RemoveExplorerMenu(AudioFileExtensions);
+  except
+    ExitCode := 1;
+  end;
+end;
+
+procedure TFormMain.PathsReceived(const Paths: TStringArray);
+var
+  P: string;
+begin
+  for P in Paths do FIncoming.Add(P);
+  if IsIconic(Handle) then ShowWindow(Handle, SW_RESTORE);
+  SetForegroundWindow(Handle);
+  // Explorer starts one process per selected file; wait until the last one has called.
+  FTimerIncoming.Enabled := False;
+  FTimerIncoming.Enabled := True;
+end;
+
+procedure TFormMain.TimerIncomingTimer(Sender: TObject);
+var
+  Paths: TStringArray;
+  I: Integer;
+begin
+  if Application.ModalLevel > 0 then Exit; // a dialog is open; try again on the next tick
+  FTimerIncoming.Enabled := False;
+  Paths := nil;
+  for I := 0 to FIncoming.Count - 1 do Insert(FIncoming[I], Paths, Length(Paths));
+  FIncoming.Clear;
+  OpenPaths(Paths);
+end;
+
+{ The folder to show for paths from Explorer: the first folder among them, otherwise the
+  folder of the first file, whose files in that folder are selected after the scan. }
+function TFormMain.PrepareOpen(const Paths: TStringArray): string;
+var
+  P: string;
+begin
+  Result := '';
+  FPendingSelect.Clear;
+  for P in Paths do
+    if DirectoryExists(P) then Exit(P);
+  if Length(Paths) = 0 then Exit;
+  Result := ExtractFileDir(Paths[0]);
+  for P in Paths do
+    if SameFileName(ExtractFileDir(P), Result) then FPendingSelect.Add(P);
+  FLastOpenDir := Result;
+  FLastOpenTick := GetTickCount64;
+end;
+
+procedure TFormMain.OpenPaths(const Paths: TStringArray);
+var
+  Dir, P: string;
+  Old: TStringArray;
+  I: Integer;
+begin
+  // Still reading the folder of this start's own file: add to its selection.
+  Old := nil;
+  if FScanner <> nil then
+    for I := 0 to FPendingSelect.Count - 1 do Insert(FPendingSelect[I], Old, Length(Old));
+  Dir := PrepareOpen(Paths);
+  if (Dir <> '') and (FScanner <> nil) and (FPendingSelect.Count > 0) and SameFileName(Dir, FFolder) then
+  begin
+    for P in Old do
+      if FPendingSelect.IndexOf(P) < 0 then FPendingSelect.Add(P);
+    Exit;
+  end;
+  if Dir = '' then Exit;
+  // files already in the list are just selected
+  if (FPendingSelect.Count > 0) and (FScanner = nil) and
+    ApplyPendingSelect(SameFileName(Dir, FLastOpenDir) and (GetTickCount64 - FLastOpenTick < 5000)) then
+  begin
+    SelectionChanged;
+    Exit;
+  end;
+  Navigate(Dir);
+end;
+
+{ Selects the files waiting in FPendingSelect, added to the current selection when Extend
+  (Explorer's processes for one selection can arrive just after the scan); False when
+  none of them is in the list. }
+function TFormMain.ApplyPendingSelect(Extend: Boolean): Boolean;
+var
+  I: Integer;
+  Found: array of Integer;
+begin
+  Result := False;
+  if FPendingSelect.Count = 0 then Exit;
+  Found := nil;
+  for I := 0 to FView.Count - 1 do
+    if FPendingSelect.IndexOf(Item(I).FileName) >= 0 then Insert(I, Found, Length(Found));
+  if Length(Found) = 0 then Exit;
+  FPendingSelect.Clear;
+  if not Extend then FileList.ClearSelection;
+  for I in Found do FileList.Items[I].Selected := True;
+  FileList.ItemFocused := FileList.Items[Found[0]];
+  FileList.Items[Found[0]].MakeVisible(False);
+  Result := True;
+end;
+
 procedure TFormMain.Navigate(const Dir: string);
 var
   D: string;
@@ -1877,6 +2014,7 @@ begin
     TimerPoll.Enabled := False;
     SortItems;
     if FActAutoFitAfterScan.Checked then AutoFitColumns;
+    ApplyPendingSelect;
     SelectionChanged;
   end
   else
@@ -3723,7 +3861,7 @@ var
   Pages: TPageControl;
   Tab: TTabSheet;
   RLang, RAlbum: TRadioGroup;
-  CKeep, CAuto, CJpeg, CFit, CSub, CLow, CNoV1, CHideExt, CGrid, CUni, CExtInf, CFull: TCheckBox;
+  CKeep, CAuto, CJpeg, CFit, CSub, CLow, CNoV1, CHideExt, CGrid, CUni, CExtInf, CFull, CShell: TCheckBox;
   ESide, EQual, ELow, EFont: TSpinEdit;
   RStart: TRadioGroup;
   EStart, EInfo, EPlFolder, EPlName: TEdit;
@@ -3832,6 +3970,7 @@ begin
     Y := 250;
     CKeep := Chk(Tab, rsBevarFilernesDatoVedGem, FKeepTimestamp);
     CUni := Chk(Tab, rsID3Unicode, AppOptions.ID3Unicode);
+    CShell := Chk(Tab, rsStifinderMenu, ExplorerMenuInstalled);
     Btn(Tab, rsGenreliste, @Btns.GenresClick);
 
     // covers
@@ -3922,6 +4061,15 @@ begin
     ActAutoResizeExecute(nil);
     FActAutoFitAfterScan.Checked := CFit.Checked;
     AppOptions.ID3Unicode := CUni.Checked;
+    if CShell.Checked <> ExplorerMenuInstalled then
+    try
+      if CShell.Checked then
+        InstallExplorerMenu(rsAabnITidyTag, AudioFileExtensions)
+      else
+        RemoveExplorerMenu(AudioFileExtensions);
+    except
+      on E: Exception do Inform(rsIndstillingerTitel, Format(rsStifinderMenuFejl, [E.Message]), mtWarning);
+    end;
     AppOptions.MarkLowBitrate := CLow.Checked;
     AppOptions.LowBitrate := ELow.Value;
     AppOptions.MarkNoID3v1 := CNoV1.Checked;
@@ -5577,6 +5725,7 @@ begin
   if MessageDlg(rsSprog, rsSprogetSkiftesNaarTidytagGenstartes, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     Exit;
   SaveSettings;
+  ReleaseInstance; // the new process must not hand its folder back to us
   P := TProcess.Create(nil);
   try
     P.Executable := ParamStr(0);
@@ -5759,8 +5908,9 @@ begin
   ActFoldersExecute(FActFolders);
   if AppOptions.FixedStartFolder and DirectoryExists(AppOptions.StartFolder) then
     Start := AppOptions.StartFolder;
-  if (ParamCount > 0) and DirectoryExists(ParamStr(1)) then
-    Start := ParamStr(1)
+  S := PrepareOpen(CommandLinePaths);
+  if S <> '' then
+    Start := S
   else if (ParamCount >= 2) and (ParamStr(1) = '--selftest') then
     Start := ParamStr(2);
   if (Start = '') or not DirectoryExists(Start) then
@@ -5776,6 +5926,11 @@ begin
   AddAddressHistory(FFolder);
   FileList.OnCustomDrawSubItem := @FileListCustomDrawSubItem;
   StartScan;
+  try
+    RefreshExplorerMenu(rsAabnITidyTag, AudioFileExtensions); // the exe moved or the language changed
+  except
+    // only a convenience; the settings dialog reports problems
+  end;
 end;
 
 procedure TFormMain.SaveSettings;
