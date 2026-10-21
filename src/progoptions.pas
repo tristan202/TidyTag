@@ -34,6 +34,11 @@ type
     PlFullPaths: Boolean;
     PlFolder: string;             // '' = the files' folder
     PlNameMask: string;           // quick save file name
+    AnBpm, AnKey: Boolean;        // tempo/key analysis: what to find
+    AnMinBpm: Integer;            // tempo range AnMinBpm .. 2 * AnMinBpm
+    AnBpmDecimals: Integer;       // 0..2
+    AnKeyNotation: Integer;       // Ord(TKeyNotation): musical, Camelot, Open Key
+    AnSkipExisting: Boolean;
   end;
 
 var
@@ -110,6 +115,12 @@ begin
       PlFullPaths := Ini.ReadBool('Playlist', 'FullPaths', False);
       PlFolder := Ini.ReadString('Playlist', 'Folder', '');
       PlNameMask := Ini.ReadString('Playlist', 'NameMask', '%f');
+      AnBpm := Ini.ReadBool('Analysis', 'Bpm', True);
+      AnKey := Ini.ReadBool('Analysis', 'Key', True);
+      AnMinBpm := Ini.ReadInteger('Analysis', 'MinBpm', 85);
+      AnBpmDecimals := Ini.ReadInteger('Analysis', 'BpmDecimals', 0);
+      AnKeyNotation := Ini.ReadInteger('Analysis', 'KeyNotation', 0);
+      AnSkipExisting := Ini.ReadBool('Analysis', 'SkipExisting', True);
       for I := 0 to High(CustomGenres) do CustomGenres[I] := Unquote(CustomGenres[I]);
       for I := 0 to High(HiddenGenres) do HiddenGenres[I] := Unquote(HiddenGenres[I]);
       for I := 0 to High(Players) do Players[I] := Unquote(Players[I]);
@@ -144,6 +155,12 @@ begin
       Ini.WriteBool('Playlist', 'FullPaths', PlFullPaths);
       Ini.WriteString('Playlist', 'Folder', PlFolder);
       Ini.WriteString('Playlist', 'NameMask', PlNameMask);
+      Ini.WriteBool('Analysis', 'Bpm', AnBpm);
+      Ini.WriteBool('Analysis', 'Key', AnKey);
+      Ini.WriteInteger('Analysis', 'MinBpm', AnMinBpm);
+      Ini.WriteInteger('Analysis', 'BpmDecimals', AnBpmDecimals);
+      Ini.WriteInteger('Analysis', 'KeyNotation', AnKeyNotation);
+      Ini.WriteBool('Analysis', 'SkipExisting', AnSkipExisting);
     end;
   finally
     Ini.Free;

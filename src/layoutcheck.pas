@@ -177,7 +177,8 @@ var
   Fs: TTagFieldSet;
   T: TTagField;
   CO: TCoverResize;
-  RGAlbum, RGSkip: Boolean;
+  RGAlbum, RGSkip, AnB, AnK: Boolean;
+  AnMin, AnDec, AnNot: Integer;
   GCustom, GHidden: TStringArray;
   MaskText: string;
 
@@ -223,6 +224,13 @@ begin
     RGSkip := False;
     Arm;
     AskReplayGain(RGAlbum, RGSkip);
+    AnB := True;
+    AnK := True;
+    AnMin := 85;
+    AnDec := 0;
+    AnNot := 0;
+    Arm;
+    AskAnalysis(AnB, AnK, AnMin, AnDec, AnNot, RGSkip);
     GCustom := ['Dansktop'];
     GHidden := ['Blues'];
     Arm;

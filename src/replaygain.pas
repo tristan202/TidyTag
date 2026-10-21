@@ -8,7 +8,7 @@ unit ReplayGain;
 interface
 
 uses
-  Classes, SysUtils, Loudness;
+  Classes, SysUtils, Loudness, WorkBatch;
 
 type
   TRGMeasure = record
@@ -21,21 +21,12 @@ type
   TRGMeasures = array of TRGMeasure;
 
   { Start it, poll Done/Finished (e.g. from a timer), read Results when finished. }
-  TRGBatch = class
-  private
-    FFiles: TStringArray;
-    FNext, FDone, FRunning: LongInt;
-    FThreads: TList;
+  TRGBatch = class(TWorkBatch)
+  protected
+    procedure Process(Index: Integer); override;
   public
     Results: TRGMeasures;
-    Cancelled: Boolean;
     constructor Create(const Files: TStringArray);
-    destructor Destroy; override;
-    procedure Start(ThreadCount: Integer = 0);
-    procedure Cancel;
-    function Finished: Boolean;
-    property Done: LongInt read FDone;
-    function Count: Integer;
   end;
 
 { Measures one file (also used by the tests). }
@@ -60,14 +51,6 @@ type
     procedure Data(Samples: PSingle; Frames: Integer);
   end;
 
-  TRGThread = class(TThread)
-  private
-    FBatch: TRGBatch;
-  protected
-    procedure Execute; override;
-  public
-    constructor Create(Batch: TRGBatch);
-  end;
 
 procedure TSink.Format(Rate, Channels: Integer);
 begin
@@ -137,39 +120,13 @@ begin
   Peak := RGPeakText(P);
 end;
 
-{ TRGThread }
-
-constructor TRGThread.Create(Batch: TRGBatch);
-begin
-  FBatch := Batch;
-  FreeOnTerminate := False;
-  inherited Create(False);
-end;
-
-procedure TRGThread.Execute;
-var
-  I: LongInt;
-begin
-  try
-    repeat
-      I := InterLockedIncrement(FBatch.FNext) - 1;
-      if (I >= Length(FBatch.FFiles)) or FBatch.Cancelled then Break;
-      FBatch.Results[I] := MeasureFile(FBatch.FFiles[I], @FBatch.Cancelled);
-      InterLockedIncrement(FBatch.FDone);
-    until False;
-  finally
-    InterLockedDecrement(FBatch.FRunning);
-  end;
-end;
-
 { TRGBatch }
 
 constructor TRGBatch.Create(const Files: TStringArray);
 var
   I: Integer;
 begin
-  inherited Create;
-  FFiles := Copy(Files);
+  inherited Create(Files);
   SetLength(Results, Length(Files));
   for I := 0 to High(Results) do
   begin
@@ -177,46 +134,11 @@ begin
     Results[I].Error := rsIkkeMaalt;
     Results[I].Loudness := NegInfinity;
   end;
-  FThreads := TList.Create;
 end;
 
-destructor TRGBatch.Destroy;
-var
-  I: Integer;
+procedure TRGBatch.Process(Index: Integer);
 begin
-  Cancelled := True;
-  for I := 0 to FThreads.Count - 1 do
-  begin
-    TRGThread(FThreads[I]).WaitFor;
-    TRGThread(FThreads[I]).Free;
-  end;
-  FThreads.Free;
-  inherited Destroy;
-end;
-
-procedure TRGBatch.Start(ThreadCount: Integer);
-var
-  I: Integer;
-begin
-  if ThreadCount <= 0 then ThreadCount := Max(1, Min(TThread.ProcessorCount, 8));
-  ThreadCount := Max(1, Min(ThreadCount, Length(FFiles)));
-  FRunning := ThreadCount;
-  for I := 1 to ThreadCount do FThreads.Add(TRGThread.Create(Self));
-end;
-
-procedure TRGBatch.Cancel;
-begin
-  Cancelled := True;
-end;
-
-function TRGBatch.Finished: Boolean;
-begin
-  Result := FRunning <= 0;
-end;
-
-function TRGBatch.Count: Integer;
-begin
-  Result := Length(FFiles);
+  Results[Index] := MeasureFile(FFiles[Index], @Cancelled);
 end;
 
 end.

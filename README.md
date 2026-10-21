@@ -92,6 +92,12 @@ Windows SmartScreen may warn about an unknown publisher the first time.
   Foundation (MP3, AAC/ALAC, WMA, FLAC). Ogg, Opus, APE, WavPack, Musepack and OptimFROG need a
   codec installed in Windows.
 - Opus files get `R128_TRACK_GAIN`/`R128_ALBUM_GAIN` (RFC 7845). "Remove tags" keeps ReplayGain values.
+- Tools > BPM and key analyses the audio (no external programs, same decoding as ReplayGain) and
+  writes the BPM and key fields. The tempo is searched within a one-octave range you choose
+  (85-170, 100-200 for drum & bass, 70-140 for hip-hop ...), so half/double tempo is avoided, and is
+  refined over the whole track to about ±0.05 BPM; tracks whose tempo changes are listed afterwards.
+  Keys are written as musical notation (Am, F#), Camelot (8A, 2B) or Open Key (1m, 7d), and existing
+  keys in any of these notations can be converted to the chosen one.
 
 ### Export and import
 - Export to CSV (Excel: semicolon + BOM), CSV (comma), text, HTML and XML with selectable columns.
@@ -164,6 +170,7 @@ C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe -Mobjfpc -Sh -Fusrc -FUlib\tools -
 | `tagtest` | Write test. It works on **copies** in a test folder and checks fields, pictures, tag removal and that the audio data is unchanged: `bin\tagtest.exe C:\Temp\tagtest song.mp3 song.flac` |
 | `renametest` | Renaming of files and folders, tags from file names, track numbers (creates empty test files): `bin\renametest.exe C:\Temp\renametest` |
 | `tooltest` | Field tools, ID3 sync, Recycle Bin (puts one tiny test file in the Recycle Bin): `bin\tooltest.exe C:\Temp\tt song.mp3` |
+| `bpmtest` | Tempo and key: notation checks and synthetic tracks with a known tempo and key; with files or folders given, analyses them (several threads, only reads) and compares with the BPM and key in their tags: `binpmtest.exe C:\Temppm D:\Music` |
 | `rgtest` | ReplayGain: EBU Tech 3341 test signals written as WAV/AIFF and measured directly and through Media Foundation, plus measurement of given files: `bin\rgtest.exe C:\Temp\rg song.flac` |
 | `exporttest` | Export and import |
 | `webtest` | Offline test of MusicBrainz responses and track matching |
@@ -216,6 +223,8 @@ To add a language, add its code in `src\language.pas`, add translations to the J
 | `src/flacwriter.pas` | FLAC metadata blocks and Vorbis comments |
 | `src/mp4writer.pas` | MP4 atom tree, `ilst`, chunk offsets |
 | `src/oggwriter.pas` | Ogg Vorbis/Opus: comment packet, new paging, CRC |
+| `src/musicanalysis.pas` | Tempo (onset envelope, autocorrelation, beat folding) and key (pitch-class profile) detection |
+| `src/workbatch.pas` | Runs one job per file on several threads (ReplayGain, BPM/key) |
 | `src/shellintegration.pas` | Explorer context menu entries, hand-over of paths to a running TidyTag |
 | `src/batchwrite.pas` | Saves selected fields/cover in one file (tabs, paste tag, drag and drop) |
 | `src/tagremove.pas` | Remove tags |

@@ -811,6 +811,55 @@ msgstr "Nom de fichier (enregistrement rapide) :"
 msgid "Masker som ved omdøbning, fx %1 - %2; %f er mappens navn."
 msgstr "Masques comme pour le renommage, ex. %1 - %2 ; %f est le nom du dossier."
 
+#: mainform.rsbpmogtoneartmenu
+msgctxt "mainform.rsbpmogtoneartmenu"
+msgid "BPM og toneart"
+msgstr "BPM et tonalité"
+
+#: mainform.rsfindbpmogtoneart
+msgid "Find BPM og toneart..."
+msgstr "Détecter BPM et tonalité..."
+
+#: mainform.rsfindbpmogtonearthint
+msgid "Analysér lyden og skriv tempo og toneart i de afkrydsede filer"
+msgstr "Analyser l'audio et écrire le tempo et la tonalité dans les fichiers cochés"
+
+#: mainform.rsomskrivtoneart
+msgid "Skriv toneart om til valgt notation..."
+msgstr "Convertir les tonalités dans la notation choisie..."
+
+#: mainform.rsomskrivtonearthint
+msgid "Skriv eksisterende toneart (fx 8A eller Am) i den notation, der er valgt under BPM og toneart"
+msgstr "Réécrire les tonalités existantes (p. ex. 8A ou Am) dans la notation choisie sous BPM et tonalité"
+
+#: mainform.rsanalyserer
+msgid "Analyserer: %d af %d filer"
+msgstr "Analyse : %d sur %d fichiers"
+
+#: mainform.rsanalyseintetatgoere
+msgid "Alle filerne har allerede de valgte værdier."
+msgstr "Tous les fichiers ont déjà les valeurs choisies."
+
+#: mainform.rstempovarierer
+msgid "Tempoet skifter undervejs; tjek BPM:"
+msgstr "Le tempo change en cours de morceau ; vérifiez le BPM :"
+
+#: mainform.rsingentoneart
+msgid "Ingen tydelig toneart:"
+msgstr "Pas de tonalité nette :"
+
+#: mainform.rsanalysefejl
+msgid "Kunne ikke analyseres:"
+msgstr "Analyse impossible :"
+
+#: mainform.rstoneartomskrevet
+msgid "%d af %d toneart-felter skrevet som %s"
+msgstr "%d sur %d champs de tonalité écrits comme %s"
+
+#: mainform.rsukendtetoneart
+msgid "Ukendt toneart, ikke ændret:"
+msgstr "Tonalité inconnue, non modifiée :"
+
 #: mainform.rsberegnreplaygain
 msgid "Beregn ReplayGain..."
 msgstr "Calculer ReplayGain..."
@@ -2366,6 +2415,19 @@ msgctxt "multieditform.rsluk"
 msgid "Luk"
 msgstr "Fermer"
 
+#: musicanalysis.rsingenlydanalyse
+msgctxt "musicanalysis.rsingenlydanalyse"
+msgid "ingen lyd"
+msgstr "pas d'audio"
+
+#: musicanalysis.rsforkorttiltempo
+msgid "for kort til tempo"
+msgstr "trop court pour le tempo"
+
+#: musicanalysis.rsikkeanalyseret
+msgid "ikke analyseret"
+msgstr "non analysé"
+
 #: musicbrainz.rskunneikkestartenetvaerksforbindelsenfejl
 msgid "Kunne ikke starte netværksforbindelsen (fejl %d)"
 msgstr "Impossible de démarrer la connexion réseau (erreur %d)"
@@ -2596,6 +2658,7 @@ msgid "Omdøb %d filer?"
 msgstr "Renommer %d fichiers ?"
 
 #: replaygain.rsingenlyd
+msgctxt "replaygain.rsingenlyd"
 msgid "ingen lyd"
 msgstr "pas d'audio"
 
@@ -2741,6 +2804,63 @@ msgstr "Vos genres (un par ligne) :"
 msgctxt "tooldialogs.rsreplaygain"
 msgid "ReplayGain"
 msgstr "ReplayGain"
+
+#: tooldialogs.rsbpmogtoneart
+msgctxt "tooldialogs.rsbpmogtoneart"
+msgid "BPM og toneart"
+msgstr "BPM et tonalité"
+
+#: tooldialogs.rsfindbpm
+msgid "Find BPM (tempo)"
+msgstr "Détecter le BPM (tempo)"
+
+#: tooldialogs.rstempointerval
+msgid "Tempointerval:"
+msgstr "Plage de tempo :"
+
+#: tooldialogs.rsdecimaler
+msgid "Decimaler:"
+msgstr "Décimales :"
+
+#: tooldialogs.rsheletal
+msgid "Hele tal (128)"
+msgstr "Nombres entiers (128)"
+
+#: tooldialogs.rsendecimal
+msgid "1 decimal (128.0)"
+msgstr "1 décimale (128.0)"
+
+#: tooldialogs.rstodecimaler
+msgid "2 decimaler (128.00)"
+msgstr "2 décimales (128.00)"
+
+#: tooldialogs.rsfindtoneart
+msgid "Find toneart"
+msgstr "Détecter la tonalité"
+
+#: tooldialogs.rsnotation
+msgid "Skrives som:"
+msgstr "Écrire comme :"
+
+#: tooldialogs.rsnotationmusikalsk
+msgid "Musikalsk (Am, F#)"
+msgstr "Musicale (Am, F#)"
+
+#: tooldialogs.rsnotationcamelot
+msgid "Camelot (8A, 2B)"
+msgstr "Camelot (8A, 2B)"
+
+#: tooldialogs.rsnotationopenkey
+msgid "Open Key (1m, 7d)"
+msgstr "Open Key (1m, 7d)"
+
+#: tooldialogs.rsanalysespringover
+msgid "Spring felter over, der allerede har en værdi"
+msgstr "Ignorer les champs qui ont déjà une valeur"
+
+#: tooldialogs.rsanalysehjaelp
+msgid "Tempoet søges inden for intervallet, som er én oktav, så halvt eller dobbelt tempo undgås: 85-170 passer til det meste, 100-200 til drum && bass, 70-140 til hiphop og ballader. Numre, hvor tempoet skifter undervejs, nævnes bagefter. Toneart findes ud fra hele nummeret."
+msgstr "Le tempo est cherché dans la plage (une octave), ce qui évite le demi ou double tempo : 85-170 convient à la plupart des cas, 100-200 à la drum && bass, 70-140 au hip-hop et aux ballades. Les morceaux dont le tempo change sont listés ensuite. La tonalité est déterminée sur tout le morceau."
 
 #: tooldialogs.rsrgsporogalbum
 msgid "Beregn sporgain og albumgain"

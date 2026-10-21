@@ -6342,5 +6342,221 @@
   "it": "Impossibile modificare il menu di Esplora file: %s",
   "sv": "Utforskarmenyn kunde inte ändras: %s",
   "es": "No se pudo cambiar el menú del Explorador: %s"
+ },
+ "BPM og toneart": {
+  "en": "BPM and key",
+  "de": "BPM und Tonart",
+  "fr": "BPM et tonalité",
+  "it": "BPM e tonalità",
+  "sv": "BPM och tonart",
+  "es": "BPM y tonalidad"
+ },
+ "Find BPM og toneart...": {
+  "en": "Detect BPM and key...",
+  "de": "BPM und Tonart ermitteln...",
+  "fr": "Détecter BPM et tonalité...",
+  "it": "Rileva BPM e tonalità...",
+  "sv": "Hitta BPM och tonart...",
+  "es": "Detectar BPM y tonalidad..."
+ },
+ "Analysér lyden og skriv tempo og toneart i de afkrydsede filer": {
+  "en": "Analyse the audio and write tempo and key to the checked files",
+  "de": "Audio analysieren und Tempo und Tonart in die markierten Dateien schreiben",
+  "fr": "Analyser l'audio et écrire le tempo et la tonalité dans les fichiers cochés",
+  "it": "Analizza l'audio e scrivi tempo e tonalità nei file spuntati",
+  "sv": "Analysera ljudet och skriv tempo och tonart i de markerade filerna",
+  "es": "Analizar el audio y escribir tempo y tonalidad en los archivos marcados"
+ },
+ "Skriv toneart om til valgt notation...": {
+  "en": "Convert keys to the chosen notation...",
+  "de": "Tonarten in gewählte Schreibweise umwandeln...",
+  "fr": "Convertir les tonalités dans la notation choisie...",
+  "it": "Converti le tonalità nella notazione scelta...",
+  "sv": "Skriv om tonarter till vald notation...",
+  "es": "Convertir tonalidades a la notación elegida..."
+ },
+ "Skriv eksisterende toneart (fx 8A eller Am) i den notation, der er valgt under BPM og toneart": {
+  "en": "Rewrite existing keys (e.g. 8A or Am) in the notation chosen under BPM and key",
+  "de": "Vorhandene Tonarten (z. B. 8A oder Am) in der unter BPM und Tonart gewählten Schreibweise schreiben",
+  "fr": "Réécrire les tonalités existantes (p. ex. 8A ou Am) dans la notation choisie sous BPM et tonalité",
+  "it": "Riscrivi le tonalità esistenti (es. 8A o Am) nella notazione scelta in BPM e tonalità",
+  "sv": "Skriv befintliga tonarter (t.ex. 8A eller Am) i den notation som valts under BPM och tonart",
+  "es": "Reescribir las tonalidades existentes (p. ej. 8A o Am) en la notación elegida en BPM y tonalidad"
+ },
+ "Analyserer: %d af %d filer": {
+  "en": "Analysing: %d of %d files",
+  "de": "Analysiere: %d von %d Dateien",
+  "fr": "Analyse : %d sur %d fichiers",
+  "it": "Analisi: %d di %d file",
+  "sv": "Analyserar: %d av %d filer",
+  "es": "Analizando: %d de %d archivos"
+ },
+ "Alle filerne har allerede de valgte værdier.": {
+  "en": "All the files already have the chosen values.",
+  "de": "Alle Dateien haben die gewählten Werte bereits.",
+  "fr": "Tous les fichiers ont déjà les valeurs choisies.",
+  "it": "Tutti i file hanno già i valori scelti.",
+  "sv": "Alla filerna har redan de valda värdena.",
+  "es": "Todos los archivos ya tienen los valores elegidos."
+ },
+ "Tempoet skifter undervejs; tjek BPM:": {
+  "en": "The tempo changes during the track; check the BPM:",
+  "de": "Das Tempo ändert sich im Verlauf; BPM prüfen:",
+  "fr": "Le tempo change en cours de morceau ; vérifiez le BPM :",
+  "it": "Il tempo cambia durante il brano; controlla il BPM:",
+  "sv": "Tempot ändras under låten; kontrollera BPM:",
+  "es": "El tempo cambia durante la pista; compruebe el BPM:"
+ },
+ "Ingen tydelig toneart:": {
+  "en": "No clear key:",
+  "de": "Keine eindeutige Tonart:",
+  "fr": "Pas de tonalité nette :",
+  "it": "Nessuna tonalità chiara:",
+  "sv": "Ingen tydlig tonart:",
+  "es": "Sin tonalidad clara:"
+ },
+ "Kunne ikke analyseres:": {
+  "en": "Could not be analysed:",
+  "de": "Konnte nicht analysiert werden:",
+  "fr": "Analyse impossible :",
+  "it": "Impossibile analizzare:",
+  "sv": "Kunde inte analyseras:",
+  "es": "No se pudo analizar:"
+ },
+ "%d af %d toneart-felter skrevet som %s": {
+  "en": "%d of %d key fields written as %s",
+  "de": "%d von %d Tonart-Feldern als %s geschrieben",
+  "fr": "%d sur %d champs de tonalité écrits comme %s",
+  "it": "%d di %d campi tonalità scritti come %s",
+  "sv": "%d av %d tonartsfält skrivna som %s",
+  "es": "%d de %d campos de tonalidad escritos como %s"
+ },
+ "Ukendt toneart, ikke ændret:": {
+  "en": "Unknown key, not changed:",
+  "de": "Unbekannte Tonart, nicht geändert:",
+  "fr": "Tonalité inconnue, non modifiée :",
+  "it": "Tonalità sconosciuta, non modificata:",
+  "sv": "Okänd tonart, inte ändrad:",
+  "es": "Tonalidad desconocida, sin cambios:"
+ },
+ "for kort til tempo": {
+  "en": "too short for tempo",
+  "de": "zu kurz für Tempo",
+  "fr": "trop court pour le tempo",
+  "it": "troppo breve per il tempo",
+  "sv": "för kort för tempo",
+  "es": "demasiado corto para el tempo"
+ },
+ "ikke analyseret": {
+  "en": "not analysed",
+  "de": "nicht analysiert",
+  "fr": "non analysé",
+  "it": "non analizzato",
+  "sv": "inte analyserad",
+  "es": "no analizado"
+ },
+ "Find BPM (tempo)": {
+  "en": "Detect BPM (tempo)",
+  "de": "BPM ermitteln (Tempo)",
+  "fr": "Détecter le BPM (tempo)",
+  "it": "Rileva BPM (tempo)",
+  "sv": "Hitta BPM (tempo)",
+  "es": "Detectar BPM (tempo)"
+ },
+ "Tempointerval:": {
+  "en": "Tempo range:",
+  "de": "Tempobereich:",
+  "fr": "Plage de tempo :",
+  "it": "Intervallo di tempo:",
+  "sv": "Tempointervall:",
+  "es": "Rango de tempo:"
+ },
+ "Decimaler:": {
+  "en": "Decimals:",
+  "de": "Dezimalstellen:",
+  "fr": "Décimales :",
+  "it": "Decimali:",
+  "sv": "Decimaler:",
+  "es": "Decimales:"
+ },
+ "Hele tal (128)": {
+  "en": "Whole numbers (128)",
+  "de": "Ganze Zahlen (128)",
+  "fr": "Nombres entiers (128)",
+  "it": "Numeri interi (128)",
+  "sv": "Heltal (128)",
+  "es": "Números enteros (128)"
+ },
+ "1 decimal (128.0)": {
+  "en": "1 decimal (128.0)",
+  "de": "1 Dezimalstelle (128.0)",
+  "fr": "1 décimale (128.0)",
+  "it": "1 decimale (128.0)",
+  "sv": "1 decimal (128.0)",
+  "es": "1 decimal (128.0)"
+ },
+ "2 decimaler (128.00)": {
+  "en": "2 decimals (128.00)",
+  "de": "2 Dezimalstellen (128.00)",
+  "fr": "2 décimales (128.00)",
+  "it": "2 decimali (128.00)",
+  "sv": "2 decimaler (128.00)",
+  "es": "2 decimales (128.00)"
+ },
+ "Find toneart": {
+  "en": "Detect key",
+  "de": "Tonart ermitteln",
+  "fr": "Détecter la tonalité",
+  "it": "Rileva tonalità",
+  "sv": "Hitta tonart",
+  "es": "Detectar tonalidad"
+ },
+ "Skrives som:": {
+  "en": "Write as:",
+  "de": "Schreiben als:",
+  "fr": "Écrire comme :",
+  "it": "Scrivi come:",
+  "sv": "Skriv som:",
+  "es": "Escribir como:"
+ },
+ "Musikalsk (Am, F#)": {
+  "en": "Musical (Am, F#)",
+  "de": "Musikalisch (Am, F#)",
+  "fr": "Musicale (Am, F#)",
+  "it": "Musicale (Am, F#)",
+  "sv": "Musikalisk (Am, F#)",
+  "es": "Musical (Am, F#)"
+ },
+ "Camelot (8A, 2B)": {
+  "en": "Camelot (8A, 2B)",
+  "de": "Camelot (8A, 2B)",
+  "fr": "Camelot (8A, 2B)",
+  "it": "Camelot (8A, 2B)",
+  "sv": "Camelot (8A, 2B)",
+  "es": "Camelot (8A, 2B)"
+ },
+ "Open Key (1m, 7d)": {
+  "en": "Open Key (1m, 7d)",
+  "de": "Open Key (1m, 7d)",
+  "fr": "Open Key (1m, 7d)",
+  "it": "Open Key (1m, 7d)",
+  "sv": "Open Key (1m, 7d)",
+  "es": "Open Key (1m, 7d)"
+ },
+ "Spring felter over, der allerede har en værdi": {
+  "en": "Skip fields that already have a value",
+  "de": "Felder überspringen, die schon einen Wert haben",
+  "fr": "Ignorer les champs qui ont déjà une valeur",
+  "it": "Salta i campi che hanno già un valore",
+  "sv": "Hoppa över fält som redan har ett värde",
+  "es": "Omitir los campos que ya tienen un valor"
+ },
+ "Tempoet søges inden for intervallet, som er én oktav, så halvt eller dobbelt tempo undgås: 85-170 passer til det meste, 100-200 til drum && bass, 70-140 til hiphop og ballader. Numre, hvor tempoet skifter undervejs, nævnes bagefter. Toneart findes ud fra hele nummeret.": {
+  "en": "The tempo is searched within the range, which is one octave, so half or double tempo is avoided: 85-170 suits most music, 100-200 drum && bass, 70-140 hip-hop and ballads. Tracks whose tempo changes are listed afterwards. The key is found from the whole track.",
+  "de": "Das Tempo wird im Bereich (eine Oktave) gesucht, so werden halbes oder doppeltes Tempo vermieden: 85-170 passt für das meiste, 100-200 für Drum && Bass, 70-140 für Hip-Hop und Balladen. Titel mit wechselndem Tempo werden danach aufgelistet. Die Tonart wird aus dem ganzen Titel ermittelt.",
+  "fr": "Le tempo est cherché dans la plage (une octave), ce qui évite le demi ou double tempo : 85-170 convient à la plupart des cas, 100-200 à la drum && bass, 70-140 au hip-hop et aux ballades. Les morceaux dont le tempo change sont listés ensuite. La tonalité est déterminée sur tout le morceau.",
+  "it": "Il tempo viene cercato nell'intervallo (un'ottava), evitando così il tempo dimezzato o doppio: 85-170 va bene per quasi tutto, 100-200 per la drum && bass, 70-140 per hip-hop e ballate. I brani con tempo variabile vengono elencati dopo. La tonalità è ricavata dall'intero brano.",
+  "sv": "Tempot söks inom intervallet, som är en oktav, så halvt eller dubbelt tempo undviks: 85-170 passar det mesta, 100-200 drum && bass, 70-140 hiphop och ballader. Låtar där tempot ändras listas efteråt. Tonarten bestäms utifrån hela låten.",
+  "es": "El tempo se busca dentro del rango (una octava), así se evita el tempo a la mitad o al doble: 85-170 sirve para casi todo, 100-200 para drum && bass, 70-140 para hip-hop y baladas. Las pistas cuyo tempo cambia se listan después. La tonalidad se obtiene de toda la pista."
  }
 }

@@ -8,7 +8,7 @@ unit ToolDialogs;
 interface
 
 uses
-  Classes, SysUtils, AudioTypes, AppSettings, BatchWrite, ID3Sync, CoverImage, ReplayGain;
+  Classes, SysUtils, AudioTypes, AppSettings, BatchWrite, ID3Sync, CoverImage, WorkBatch;
 
 { Returns False when cancelled. ShowCheck adds a check box (Check = its state). }
 function AskFieldPair(const Title, FromCaption, ToCaption, CheckCaption: string;
@@ -22,8 +22,13 @@ function AskFieldSet(const Title, Prompt: string; const Values: TFieldValues;
 function AskCoverResize(const Title: string; var Opt: TCoverResize): Boolean;
 { ReplayGain options: album gain too, and skip files (albums) that already have values. }
 function AskReplayGain(var Album, SkipExisting: Boolean): Boolean;
-{ Runs the measurement with a progress window; False when cancelled. }
-function RunReplayGainBatch(const Title: string; Batch: TRGBatch): Boolean;
+{ Tempo/key analysis: what to find, tempo range (MinBpm .. 2 * MinBpm), BPM decimals, key
+  notation (Ord(TKeyNotation)) and whether to skip files that have a value. }
+function AskAnalysis(var DoBpm, DoKey: Boolean; var MinBpm, Decimals, Notation: Integer;
+  var SkipExisting: Boolean): Boolean;
+{ Runs the batch with a progress window; Progress is a format for done and total
+  ('' = measuring loudness). False when cancelled. }
+function RunWorkBatch(const Title: string; Batch: TWorkBatch; const Progress: string = ''): Boolean;
 { Standard genres to show (ticked) and own genres. }
 function EditGenreList(var Custom, Hidden: TStringArray): Boolean;
 { Web lookup of several files: one lookup per album (True) or per file (False). }
@@ -42,7 +47,7 @@ implementation
 
 uses
   Forms, Controls, Graphics, StdCtrls, ExtCtrls, Grids, Dialogs, ButtonPanel, CheckLst, Spin,
-  IniFiles, ComCtrls, TagUtils;
+  IniFiles, ComCtrls, Math, TagUtils;
 
 resourcestring
   rsWebOpslagTitel = 'Web-opslag';
@@ -55,6 +60,22 @@ resourcestring
   rsStandardgenrer = 'Standardgenrer (fjern fluebenet for at skjule en genre):';
   rsEgneGenrer = 'Egne genrer (én pr. linje):';
   rsReplayGain = 'ReplayGain';
+  rsBpmOgToneart = 'BPM og toneart';
+  rsFindBpm = 'Find BPM (tempo)';
+  rsTempointerval = 'Tempointerval:';
+  rsDecimaler = 'Decimaler:';
+  rsHeleTal = 'Hele tal (128)';
+  rsEnDecimal = '1 decimal (128.0)';
+  rsToDecimaler = '2 decimaler (128.00)';
+  rsFindToneart = 'Find toneart';
+  rsNotation = 'Skrives som:';
+  rsNotationMusikalsk = 'Musikalsk (Am, F#)';
+  rsNotationCamelot = 'Camelot (8A, 2B)';
+  rsNotationOpenKey = 'Open Key (1m, 7d)';
+  rsAnalyseSpringOver = 'Spring felter over, der allerede har en værdi';
+  rsAnalyseHjaelp = 'Tempoet søges inden for intervallet, som er én oktav, så halvt eller dobbelt tempo ' +
+    'undgås: 85-170 passer til det meste, 100-200 til drum && bass, 70-140 til hiphop og ballader. ' +
+    'Numre, hvor tempoet skifter undervejs, nævnes bagefter. Toneart findes ud fra hele nummeret.';
   rsRGSporOgAlbum = 'Beregn sporgain og albumgain';
   rsRGKunSpor = 'Beregn kun sporgain';
   rsRGSpringOver = 'Spring filer over, der allerede har ReplayGain (for album: hele albummet)';
@@ -530,12 +551,88 @@ begin
   end;
 end;
 
+function AskAnalysis(var DoBpm, DoKey: Boolean; var MinBpm, Decimals, Notation: Integer;
+  var SkipExisting: Boolean): Boolean;
+const
+  Ranges: array[0..4] of Integer = (60, 70, 75, 85, 100);
+var
+  F: TForm;
+  CB, CK, CS: TCheckBox;
+  ER, ED, EN: TComboBox;
+  I: Integer;
+
+  function Combo(Y: Integer; const Items: array of string; Index: Integer): TComboBox;
+  var
+    S: string;
+  begin
+    Result := TComboBox.Create(F);
+    Result.Parent := F;
+    Result.Style := csDropDownList;
+    Result.SetBounds(F.Scale96ToForm(200), F.Scale96ToForm(Y), F.Scale96ToForm(240), F.Scale96ToForm(23));
+    for S in Items do Result.Items.Add(S);
+    Result.ItemIndex := Index;
+  end;
+
+  function Chk(const Caption: string; Y: Integer; Value: Boolean): TCheckBox;
+  begin
+    Result := TCheckBox.Create(F);
+    Result.Parent := F;
+    Result.Caption := Caption;
+    Result.Left := F.Scale96ToForm(12);
+    Result.Top := F.Scale96ToForm(Y);
+    Result.Checked := Value;
+  end;
+
+begin
+  F := NewDialog(rsBpmOgToneart, 460, 350);
+  try
+    CB := Chk(rsFindBpm, 10, DoBpm);
+    AddLabel(F, rsTempointerval, 32, 41);
+    ER := Combo(38, [], 3);
+    for I := 0 to High(Ranges) do
+    begin
+      ER.Items.Add(Format('%d-%d BPM', [Ranges[I], 2 * Ranges[I]]));
+      if Ranges[I] = MinBpm then ER.ItemIndex := I;
+    end;
+    AddLabel(F, rsDecimaler, 32, 72);
+    ED := Combo(69, [rsHeleTal, rsEnDecimal, rsToDecimaler], EnsureRange(Decimals, 0, 2));
+    CK := Chk(rsFindToneart, 108, DoKey);
+    AddLabel(F, rsNotation, 32, 139);
+    EN := Combo(136, [rsNotationMusikalsk, rsNotationCamelot, rsNotationOpenKey], EnsureRange(Notation, 0, 2));
+    CS := Chk(rsAnalyseSpringOver, 176, SkipExisting);
+    with AddLabel(F, rsAnalyseHjaelp, 12, 206) do
+    begin
+      WordWrap := True;
+      AutoSize := False;
+      Width := F.Scale96ToForm(436);
+      Height := F.Scale96ToForm(90);
+      Font.Color := clGrayText;
+    end;
+    AddButtons(F);
+    repeat
+      Result := F.ShowModal = mrOK;
+    until not Result or CB.Checked or CK.Checked;
+    if Result then
+    begin
+      DoBpm := CB.Checked;
+      DoKey := CK.Checked;
+      MinBpm := Ranges[Max(0, ER.ItemIndex)];
+      Decimals := Max(0, ED.ItemIndex);
+      Notation := Max(0, EN.ItemIndex);
+      SkipExisting := CS.Checked;
+    end;
+  finally
+    F.Free;
+  end;
+end;
+
 type
   TRGProgress = class
     Form: TForm;
     Bar: TProgressBar;
     Info: TLabel;
-    Batch: TRGBatch;
+    Batch: TWorkBatch;
+    Text: string;
     procedure Tick(Sender: TObject);
     procedure CancelClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -544,7 +641,7 @@ type
 procedure TRGProgress.Tick(Sender: TObject);
 begin
   Bar.Position := Batch.Done;
-  Info.Caption := Format(rsRGMaaler, [Batch.Done, Batch.Count]);
+  Info.Caption := Format(Text, [Batch.Done, Batch.Count]);
   if Batch.Finished then Form.ModalResult := mrOK;
 end;
 
@@ -563,7 +660,7 @@ begin
   end;
 end;
 
-function RunReplayGainBatch(const Title: string; Batch: TRGBatch): Boolean;
+function RunWorkBatch(const Title: string; Batch: TWorkBatch; const Progress: string): Boolean;
 var
   P: TRGProgress;
   T: TTimer;
@@ -571,10 +668,11 @@ var
 begin
   P := TRGProgress.Create;
   P.Batch := Batch;
+  if Progress = '' then P.Text := rsRGMaaler else P.Text := Progress;
   P.Form := NewDialog(Title, 420, 110);
   try
     P.Form.OnCloseQuery := @P.FormCloseQuery;
-    P.Info := AddLabel(P.Form, Format(rsRGMaaler, [0, Batch.Count]), 12, 12);
+    P.Info := AddLabel(P.Form, Format(P.Text, [0, Batch.Count]), 12, 12);
     P.Bar := TProgressBar.Create(P.Form);
     P.Bar.Parent := P.Form;
     P.Bar.SetBounds(P.Form.Scale96ToForm(12), P.Form.Scale96ToForm(36), P.Form.Scale96ToForm(396),

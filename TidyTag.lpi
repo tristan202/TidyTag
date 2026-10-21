@@ -353,6 +353,16 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ShellIntegration"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\workbatch.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WorkBatch"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\musicanalysis.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MusicAnalysis"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

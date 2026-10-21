@@ -291,6 +291,8 @@ type
     procedure ActReplayGainExecute(Sender: TObject);
     procedure ActRemoveReplayGainExecute(Sender: TObject);
     procedure RunReplayGain(Album, SkipExisting: Boolean);
+    procedure ActAnalyzeExecute(Sender: TObject);
+    procedure ActConvertKeysExecute(Sender: TObject);
     procedure RunWebBatch(const Items: TAudioInfoArray);
     procedure ActRenameManualExecute(Sender: TObject);
     procedure RenameFileDialog;
@@ -405,7 +407,7 @@ uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
   Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage, Spin, ButtonPanel,
-  ReplayGain, ID3Writer, ProgOptions, FileInfo, ShellIntegration;
+  ReplayGain, ID3Writer, ProgOptions, FileInfo, ShellIntegration, MusicAnalysis;
 
 resourcestring
   rsAabnITidyTag = 'Åbn i TidyTag';
@@ -462,6 +464,18 @@ resourcestring
   rsPlaylisteMappe = 'Playliste-mappe (tom = filernes mappe):';
   rsHurtigGemNavn = 'Filnavn ved hurtig gem:';
   rsPlaylisteVarHjaelp = 'Masker som ved omdøbning, fx %1 - %2; %f er mappens navn.';
+  rsBpmOgToneartMenu = 'BPM og toneart';
+  rsFindBpmOgToneart = 'Find BPM og toneart...';
+  rsFindBpmOgToneartHint = 'Analysér lyden og skriv tempo og toneart i de afkrydsede filer';
+  rsOmskrivToneart = 'Skriv toneart om til valgt notation...';
+  rsOmskrivToneartHint = 'Skriv eksisterende toneart (fx 8A eller Am) i den notation, der er valgt under BPM og toneart';
+  rsAnalyserer = 'Analyserer: %d af %d filer';
+  rsAnalyseIntetAtGoere = 'Alle filerne har allerede de valgte værdier.';
+  rsTempoVarierer = 'Tempoet skifter undervejs; tjek BPM:';
+  rsIngenToneart = 'Ingen tydelig toneart:';
+  rsAnalyseFejl = 'Kunne ikke analyseres:';
+  rsToneartOmskrevet = '%d af %d toneart-felter skrevet som %s';
+  rsUkendteToneart = 'Ukendt toneart, ikke ændret:';
   rsBeregnReplayGain = 'Beregn ReplayGain...';
   rsBeregnReplayGainHint = 'Mål lydstyrken (EBU R128) og skriv ReplayGain-værdier i de afkrydsede filer';
   rsFjernReplayGain = 'Fjern ReplayGain...';
@@ -1121,7 +1135,7 @@ var
     aMoveUp, aMoveDown, aExport, aSwapAT, aSwapAA, aSwapLT, aSwap, aCopyField, aClean,
     aRemoveTags, aCoverIn, aCoverOut, aWords, aSync, aAutoFit, aRandom, aCopyTo, aMoveTo,
     aDelFolderCover, aResizeFiles, aResizeFolders, aCoverAsFolder, aSettings,
-    aReplayGain, aRemoveRG, aRenameManual, aProperties, aExtM4A, aExtM4B, aExtM4BBack,
+    aReplayGain, aRemoveRG, aAnalyze, aConvertKeys, aRenameManual, aProperties, aExtM4A, aExtM4B, aExtM4BBack,
     aExpandFolders, aCollapseFolders, aPlayFolder, aQuickPlaylist, aGenres: TAction;
   CoverPopup: TPopupMenu;
   PM: TMenuItem;
@@ -1263,6 +1277,8 @@ begin
   NameTools[ntSurnameFirstToName] := NewAction(rsEfternavnFornavnTil, '', 0, -1, @ActNameToolExecute);
   for NT := Low(TNameTool) to High(TNameTool) do NameTools[NT].Tag := Ord(NT);
   aSync := NewAction(rsMpTagSynkroniseringMenu, rsMpTagSynkroniseringHint, 0, -1, @ActID3SyncExecute);
+  aAnalyze := NewAction(rsFindBpmOgToneart, rsFindBpmOgToneartHint, 0, -1, @ActAnalyzeExecute);
+  aConvertKeys := NewAction(rsOmskrivToneart, rsOmskrivToneartHint, 0, -1, @ActConvertKeysExecute);
   aReplayGain := NewAction(rsBeregnReplayGain, rsBeregnReplayGainHint, 0, -1, @ActReplayGainExecute);
   aRemoveRG := NewAction(rsFjernReplayGain, rsFjernReplayGainHint, 0, -1, @ActRemoveReplayGainExecute);
   aRenameManual := NewAction(rsOmdoebFilManuelt, rsOmdoebFilManueltHint, ShortCut(VK_F6, []), -1, @ActRenameManualExecute);
@@ -1339,6 +1355,8 @@ begin
   Add(SubMenu, aResizeFiles); Add(SubMenu, aResizeFolders); Add(SubMenu, nil); Add(SubMenu, aDelFolderCover);
   SubMenu := Sub(TopMenu, rsReplayGainTitel);
   Add(SubMenu, aReplayGain); Add(SubMenu, nil); Add(SubMenu, aRemoveRG);
+  SubMenu := Sub(TopMenu, rsBpmOgToneartMenu);
+  Add(SubMenu, aAnalyze); Add(SubMenu, nil); Add(SubMenu, aConvertKeys);
   SubMenu := Sub(TopMenu, rsSkiftFiltype);
   Add(SubMenu, aExtM4A); Add(SubMenu, aExtM4B); Add(SubMenu, aExtM4BBack);
   // right click on the file cover
@@ -4430,7 +4448,7 @@ begin
     SetLength(PerFields, Length(Todo));
     Batch := TRGBatch.Create(Files);
     try
-      if not RunReplayGainBatch(rsReplayGainTitel, Batch) then
+      if not RunWorkBatch(rsReplayGainTitel, Batch) then
       begin
         SetMessage(rsRGAfbrudt);
         Exit;
@@ -4496,6 +4514,147 @@ begin
     Groups.Free;
     Keys.Free;
     Errors.Free;
+  end;
+end;
+
+procedure TFormMain.ActAnalyzeExecute(Sender: TObject);
+var
+  Items, Todo: TAudioInfoArray;
+  Files: TStringArray;
+  Opt: TAnalysisOptions;
+  Batch: TAnalysisBatch;
+  PerItem: array of TFieldValues;
+  PerFields: array of TTagFieldSet;
+  Vary, NoKey, Errors, Report: TStringList;
+  F: TTagField;
+  I: Integer;
+  R: TAnalysisResult;
+  FName: string;
+begin
+  if not RequireTargets(Items) then Exit;
+  with AppOptions do
+    if not AskAnalysis(AnBpm, AnKey, AnMinBpm, AnBpmDecimals, AnKeyNotation, AnSkipExisting) then Exit;
+  SaveAppOptions;
+  Opt.MinBpm := AppOptions.AnMinBpm;
+  Opt.DoBpm := AppOptions.AnBpm;
+  Opt.DoKey := AppOptions.AnKey;
+  Todo := nil;
+  for I := 0 to High(Items) do
+  begin
+    // skip a file only when every chosen field has a value
+    if AppOptions.AnSkipExisting and
+      (not AppOptions.AnBpm or (Trim(Items[I].Fields[tfBpm]) <> '')) and
+      (not AppOptions.AnKey or (Trim(Items[I].Fields[tfInitialKey]) <> '')) then Continue;
+    Insert(Items[I], Todo, Length(Todo));
+  end;
+  if Length(Todo) = 0 then
+  begin
+    Inform(rsBpmOgToneartMenu, rsAnalyseIntetAtGoere);
+    Exit;
+  end;
+  SetLength(Files, Length(Todo));
+  for I := 0 to High(Todo) do Files[I] := Todo[I].FileName;
+  SetLength(PerItem, Length(Todo));
+  SetLength(PerFields, Length(Todo));
+  Vary := TStringList.Create;
+  NoKey := TStringList.Create;
+  Errors := TStringList.Create;
+  Report := TStringList.Create;
+  try
+    Batch := TAnalysisBatch.Create(Files, Opt);
+    try
+      if not RunWorkBatch(rsBpmOgToneartMenu, Batch, rsAnalyserer) then
+      begin
+        SetMessage(rsRGAfbrudt);
+        Exit;
+      end;
+      for I := 0 to High(Todo) do
+      begin
+        for F := Low(TTagField) to High(TTagField) do PerItem[I][F] := '';
+        PerFields[I] := [];
+        R := Batch.Results[I];
+        FName := ExtractFileName(Files[I]);
+        if R.Error <> '' then
+        begin
+          Errors.Add(FName + ': ' + R.Error);
+          Continue;
+        end;
+        if Opt.DoBpm and (R.Bpm > 0) and
+          not (AppOptions.AnSkipExisting and (Trim(Todo[I].Fields[tfBpm]) <> '')) then
+        begin
+          PerItem[I][tfBpm] := BpmText(R.Bpm, AppOptions.AnBpmDecimals);
+          Include(PerFields[I], tfBpm);
+          if not R.BpmSteady then Vary.Add(FName + ' (' + PerItem[I][tfBpm] + ')');
+        end;
+        if Opt.DoKey and not (AppOptions.AnSkipExisting and (Trim(Todo[I].Fields[tfInitialKey]) <> '')) then
+        begin
+          if R.Key < 0 then NoKey.Add(FName)
+          else
+          begin
+            PerItem[I][tfInitialKey] := KeyName(R.Key, TKeyNotation(AppOptions.AnKeyNotation));
+            Include(PerFields[I], tfInitialKey);
+          end;
+        end;
+      end;
+    finally
+      Batch.Free;
+    end;
+    WriteFieldsBatch(Todo, PerItem, PerFields, nil, rsBpmOgToneartMenu);
+    if Vary.Count > 0 then Report.Add(rsTempoVarierer + LineEnding + Vary.Text);
+    if NoKey.Count > 0 then Report.Add(rsIngenToneart + LineEnding + NoKey.Text);
+    if Errors.Count > 0 then Report.Add(rsAnalyseFejl + LineEnding + Errors.Text);
+    if Report.Count > 0 then Inform(rsBpmOgToneartMenu, Report.Text, mtInformation);
+  finally
+    Vary.Free;
+    NoKey.Free;
+    Errors.Free;
+    Report.Free;
+  end;
+end;
+
+procedure TFormMain.ActConvertKeysExecute(Sender: TObject);
+var
+  Items, Todo: TAudioInfoArray;
+  PerItem: array of TFieldValues;
+  PerFields: array of TTagFieldSet;
+  Unknown: TStringList;
+  F: TTagField;
+  I, K, Total: Integer;
+  NewKey: string;
+  Notation: TKeyNotation;
+begin
+  if not RequireTargets(Items) then Exit;
+  Notation := TKeyNotation(EnsureRange(AppOptions.AnKeyNotation, 0, 2));
+  Todo := nil;
+  PerItem := nil;
+  PerFields := nil;
+  Total := 0;
+  Unknown := TStringList.Create;
+  try
+    for I := 0 to High(Items) do
+    begin
+      if Trim(Items[I].Fields[tfInitialKey]) = '' then Continue;
+      Inc(Total);
+      K := ParseKey(Items[I].Fields[tfInitialKey]);
+      if K < 0 then
+      begin
+        Unknown.Add(ExtractFileName(Items[I].FileName) + ': ' + Items[I].Fields[tfInitialKey]);
+        Continue;
+      end;
+      NewKey := KeyName(K, Notation);
+      if NewKey = Items[I].Fields[tfInitialKey] then Continue;
+      Insert(Items[I], Todo, Length(Todo));
+      SetLength(PerItem, Length(Todo));
+      SetLength(PerFields, Length(Todo));
+      for F := Low(TTagField) to High(TTagField) do PerItem[High(Todo)][F] := '';
+      PerItem[High(Todo)][tfInitialKey] := NewKey;
+      PerFields[High(Todo)] := [tfInitialKey];
+    end;
+    if Length(Todo) > 0 then WriteFieldsBatch(Todo, PerItem, PerFields, nil, rsBpmOgToneartMenu);
+    SetMessage(Format(rsToneartOmskrevet, [Length(Todo), Total, KeyName(21, Notation)]));
+    if Unknown.Count > 0 then Inform(rsBpmOgToneartMenu, rsUkendteToneart + LineEnding + Unknown.Text, mtWarning);
+  finally
+    Unknown.Free;
   end;
 end;
 
