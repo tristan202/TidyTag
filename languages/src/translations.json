@@ -6558,5 +6558,101 @@
   "it": "Il tempo viene cercato nell'intervallo (un'ottava), evitando così il tempo dimezzato o doppio: 85-170 va bene per quasi tutto, 100-200 per la drum && bass, 70-140 per hip-hop e ballate. I brani con tempo variabile vengono elencati dopo. La tonalità è ricavata dall'intero brano.",
   "sv": "Tempot söks inom intervallet, som är en oktav, så halvt eller dubbelt tempo undviks: 85-170 passar det mesta, 100-200 drum && bass, 70-140 hiphop och ballader. Låtar där tempot ändras listas efteråt. Tonarten bestäms utifrån hela låten.",
   "es": "El tempo se busca dentro del rango (una octava), así se evita el tempo a la mitad o al doble: 85-170 sirve para casi todo, 100-200 para drum && bass, 70-140 para hip-hop y baladas. Las pistas cuyo tempo cambia se listan después. La tonalidad se obtiene de toda la pista."
+ },
+ "filen kan ikke afspilles af Windows (codec mangler?) – fejl %s": {
+  "en": "Windows cannot play the file (missing codec?) – error %s",
+  "de": "Windows kann die Datei nicht abspielen (Codec fehlt?) – Fehler %s",
+  "fr": "Windows ne peut pas lire le fichier (codec manquant ?) – erreur %s",
+  "it": "Windows non può riprodurre il file (codec mancante?) – errore %s",
+  "sv": "Windows kan inte spela upp filen (codec saknas?) – fel %s",
+  "es": "Windows no puede reproducir el archivo (¿falta un códec?) – error %s"
+ },
+ "Afspil med": {
+  "en": "Play with",
+  "de": "Abspielen mit",
+  "fr": "Lire avec",
+  "it": "Riproduci con",
+  "sv": "Spela upp med",
+  "es": "Reproducir con"
+ },
+ "TidyTag (indbygget afspiller)": {
+  "en": "TidyTag (built-in player)",
+  "de": "TidyTag (eingebauter Player)",
+  "fr": "TidyTag (lecteur intégré)",
+  "it": "TidyTag (lettore integrato)",
+  "sv": "TidyTag (inbyggd spelare)",
+  "es": "TidyTag (reproductor integrado)"
+ },
+ "Windows-standardprogram": {
+  "en": "Windows default program",
+  "de": "Windows-Standardprogramm",
+  "fr": "Programme par défaut de Windows",
+  "it": "Programma predefinito di Windows",
+  "sv": "Windows standardprogram",
+  "es": "Programa predeterminado de Windows"
+ },
+ "Vælg program...": {
+  "en": "Choose program...",
+  "de": "Programm wählen...",
+  "fr": "Choisir un programme...",
+  "it": "Scegli programma...",
+  "sv": "Välj program...",
+  "es": "Elegir programa..."
+ },
+ "Programmer": {
+  "en": "Programs",
+  "de": "Programme",
+  "fr": "Programmes",
+  "it": "Programmi",
+  "sv": "Program",
+  "es": "Programas"
+ },
+ "Forrige": {
+  "en": "Previous",
+  "de": "Vorheriger",
+  "fr": "Précédent",
+  "it": "Precedente",
+  "sv": "Föregående",
+  "es": "Anterior"
+ },
+ "Afspil / pause": {
+  "en": "Play / pause",
+  "de": "Abspielen / Pause",
+  "fr": "Lecture / pause",
+  "it": "Riproduci / pausa",
+  "sv": "Spela / paus",
+  "es": "Reproducir / pausa"
+ },
+ "Næste": {
+  "en": "Next",
+  "de": "Nächster",
+  "fr": "Suivant",
+  "it": "Successivo",
+  "sv": "Nästa",
+  "es": "Siguiente"
+ },
+ "Stop og luk afspilleren": {
+  "en": "Stop and close the player",
+  "de": "Stoppen und Player schließen",
+  "fr": "Arrêter et fermer le lecteur",
+  "it": "Ferma e chiudi il lettore",
+  "sv": "Stoppa och stäng spelaren",
+  "es": "Detener y cerrar el reproductor"
+ },
+ "Lydstyrke": {
+  "en": "Volume",
+  "de": "Lautstärke",
+  "fr": "Volume",
+  "it": "Volume",
+  "sv": "Volym",
+  "es": "Volumen"
+ },
+ "Afspil fil (Ctrl+P) i TidyTags egen afspiller": {
+  "en": "Play file (Ctrl+P) in TidyTag's own player",
+  "de": "Datei abspielen (Strg+P) im eigenen Player von TidyTag",
+  "fr": "Lire le fichier (Ctrl+P) dans le lecteur de TidyTag",
+  "it": "Riproduci file (Ctrl+P) nel lettore di TidyTag",
+  "sv": "Spela upp fil (Ctrl+P) i TidyTags egen spelare",
+  "es": "Reproducir archivo (Ctrl+P) en el reproductor de TidyTag"
  }
 }

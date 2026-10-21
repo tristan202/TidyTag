@@ -10,7 +10,7 @@ interface
 
 uses
   Windows, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
-  StdCtrls, ShellCtrls, Menus, ActnList, IniFiles, AudioTypes, ScanThread, RenameCore,
+  StdCtrls, Buttons, ShellCtrls, Menus, ActnList, IniFiles, AudioPlayer, AudioTypes, ScanThread, RenameCore,
   BatchWrite, FieldTools, AppSettings, ID3Sync;
 
 type
@@ -156,6 +156,35 @@ type
     FLastOpenDir: string;        // folder and time of the last open from Explorer
     FLastOpenTick: QWord;
     procedure PathsReceived(const Paths: TStringArray);
+  private
+    // built-in player and "Play with"
+    FPlayer: TAudioPlayer;
+    FPlayQueue: TStringList;
+    FPlayIndex: Integer;
+    FSawPlaying, FPosUpdating: Boolean;
+    PanelPlayer: TPanel;
+    FBtnPlay: TSpeedButton;
+    FLblPlayTitle, FLblPlayTime: TLabel;
+    FTrackPos, FTrackVol: TTrackBar;
+    FTimerPlayer: TTimer;
+    FPlayWithFile, FPlayWithPopup: TMenuItem;
+    FPlayWithProgs: TStringList;
+    procedure BuildPlayerBar;
+    procedure StartPlaying(const Files: TStringArray; Index: Integer);
+    procedure PlayQueueItem;
+    procedure StopPlaying;
+    procedure PlayerTimer(Sender: TObject);
+    procedure PlayerPlayClick(Sender: TObject);
+    procedure PlayerStopClick(Sender: TObject);
+    procedure PlayerPrevClick(Sender: TObject);
+    procedure PlayerNextClick(Sender: TObject);
+    procedure PlayerPosChange(Sender: TObject);
+    procedure PlayerPosMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure PlayerVolChange(Sender: TObject);
+    procedure RebuildPlayWith(Sender: TObject);
+    procedure PlayWithClick(Sender: TObject);
+    procedure PlayExternal(const Prog: string; const Files: TStringArray);
+    function PlayTargets(out Index: Integer): TStringArray;
     procedure TimerIncomingTimer(Sender: TObject);
     function PrepareOpen(const Paths: TStringArray): string;
     procedure OpenPaths(const Paths: TStringArray);
@@ -407,7 +436,7 @@ uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
   Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage, Spin, ButtonPanel,
-  ReplayGain, ID3Writer, ProgOptions, FileInfo, ShellIntegration, MusicAnalysis;
+  ReplayGain, ID3Writer, ProgOptions, FileInfo, winpeimagereader, ShellIntegration, MusicAnalysis;
 
 resourcestring
   rsAabnITidyTag = 'Åbn i TidyTag';
@@ -465,6 +494,18 @@ resourcestring
   rsHurtigGemNavn = 'Filnavn ved hurtig gem:';
   rsPlaylisteVarHjaelp = 'Masker som ved omdøbning, fx %1 - %2; %f er mappens navn.';
   rsBpmOgToneartMenu = 'BPM og toneart';
+  rsAfspilMed = 'Afspil med';
+  rsTidyTagAfspiller = 'TidyTag (indbygget afspiller)';
+  rsWindowsStandard = 'Windows-standardprogram';
+  rsVaelgProgram = 'Vælg program...';
+  rsProgrammer = 'Programmer';
+  rsPlForrige = 'Forrige';
+  rsAfspilPause = 'Afspil / pause';
+  rsStop = 'Stop';
+  rsPlNaeste = 'Næste';
+  rsLukAfspiller = 'Stop og luk afspilleren';
+  rsLydstyrke = 'Lydstyrke';
+  rsAfspilIntern = 'Afspil fil (Ctrl+P) i TidyTags egen afspiller';
   rsFindBpmOgToneart = 'Find BPM og toneart...';
   rsFindBpmOgToneartHint = 'Analysér lyden og skriv tempo og toneart i de afkrydsede filer';
   rsOmskrivToneart = 'Skriv toneart om til valgt notation...';
@@ -1036,6 +1077,7 @@ begin
   FTimerIncoming.Interval := 400;
   FTimerIncoming.OnTimer := @TimerIncomingTimer;
   StartReceiving(@PathsReceived);
+  BuildPlayerBar;
   FSortColumn := 1; // file name
   FLoading := True;
   try
@@ -1075,6 +1117,7 @@ procedure TFormMain.FormDestroy(Sender: TObject);
 begin
   ReleaseInstance;
   StopScan;
+  if FPlayer <> nil then SaveAppOptions; // player volume
   SaveSettings;
   SaveInlineOptions;
   ClearItems;
@@ -1083,6 +1126,9 @@ begin
   FFavorites.Free;
   FIncoming.Free;
   FPendingSelect.Free;
+  FreeAndNil(FPlayer);
+  FPlayQueue.Free;
+  FPlayWithProgs.Free;
 end;
 
 procedure TFormMain.LoadIcons;
@@ -1320,7 +1366,10 @@ begin
   TopMenu := Menu(rsFiler);
   Add(TopMenu, aOpen); Add(TopMenu, aRefresh); Add(TopMenu, nil);
   Add(TopMenu, aEdit); Add(TopMenu, aMulti); Add(TopMenu, aRenameFolder); Add(TopMenu, nil);
-  Add(TopMenu, aPlay); Add(TopMenu, aPlayFolder); Add(TopMenu, aExplorer); Add(TopMenu, aProperties); Add(TopMenu, nil);
+  Add(TopMenu, aPlay);
+  FPlayWithFile := Sub(TopMenu, rsAfspilMed);
+  TopMenu.OnClick := @RebuildPlayWith;
+  Add(TopMenu, aPlayFolder); Add(TopMenu, aExplorer); Add(TopMenu, aProperties); Add(TopMenu, nil);
   Add(TopMenu, aRenameManual); Add(TopMenu, aCopyTo); Add(TopMenu, aMoveTo); Add(TopMenu, FActDeleteFiles); Add(TopMenu, nil);
   FRecentMenu := Sub(TopMenu, rsSenesteMapper);
   Add(TopMenu, nil);
@@ -1380,7 +1429,12 @@ begin
   AddPopup(aEdit); AddPopup(aMulti); AddPopup(aWeb); AddPopup(nil);
   AddPopup(aChkSel); AddPopup(aUnchkSel); AddPopup(aChkAll); AddPopup(aUnchkAll); AddPopup(aInvert);
   AddPopup(nil); AddPopup(aCopy); AddPopup(FActPaste); AddPopup(nil); AddPopup(aMoveUp); AddPopup(aMoveDown);
-  AddPopup(nil); AddPopup(aPlay); AddPopup(aExplorer); AddPopup(aProperties); AddPopup(aRenameManual);
+  AddPopup(nil); AddPopup(aPlay);
+  FPlayWithPopup := TMenuItem.Create(PopupFileList);
+  FPlayWithPopup.Caption := rsAfspilMed;
+  PopupFileList.Items.Add(FPlayWithPopup);
+  PopupFileList.OnPopup := @RebuildPlayWith;
+  AddPopup(aExplorer); AddPopup(aProperties); AddPopup(aRenameManual);
   AddPopup(nil); AddPopup(aCopyTo); AddPopup(aMoveTo); AddPopup(FActDeleteFiles);
 
   // ---- toolbars
@@ -3183,9 +3237,474 @@ end;
 procedure TFormMain.ActPlayExecute(Sender: TObject);
 var
   Info: TAudioInfo;
+  Files: TStringArray;
+  Index: Integer;
 begin
+  if AppOptions.PlayInternal and PlayerAvailable then
+  begin
+    Files := PlayTargets(Index);
+    if Length(Files) > 0 then StartPlaying(Files, Index);
+    Exit;
+  end;
   Info := FocusedInfo;
   if Info <> nil then PlayWith(Info.FileName);
+end;
+
+{ Built-in player }
+
+procedure WritePlaylist(const FileName: string; const Items: TAudioInfoArray; FullPaths: Boolean = False); forward;
+
+{ What to play: the selected files when there are several, otherwise the whole list from
+  the focused file on (so "next" goes on through the list). }
+function TFormMain.PlayTargets(out Index: Integer): TStringArray;
+var
+  Sel: TAudioInfoArray;
+  I: Integer;
+  Focus: TAudioInfo;
+begin
+  Result := nil;
+  Index := 0;
+  Sel := SelectedItems;
+  if Length(Sel) > 1 then
+  begin
+    for I := 0 to High(Sel) do Insert(Sel[I].FileName, Result, Length(Result));
+    Exit;
+  end;
+  Focus := FocusedInfo;
+  if Focus = nil then Exit;
+  for I := 0 to FView.Count - 1 do
+  begin
+    if Item(I) = Focus then Index := Length(Result);
+    Insert(Item(I).FileName, Result, Length(Result));
+  end;
+end;
+
+procedure TFormMain.BuildPlayerBar;
+var
+  X: Integer;
+
+  // aligned controls keep the order of their Left values
+  procedure Place(C: TControl; AAlign: TAlign);
+  begin
+    Inc(X, 100);
+    C.Left := X;
+    C.Parent := PanelPlayer;
+    C.Align := AAlign;
+  end;
+
+  function Button(const Glyph, AHint: string; Handler: TNotifyEvent; AAlign: TAlign): TSpeedButton;
+  begin
+    Result := TSpeedButton.Create(PanelPlayer);
+    Place(Result, AAlign);
+    Result.Width := Scale96ToForm(34);
+    Result.Flat := True;
+    Result.Font.Name := 'Segoe MDL2 Assets'; // Windows 10/11 symbol font
+    Result.Font.Size := 11;
+    Result.Caption := Glyph;
+    Result.Hint := AHint;
+    Result.ShowHint := True;
+    Result.OnClick := Handler;
+  end;
+
+var
+  L: TLabel;
+begin
+  X := 0;
+  PanelPlayer := TPanel.Create(Self);
+  PanelPlayer.Parent := Self;
+  PanelPlayer.Align := alBottom;
+  PanelPlayer.Height := Scale96ToForm(34);
+  PanelPlayer.BevelOuter := bvNone;
+  PanelPlayer.Top := StatusBar.Top - 1; // above the status bar
+  PanelPlayer.Visible := False;
+  Button(UTF8Encode(WideChar($E892)), rsPlForrige, @PlayerPrevClick, alLeft);
+  FBtnPlay := Button(UTF8Encode(WideChar($E768)), rsAfspilPause, @PlayerPlayClick, alLeft);
+  Button(UTF8Encode(WideChar($E71A)), rsStop, @PlayerStopClick, alLeft);
+  Button(UTF8Encode(WideChar($E893)), rsPlNaeste, @PlayerNextClick, alLeft);
+  FLblPlayTitle := TLabel.Create(PanelPlayer);
+  Place(FLblPlayTitle, alLeft);
+  FLblPlayTitle.ShowAccelChar := False;
+  FLblPlayTitle.AutoSize := False;
+  FLblPlayTitle.Width := Scale96ToForm(320);
+  FLblPlayTitle.Layout := tlCenter;
+  FLblPlayTitle.BorderSpacing.Left := Scale96ToForm(8);
+  FLblPlayTitle.ShowHint := True;
+  FLblPlayTime := TLabel.Create(PanelPlayer);
+  Place(FLblPlayTime, alRight);
+  FLblPlayTime.Layout := tlCenter;
+  FLblPlayTime.BorderSpacing.Left := Scale96ToForm(8);
+  FLblPlayTime.Caption := '0:00 / 0:00';
+  L := TLabel.Create(PanelPlayer);
+  Place(L, alRight);
+  L.Font.Name := 'Segoe MDL2 Assets';
+  L.Caption := UTF8Encode(WideChar($E767));
+  L.Layout := tlCenter;
+  L.BorderSpacing.Left := Scale96ToForm(12);
+  FTrackVol := TTrackBar.Create(PanelPlayer);
+  Place(FTrackVol, alRight);
+  FTrackVol.Width := Scale96ToForm(110);
+  FTrackVol.Max := 100;
+  FTrackVol.TickStyle := tsNone;
+  FTrackVol.Position := EnsureRange(AppOptions.PlayerVolume, 0, 100);
+  FTrackVol.Hint := rsLydstyrke;
+  FTrackVol.ShowHint := True;
+  FTrackVol.OnChange := @PlayerVolChange;
+  Button(UTF8Encode(WideChar($E711)), rsLukAfspiller, @PlayerStopClick, alRight).Tag := 1;
+  FTrackPos := TTrackBar.Create(PanelPlayer);
+  Place(FTrackPos, alClient);
+  FTrackPos.TickStyle := tsNone;
+  FTrackPos.Max := 1000;
+  FTrackPos.OnChange := @PlayerPosChange;
+  FTrackPos.OnMouseUp := @PlayerPosMouseUp;
+  FTimerPlayer := TTimer.Create(Self);
+  FTimerPlayer.Enabled := False;
+  FTimerPlayer.Interval := 250;
+  FTimerPlayer.OnTimer := @PlayerTimer;
+  FPlayQueue := TStringList.Create;
+end;
+
+procedure TFormMain.StartPlaying(const Files: TStringArray; Index: Integer);
+var
+  F: string;
+begin
+  FPlayQueue.Clear;
+  for F in Files do FPlayQueue.Add(F);
+  FPlayIndex := EnsureRange(Index, 0, FPlayQueue.Count - 1);
+  PlayQueueItem;
+end;
+
+procedure TFormMain.PlayQueueItem;
+var
+  E, Title: string;
+  I: Integer;
+  Info: TAudioInfo;
+begin
+  if (FPlayIndex < 0) or (FPlayIndex >= FPlayQueue.Count) then
+  begin
+    StopPlaying;
+    Exit;
+  end;
+  if FPlayer = nil then FPlayer := TAudioPlayer.Create;
+  FPlayer.SetVolume(FTrackVol.Position / 100);
+  E := FPlayer.Play(FPlayQueue[FPlayIndex]);
+  if E <> '' then
+  begin
+    StopPlaying;
+    Inform(rsAfspilFil, ExtractFileName(FPlayQueue[FPlayIndex]) + ': ' + E, mtWarning);
+    Exit;
+  end;
+  Title := ExtractFileName(FPlayQueue[FPlayIndex]);
+  for I := 0 to FItems.Count - 1 do
+  begin
+    Info := TAudioInfo(FItems[I]);
+    if SameFileName(Info.FileName, FPlayQueue[FPlayIndex]) then
+    begin
+      if (Info.Fields[tfArtist] <> '') and (Info.Fields[tfTitle] <> '') then
+        Title := Info.Fields[tfArtist] + ' - ' + Info.Fields[tfTitle];
+      Break;
+    end;
+  end;
+  FLblPlayTitle.Caption := Title;
+  FLblPlayTitle.Hint := FPlayQueue[FPlayIndex];
+  FSawPlaying := False;
+  FBtnPlay.Caption := UTF8Encode(WideChar($E769)); // pause
+  if not PanelPlayer.Visible then
+  begin
+    PanelPlayer.Visible := True;
+    StatusBar.Top := ClientHeight; // keep the status bar at the very bottom
+  end;
+  FTimerPlayer.Enabled := True;
+end;
+
+procedure TFormMain.StopPlaying;
+begin
+  if FPlayer <> nil then FPlayer.Stop;
+  FTimerPlayer.Enabled := False;
+  FBtnPlay.Caption := UTF8Encode(WideChar($E768)); // play
+  FPosUpdating := True;
+  FTrackPos.Position := 0;
+  FPosUpdating := False;
+  FLblPlayTime.Caption := '0:00 / 0:00';
+end;
+
+procedure TFormMain.PlayerTimer(Sender: TObject);
+var
+  St: TPlayerState;
+  Pos, Dur: Double;
+begin
+  if FPlayer = nil then Exit;
+  St := FPlayer.State;
+  if St = psPlaying then FSawPlaying := True;
+  // the end of a track: on to the next one
+  if FSawPlaying and (St = psStopped) then
+  begin
+    Inc(FPlayIndex);
+    PlayQueueItem;
+    Exit;
+  end;
+  Pos := FPlayer.Position;
+  Dur := FPlayer.Duration;
+  FLblPlayTime.Caption := FormatDuration(Pos) + ' / ' + FormatDuration(Dur);
+  if (Dur > 0) and not FTrackPos.MouseInClient then
+  begin
+    FPosUpdating := True;
+    FTrackPos.Position := Round(Pos / Dur * FTrackPos.Max);
+    FPosUpdating := False;
+  end;
+end;
+
+procedure TFormMain.PlayerPlayClick(Sender: TObject);
+var
+  Files: TStringArray;
+  Index: Integer;
+begin
+  if (FPlayer = nil) or (FPlayer.FileName = '') then
+  begin
+    if FPlayQueue.Count > 0 then PlayQueueItem
+    else
+    begin
+      Files := PlayTargets(Index);
+      if Length(Files) > 0 then StartPlaying(Files, Index);
+    end;
+    Exit;
+  end;
+  if FPlayer.State = psPlaying then
+  begin
+    FPlayer.Pause;
+    FBtnPlay.Caption := UTF8Encode(WideChar($E768));
+  end
+  else
+  begin
+    FPlayer.Resume;
+    FBtnPlay.Caption := UTF8Encode(WideChar($E769));
+  end;
+end;
+
+procedure TFormMain.PlayerStopClick(Sender: TObject);
+begin
+  StopPlaying;
+  if (Sender is TComponent) and (TComponent(Sender).Tag = 1) then PanelPlayer.Visible := False;
+end;
+
+procedure TFormMain.PlayerPrevClick(Sender: TObject);
+begin
+  if FPlayQueue.Count = 0 then Exit;
+  // like most players: back to the start first, the previous track within 3 seconds
+  if (FPlayer <> nil) and (FPlayer.Position > 3) then
+  begin
+    FPlayer.Seek(0);
+    Exit;
+  end;
+  if FPlayIndex > 0 then Dec(FPlayIndex);
+  PlayQueueItem;
+end;
+
+procedure TFormMain.PlayerNextClick(Sender: TObject);
+begin
+  if FPlayIndex + 1 >= FPlayQueue.Count then Exit;
+  Inc(FPlayIndex);
+  PlayQueueItem;
+end;
+
+procedure TFormMain.PlayerPosChange(Sender: TObject);
+var
+  Dur: Double;
+begin
+  if FPosUpdating or (FPlayer = nil) then Exit;
+  Dur := FPlayer.Duration;
+  if Dur > 0 then FPlayer.Seek(FTrackPos.Position / FTrackPos.Max * Dur);
+end;
+
+{ A click on the bar jumps to that point (Windows would only move one page). }
+procedure TFormMain.PlayerPosMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  Margin: Integer;
+begin
+  if (Button <> mbLeft) or (FPlayer = nil) then Exit;
+  Margin := Scale96ToForm(12); // where the thumb's centre can go
+  if FTrackPos.Width <= 2 * Margin then Exit;
+  FTrackPos.Position := Round(EnsureRange((X - Margin) / (FTrackPos.Width - 2 * Margin), 0, 1) * FTrackPos.Max);
+end;
+
+procedure TFormMain.PlayerVolChange(Sender: TObject);
+begin
+  AppOptions.PlayerVolume := FTrackVol.Position;
+  if FPlayer <> nil then FPlayer.SetVolume(FTrackVol.Position / 100);
+end;
+
+{ "Play with" }
+
+{ The program's own name ('VLC media player') from its version info, else the file name. }
+function ProgramName(const Exe: string): string;
+var
+  V: TFileVersionInfo;
+begin
+  Result := '';
+  V := TFileVersionInfo.Create(nil);
+  try
+    try
+      V.FileName := Exe;
+      V.ReadFileInfo;
+      Result := Trim(V.VersionStrings.Values['ProductName']);
+    except
+      Result := '';
+    end;
+  finally
+    V.Free;
+  end;
+  if SameText(Copy(Result, Length(Result) - 11, 12), ' Application') then // 'foobar2000 Application'
+    SetLength(Result, Length(Result) - 12);
+  if Result = '' then Result := ChangeFileExt(ExtractFileName(Exe), '');
+end;
+
+{ Players we know of: the configured ones, the ones added by hand and common players
+  found in their usual folders. }
+procedure TFormMain.RebuildPlayWith(Sender: TObject);
+const
+  Known: array[0..9] of string = (
+    '%ProgramFiles%\foobar2000\foobar2000.exe', '%ProgramFiles(x86)%\foobar2000\foobar2000.exe',
+    '%ProgramFiles%\VideoLAN\VLC\vlc.exe', '%ProgramFiles(x86)%\VideoLAN\VLC\vlc.exe',
+    '%ProgramFiles(x86)%\MusicBee\MusicBee.exe', '%ProgramFiles%\AIMP\AIMP.exe',
+    '%ProgramFiles(x86)%\AIMP\AIMP.exe', '%ProgramFiles(x86)%\Winamp\winamp.exe',
+    '%ProgramFiles%\MPC-HC\mpc-hc64.exe', '%ProgramFiles%\DAUM\PotPlayer\PotPlayerMini64.exe');
+var
+  P: string;
+  E: Integer;
+
+  procedure AddProg(const Path: string);
+  var
+    Q: string;
+    I: Integer;
+  begin
+    Q := Trim(Path);
+    if (Length(Q) >= 2) and (Q[1] = '"') and (Q[Length(Q)] = '"') then Q := Copy(Q, 2, Length(Q) - 2);
+    if (Q = '') or not FileExists(Q) then Exit;
+    for I := 0 to FPlayWithProgs.Count - 1 do
+      if SameFileName(FPlayWithProgs[I], Q) then Exit;
+    FPlayWithProgs.Add(Q);
+  end;
+
+  procedure Fill(Parent: TMenuItem);
+  var
+    I: Integer;
+
+    procedure AddItem(const ACaption: string; ATag: Integer);
+    var
+      M: TMenuItem;
+    begin
+      M := TMenuItem.Create(Parent);
+      M.Caption := ACaption;
+      M.Tag := ATag;
+      if ACaption <> '-' then M.OnClick := @PlayWithClick;
+      Parent.Add(M);
+    end;
+
+  begin
+    if Parent = nil then Exit;
+    Parent.Clear;
+    if PlayerAvailable then AddItem(rsTidyTagAfspiller, -1);
+    for I := 0 to FPlayWithProgs.Count - 1 do
+      AddItem(ProgramName(FPlayWithProgs[I]), I);
+    AddItem(rsWindowsStandard, -2);
+    AddItem('-', 0);
+    AddItem(rsVaelgProgram, -3);
+  end;
+
+begin
+  if FPlayWithProgs = nil then FPlayWithProgs := TStringList.Create;
+  FPlayWithProgs.Clear;
+  for P in AppOptions.Players do
+  begin
+    E := Pos('=', P);
+    if E > 1 then AddProg(Copy(P, E + 1, MaxInt));
+  end;
+  for P in AppOptions.ExtraPlayers do AddProg(P);
+  for P in Known do
+    AddProg(StringReplace(StringReplace(P, '%ProgramFiles%', GetEnvironmentVariable('ProgramFiles'), []),
+      '%ProgramFiles(x86)%', GetEnvironmentVariable('ProgramFiles(x86)'), []));
+  Fill(FPlayWithFile);
+  Fill(FPlayWithPopup);
+end;
+
+procedure TFormMain.PlayWithClick(Sender: TObject);
+var
+  Files: TStringArray;
+  Index: Integer;
+  D: TOpenDialog;
+  Sel: TAudioInfoArray;
+  I: Integer;
+begin
+  if TMenuItem(Sender).Tag = -1 then
+  begin
+    Files := PlayTargets(Index);
+    if Length(Files) > 0 then StartPlaying(Files, Index);
+    Exit;
+  end;
+  Sel := SelectedItems;
+  if (Length(Sel) = 0) and (FocusedInfo <> nil) then Sel := [FocusedInfo];
+  if Length(Sel) = 0 then Exit;
+  Files := nil;
+  for I := 0 to High(Sel) do Insert(Sel[I].FileName, Files, Length(Files));
+  case TMenuItem(Sender).Tag of
+    -2: PlayExternal('', Files);
+    -3:
+      begin
+        D := TOpenDialog.Create(Self);
+        try
+          D.Filter := rsProgrammer + ' (*.exe)|*.exe';
+          D.InitialDir := GetEnvironmentVariable('ProgramFiles');
+          if not D.Execute then Exit;
+          Insert(D.FileName, AppOptions.ExtraPlayers, Length(AppOptions.ExtraPlayers));
+          SaveAppOptions;
+          PlayExternal(D.FileName, Files);
+        finally
+          D.Free;
+        end;
+      end;
+  else
+    PlayExternal(FPlayWithProgs[TMenuItem(Sender).Tag], Files);
+  end;
+end;
+
+{ Several files go as a temporary playlist, which every player understands. }
+procedure TFormMain.PlayExternal(const Prog: string; const Files: TStringArray);
+var
+  Target: string;
+  Items: TAudioInfoArray;
+  I, J: Integer;
+  P: TProcess;
+begin
+  if Length(Files) = 1 then Target := Files[0]
+  else
+  begin
+    Items := nil;
+    for I := 0 to High(Files) do
+      for J := 0 to FItems.Count - 1 do
+        if TAudioInfo(FItems[J]).FileName = Files[I] then
+        begin
+          Insert(TAudioInfo(FItems[J]), Items, Length(Items));
+          Break;
+        end;
+    Target := GetTempDir + 'TidyTag-afspil.m3u8';
+    WritePlaylist(Target, Items, True);
+  end;
+  if Prog = '' then
+  begin
+    OpenDocument(Target);
+    Exit;
+  end;
+  P := TProcess.Create(nil);
+  try
+    P.Executable := Prog;
+    P.Parameters.Add(Target);
+    try
+      P.Execute;
+    except
+      on E: Exception do Inform(rsAfspilFil, Prog + ': ' + E.Message, mtWarning);
+    end;
+  finally
+    P.Free; // the player keeps running
+  end;
 end;
 
 procedure TFormMain.ActShowInExplorerExecute(Sender: TObject);
@@ -3363,7 +3882,7 @@ begin
   if Result <> '' then Result := ChangeFileExt(ExtractFileName(Result), '');
 end;
 
-procedure WritePlaylist(const FileName: string; const Items: TAudioInfoArray; FullPaths: Boolean = False);
+procedure WritePlaylist(const FileName: string; const Items: TAudioInfoArray; FullPaths: Boolean);
 var
   L: TStringList;
   Info: TAudioInfo;
@@ -3879,7 +4398,7 @@ var
   Pages: TPageControl;
   Tab: TTabSheet;
   RLang, RAlbum: TRadioGroup;
-  CKeep, CAuto, CJpeg, CFit, CSub, CLow, CNoV1, CHideExt, CGrid, CUni, CExtInf, CFull, CShell: TCheckBox;
+  CKeep, CAuto, CJpeg, CFit, CSub, CLow, CNoV1, CHideExt, CGrid, CUni, CExtInf, CFull, CShell, CPlayInt: TCheckBox;
   ESide, EQual, ELow, EFont: TSpinEdit;
   RStart: TRadioGroup;
   EStart, EInfo, EPlFolder, EPlName: TEdit;
@@ -4041,8 +4560,11 @@ begin
     MPlayers.Parent := Tab;
     MPlayers.ScrollBars := ssAutoBoth;
     MPlayers.WordWrap := False;
-    MPlayers.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(78), F.Scale96ToForm(580), F.Scale96ToForm(300));
+    MPlayers.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(78), F.Scale96ToForm(580), F.Scale96ToForm(260));
     for I := 0 to High(AppOptions.Players) do MPlayers.Lines.Add(AppOptions.Players[I]);
+    Y := 348;
+    CPlayInt := Chk(Tab, rsAfspilIntern, AppOptions.PlayInternal);
+    CPlayInt.Enabled := PlayerAvailable;
 
     // playlists
     Tab := NewTab(rsPlaylisterFane);
@@ -4103,6 +4625,7 @@ begin
         SetLength(AppOptions.Players, Length(AppOptions.Players) + 1);
         AppOptions.Players[High(AppOptions.Players)] := Trim(MPlayers.Lines[I]);
       end;
+    AppOptions.PlayInternal := CPlayInt.Checked;
     AppOptions.PlExtInf := CExtInf.Checked;
     AppOptions.PlInfoMask := Trim(EInfo.Text);
     if AppOptions.PlInfoMask = '' then AppOptions.PlInfoMask := '%1 - %2';
@@ -4783,9 +5306,18 @@ procedure TFormMain.ActPlayFolderExecute(Sender: TObject);
 var
   Items: TAudioInfoArray;
   PlName: string;
+  Files: TStringArray;
+  I: Integer;
 begin
   Items := AllItems;
   if Length(Items) = 0 then Exit;
+  if AppOptions.PlayInternal and PlayerAvailable then
+  begin
+    Files := nil;
+    for I := 0 to High(Items) do Insert(Items[I].FileName, Files, Length(Files));
+    StartPlaying(Files, 0);
+    Exit;
+  end;
   PlName := GetTempDir + 'TidyTag-afspil.m3u8';
   WritePlaylist(PlName, Items, True);
   PlayWith(PlName);
@@ -6026,6 +6558,7 @@ var
 begin
   LoadAppOptions;
   ApplyViewOptions;
+  FTrackVol.Position := EnsureRange(AppOptions.PlayerVolume, 0, 100);
   Start := '';
   Ini := OpenSettings;
   try

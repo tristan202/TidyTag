@@ -363,6 +363,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="MusicAnalysis"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\audioplayer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="AudioPlayer"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

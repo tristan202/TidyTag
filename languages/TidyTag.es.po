@@ -54,6 +54,15 @@ msgstr "formato de audio desconocido"
 msgid "ingen lyddata"
 msgstr "sin datos de audio"
 
+#: audioplayer.rsafspillermangler
+msgctxt "audioplayer.rsafspillermangler"
+msgid "Windows Media Foundation findes ikke på denne computer"
+msgstr "Windows Media Foundation no está disponible en este equipo"
+
+#: audioplayer.rskanikkeafspilles
+msgid "filen kan ikke afspilles af Windows (codec mangler?) – fejl %s"
+msgstr "Windows no puede reproducir el archivo (¿falta un códec?) – error %s"
+
 #: audiotypes.rsrgsporgain
 msgid "ReplayGain spor"
 msgstr "ReplayGain pista"
@@ -815,6 +824,55 @@ msgstr "Máscaras como al renombrar, p. ej. %1 - %2; %f es el nombre de la carpe
 msgctxt "mainform.rsbpmogtoneartmenu"
 msgid "BPM og toneart"
 msgstr "BPM y tonalidad"
+
+#: mainform.rsafspilmed
+msgid "Afspil med"
+msgstr "Reproducir con"
+
+#: mainform.rstidytagafspiller
+msgid "TidyTag (indbygget afspiller)"
+msgstr "TidyTag (reproductor integrado)"
+
+#: mainform.rswindowsstandard
+msgid "Windows-standardprogram"
+msgstr "Programa predeterminado de Windows"
+
+#: mainform.rsvaelgprogram
+msgid "Vælg program..."
+msgstr "Elegir programa..."
+
+#: mainform.rsprogrammer
+msgid "Programmer"
+msgstr "Programas"
+
+#: mainform.rsplforrige
+msgid "Forrige"
+msgstr "Anterior"
+
+#: mainform.rsafspilpause
+msgid "Afspil / pause"
+msgstr "Reproducir / pausa"
+
+#: mainform.rsstop
+msgctxt "mainform.rsstop"
+msgid "Stop"
+msgstr "Detener"
+
+#: mainform.rsplnaeste
+msgid "Næste"
+msgstr "Siguiente"
+
+#: mainform.rslukafspiller
+msgid "Stop og luk afspilleren"
+msgstr "Detener y cerrar el reproductor"
+
+#: mainform.rslydstyrke
+msgid "Lydstyrke"
+msgstr "Volumen"
+
+#: mainform.rsafspilintern
+msgid "Afspil fil (Ctrl+P) i TidyTags egen afspiller"
+msgstr "Reproducir archivo (Ctrl+P) en el reproductor de TidyTag"
 
 #: mainform.rsfindbpmogtoneart
 msgid "Find BPM og toneart..."
@@ -2279,6 +2337,7 @@ msgid "Mappe oprettet: "
 msgstr "Carpeta creada: "
 
 #: mfdecode.rsmediafoundationmangler
+msgctxt "mfdecode.rsmediafoundationmangler"
 msgid "Windows Media Foundation findes ikke på denne computer"
 msgstr "Windows Media Foundation no está disponible en este equipo"
 
@@ -3266,6 +3325,7 @@ msgid "Spring over"
 msgstr "Omitir"
 
 #: weblookupform.rsstop
+msgctxt "weblookupform.rsstop"
 msgid "Stop"
 msgstr "Detener"
 

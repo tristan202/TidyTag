@@ -53,6 +53,15 @@ msgstr ""
 msgid "ingen lyddata"
 msgstr ""
 
+#: audioplayer.rsafspillermangler
+msgctxt "audioplayer.rsafspillermangler"
+msgid "Windows Media Foundation findes ikke på denne computer"
+msgstr ""
+
+#: audioplayer.rskanikkeafspilles
+msgid "filen kan ikke afspilles af Windows (codec mangler?) – fejl %s"
+msgstr ""
+
 #: audiotypes.rsrgsporgain
 msgid "ReplayGain spor"
 msgstr ""
@@ -813,6 +822,55 @@ msgstr ""
 #: mainform.rsbpmogtoneartmenu
 msgctxt "mainform.rsbpmogtoneartmenu"
 msgid "BPM og toneart"
+msgstr ""
+
+#: mainform.rsafspilmed
+msgid "Afspil med"
+msgstr ""
+
+#: mainform.rstidytagafspiller
+msgid "TidyTag (indbygget afspiller)"
+msgstr ""
+
+#: mainform.rswindowsstandard
+msgid "Windows-standardprogram"
+msgstr ""
+
+#: mainform.rsvaelgprogram
+msgid "Vælg program..."
+msgstr ""
+
+#: mainform.rsprogrammer
+msgid "Programmer"
+msgstr ""
+
+#: mainform.rsplforrige
+msgid "Forrige"
+msgstr ""
+
+#: mainform.rsafspilpause
+msgid "Afspil / pause"
+msgstr ""
+
+#: mainform.rsstop
+msgctxt "mainform.rsstop"
+msgid "Stop"
+msgstr ""
+
+#: mainform.rsplnaeste
+msgid "Næste"
+msgstr ""
+
+#: mainform.rslukafspiller
+msgid "Stop og luk afspilleren"
+msgstr ""
+
+#: mainform.rslydstyrke
+msgid "Lydstyrke"
+msgstr ""
+
+#: mainform.rsafspilintern
+msgid "Afspil fil (Ctrl+P) i TidyTags egen afspiller"
 msgstr ""
 
 #: mainform.rsfindbpmogtoneart
@@ -2278,6 +2336,7 @@ msgid "Mappe oprettet: "
 msgstr ""
 
 #: mfdecode.rsmediafoundationmangler
+msgctxt "mfdecode.rsmediafoundationmangler"
 msgid "Windows Media Foundation findes ikke på denne computer"
 msgstr ""
 
@@ -3265,6 +3324,7 @@ msgid "Spring over"
 msgstr ""
 
 #: weblookupform.rsstop
+msgctxt "weblookupform.rsstop"
 msgid "Stop"
 msgstr ""
 

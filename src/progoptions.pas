@@ -28,6 +28,10 @@ type
     HiddenGenres: TStringArray;   // standard genres left out of the lists
     // players: 'mp3=C:\Program\player.exe' (extension without dot; '*' = all)
     Players: TStringArray;
+    PlayInternal: Boolean;        // "Play file" uses TidyTag's own player
+    PlayerVolume: Integer;        // 0..100
+    ExtraPlayers: TStringArray;   // programs added under "Play with > Choose program"
+
     // playlists
     PlExtInf: Boolean;
     PlInfoMask: string;           // text after #EXTINF:<seconds>,
@@ -110,6 +114,9 @@ begin
       CustomGenres := ReadList(Ini, 'CustomGenres');
       HiddenGenres := ReadList(Ini, 'HiddenGenres');
       Players := ReadList(Ini, 'Players');
+      PlayInternal := Ini.ReadBool('Player', 'Internal', True);
+      PlayerVolume := Ini.ReadInteger('Player', 'Volume', 80);
+      ExtraPlayers := ReadList(Ini, 'ExtraPlayers');
       PlExtInf := Ini.ReadBool('Playlist', 'ExtInf', True);
       PlInfoMask := Ini.ReadString('Playlist', 'InfoMask', '%1 - %2');
       PlFullPaths := Ini.ReadBool('Playlist', 'FullPaths', False);
@@ -150,6 +157,9 @@ begin
       WriteList(Ini, 'CustomGenres', CustomGenres);
       WriteList(Ini, 'HiddenGenres', HiddenGenres);
       WriteList(Ini, 'Players', Players);
+      Ini.WriteBool('Player', 'Internal', PlayInternal);
+      Ini.WriteInteger('Player', 'Volume', PlayerVolume);
+      WriteList(Ini, 'ExtraPlayers', ExtraPlayers);
       Ini.WriteBool('Playlist', 'ExtInf', PlExtInf);
       Ini.WriteString('Playlist', 'InfoMask', PlInfoMask);
       Ini.WriteBool('Playlist', 'FullPaths', PlFullPaths);

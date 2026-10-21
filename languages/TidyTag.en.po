@@ -54,6 +54,15 @@ msgstr "unknown audio format"
 msgid "ingen lyddata"
 msgstr "no audio data"
 
+#: audioplayer.rsafspillermangler
+msgctxt "audioplayer.rsafspillermangler"
+msgid "Windows Media Foundation findes ikke på denne computer"
+msgstr "Windows Media Foundation is not available on this computer"
+
+#: audioplayer.rskanikkeafspilles
+msgid "filen kan ikke afspilles af Windows (codec mangler?) – fejl %s"
+msgstr "Windows cannot play the file (missing codec?) – error %s"
+
 #: audiotypes.rsrgsporgain
 msgid "ReplayGain spor"
 msgstr "ReplayGain track"
@@ -815,6 +824,55 @@ msgstr "Masks as for renaming, e.g. %1 - %2; %f is the folder name."
 msgctxt "mainform.rsbpmogtoneartmenu"
 msgid "BPM og toneart"
 msgstr "BPM and key"
+
+#: mainform.rsafspilmed
+msgid "Afspil med"
+msgstr "Play with"
+
+#: mainform.rstidytagafspiller
+msgid "TidyTag (indbygget afspiller)"
+msgstr "TidyTag (built-in player)"
+
+#: mainform.rswindowsstandard
+msgid "Windows-standardprogram"
+msgstr "Windows default program"
+
+#: mainform.rsvaelgprogram
+msgid "Vælg program..."
+msgstr "Choose program..."
+
+#: mainform.rsprogrammer
+msgid "Programmer"
+msgstr "Programs"
+
+#: mainform.rsplforrige
+msgid "Forrige"
+msgstr "Previous"
+
+#: mainform.rsafspilpause
+msgid "Afspil / pause"
+msgstr "Play / pause"
+
+#: mainform.rsstop
+msgctxt "mainform.rsstop"
+msgid "Stop"
+msgstr "Stop"
+
+#: mainform.rsplnaeste
+msgid "Næste"
+msgstr "Next"
+
+#: mainform.rslukafspiller
+msgid "Stop og luk afspilleren"
+msgstr "Stop and close the player"
+
+#: mainform.rslydstyrke
+msgid "Lydstyrke"
+msgstr "Volume"
+
+#: mainform.rsafspilintern
+msgid "Afspil fil (Ctrl+P) i TidyTags egen afspiller"
+msgstr "Play file (Ctrl+P) in TidyTag's own player"
 
 #: mainform.rsfindbpmogtoneart
 msgid "Find BPM og toneart..."
@@ -2279,6 +2337,7 @@ msgid "Mappe oprettet: "
 msgstr "Folder created: "
 
 #: mfdecode.rsmediafoundationmangler
+msgctxt "mfdecode.rsmediafoundationmangler"
 msgid "Windows Media Foundation findes ikke på denne computer"
 msgstr "Windows Media Foundation is not available on this computer"
 
@@ -3266,6 +3325,7 @@ msgid "Spring over"
 msgstr "Skip"
 
 #: weblookupform.rsstop
+msgctxt "weblookupform.rsstop"
 msgid "Stop"
 msgstr "Stop"
 
