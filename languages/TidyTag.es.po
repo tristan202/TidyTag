@@ -829,6 +829,38 @@ msgstr "BPM y tonalidad"
 msgid "Afspil med"
 msgstr "Reproducir con"
 
+#: mainform.rsaabntelefon
+msgid "Åbn mappe på telefon..."
+msgstr "Abrir carpeta del teléfono..."
+
+#: mainform.rsaabntelefonhint
+msgid "Arbejd på en mappe på en telefon (Android via USB); ændringer sendes automatisk tilbage"
+msgstr "Trabajar en una carpeta de un teléfono (Android por USB); los cambios se envían de vuelta automáticamente"
+
+#: mainform.rsvaelgtelefonmappe
+msgid "Vælg en mappe på telefonen"
+msgstr "Elija una carpeta del teléfono"
+
+#: mainform.rstelefon
+msgid "Telefon"
+msgstr "Teléfono"
+
+#: mainform.rshenterfratelefon
+msgid "Henter fra telefonen..."
+msgstr "Copiando del teléfono..."
+
+#: mainform.rssendttiltelefon
+msgid "Sendt til telefonen: %d"
+msgstr "Enviado al teléfono: %d"
+
+#: mainform.rstelefonfejl
+msgid "Kunne ikke sende til telefonen: %s"
+msgstr "No se pudo enviar al teléfono: %s"
+
+#: mainform.rslukmedtelefonfejl
+msgid "Nogle ændringer kunne ikke sendes til telefonen:\n%s\nDe ligger stadig i arbejdskopien og sendes, næste gang mappen åbnes fra telefonen. Luk alligevel?"
+msgstr "Algunos cambios no se pudieron enviar al teléfono:\n%s\nSe conservan en la copia de trabajo y se enviarán la próxima vez que se abra la carpeta desde el teléfono. ¿Cerrar de todos modos?"
+
 #: mainform.rstidytagafspiller
 msgid "TidyTag (indbygget afspiller)"
 msgstr "TidyTag (reproductor integrado)"
@@ -2574,6 +2606,22 @@ msgstr "Falta OpusTags"
 #: oggwriter.rsmanglervorbiskommentarpakken
 msgid "Mangler Vorbis-kommentarpakken"
 msgstr "Falta el paquete de comentarios Vorbis"
+
+#: phonesync.rsmappenfindesikkepaatelefonen
+msgid "mappen findes ikke længere på telefonen (er den tilsluttet og låst op?)"
+msgstr "la carpeta ya no está en el teléfono (¿está conectado y desbloqueado?)"
+
+#: phonesync.rskopieringmislykkedes
+msgid "kopieringen mislykkedes (fejl %s)"
+msgstr "la copia falló (error %s)"
+
+#: phonesync.rsfejlved
+msgid "%s: fejl %s"
+msgstr "%s: error %s"
+
+#: phonesync.rsfindesikke
+msgid "%s findes ikke på telefonen"
+msgstr "%s no está en el teléfono"
 
 #: renamecore.rsuaendret
 msgctxt "renamecore.rsuaendret"

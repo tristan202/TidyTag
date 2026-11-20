@@ -368,6 +368,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="AudioPlayer"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\phonesync.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="PhoneSync"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -829,6 +829,38 @@ msgstr ""
 msgid "Afspil med"
 msgstr ""
 
+#: mainform.rsaabntelefon
+msgid "Åbn mappe på telefon..."
+msgstr ""
+
+#: mainform.rsaabntelefonhint
+msgid "Arbejd på en mappe på en telefon (Android via USB); ændringer sendes automatisk tilbage"
+msgstr ""
+
+#: mainform.rsvaelgtelefonmappe
+msgid "Vælg en mappe på telefonen"
+msgstr ""
+
+#: mainform.rstelefon
+msgid "Telefon"
+msgstr ""
+
+#: mainform.rshenterfratelefon
+msgid "Henter fra telefonen..."
+msgstr ""
+
+#: mainform.rssendttiltelefon
+msgid "Sendt til telefonen: %d"
+msgstr ""
+
+#: mainform.rstelefonfejl
+msgid "Kunne ikke sende til telefonen: %s"
+msgstr ""
+
+#: mainform.rslukmedtelefonfejl
+msgid "Nogle ændringer kunne ikke sendes til telefonen:\n%s\nDe ligger stadig i arbejdskopien og sendes, næste gang mappen åbnes fra telefonen. Luk alligevel?"
+msgstr ""
+
 #: mainform.rstidytagafspiller
 msgid "TidyTag (indbygget afspiller)"
 msgstr ""
@@ -2573,6 +2605,22 @@ msgstr ""
 
 #: oggwriter.rsmanglervorbiskommentarpakken
 msgid "Mangler Vorbis-kommentarpakken"
+msgstr ""
+
+#: phonesync.rsmappenfindesikkepaatelefonen
+msgid "mappen findes ikke længere på telefonen (er den tilsluttet og låst op?)"
+msgstr ""
+
+#: phonesync.rskopieringmislykkedes
+msgid "kopieringen mislykkedes (fejl %s)"
+msgstr ""
+
+#: phonesync.rsfejlved
+msgid "%s: fejl %s"
+msgstr ""
+
+#: phonesync.rsfindesikke
+msgid "%s findes ikke på telefonen"
 msgstr ""
 
 #: renamecore.rsuaendret

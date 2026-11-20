@@ -10,7 +10,7 @@ interface
 
 uses
   Windows, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
-  StdCtrls, Buttons, ShellCtrls, Menus, ActnList, IniFiles, AudioPlayer, AudioTypes, ScanThread, RenameCore,
+  StdCtrls, Buttons, ShellCtrls, Menus, ActnList, IniFiles, AudioPlayer, PhoneSync, AudioTypes, ScanThread, RenameCore,
   BatchWrite, FieldTools, AppSettings, ID3Sync;
 
 type
@@ -156,6 +156,15 @@ type
     FLastOpenDir: string;        // folder and time of the last open from Explorer
     FLastOpenTick: QWord;
     procedure PathsReceived(const Paths: TStringArray);
+    procedure ActPhoneOpenExecute(Sender: TObject);
+    procedure TimerPhoneTimer(Sender: TObject);
+    function PhoneSyncNow(Force: Boolean): Boolean;
+    procedure PhoneRenamed(const Log: TRenameLog; Reverse: Boolean);
+    procedure UpdateCaption;
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+  private
+    FPhone: TPhoneMirror;     // set while the open folder is a working copy of a phone folder
+    FTimerPhone: TTimer;
   private
     // built-in player and "Play with"
     FPlayer: TAudioPlayer;
@@ -495,6 +504,15 @@ resourcestring
   rsPlaylisteVarHjaelp = 'Masker som ved omdøbning, fx %1 - %2; %f er mappens navn.';
   rsBpmOgToneartMenu = 'BPM og toneart';
   rsAfspilMed = 'Afspil med';
+  rsAabnTelefon = 'Åbn mappe på telefon...';
+  rsAabnTelefonHint = 'Arbejd på en mappe på en telefon (Android via USB); ændringer sendes automatisk tilbage';
+  rsVaelgTelefonmappe = 'Vælg en mappe på telefonen';
+  rsTelefon = 'Telefon';
+  rsHenterFraTelefon = 'Henter fra telefonen...';
+  rsSendtTilTelefon = 'Sendt til telefonen: %d';
+  rsTelefonFejl = 'Kunne ikke sende til telefonen: %s';
+  rsLukMedTelefonFejl = 'Nogle ændringer kunne ikke sendes til telefonen:' + LineEnding + '%s' + LineEnding +
+    'De ligger stadig i arbejdskopien og sendes, næste gang mappen åbnes fra telefonen. Luk alligevel?';
   rsTidyTagAfspiller = 'TidyTag (indbygget afspiller)';
   rsWindowsStandard = 'Windows-standardprogram';
   rsVaelgProgram = 'Vælg program...';
@@ -1076,6 +1094,11 @@ begin
   FTimerIncoming.Enabled := False;
   FTimerIncoming.Interval := 400;
   FTimerIncoming.OnTimer := @TimerIncomingTimer;
+  FTimerPhone := TTimer.Create(Self);
+  FTimerPhone.Enabled := False;
+  FTimerPhone.Interval := 2000;
+  FTimerPhone.OnTimer := @TimerPhoneTimer;
+  OnCloseQuery := @FormCloseQuery;
   StartReceiving(@PathsReceived);
   BuildPlayerBar;
   FSortColumn := 1; // file name
@@ -1129,6 +1152,7 @@ begin
   FreeAndNil(FPlayer);
   FPlayQueue.Free;
   FPlayWithProgs.Free;
+  FPhone.Free;
 end;
 
 procedure TFormMain.LoadIcons;
@@ -1174,7 +1198,7 @@ end;
 
 procedure TFormMain.BuildActionsAndMenus;
 var
-  aOpen, aRefresh, aEdit, aMulti, aRenameFolder, aPlay, aExplorer, aExit,
+  aOpen, aPhone, aRefresh, aEdit, aMulti, aRenameFolder, aPlay, aExplorer, aExit,
     aSelAll, aSelNone, aChkSel, aUnchkSel, aChkAll, aUnchkAll, aInvert, aCopy, aFind,
     aPlChecked, aPlAll, aTabRename, aTabMulti, aTabF2T, aRenameDlg, aF2TDlg, aTracks, aWeb,
     aToken, aKeys, aAbout, aUp, aFav, aNewFolder, aTreeRefresh, aCloseFolders,
@@ -1252,6 +1276,7 @@ begin
   FActions.Images := ImagesMain;
 
   aOpen := NewAction(rsAabnMappe, rsAabnEnMappe, ShortCut(VK_O, [ssCtrl]), icoOpen, @ActOpenFolderExecute);
+  aPhone := NewAction(rsAabnTelefon, rsAabnTelefonHint, 0, -1, @ActPhoneOpenExecute);
   aRefresh := NewAction(rsOpdaterFillisten, rsLaesMappenIgenF, ShortCut(VK_F5, []), icoRefresh, @ActRefreshExecute);
   aEdit := NewAction(rsRedigerTag, rsRedigerTagForDenMarkerede, 0, icoEdit, @ActEditTagExecute);
   aMulti := NewAction(rsRedigerFlereFiler, rsRetFelterOgCoverI,
@@ -1364,7 +1389,7 @@ begin
 
   // ---- main menu
   TopMenu := Menu(rsFiler);
-  Add(TopMenu, aOpen); Add(TopMenu, aRefresh); Add(TopMenu, nil);
+  Add(TopMenu, aOpen); Add(TopMenu, aPhone); Add(TopMenu, aRefresh); Add(TopMenu, nil);
   Add(TopMenu, aEdit); Add(TopMenu, aMulti); Add(TopMenu, aRenameFolder); Add(TopMenu, nil);
   Add(TopMenu, aPlay);
   FPlayWithFile := Sub(TopMenu, rsAfspilMed);
@@ -1878,6 +1903,135 @@ begin
   StartScan;
 end;
 
+{ Phone folders }
+
+procedure TFormMain.UpdateCaption;
+begin
+  if FPhone <> nil then
+    Caption := 'TidyTag - ' + rsTelefon + ': ' + FPhone.Title + Copy(FFolder, Length(FPhone.Root) + 1, MaxInt)
+  else
+    Caption := 'TidyTag - ' + FFolder;
+end;
+
+procedure TFormMain.ActPhoneOpenExecute(Sender: TObject);
+var
+  Picked, Key, Title, Local, E: string;
+  Old: TPhoneMirror;
+  Errs: TStringList;
+begin
+  if not PickDeviceFolder(Handle, rsVaelgTelefonmappe, Picked, Key, Title) then Exit;
+  if Picked <> '' then
+  begin
+    Navigate(Picked); // an ordinary folder needs no working copy
+    Exit;
+  end;
+  Local := MirrorFolderFor(Title);
+  // the working copy is made again; what an earlier one still holds goes to the phone first
+  if (FPhone <> nil) and SameText(FPhone.Root, Local) then
+  begin
+    StopScan;
+    PhoneSyncNow(True);
+    FreeAndNil(FPhone);
+    FTimerPhone.Enabled := False;
+  end
+  else if FileExists(IncludeTrailingPathDelimiter(Local) + ManifestName) then
+  begin
+    Old := TPhoneMirror.Create;
+    Errs := TStringList.Create;
+    try
+      Old.OwnerWnd := Handle;
+      Old.Load(Local);
+      Old.Sync(True, Errs);
+    finally
+      Old.Free;
+      Errs.Free;
+    end;
+  end;
+  if SameText(FindMirrorRoot(FFolder), Local) then
+  begin
+    StopScan;
+    ClearItems;
+    FileList.Items.Count := 0;
+  end;
+  SetMessage(rsHenterFraTelefon);
+  Screen.Cursor := crHourGlass;
+  try
+    Application.ProcessMessages;
+    E := DownloadPhoneFolder(Handle, Key, Title, Local);
+  finally
+    Screen.Cursor := crDefault;
+  end;
+  SetMessage('');
+  if E <> '' then
+  begin
+    Inform(rsTelefon, E, mtWarning);
+    Exit;
+  end;
+  Navigate(Local);
+end;
+
+{ Sends the changes of the working copy; False when something could not be sent. }
+function TFormMain.PhoneSyncNow(Force: Boolean): Boolean;
+var
+  Errs: TStringList;
+  N: Integer;
+begin
+  Result := True;
+  if FPhone = nil then Exit;
+  Errs := TStringList.Create;
+  try
+    N := FPhone.Sync(Force, Errs);
+    if N > 0 then
+    begin
+      SetMessage(Format(rsSendtTilTelefon, [N]));
+      UpdateCaption; // the picked folder may have a new name now
+    end;
+    if Errs.Count > 0 then
+    begin
+      SetMessage(Format(rsTelefonFejl, [Errs[0]]));
+      Result := False;
+    end;
+  finally
+    Errs.Free;
+  end;
+end;
+
+procedure TFormMain.TimerPhoneTimer(Sender: TObject);
+begin
+  // not while files are read or a dialog (which may be writing) is open
+  if (FPhone <> nil) and (FScanner = nil) and (Application.ModalLevel = 0) then PhoneSyncNow(False);
+end;
+
+procedure TFormMain.PhoneRenamed(const Log: TRenameLog; Reverse: Boolean);
+var
+  I: Integer;
+begin
+  if FPhone = nil then Exit;
+  if Reverse then
+  begin
+    for I := High(Log) downto 0 do
+      if FileExists(Log[I].OldName) or DirectoryExists(Log[I].OldName) then // undone
+        FPhone.Renamed(Log[I].NewName, Log[I].OldName);
+  end
+  else
+    for I := 0 to High(Log) do FPhone.Renamed(Log[I].OldName, Log[I].NewName);
+end;
+
+procedure TFormMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+var
+  Errs: TStringList;
+begin
+  if FPhone = nil then Exit;
+  Errs := TStringList.Create;
+  try
+    FPhone.Sync(True, Errs);
+    if Errs.Count > 0 then
+      CanClose := AskYes(rsTelefon, Format(rsLukMedTelefonFejl, [Errs.Text]), mtWarning);
+  finally
+    Errs.Free;
+  end;
+end;
+
 { Paths from Explorer }
 
 function HandleExplorerMenuSwitch: Boolean;
@@ -2054,12 +2208,27 @@ begin
 end;
 
 procedure TFormMain.StartScan;
+var
+  Root: string;
 begin
   StopScan;
   FileList.Items.Count := 0;
   ClearItems;
   ComboAddress.Text := FFolder;
-  Caption := 'TidyTag - ' + FFolder;
+  Root := FindMirrorRoot(FFolder);
+  if (FPhone <> nil) and not SameText(FPhone.Root, Root) then
+  begin
+    PhoneSyncNow(True); // leaving the working copy: send what is left
+    FreeAndNil(FPhone);
+  end;
+  if (FPhone = nil) and (Root <> '') then
+  begin
+    FPhone := TPhoneMirror.Create;
+    FPhone.OwnerWnd := Handle;
+    FPhone.Load(Root);
+  end;
+  FTimerPhone.Enabled := FPhone <> nil;
+  UpdateCaption;
   FCoverFile := '';
   FFolderCoverDir := '';
   if FSortColumn < 0 then FSortColumn := 1; // a fresh scan starts sorted by file name
@@ -2138,6 +2307,7 @@ end;
 
 procedure TFormMain.SetUndoLog(const Log: TRenameLog; const What: string);
 begin
+  PhoneRenamed(Log, False);
   FUndoLog := Log;
   FActUndo.Enabled := True;
   ButtonRenameUndo.Enabled := True;
@@ -2162,7 +2332,7 @@ begin
   begin
     FFolder := NewFolder;
     ComboAddress.Text := FFolder;
-    Caption := 'TidyTag - ' + FFolder;
+    UpdateCaption;
   end;
   try
     ShellTree.UpdateView(FFolder); // show the new folder names, keep the open folder selected
@@ -2182,6 +2352,7 @@ begin
   Errors := TStringList.Create;
   try
     Restored := UndoRename(FUndoLog, Errors);
+    PhoneRenamed(FUndoLog, True);
     ApplyRenameLog(FUndoLog, True);
     FUndoLog := nil;
     FActUndo.Enabled := False;

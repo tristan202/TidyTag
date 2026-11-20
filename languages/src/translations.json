@@ -6654,5 +6654,101 @@
   "it": "Riproduci file (Ctrl+P) nel lettore di TidyTag",
   "sv": "Spela upp fil (Ctrl+P) i TidyTags egen spelare",
   "es": "Reproducir archivo (Ctrl+P) en el reproductor de TidyTag"
+ },
+ "Åbn mappe på telefon...": {
+  "en": "Open folder on phone...",
+  "de": "Ordner auf dem Telefon öffnen...",
+  "fr": "Ouvrir un dossier du téléphone...",
+  "it": "Apri cartella sul telefono...",
+  "sv": "Öppna mapp på telefonen...",
+  "es": "Abrir carpeta del teléfono..."
+ },
+ "Arbejd på en mappe på en telefon (Android via USB); ændringer sendes automatisk tilbage": {
+  "en": "Work on a folder on a phone (Android over USB); changes are sent back automatically",
+  "de": "Einen Ordner auf einem Telefon bearbeiten (Android über USB); Änderungen werden automatisch zurückgeschickt",
+  "fr": "Travailler sur un dossier d'un téléphone (Android via USB) ; les modifications sont renvoyées automatiquement",
+  "it": "Lavora su una cartella di un telefono (Android via USB); le modifiche vengono rinviate automaticamente",
+  "sv": "Arbeta med en mapp på en telefon (Android via USB); ändringar skickas tillbaka automatiskt",
+  "es": "Trabajar en una carpeta de un teléfono (Android por USB); los cambios se envían de vuelta automáticamente"
+ },
+ "Vælg en mappe på telefonen": {
+  "en": "Choose a folder on the phone",
+  "de": "Ordner auf dem Telefon wählen",
+  "fr": "Choisissez un dossier sur le téléphone",
+  "it": "Scegli una cartella sul telefono",
+  "sv": "Välj en mapp på telefonen",
+  "es": "Elija una carpeta del teléfono"
+ },
+ "Telefon": {
+  "en": "Phone",
+  "de": "Telefon",
+  "fr": "Téléphone",
+  "it": "Telefono",
+  "sv": "Telefon",
+  "es": "Teléfono"
+ },
+ "Henter fra telefonen...": {
+  "en": "Copying from the phone...",
+  "de": "Kopiere vom Telefon...",
+  "fr": "Copie depuis le téléphone...",
+  "it": "Copia dal telefono...",
+  "sv": "Hämtar från telefonen...",
+  "es": "Copiando del teléfono..."
+ },
+ "Sendt til telefonen: %d": {
+  "en": "Sent to the phone: %d",
+  "de": "An das Telefon gesendet: %d",
+  "fr": "Envoyé au téléphone : %d",
+  "it": "Inviati al telefono: %d",
+  "sv": "Skickat till telefonen: %d",
+  "es": "Enviado al teléfono: %d"
+ },
+ "Kunne ikke sende til telefonen: %s": {
+  "en": "Could not send to the phone: %s",
+  "de": "Senden an das Telefon fehlgeschlagen: %s",
+  "fr": "Envoi au téléphone impossible : %s",
+  "it": "Impossibile inviare al telefono: %s",
+  "sv": "Kunde inte skicka till telefonen: %s",
+  "es": "No se pudo enviar al teléfono: %s"
+ },
+ "Nogle ændringer kunne ikke sendes til telefonen:\n%s\nDe ligger stadig i arbejdskopien og sendes, næste gang mappen åbnes fra telefonen. Luk alligevel?": {
+  "en": "Some changes could not be sent to the phone:\n%s\nThey are kept in the working copy and sent the next time the folder is opened from the phone. Close anyway?",
+  "de": "Einige Änderungen konnten nicht an das Telefon gesendet werden:\n%s\nSie bleiben in der Arbeitskopie und werden gesendet, wenn der Ordner das nächste Mal vom Telefon geöffnet wird. Trotzdem schließen?",
+  "fr": "Certaines modifications n'ont pas pu être envoyées au téléphone :\n%s\nElles restent dans la copie de travail et seront envoyées la prochaine fois que le dossier sera ouvert depuis le téléphone. Fermer quand même ?",
+  "it": "Alcune modifiche non sono state inviate al telefono:\n%s\nRestano nella copia di lavoro e verranno inviate la prossima volta che la cartella verrà aperta dal telefono. Chiudere comunque?",
+  "sv": "Vissa ändringar kunde inte skickas till telefonen:\n%s\nDe finns kvar i arbetskopian och skickas nästa gång mappen öppnas från telefonen. Stäng ändå?",
+  "es": "Algunos cambios no se pudieron enviar al teléfono:\n%s\nSe conservan en la copia de trabajo y se enviarán la próxima vez que se abra la carpeta desde el teléfono. ¿Cerrar de todos modos?"
+ },
+ "mappen findes ikke længere på telefonen (er den tilsluttet og låst op?)": {
+  "en": "the folder is no longer on the phone (is it connected and unlocked?)",
+  "de": "der Ordner ist nicht mehr auf dem Telefon (ist es verbunden und entsperrt?)",
+  "fr": "le dossier n'est plus sur le téléphone (est-il connecté et déverrouillé ?)",
+  "it": "la cartella non è più sul telefono (è collegato e sbloccato?)",
+  "sv": "mappen finns inte längre på telefonen (är den ansluten och upplåst?)",
+  "es": "la carpeta ya no está en el teléfono (¿está conectado y desbloqueado?)"
+ },
+ "kopieringen mislykkedes (fejl %s)": {
+  "en": "copying failed (error %s)",
+  "de": "Kopieren fehlgeschlagen (Fehler %s)",
+  "fr": "échec de la copie (erreur %s)",
+  "it": "copia non riuscita (errore %s)",
+  "sv": "kopieringen misslyckades (fel %s)",
+  "es": "la copia falló (error %s)"
+ },
+ "%s: fejl %s": {
+  "en": "%s: error %s",
+  "de": "%s: Fehler %s",
+  "fr": "%s : erreur %s",
+  "it": "%s: errore %s",
+  "sv": "%s: fel %s",
+  "es": "%s: error %s"
+ },
+ "%s findes ikke på telefonen": {
+  "en": "%s is not on the phone",
+  "de": "%s ist nicht auf dem Telefon",
+  "fr": "%s n'est pas sur le téléphone",
+  "it": "%s non è sul telefono",
+  "sv": "%s finns inte på telefonen",
+  "es": "%s no está en el teléfono"
  }
 }

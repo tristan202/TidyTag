@@ -829,6 +829,38 @@ msgstr "BPM and key"
 msgid "Afspil med"
 msgstr "Play with"
 
+#: mainform.rsaabntelefon
+msgid "Åbn mappe på telefon..."
+msgstr "Open folder on phone..."
+
+#: mainform.rsaabntelefonhint
+msgid "Arbejd på en mappe på en telefon (Android via USB); ændringer sendes automatisk tilbage"
+msgstr "Work on a folder on a phone (Android over USB); changes are sent back automatically"
+
+#: mainform.rsvaelgtelefonmappe
+msgid "Vælg en mappe på telefonen"
+msgstr "Choose a folder on the phone"
+
+#: mainform.rstelefon
+msgid "Telefon"
+msgstr "Phone"
+
+#: mainform.rshenterfratelefon
+msgid "Henter fra telefonen..."
+msgstr "Copying from the phone..."
+
+#: mainform.rssendttiltelefon
+msgid "Sendt til telefonen: %d"
+msgstr "Sent to the phone: %d"
+
+#: mainform.rstelefonfejl
+msgid "Kunne ikke sende til telefonen: %s"
+msgstr "Could not send to the phone: %s"
+
+#: mainform.rslukmedtelefonfejl
+msgid "Nogle ændringer kunne ikke sendes til telefonen:\n%s\nDe ligger stadig i arbejdskopien og sendes, næste gang mappen åbnes fra telefonen. Luk alligevel?"
+msgstr "Some changes could not be sent to the phone:\n%s\nThey are kept in the working copy and sent the next time the folder is opened from the phone. Close anyway?"
+
 #: mainform.rstidytagafspiller
 msgid "TidyTag (indbygget afspiller)"
 msgstr "TidyTag (built-in player)"
@@ -2574,6 +2606,22 @@ msgstr "OpusTags missing"
 #: oggwriter.rsmanglervorbiskommentarpakken
 msgid "Mangler Vorbis-kommentarpakken"
 msgstr "Vorbis comment packet missing"
+
+#: phonesync.rsmappenfindesikkepaatelefonen
+msgid "mappen findes ikke længere på telefonen (er den tilsluttet og låst op?)"
+msgstr "the folder is no longer on the phone (is it connected and unlocked?)"
+
+#: phonesync.rskopieringmislykkedes
+msgid "kopieringen mislykkedes (fejl %s)"
+msgstr "copying failed (error %s)"
+
+#: phonesync.rsfejlved
+msgid "%s: fejl %s"
+msgstr "%s: error %s"
+
+#: phonesync.rsfindesikke
+msgid "%s findes ikke på telefonen"
+msgstr "%s is not on the phone"
 
 #: renamecore.rsuaendret
 msgctxt "renamecore.rsuaendret"

@@ -829,6 +829,38 @@ msgstr "BPM und Tonart"
 msgid "Afspil med"
 msgstr "Abspielen mit"
 
+#: mainform.rsaabntelefon
+msgid "Åbn mappe på telefon..."
+msgstr "Ordner auf dem Telefon öffnen..."
+
+#: mainform.rsaabntelefonhint
+msgid "Arbejd på en mappe på en telefon (Android via USB); ændringer sendes automatisk tilbage"
+msgstr "Einen Ordner auf einem Telefon bearbeiten (Android über USB); Änderungen werden automatisch zurückgeschickt"
+
+#: mainform.rsvaelgtelefonmappe
+msgid "Vælg en mappe på telefonen"
+msgstr "Ordner auf dem Telefon wählen"
+
+#: mainform.rstelefon
+msgid "Telefon"
+msgstr "Telefon"
+
+#: mainform.rshenterfratelefon
+msgid "Henter fra telefonen..."
+msgstr "Kopiere vom Telefon..."
+
+#: mainform.rssendttiltelefon
+msgid "Sendt til telefonen: %d"
+msgstr "An das Telefon gesendet: %d"
+
+#: mainform.rstelefonfejl
+msgid "Kunne ikke sende til telefonen: %s"
+msgstr "Senden an das Telefon fehlgeschlagen: %s"
+
+#: mainform.rslukmedtelefonfejl
+msgid "Nogle ændringer kunne ikke sendes til telefonen:\n%s\nDe ligger stadig i arbejdskopien og sendes, næste gang mappen åbnes fra telefonen. Luk alligevel?"
+msgstr "Einige Änderungen konnten nicht an das Telefon gesendet werden:\n%s\nSie bleiben in der Arbeitskopie und werden gesendet, wenn der Ordner das nächste Mal vom Telefon geöffnet wird. Trotzdem schließen?"
+
 #: mainform.rstidytagafspiller
 msgid "TidyTag (indbygget afspiller)"
 msgstr "TidyTag (eingebauter Player)"
@@ -2574,6 +2606,22 @@ msgstr "OpusTags fehlt"
 #: oggwriter.rsmanglervorbiskommentarpakken
 msgid "Mangler Vorbis-kommentarpakken"
 msgstr "Vorbis-Kommentarpaket fehlt"
+
+#: phonesync.rsmappenfindesikkepaatelefonen
+msgid "mappen findes ikke længere på telefonen (er den tilsluttet og låst op?)"
+msgstr "der Ordner ist nicht mehr auf dem Telefon (ist es verbunden und entsperrt?)"
+
+#: phonesync.rskopieringmislykkedes
+msgid "kopieringen mislykkedes (fejl %s)"
+msgstr "Kopieren fehlgeschlagen (Fehler %s)"
+
+#: phonesync.rsfejlved
+msgid "%s: fejl %s"
+msgstr "%s: Fehler %s"
+
+#: phonesync.rsfindesikke
+msgid "%s findes ikke på telefonen"
+msgstr "%s ist nicht auf dem Telefon"
 
 #: renamecore.rsuaendret
 msgctxt "renamecore.rsuaendret"

@@ -9,13 +9,14 @@ interface
 uses
   Classes, SysUtils, IniFiles;
 
+{ %LOCALAPPDATA%\TidyTag\, whatever the exe is called. }
+function SettingsDir: string;
 function SettingsFileName: string;
 { Opens (and creates the folder of) the settings file; the caller frees it. }
 function OpenSettings: TIniFile;
 
 implementation
 
-{ %LOCALAPPDATA%\TidyTag\, whatever the exe is called. }
 function SettingsDir: string;
 begin
   Result := ExtractFilePath(ExcludeTrailingPathDelimiter(GetAppConfigDir(False))) + 'TidyTag' +

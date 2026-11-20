@@ -37,6 +37,11 @@ Windows SmartScreen may warn about an unknown publisher the first time.
   extensions, font size, a fixed start folder, a "Recent folders" menu, expand/collapse folders.
 - Playlists (.m3u8/.m3u) with configurable #EXTINF text, relative or full paths, a playlist folder and
   a quick save without a dialog.
+- Android phones over USB: File > Open folder on phone copies a folder from the phone (or any device
+  without a drive letter) to a working copy; everything works as usual, and changed, renamed or moved
+  files are sent back automatically a few seconds after each save, through Windows' own copying.
+  Nothing is ever deleted on the phone. Unsent changes are sent when the folder is left or TidyTag
+  closes.
 - "Open in TidyTag" in the Explorer context menu for folders, drives, folder backgrounds and audio
   files (chosen in the installer or in Settings, per user). Selected files open in their folder and are
   selected; when TidyTag is already running, the files go to that window instead of a new one. On
@@ -171,6 +176,7 @@ C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe -Mobjfpc -Sh -Fusrc -FUlib\tools -
 | `renametest` | Renaming of files and folders, tags from file names, track numbers (creates empty test files): `bin\renametest.exe C:\Temp\renametest` |
 | `tooltest` | Field tools, ID3 sync, Recycle Bin (puts one tiny test file in the Recycle Bin): `bin\tooltest.exe C:\Temp\tt song.mp3` |
 | `bpmtest` | Tempo and key: notation checks and synthetic tracks with a known tempo and key; with files or folders given, analyses them (several threads, only reads) and compares with the BPM and key in their tags: `binpmtest.exe C:\Temppm D:\Music` |
+| `phonetest` | Phone sync with an ordinary folder standing in for the phone: download, changed file, renames, folder renames, moves, new and deleted files, renamed root: `bin\phonetest.exe C:\Temp\ph song.mp3 song.flac` |
 | `rgtest` | ReplayGain: EBU Tech 3341 test signals written as WAV/AIFF and measured directly and through Media Foundation, plus measurement of given files: `bin\rgtest.exe C:\Temp\rg song.flac` |
 | `exporttest` | Export and import |
 | `webtest` | Offline test of MusicBrainz responses and track matching |
@@ -225,6 +231,7 @@ To add a language, add its code in `src\language.pas`, add translations to the J
 | `src/oggwriter.pas` | Ogg Vorbis/Opus: comment packet, new paging, CRC |
 | `src/musicanalysis.pas` | Tempo (onset envelope, autocorrelation, beat folding) and key (pitch-class profile) detection |
 | `src/workbatch.pas` | Runs one job per file on several threads (ReplayGain, BPM/key) |
+| `src/phonesync.pas` | Phone folders (MTP): working copy, manifest, sending changes back with IFileOperation |
 | `src/shellintegration.pas` | Explorer context menu entries, hand-over of paths to a running TidyTag |
 | `src/batchwrite.pas` | Saves selected fields/cover in one file (tabs, paste tag, drag and drop) |
 | `src/tagremove.pas` | Remove tags |
@@ -278,5 +285,3 @@ and the toolbar icons from the Lazarus general_purpose set by Roland Hahn (CC0 1
 2. ReplayGain for Ogg Vorbis and Opus without a Windows codec
 3. Ogg FLAC writing and DSF (ID3 in DSD files)
 4. A setting for contact info in the MusicBrainz User-Agent (recommended by MusicBrainz)
-5. Direct access to Android phones over USB (MTP, through Windows Portable Devices): today the music
-   has to be copied to the PC, put on an SD card in a card reader, or shared as a network drive
