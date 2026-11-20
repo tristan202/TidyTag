@@ -46,6 +46,7 @@ type
     Root: string;          // local mirror root folder
     RootParsing: string;   // the picked phone folder
     RootPhoneName: string; // its name on the phone
+    RootLocalName: string; // the working copy's own name when last in step (may differ: '?' or ':')
     Title: string;         // shown to the user: 'Pixel 9 Pro XL\...\Music\Rock'
     OwnerWnd: HWND;
     constructor Create;
@@ -559,7 +560,8 @@ begin
   Pending := TStringList.Create;
   Lines := TStringList.Create;
   try
-    Lines.Add('R'#9 + Parsing + #9 + ItemName(Root, SIGDN_NORMALDISPLAY) + #9 + Title);
+    Lines.Add('R'#9 + Parsing + #9 + ItemName(Root, SIGDN_NORMALDISPLAY) + #9 + Title + #9 +
+      ExtractFileName(ExcludeTrailingPathDelimiter(LocalRoot)));
     Walk(Root, '');
     if Pending.Count > 0 then
     begin
@@ -630,6 +632,7 @@ begin
         RootParsing := P[1];
         RootPhoneName := P[2];
         Title := P[3];
+        if Length(P) >= 5 then RootLocalName := P[4] else RootLocalName := ExtractFileName(Root);
         Continue;
       end;
       E.IsDir := P[0] = 'D';
@@ -658,7 +661,7 @@ var
 begin
   L := TStringList.Create;
   try
-    L.Add('R'#9 + RootParsing + #9 + RootPhoneName + #9 + Title);
+    L.Add('R'#9 + RootParsing + #9 + RootPhoneName + #9 + Title + #9 + RootLocalName);
     for E in FEntries do
       if E.IsDir then L.Add('D'#9 + E.Rel + #9 + E.Parsing + #9 + E.PhoneRel)
       else L.Add('F'#9 + E.Rel + #9 + E.Parsing + #9 + E.PhoneRel + #9 + E.Stamp + #9 + IntToStr(E.Hash));
@@ -900,7 +903,8 @@ begin
     NewFiles('');
 
     // 1. the picked folder itself was renamed
-    if not SameText(ExtractFileName(Root), RootPhoneName) and StartOp then
+    // only a rename done here counts: the working copy's name may differ from the phone's
+    if not SameText(ExtractFileName(Root), RootLocalName) and StartOp then
     begin
       Op.RenameItem(RootItem, PWideChar(UTF8Decode(ExtractFileName(Root))), nil);
       EndOp;
@@ -909,6 +913,7 @@ begin
       begin
         RootParsing := NewParsing;
         RootPhoneName := ExtractFileName(Root);
+        RootLocalName := RootPhoneName;
         Title := ExtractFilePath(Title) + RootPhoneName;
         Inc(Result);
       end;

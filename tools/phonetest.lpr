@@ -105,6 +105,11 @@ begin
     Check(SameContent(Phone + '\Live\live.mp3', Mirror + '\Live\live.mp3'), 'subfolder copied');
     M.Load(Mirror);
     Check(M.Sync(True, Errors) = 0, 'nothing to send right after the download');
+    // a working copy may be named differently ('?' and ':' are not allowed here): no rename
+    Check(DownloadPhoneFolder(0, Phone, 'Test\Rock', Work + 'other\Andet navn') = '', 'download under another name');
+    M.Load(Work + 'other\Andet navn');
+    Check((M.Sync(True, Errors) = 0) and DirectoryExists(Phone), 'phone folder keeps its name');
+    M.Load(Mirror);
 
     WriteLn('== changed file');
     ChangeFile(Mirror + PathDelim + Names[0]);
