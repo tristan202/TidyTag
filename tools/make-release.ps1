@@ -19,7 +19,9 @@ if (($nums -join '.') -ne $version) {
 }
 Write-Host "TidyTag $version"
 
-if (Get-Process TidyTag -ErrorAction SilentlyContinue) { throw 'Close TidyTag first (the exe is rebuilt).' }
+if (Get-Process TidyTag -ErrorAction SilentlyContinue | Where-Object Path -eq "$root\bin\TidyTag.exe") {
+  throw 'Close bin\TidyTag.exe first (it is rebuilt).'
+}
 
 Write-Host '== Release build'
 & $Lazbuild --build-mode=Release TidyTag.lpi | Select-String -Pattern 'Error|Fatal|Linking'
