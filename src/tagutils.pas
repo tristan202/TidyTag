@@ -71,10 +71,11 @@ procedure SetFileStamp(const FileName: string; const Stamp: TFileStamp);
 
 implementation
 
-{$IFDEF WINDOWS}
 uses
-  Windows;
-{$ENDIF}
+  {$IFDEF WINDOWS}Windows,{$ENDIF} FileLayer;
+
+const
+  UnixEpochFileTime = 116444736000000000; // 1970-01-01 in 100 ns steps since 1601
 
 function InRange(const B: TBytes; P, Len: SizeInt): Boolean; inline;
 begin
@@ -375,6 +376,7 @@ end;
 procedure CopyStreamRange(Src, Dst: TStream; From, Count: Int64);
 begin
   if Count <= 0 then Exit;
+  if CopyOnPhone(Src, Dst, From, Count) then Exit; // the phone copies; the audio stays there
   Src.Position := From;
   if Dst.CopyFrom(Src, Count) <> Count then
     raise EStreamError.Create('Kunne ikke kopiere lyddata');
@@ -398,6 +400,11 @@ end;
 
 procedure ReplaceFileWith(const TempName, Target: string);
 begin
+  if IsPhonePath(Target) then
+  begin
+    ReplacePhoneFile(TempName, Target);
+    Exit;
+  end;
   {$IFDEF WINDOWS}
   if not MoveFileExW(PWideChar(UTF8Decode(TempName)), PWideChar(UTF8Decode(Target)),
     MOVEFILE_REPLACE_EXISTING or $8 {MOVEFILE_WRITE_THROUGH}) then
@@ -410,13 +417,22 @@ begin
 end;
 
 function GetFileStamp(const FileName: string): TFileStamp;
-{$IFDEF WINDOWS}
 var
+  Ms: Int64;
+{$IFDEF WINDOWS}
   H: THandle;
 {$ENDIF}
 begin
   Result.Valid := False;
   FillChar(Result.Data, SizeOf(Result.Data), 0);
+  if IsPhonePath(FileName) then
+  begin
+    Result.Valid := GetPhoneMTime(FileName, Ms);
+    Result.Data[2] := Ms * 10000 + UnixEpochFileTime;
+    Result.Data[0] := Result.Data[2];
+    Result.Data[1] := Result.Data[2];
+    Exit;
+  end;
   {$IFDEF WINDOWS}
   H := CreateFileW(PWideChar(UTF8Decode(FileName)), GENERIC_READ,
     FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
@@ -436,6 +452,11 @@ var
 {$ENDIF}
 begin
   if not Stamp.Valid then Exit;
+  if IsPhonePath(FileName) then
+  begin
+    SetPhoneMTime(FileName, (Stamp.Data[2] - UnixEpochFileTime) div 10000);
+    Exit;
+  end;
   {$IFDEF WINDOWS}
   H := CreateFileW(PWideChar(UTF8Decode(FileName)), FILE_WRITE_ATTRIBUTES,
     FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);

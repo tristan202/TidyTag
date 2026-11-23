@@ -152,7 +152,7 @@ var
 begin
   Result := nil;
   U := Path;
-  for I := 0 to High(Query) div 2 do
+  for I := 0 to Length(Query) div 2 - 1 do
   begin
     if I = 0 then U := U + '?' else U := U + '&';
     U := U + Query[2 * I] + '=' + UrlEncode(Query[2 * I + 1]);
