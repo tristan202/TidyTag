@@ -466,6 +466,14 @@ msgstr "Die importierten Werte in %d Dateien schreiben?"
 msgid "Skriver %s..."
 msgstr "Schreibe %s..."
 
+#: filelayer.rstelefonikkefundet
+msgid "Telefonen \"%s\" er ikke parret eller kan ikke nås. Start TidyTag Companion på telefonen."
+msgstr "Das Telefon \"%s\" ist nicht gekoppelt oder nicht erreichbar. Starte TidyTag Companion auf dem Telefon."
+
+#: filelayer.rskunlaesning
+msgid "Filen er åbnet kun til læsning"
+msgstr "Die Datei ist nur zum Lesen geöffnet"
+
 #: filenametags.filetotagvariableshelp
 msgid "%1 Kunstner   %2 Titel   %3 Album   %4 År   %5 Genre   %6 Spor   %# Disc\n%9 Kommentar   %b BPM   %aa Albumkunstner   %cp Komponist   %co Dirigent   %lb Pladeselskab\n%d Spring over\nFiltypen fjernes automatisk. Brug \\ for mappenavne, fx  %1\\%3\\%6 - %2"
 msgstr "%1 Interpret   %2 Titel   %3 Album   %4 Jahr   %5 Genre   %6 Track   %# Disc\n%9 Kommentar   %b BPM   %aa Album-Interpret   %cp Komponist   %co Dirigent   %lb Label\n%d Überspringen\nDie Dateiendung wird automatisch entfernt. \\ für Ordnernamen, z. B.  %1\\%3\\%6 - %2"
@@ -477,6 +485,14 @@ msgstr "existiert bereits im Zielordner"
 #: fileops.rskunneikkelaeggesipapirkurven
 msgid "kunne ikke lægges i papirkurven"
 msgstr "konnte nicht in den Papierkorb verschoben werden"
+
+#: fileops.rstelefonenspapirkurv
+msgid "kan ikke lægges i telefonens papirkurv (kun musik, billeder og video); den er ikke slettet"
+msgstr "kann nicht in den Papierkorb des Telefons (nur Musik, Bilder und Videos); sie wurde nicht gelöscht"
+
+#: fileops.rsikkemellempcogtelefon
+msgid "kan ikke kopieres eller flyttes mellem pc'en og telefonen"
+msgstr "kann nicht zwischen PC und Telefon kopiert oder verschoben werden"
 
 #: filetotagform.rsklar
 msgid "Klar"
@@ -832,6 +848,26 @@ msgstr "Abspielen mit"
 #: mainform.rsaabntelefon
 msgid "Åbn mappe på telefon..."
 msgstr "Ordner auf dem Telefon öffnen..."
+
+#: mainform.rskunpaapc
+msgid "Det kan kun bruges på filer på pc'en, ikke på telefonen."
+msgstr "Das geht nur mit Dateien auf dem PC, nicht auf dem Telefon."
+
+#: mainform.rstilfoejtelefon
+msgid "Tilføj telefon..."
+msgstr "Telefon hinzufügen..."
+
+#: mainform.rstilfoejtelefonhint
+msgid "Find og par en telefon med TidyTag Companion, så den vises i mappetræet"
+msgstr "Ein Telefon mit TidyTag Companion finden und koppeln, damit es im Ordnerbaum erscheint"
+
+#: mainform.rsingentelefonfundet
+msgid "Ingen telefon svarede. Start TidyTag Companion på telefonen, tænd den, og sørg for at telefonen og pc'en er på samme Wi-Fi."
+msgstr "Kein Telefon hat geantwortet. Starte TidyTag Companion auf dem Telefon, schalte es ein und achte darauf, dass Telefon und PC im selben WLAN sind."
+
+#: mainform.rsforkertkode
+msgid "Koden passede ikke. Prøv igen med koden, som telefonen viser nu."
+msgstr "Der Code stimmt nicht. Versuche es erneut mit dem Code, den das Telefon jetzt anzeigt."
 
 #: mainform.rsaabntelefonhint
 msgid "Arbejd på en mappe på en telefon (Android via USB); ændringer sendes automatisk tilbage"
@@ -2607,6 +2643,18 @@ msgstr "OpusTags fehlt"
 msgid "Mangler Vorbis-kommentarpakken"
 msgstr "Vorbis-Kommentarpaket fehlt"
 
+#: phoneclient.rstelefonsvarerikke
+msgid "Telefonen svarer ikke (%s). Er TidyTag Companion tændt, og er telefonen på samme Wi-Fi?"
+msgstr "Das Telefon antwortet nicht (%s). Ist TidyTag Companion eingeschaltet und ist das Telefon im selben WLAN?"
+
+#: phoneclient.rstelefonfejl
+msgid "Telefonen svarede: %s"
+msgstr "Das Telefon antwortete: %s"
+
+#: phoneclient.rsikkeparret
+msgid "Telefonen kender ikke denne pc længere. Par den igen under \"Tilføj telefon\"."
+msgstr "Das Telefon kennt diesen PC nicht mehr. Kopple es erneut unter \"Telefon hinzufügen\"."
+
 #: phonesync.rsmappenfindesikkepaatelefonen
 msgid "mappen findes ikke længere på telefonen (er den tilsluttet og låst op?)"
 msgstr "der Ordner ist nicht mehr auf dem Telefon (ist es verbunden und entsperrt?)"
@@ -2916,6 +2964,18 @@ msgstr "ReplayGain"
 msgctxt "tooldialogs.rsbpmogtoneart"
 msgid "BPM og toneart"
 msgstr "BPM und Tonart"
+
+#: tooldialogs.rspartelefon
+msgid "Tilføj telefon"
+msgstr "Telefon hinzufügen"
+
+#: tooldialogs.rsfundnetelefoner
+msgid "Telefoner med TidyTag Companion på dit Wi-Fi:"
+msgstr "Telefone mit TidyTag Companion in deinem WLAN:"
+
+#: tooldialogs.rsparringskode
+msgid "Parringskode (vises i appen på telefonen):"
+msgstr "Kopplungscode (wird in der App auf dem Telefon angezeigt):"
 
 #: tooldialogs.rsfindbpm
 msgid "Find BPM (tempo)"

@@ -231,6 +231,8 @@ begin
     AnNot := 0;
     Arm;
     AskAnalysis(AnB, AnK, AnMin, AnDec, AnNot, RGSkip);
+    Arm;
+    AskPhonePairing(['Pixel 9 Pro XL', 'Galaxy S24'], AnMin, MaskText);
     GCustom := ['Dansktop'];
     GHidden := ['Blues'];
     Arm;

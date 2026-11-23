@@ -374,6 +374,21 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="PhoneSync"/>
       </Unit>
+      <Unit>
+        <Filename Value="src\phoneclient.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="PhoneClient"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\filelayer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="FileLayer"/>
+      </Unit>
+      <Unit>
+        <Filename Value="src\phonetree.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="PhoneTree"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

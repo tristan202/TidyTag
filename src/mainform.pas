@@ -10,7 +10,7 @@ interface
 
 uses
   Windows, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
-  StdCtrls, Buttons, ShellCtrls, Menus, ActnList, IniFiles, AudioPlayer, PhoneSync, AudioTypes, ScanThread, RenameCore,
+  StdCtrls, Buttons, ShellCtrls, PhoneTree, Menus, ActnList, IniFiles, AudioPlayer, PhoneSync, AudioTypes, ScanThread, RenameCore,
   BatchWrite, FieldTools, AppSettings, ID3Sync;
 
 type
@@ -157,6 +157,8 @@ type
     FLastOpenTick: QWord;
     procedure PathsReceived(const Paths: TStringArray);
     procedure ActPhoneOpenExecute(Sender: TObject);
+    procedure ActAddPhoneExecute(Sender: TObject);
+    procedure PhoneTreeError(const Msg: string);
     procedure TimerPhoneTimer(Sender: TObject);
     function PhoneSyncNow(Force: Boolean): Boolean;
     procedure PhoneRenamed(const Log: TRenameLog; Reverse: Boolean);
@@ -445,7 +447,7 @@ uses
   StrUtils, LazUTF8, LCLType, LCLIntf, TagUtils, AudioTags, TagWriter, TagEditForm, RenameForm,
   FileToTagForm, FileNameTags, MultiEditForm, TrackToolsForm, WebLookupForm, ExportImportForm,
   Math, Language, Process, TagRemove, ToolDialogs, FileOps, CoverImage, Spin, ButtonPanel,
-  ReplayGain, ID3Writer, ProgOptions, FileInfo, winpeimagereader, ShellIntegration, MusicAnalysis;
+  ReplayGain, ID3Writer, ProgOptions, FileInfo, winpeimagereader, ShellIntegration, MusicAnalysis, FileLayer, PhoneClient;
 
 resourcestring
   rsAabnITidyTag = 'Åbn i TidyTag';
@@ -505,6 +507,11 @@ resourcestring
   rsBpmOgToneartMenu = 'BPM og toneart';
   rsAfspilMed = 'Afspil med';
   rsAabnTelefon = 'Åbn mappe på telefon...';
+  rsKunPaaPc = 'Det kan kun bruges på filer på pc''en, ikke på telefonen.';
+  rsTilfoejTelefon = 'Tilføj telefon...';
+  rsTilfoejTelefonHint = 'Find og par en telefon med TidyTag Companion, så den vises i mappetræet';
+  rsIngenTelefonFundet = 'Ingen telefon svarede. Start TidyTag Companion på telefonen, tænd den, og sørg for at telefonen og pc''en er på samme Wi-Fi.';
+  rsForkertKode = 'Koden passede ikke. Prøv igen med koden, som telefonen viser nu.';
   rsAabnTelefonHint = 'Arbejd på en mappe på en telefon (Android via USB); ændringer sendes automatisk tilbage';
   rsVaelgTelefonmappe = 'Vælg en mappe på telefonen';
   rsTelefon = 'Telefon';
@@ -1046,9 +1053,9 @@ end;
 
 function ReadFileBytes(const FileName: string): TBytes;
 var
-  S: TFileStream;
+  S: TStream;
 begin
-  S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  S := OpenFileStream(FileName, fmOpenRead or fmShareDenyWrite);
   try
     Result := ReadStreamBytes(S, S.Size);
   finally
@@ -1058,9 +1065,9 @@ end;
 
 procedure WriteFileBytes(const FileName: string; const Data: TBytes);
 var
-  S: TFileStream;
+  S: TStream;
 begin
-  S := TFileStream.Create(FileName, fmCreate);
+  S := OpenFileStream(FileName, fmCreate);
   try
     if Length(Data) > 0 then S.WriteBuffer(Data[0], Length(Data));
   finally
@@ -1099,6 +1106,7 @@ begin
   FTimerPhone.Interval := 2000;
   FTimerPhone.OnTimer := @TimerPhoneTimer;
   OnCloseQuery := @FormCloseQuery;
+  ShellTree.OnPhoneError := @PhoneTreeError;
   StartReceiving(@PathsReceived);
   BuildPlayerBar;
   FSortColumn := 1; // file name
@@ -1198,7 +1206,7 @@ end;
 
 procedure TFormMain.BuildActionsAndMenus;
 var
-  aOpen, aPhone, aRefresh, aEdit, aMulti, aRenameFolder, aPlay, aExplorer, aExit,
+  aOpen, aPhone, aAddPhone, aRefresh, aEdit, aMulti, aRenameFolder, aPlay, aExplorer, aExit,
     aSelAll, aSelNone, aChkSel, aUnchkSel, aChkAll, aUnchkAll, aInvert, aCopy, aFind,
     aPlChecked, aPlAll, aTabRename, aTabMulti, aTabF2T, aRenameDlg, aF2TDlg, aTracks, aWeb,
     aToken, aKeys, aAbout, aUp, aFav, aNewFolder, aTreeRefresh, aCloseFolders,
@@ -1277,6 +1285,7 @@ begin
 
   aOpen := NewAction(rsAabnMappe, rsAabnEnMappe, ShortCut(VK_O, [ssCtrl]), icoOpen, @ActOpenFolderExecute);
   aPhone := NewAction(rsAabnTelefon, rsAabnTelefonHint, 0, -1, @ActPhoneOpenExecute);
+  aAddPhone := NewAction(rsTilfoejTelefon, rsTilfoejTelefonHint, 0, -1, @ActAddPhoneExecute);
   aRefresh := NewAction(rsOpdaterFillisten, rsLaesMappenIgenF, ShortCut(VK_F5, []), icoRefresh, @ActRefreshExecute);
   aEdit := NewAction(rsRedigerTag, rsRedigerTagForDenMarkerede, 0, icoEdit, @ActEditTagExecute);
   aMulti := NewAction(rsRedigerFlereFiler, rsRetFelterOgCoverI,
@@ -1389,7 +1398,7 @@ begin
 
   // ---- main menu
   TopMenu := Menu(rsFiler);
-  Add(TopMenu, aOpen); Add(TopMenu, aPhone); Add(TopMenu, aRefresh); Add(TopMenu, nil);
+  Add(TopMenu, aOpen); Add(TopMenu, aAddPhone); Add(TopMenu, aPhone); Add(TopMenu, aRefresh); Add(TopMenu, nil);
   Add(TopMenu, aEdit); Add(TopMenu, aMulti); Add(TopMenu, aRenameFolder); Add(TopMenu, nil);
   Add(TopMenu, aPlay);
   FPlayWithFile := Sub(TopMenu, rsAfspilMed);
@@ -1895,7 +1904,7 @@ begin
   except
     NewFolder := '';
   end;
-  if (NewFolder = '') or not DirectoryExists(NewFolder) then Exit;
+  if (NewFolder = '') or not DirectoryExistsL(NewFolder) then Exit;
   NewFolder := ExcludeTrailingPathDelimiter(NewFolder);
   if SameFileName(NewFolder, FFolder) then Exit; // use "Opdater" to re-read
   FFolder := NewFolder;
@@ -1905,9 +1914,47 @@ end;
 
 { Phone folders }
 
+procedure TFormMain.PhoneTreeError(const Msg: string);
+begin
+  SetMessage(Msg);
+end;
+
+procedure TFormMain.ActAddPhoneExecute(Sender: TObject);
+var
+  Found: TPhoneInfos;
+  Names: TStringArray;
+  I: Integer;
+  Code, Token: string;
+begin
+  Screen.Cursor := crHourGlass;
+  try
+    Found := DiscoverPhones;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+  if Length(Found) = 0 then
+  begin
+    Inform(rsTilfoejTelefon, rsIngenTelefonFundet, mtInformation);
+    Exit;
+  end;
+  Names := nil;
+  for I := 0 to High(Found) do Insert(Found[I].Name, Names, Length(Names));
+  repeat
+    if not AskPhonePairing(Names, I, Code) then Exit;
+    if PairPhone(Found[I], Code, Token) then Break;
+    Inform(rsTilfoejTelefon, rsForkertKode, mtWarning);
+  until False;
+  SavePairedPhone(Found[I], Token);
+  ResetPhones;
+  ShellTree.RefreshPhones;
+  Navigate(PhonePrefix + Found[I].Name);
+end;
+
 procedure TFormMain.UpdateCaption;
 begin
-  if FPhone <> nil then
+  if IsPhonePath(FFolder) then
+    Caption := 'TidyTag - ' + rsTelefon + ': ' + Copy(FFolder, Length(PhonePrefix) + 1, MaxInt)
+  else if FPhone <> nil then
     Caption := 'TidyTag - ' + rsTelefon + ': ' + FPhone.Title + Copy(FFolder, Length(FPhone.Root) + 1, MaxInt)
   else
     Caption := 'TidyTag - ' + FFolder;
@@ -2146,7 +2193,7 @@ var
   D: string;
 begin
   D := ExcludeTrailingPathDelimiter(Trim(Dir));
-  if (D = '') or not DirectoryExists(D) then
+  if (D = '') or not DirectoryExistsL(D) then
   begin
     MessageDlg(rsMappenFindesIkke + LineEnding + Dir, mtWarning, [mbOK], 0);
     Exit;
@@ -2251,6 +2298,7 @@ begin
   if Finished then
   begin
     FScanner.TakeResults(FItems); // anything added after the Finished check
+    if FScanner.ErrorText <> '' then SetMessage(FScanner.ErrorText);
     FreeAndNil(FScanner);
     TimerPoll.Enabled := False;
     SortItems;
@@ -2324,11 +2372,11 @@ begin
   begin
     Info := TAudioInfo(FItems[I]);
     NewPath := MapRenamedPath(Info.FileName, Log, Reverse);
-    if (NewPath <> Info.FileName) and FileExists(NewPath) then
+    if (NewPath <> Info.FileName) and FileExistsL(NewPath) then
       Info.FileName := NewPath;
   end;
   NewFolder := MapRenamedPath(FFolder, Log, Reverse);
-  if (NewFolder <> FFolder) and DirectoryExists(NewFolder) then
+  if (NewFolder <> FFolder) and DirectoryExistsL(NewFolder) then
   begin
     FFolder := NewFolder;
     ComboAddress.Text := FFolder;
@@ -2916,7 +2964,7 @@ var
   N: string;
 begin
   for N in Names do
-    if FileExists(IncludeTrailingPathDelimiter(Dir) + N) then
+    if FileExistsL(IncludeTrailingPathDelimiter(Dir) + N) then
       Exit(IncludeTrailingPathDelimiter(Dir) + N);
   Result := '';
 end;
@@ -3015,7 +3063,7 @@ var
   PerItem: array of TFieldValues;
   PerFields: array of TTagFieldSet;
   Info: TAudioInfo;
-  CoverStream: TFileStream;
+  CoverStream: TStream;
 
   function Over(C: TControl): Boolean;
   var
@@ -3064,10 +3112,10 @@ begin
     if Info <> nil then Dir := ExtractFileDir(Info.FileName) else Dir := FFolder;
     if DetectImageMime(Data) = 'image/png' then Target := 'folder.png' else Target := 'folder.jpg';
     Target := IncludeTrailingPathDelimiter(Dir) + Target;
-    if FileExists(Target) and (MessageDlg(rsMappensCover, Format(rsSFindesAlleredeErstatDet,
+    if FileExistsL(Target) and (MessageDlg(rsMappensCover, Format(rsSFindesAlleredeErstatDet,
       [ExtractFileName(Target)]), mtConfirmation, [mbYes, mbNo], 0) <> mrYes) then Exit;
     try
-      CoverStream := TFileStream.Create(Target, fmCreate);
+      CoverStream := OpenFileStream(Target, fmCreate);
       try
         WriteBytes(CoverStream, Data);
       finally
@@ -3411,6 +3459,11 @@ var
   Files: TStringArray;
   Index: Integer;
 begin
+  if IsPhonePath(FFolder) then
+  begin
+    Inform('TidyTag', rsKunPaaPc, mtInformation); // Sender may be nil (player buttons)
+    Exit;
+  end;
   if AppOptions.PlayInternal and PlayerAvailable then
   begin
     Files := PlayTargets(Index);
@@ -3805,6 +3858,11 @@ var
   Sel: TAudioInfoArray;
   I: Integer;
 begin
+  if IsPhonePath(FFolder) then
+  begin
+    Inform(rsAfspilMed, rsKunPaaPc, mtInformation);
+    Exit;
+  end;
   if TMenuItem(Sender).Tag = -1 then
   begin
     Files := PlayTargets(Index);
@@ -3882,6 +3940,11 @@ procedure TFormMain.ActShowInExplorerExecute(Sender: TObject);
 var
   Info: TAudioInfo;
 begin
+  if IsPhonePath(FFolder) then
+  begin
+    Inform('TidyTag', rsKunPaaPc, mtInformation); // Sender may be nil (player buttons)
+    Exit;
+  end;
   Info := FocusedInfo;
   if Info <> nil then
     ExecuteProcess('explorer.exe', '/select,"' + Info.FileName + '"')
@@ -4117,11 +4180,21 @@ var
   ScopeCaption: string;
   Prefer: Boolean;
 begin
+  if IsPhonePath(FFolder) then
+  begin
+    Inform('TidyTag', rsKunPaaPc, mtInformation); // Sender may be nil (player buttons)
+    Exit;
+  end;
   SavePlaylistDialog(Self, TargetItems(ScopeCaption, Prefer));
 end;
 
 procedure TFormMain.ActPlaylistAllExecute(Sender: TObject);
 begin
+  if IsPhonePath(FFolder) then
+  begin
+    Inform('TidyTag', rsKunPaaPc, mtInformation); // Sender may be nil (player buttons)
+    Exit;
+  end;
   SavePlaylistDialog(Self, AllItems);
 end;
 
@@ -4173,7 +4246,7 @@ begin
   try
     Gone := RecycleFiles(Names, Errors);
     for I := 0 to High(Items) do
-      if not FileExists(Items[I].FileName) then
+      if not FileExistsL(Items[I].FileName) then
       begin
         FItems.Remove(Items[I]);
         Items[I].Free;
@@ -4429,7 +4502,7 @@ begin
     Files := nil;
     for I := 0 to Dirs.Count - 1 do
       for N in Names do
-        if FileExists(IncludeTrailingPathDelimiter(Dirs[I]) + N) then
+        if FileExistsL(IncludeTrailingPathDelimiter(Dirs[I]) + N) then
         begin
           SetLength(Files, Length(Files) + 1);
           Files[High(Files)] := IncludeTrailingPathDelimiter(Dirs[I]) + N;
@@ -4473,7 +4546,7 @@ begin
     if Pic < 0 then Exit;
     if Full.Pictures[Pic].MimeType = 'image/png' then Target := 'folder.png' else Target := 'folder.jpg';
     Target := IncludeTrailingPathDelimiter(ExtractFileDir(Info.FileName)) + Target;
-    if FileExists(Target) and not AskYes(rsMappensCover, Format(rsSFindesAlleredeErstatDet,
+    if FileExistsL(Target) and not AskYes(rsMappensCover, Format(rsSFindesAlleredeErstatDet,
       [ExtractFileName(Target)])) then Exit;
     try
       WriteFileBytes(Target, Full.Pictures[Pic].Data);
@@ -5078,6 +5151,11 @@ end;
 
 procedure TFormMain.ActReplayGainExecute(Sender: TObject);
 begin
+  if IsPhonePath(FFolder) then
+  begin
+    Inform('TidyTag', rsKunPaaPc, mtInformation); // Sender may be nil (player buttons)
+    Exit;
+  end;
   if AskReplayGain(FRGAlbum, FRGSkip) then RunReplayGain(FRGAlbum, FRGSkip);
 end;
 
@@ -5225,6 +5303,11 @@ var
   R: TAnalysisResult;
   FName: string;
 begin
+  if IsPhonePath(FFolder) then
+  begin
+    Inform('TidyTag', rsKunPaaPc, mtInformation); // Sender may be nil (player buttons)
+    Exit;
+  end;
   if not RequireTargets(Items) then Exit;
   with AppOptions do
     if not AskAnalysis(AnBpm, AnKey, AnMinBpm, AnBpmDecimals, AnKeyNotation, AnSkipExisting) then Exit;
@@ -5480,6 +5563,11 @@ var
   Files: TStringArray;
   I: Integer;
 begin
+  if IsPhonePath(FFolder) then
+  begin
+    Inform('TidyTag', rsKunPaaPc, mtInformation); // Sender may be nil (player buttons)
+    Exit;
+  end;
   Items := AllItems;
   if Length(Items) = 0 then Exit;
   if AppOptions.PlayInternal and PlayerAvailable then
@@ -5500,6 +5588,11 @@ var
   ScopeCaption, Dir, PlName: string;
   Prefer: Boolean;
 begin
+  if IsPhonePath(FFolder) then
+  begin
+    Inform('TidyTag', rsKunPaaPc, mtInformation); // Sender may be nil (player buttons)
+    Exit;
+  end;
   Items := TargetItems(ScopeCaption, Prefer);
   if Length(Items) = 0 then
   begin
@@ -5544,6 +5637,11 @@ var
   Info: TAudioInfo;
   W: UnicodeString;
 begin
+  if IsPhonePath(FFolder) then
+  begin
+    Inform('TidyTag', rsKunPaaPc, mtInformation); // Sender may be nil (player buttons)
+    Exit;
+  end;
   Info := FocusedInfo;
   if Info <> nil then W := UnicodeString(Info.FileName)
   else if FFolder <> '' then W := UnicodeString(FFolder)
@@ -5681,7 +5779,7 @@ var
   Log: TRenameLog;
 begin
   Dir := ExcludeTrailingPathDelimiter(ShellTree.Path);
-  if (Dir = '') or not DirectoryExists(Dir) or (ExtractFileName(Dir) = '') then Exit;
+  if (Dir = '') or not DirectoryExistsL(Dir) or (ExtractFileName(Dir) = '') then Exit;
   NewName := ExtractFileName(Dir);
   if not InputQuery(rsOmdoebMappeTitel, rsNytNavn, NewName) then Exit;
   NewName := Trim(NewName);
@@ -5731,7 +5829,7 @@ begin
       Plan[N].OldName := Items[I].FileName;
       Plan[N].NewName := ChangeFileExt(Items[I].FileName, ToExt[K]);
       Plan[N].Detail := '';
-      if FileExists(Plan[N].NewName) then
+      if FileExistsL(Plan[N].NewName) then
       begin
         Plan[N].Status := rsExists;
         Errors.Add(Format(rsFiltypeFindes, [ExtractFileName(Plan[N].NewName)]));
@@ -6699,7 +6797,7 @@ begin
   NewName := SanitizeNamePart(NewName);
   if NewName = '' then Exit;
   Dir := IncludeTrailingPathDelimiter(FFolder) + NewName;
-  if DirectoryExists(Dir) or not CreateDir(Dir) then
+  if DirectoryExistsL(Dir) or not ForceDirectoriesL(Dir) then
   begin
     MessageDlg(rsMappenKunneIkkeOprettes + LineEnding + Dir, mtWarning, [mbOK], 0);
     Exit;

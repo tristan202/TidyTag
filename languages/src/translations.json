@@ -6750,5 +6750,125 @@
   "it": "%s non è sul telefono",
   "sv": "%s finns inte på telefonen",
   "es": "%s no está en el teléfono"
+ },
+ "Telefonen \"%s\" er ikke parret eller kan ikke nås. Start TidyTag Companion på telefonen.": {
+  "en": "The phone \"%s\" is not paired or cannot be reached. Start TidyTag Companion on the phone.",
+  "de": "Das Telefon \"%s\" ist nicht gekoppelt oder nicht erreichbar. Starte TidyTag Companion auf dem Telefon.",
+  "fr": "Le téléphone « %s » n'est pas associé ou est injoignable. Lancez TidyTag Companion sur le téléphone.",
+  "it": "Il telefono \"%s\" non è associato o non è raggiungibile. Avvia TidyTag Companion sul telefono.",
+  "sv": "Telefonen \"%s\" är inte parkopplad eller kan inte nås. Starta TidyTag Companion på telefonen.",
+  "es": "El teléfono \"%s\" no está emparejado o no se puede alcanzar. Inicie TidyTag Companion en el teléfono."
+ },
+ "Filen er åbnet kun til læsning": {
+  "en": "The file is open for reading only",
+  "de": "Die Datei ist nur zum Lesen geöffnet",
+  "fr": "Le fichier est ouvert en lecture seule",
+  "it": "Il file è aperto in sola lettura",
+  "sv": "Filen är öppnad endast för läsning",
+  "es": "El archivo está abierto solo para lectura"
+ },
+ "kan ikke lægges i telefonens papirkurv (kun musik, billeder og video); den er ikke slettet": {
+  "en": "cannot go to the phone's trash (only music, pictures and video); it was not deleted",
+  "de": "kann nicht in den Papierkorb des Telefons (nur Musik, Bilder und Videos); sie wurde nicht gelöscht",
+  "fr": "ne peut pas aller dans la corbeille du téléphone (musique, images et vidéos seulement) ; il n'a pas été supprimé",
+  "it": "non può andare nel cestino del telefono (solo musica, immagini e video); non è stato eliminato",
+  "sv": "kan inte läggas i telefonens papperskorg (bara musik, bilder och video); den har inte raderats",
+  "es": "no puede ir a la papelera del teléfono (solo música, imágenes y vídeo); no se ha eliminado"
+ },
+ "kan ikke kopieres eller flyttes mellem pc'en og telefonen": {
+  "en": "cannot be copied or moved between the PC and the phone",
+  "de": "kann nicht zwischen PC und Telefon kopiert oder verschoben werden",
+  "fr": "ne peut pas être copié ou déplacé entre le PC et le téléphone",
+  "it": "non può essere copiato o spostato tra il PC e il telefono",
+  "sv": "kan inte kopieras eller flyttas mellan datorn och telefonen",
+  "es": "no se puede copiar ni mover entre el PC y el teléfono"
+ },
+ "Det kan kun bruges på filer på pc'en, ikke på telefonen.": {
+  "en": "This only works on files on the PC, not on the phone.",
+  "de": "Das geht nur mit Dateien auf dem PC, nicht auf dem Telefon.",
+  "fr": "Cela ne fonctionne qu'avec les fichiers du PC, pas avec ceux du téléphone.",
+  "it": "Funziona solo con i file sul PC, non sul telefono.",
+  "sv": "Det fungerar bara med filer på datorn, inte på telefonen.",
+  "es": "Solo funciona con archivos del PC, no del teléfono."
+ },
+ "Tilføj telefon...": {
+  "en": "Add phone...",
+  "de": "Telefon hinzufügen...",
+  "fr": "Ajouter un téléphone...",
+  "it": "Aggiungi telefono...",
+  "sv": "Lägg till telefon...",
+  "es": "Añadir teléfono..."
+ },
+ "Find og par en telefon med TidyTag Companion, så den vises i mappetræet": {
+  "en": "Find and pair a phone running TidyTag Companion, so it shows in the folder tree",
+  "de": "Ein Telefon mit TidyTag Companion finden und koppeln, damit es im Ordnerbaum erscheint",
+  "fr": "Trouver et associer un téléphone avec TidyTag Companion pour l'afficher dans l'arborescence",
+  "it": "Trova e associa un telefono con TidyTag Companion, così appare nell'albero delle cartelle",
+  "sv": "Hitta och parkoppla en telefon med TidyTag Companion så att den visas i mappträdet",
+  "es": "Buscar y emparejar un teléfono con TidyTag Companion para que aparezca en el árbol de carpetas"
+ },
+ "Ingen telefon svarede. Start TidyTag Companion på telefonen, tænd den, og sørg for at telefonen og pc'en er på samme Wi-Fi.": {
+  "en": "No phone answered. Start TidyTag Companion on the phone, switch it on, and make sure the phone and the PC are on the same Wi-Fi.",
+  "de": "Kein Telefon hat geantwortet. Starte TidyTag Companion auf dem Telefon, schalte es ein und achte darauf, dass Telefon und PC im selben WLAN sind.",
+  "fr": "Aucun téléphone n'a répondu. Lancez TidyTag Companion sur le téléphone, activez-le et vérifiez que le téléphone et le PC sont sur le même Wi-Fi.",
+  "it": "Nessun telefono ha risposto. Avvia TidyTag Companion sul telefono, attivalo e assicurati che telefono e PC siano sulla stessa rete Wi-Fi.",
+  "sv": "Ingen telefon svarade. Starta TidyTag Companion på telefonen, slå på den och se till att telefonen och datorn är på samma wifi.",
+  "es": "Ningún teléfono respondió. Inicie TidyTag Companion en el teléfono, actívelo y compruebe que el teléfono y el PC están en la misma red Wi-Fi."
+ },
+ "Koden passede ikke. Prøv igen med koden, som telefonen viser nu.": {
+  "en": "The code did not match. Try again with the code the phone shows now.",
+  "de": "Der Code stimmt nicht. Versuche es erneut mit dem Code, den das Telefon jetzt anzeigt.",
+  "fr": "Le code ne correspond pas. Réessayez avec le code que le téléphone affiche maintenant.",
+  "it": "Il codice non corrisponde. Riprova con il codice che il telefono mostra ora.",
+  "sv": "Koden stämde inte. Försök igen med koden som telefonen visar nu.",
+  "es": "El código no coincide. Inténtelo de nuevo con el código que muestra ahora el teléfono."
+ },
+ "Telefonen svarer ikke (%s). Er TidyTag Companion tændt, og er telefonen på samme Wi-Fi?": {
+  "en": "The phone does not answer (%s). Is TidyTag Companion switched on, and is the phone on the same Wi-Fi?",
+  "de": "Das Telefon antwortet nicht (%s). Ist TidyTag Companion eingeschaltet und ist das Telefon im selben WLAN?",
+  "fr": "Le téléphone ne répond pas (%s). TidyTag Companion est-il activé et le téléphone est-il sur le même Wi-Fi ?",
+  "it": "Il telefono non risponde (%s). TidyTag Companion è attivo e il telefono è sulla stessa rete Wi-Fi?",
+  "sv": "Telefonen svarar inte (%s). Är TidyTag Companion påslaget och är telefonen på samma wifi?",
+  "es": "El teléfono no responde (%s). ¿Está activado TidyTag Companion y está el teléfono en la misma red Wi-Fi?"
+ },
+ "Telefonen svarede: %s": {
+  "en": "The phone answered: %s",
+  "de": "Das Telefon antwortete: %s",
+  "fr": "Le téléphone a répondu : %s",
+  "it": "Il telefono ha risposto: %s",
+  "sv": "Telefonen svarade: %s",
+  "es": "El teléfono respondió: %s"
+ },
+ "Telefonen kender ikke denne pc længere. Par den igen under \"Tilføj telefon\".": {
+  "en": "The phone no longer knows this PC. Pair it again under \"Add phone\".",
+  "de": "Das Telefon kennt diesen PC nicht mehr. Kopple es erneut unter \"Telefon hinzufügen\".",
+  "fr": "Le téléphone ne connaît plus ce PC. Associez-le à nouveau avec « Ajouter un téléphone ».",
+  "it": "Il telefono non riconosce più questo PC. Associalo di nuovo con \"Aggiungi telefono\".",
+  "sv": "Telefonen känner inte längre igen den här datorn. Parkoppla den igen under \"Lägg till telefon\".",
+  "es": "El teléfono ya no reconoce este PC. Vuelva a emparejarlo en \"Añadir teléfono\"."
+ },
+ "Tilføj telefon": {
+  "en": "Add phone",
+  "de": "Telefon hinzufügen",
+  "fr": "Ajouter un téléphone",
+  "it": "Aggiungi telefono",
+  "sv": "Lägg till telefon",
+  "es": "Añadir teléfono"
+ },
+ "Telefoner med TidyTag Companion på dit Wi-Fi:": {
+  "en": "Phones with TidyTag Companion on your Wi-Fi:",
+  "de": "Telefone mit TidyTag Companion in deinem WLAN:",
+  "fr": "Téléphones avec TidyTag Companion sur votre Wi-Fi :",
+  "it": "Telefoni con TidyTag Companion sulla tua rete Wi-Fi:",
+  "sv": "Telefoner med TidyTag Companion på ditt wifi:",
+  "es": "Teléfonos con TidyTag Companion en su Wi-Fi:"
+ },
+ "Parringskode (vises i appen på telefonen):": {
+  "en": "Pairing code (shown in the app on the phone):",
+  "de": "Kopplungscode (wird in der App auf dem Telefon angezeigt):",
+  "fr": "Code d'association (affiché dans l'application du téléphone) :",
+  "it": "Codice di associazione (mostrato nell'app sul telefono):",
+  "sv": "Parkopplingskod (visas i appen på telefonen):",
+  "es": "Código de emparejamiento (se muestra en la app del teléfono):"
  }
 }

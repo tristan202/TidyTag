@@ -26,6 +26,8 @@ function AskReplayGain(var Album, SkipExisting: Boolean): Boolean;
   notation (Ord(TKeyNotation)) and whether to skip files that have a value. }
 function AskAnalysis(var DoBpm, DoKey: Boolean; var MinBpm, Decimals, Notation: Integer;
   var SkipExisting: Boolean): Boolean;
+{ Pairing: which of the phones that answered, and the code it shows. }
+function AskPhonePairing(const Names: array of string; out Index: Integer; out Code: string): Boolean;
 { Runs the batch with a progress window; Progress is a format for done and total
   ('' = measuring loudness). False when cancelled. }
 function RunWorkBatch(const Title: string; Batch: TWorkBatch; const Progress: string = ''): Boolean;
@@ -61,6 +63,9 @@ resourcestring
   rsEgneGenrer = 'Egne genrer (én pr. linje):';
   rsReplayGain = 'ReplayGain';
   rsBpmOgToneart = 'BPM og toneart';
+  rsParTelefon = 'Tilføj telefon';
+  rsFundneTelefoner = 'Telefoner med TidyTag Companion på dit Wi-Fi:';
+  rsParringskode = 'Parringskode (vises i appen på telefonen):';
   rsFindBpm = 'Find BPM (tempo)';
   rsTempointerval = 'Tempointerval:';
   rsDecimaler = 'Decimaler:';
@@ -620,6 +625,42 @@ begin
       Decimals := Max(0, ED.ItemIndex);
       Notation := Max(0, EN.ItemIndex);
       SkipExisting := CS.Checked;
+    end;
+  finally
+    F.Free;
+  end;
+end;
+
+function AskPhonePairing(const Names: array of string; out Index: Integer; out Code: string): Boolean;
+var
+  F: TForm;
+  L: TListBox;
+  E: TEdit;
+  N: string;
+begin
+  Index := -1;
+  Code := '';
+  F := NewDialog(rsParTelefon, 420, 260);
+  try
+    AddLabel(F, rsFundneTelefoner, 12, 10);
+    L := TListBox.Create(F);
+    L.Parent := F;
+    L.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(32), F.Scale96ToForm(396), F.Scale96ToForm(100));
+    for N in Names do L.Items.Add(N);
+    L.ItemIndex := 0;
+    AddLabel(F, rsParringskode, 12, 144);
+    E := TEdit.Create(F);
+    E.Parent := F;
+    E.SetBounds(F.Scale96ToForm(12), F.Scale96ToForm(166), F.Scale96ToForm(160), F.Scale96ToForm(28));
+    E.Font.Size := 14;
+    E.MaxLength := 6;
+    AddButtons(F);
+    F.ActiveControl := E;
+    Result := (F.ShowModal = mrOK) and (L.ItemIndex >= 0) and (Trim(E.Text) <> '');
+    if Result then
+    begin
+      Index := L.ItemIndex;
+      Code := Trim(E.Text);
     end;
   finally
     F.Free;
