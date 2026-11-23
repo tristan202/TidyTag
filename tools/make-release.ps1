@@ -50,8 +50,31 @@ if (Test-Path $zip) { Remove-Item $zip }
 Compress-Archive -Path "$stage\*" -DestinationPath $zip
 Remove-Item -Recurse -Force $stage
 
+Write-Host '== TidyTag Companion (Android)'
+# signing key: the user's own %USERPROFILE%\.tidytag\release.properties with keystore, storePassword,
+# keyAlias, keyPassword (never in the repository); without it a debug-signed APK is made
+$props = "$env:USERPROFILE\.tidytag\release.properties"
+$java = "$env:LOCALAPPDATA\TidyTagBuildTools\jdk17"
+if (-not $env:JAVA_HOME -and (Test-Path $java)) { $env:JAVA_HOME = $java }
+$apk = "$out\TidyTag-Companion-$version.apk"
+if (Test-Path $props) {
+  $p = @{}
+  Get-Content $props | Where-Object { $_ -match '^\s*([^#=]+?)\s*=\s*(.*)$' } | ForEach-Object { $p[$Matches[1]] = $Matches[2] }
+  & "$root\companion\gradlew.bat" -p "$root\companion" :app:assembleRelease -q "-PappVersion=$version" `
+    "-PtidytagKeystore=$($p.keystore)" "-PtidytagStorePassword=$($p.storePassword)" `
+    "-PtidytagKeyAlias=$($p.keyAlias)" "-PtidytagKeyPassword=$($p.keyPassword)"
+  if ($LASTEXITCODE -ne 0) { throw 'Android build failed' }
+  Copy-Item "$root\companion\app\build\outputs\apk\release\app-release.apk" $apk -Force
+} else {
+  Write-Warning "No $props - the APK is signed with this PC's debug key (fine for testing, not for publishing)"
+  & "$root\companion\gradlew.bat" -p "$root\companion" :app:assembleDebug -q "-PappVersion=$version"
+  if ($LASTEXITCODE -ne 0) { throw 'Android build failed' }
+  $apk = "$out\TidyTag-Companion-$version-debug.apk"
+  Copy-Item "$root\companion\app\build\outputs\apk\debug\app-debug.apk" $apk -Force
+}
+
 Write-Host '== Files (SHA-256 for the release notes)'
-foreach ($f in "$out\TidyTag-$version-setup.exe", $zip) {
+foreach ($f in "$out\TidyTag-$version-setup.exe", $zip, $apk) {
   $h = (Get-FileHash $f -Algorithm SHA256).Hash.ToLower()
   '{0}  {1:N0} KB  {2}' -f (Split-Path -Leaf $f), ((Get-Item $f).Length / 1KB), $h
 }

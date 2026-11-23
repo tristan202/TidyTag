@@ -78,6 +78,7 @@ Priority: **A** = high value in daily use, **B** = useful, **C** = rare / niche,
 | Playlist: EXTINF, full paths, playlist folder, quick save without a dialog | **Done** | Options > Playlists |
 | Start folder, font size | **Done** | Font size applies to the file list and folder tree |
 | Genre list editor (choose standard genres, own genres) | **Done** | Options > Genre list |
+| Tagging directly on an Android phone (not in the original) | **Done** | TidyTag Companion app; phones in the folder tree; File > Add phone |
 | BPM and key detection (not in the original) | **Done** | Tools > BPM and key; musical, Camelot or Open Key notation |
 | Shell integration (right-click in Explorer) | **Done** | "Open in TidyTag" for folders and audio files; installer task or Settings > General; one window receives the files |
 

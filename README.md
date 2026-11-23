@@ -37,7 +37,18 @@ Windows SmartScreen may warn about an unknown publisher the first time.
   extensions, font size, a fixed start folder, a "Recent folders" menu, expand/collapse folders.
 - Playlists (.m3u8/.m3u) with configurable #EXTINF text, relative or full paths, a playlist folder and
   a quick save without a dialog.
-- Android phones over USB: File > Open folder on phone copies a folder from the phone (or any device
+- Tag directly on an Android phone with the TidyTag Companion app (`TidyTag-Companion-<version>.apk`
+  on the release page). Switch it on in the app, then use File > Add phone... in TidyTag and type the
+  pairing code the app shows. The phone appears in the folder tree beside the drives.
+  - Tags, covers, renames and moves work directly on the phone's files over Wi-Fi. Only the bytes
+    that are needed travel: listing a folder reads the tag parts, a save sends only the changed bytes,
+    and when a tag has to grow the phone copies the audio itself.
+  - "Delete files" moves files to Android's trash, where they can be restored for about 30 days.
+  - After every change the phone's music library is updated, so music apps show the new tags.
+  - BPM/key, ReplayGain and playback work on PC files only.
+  - Known limit of version 1: the connection is plain HTTP on the local network, protected by the
+    pairing token but not encrypted. Use it on your own Wi-Fi.
+- Android phones over USB without the app: File > Open folder on phone copies a folder from the phone (or any device
   without a drive letter) to a working copy; everything works as usual, and changed, renamed or moved
   files are sent back automatically a few seconds after each save, through Windows' own copying.
   Nothing is ever deleted on the phone. Unsent changes are sent when the folder is left or TidyTag
@@ -151,6 +162,16 @@ The toolbar icons are linked from the precompiled `res\icons.res`. After changin
 PNG files in `res\icons`, run `powershell -ExecutionPolicy Bypass -File tools\make-icons-res.ps1`
 (FPC 3.2.2 cannot compile `.rc` files when the project path contains spaces).
 
+### TidyTag Companion (Android app)
+The app is in `companion\`. It needs JDK 17 and the Android SDK (platform 35, build-tools 35):
+```
+set JAVA_HOME=<path to JDK 17>
+companion\gradlew.bat -p companion :core:test :app:assembleDebug
+```
+`companion\core` is plain Kotlin and holds the server, the protocol (`docs\phone-protocol.md`) and
+the file rules. `companion\gradlew.bat -p companion :core:desktopJar` builds
+`companion-desktop.jar`, which serves any folder like a phone; TidyTag's phone tests use it.
+
 ## Making a release
 1. Set the new version in Lazarus under *Project > Project Options > Version Info* (the numbers and
    the *Product version* string must match), or edit `VersionInfo` in `TidyTag.lpi`.
@@ -172,10 +193,12 @@ C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe -Mobjfpc -Sh -Fusrc -FUlib\tools -
 | Tool | Purpose |
 |---|---|
 | `tagdump` | Prints the tags of files or folders: `bin\tagdump.exe "D:\Music\Album" -r` |
-| `tagtest` | Write test. It works on **copies** in a test folder and checks fields, pictures, tag removal and that the audio data is unchanged: `bin\tagtest.exe C:\Temp\tagtest song.mp3 song.flac` |
-| `renametest` | Renaming of files and folders, tags from file names, track numbers (creates empty test files): `bin\renametest.exe C:\Temp\renametest` |
+| `tagtest` | Write test. It works on **copies** in a test folder and checks fields, pictures, tag removal and that the audio data is unchanged: `bin\tagtest.exe C:\Temp\tagtest song.mp3 song.flac`. With `-phone companion-desktop.jar java.exe` at the end every check runs on phone paths. |
+| `renametest` | Renaming of files and folders, tags from file names, track numbers (creates empty test files): `bin\renametest.exe C:\Temp\renametest`; with `-phone companion-desktop.jar java.exe` after the folder the disk part runs on phone paths, plus the trash and PC/phone checks. |
 | `tooltest` | Field tools, ID3 sync, Recycle Bin (puts one tiny test file in the Recycle Bin): `bin\tooltest.exe C:\Temp\tt song.mp3` |
 | `bpmtest` | Tempo and key: notation checks and synthetic tracks with a known tempo and key; with files or folders given, analyses them (several threads, only reads) and compares with the BPM and key in their tags: `binpmtest.exe C:\Temppm D:\Music` |
+| `phoneclienttest` | Phone client against the companion's desktop jar: discovery, pairing, list/read/write, batch head/tail read, finding a phone again on a new port: `bin\phoneclienttest.exe C:\Temp\pc companion-desktop.jar java.exe` |
+| `filelayertest` | File layer on phone paths: reads across blocks, in-place writes, a rewrite that does not send the audio, cache freshness, renames, file dates, a connection lost mid-rewrite, code pages: `bin\filelayertest.exe C:\Temp\fl companion-desktop.jar java.exe` |
 | `phonetest` | Phone sync with an ordinary folder standing in for the phone: download, changed file, renames, folder renames, moves, new and deleted files, renamed root: `bin\phonetest.exe C:\Temp\ph song.mp3 song.flac` |
 | `rgtest` | ReplayGain: EBU Tech 3341 test signals written as WAV/AIFF and measured directly and through Media Foundation, plus measurement of given files: `bin\rgtest.exe C:\Temp\rg song.flac` |
 | `exporttest` | Export and import |
@@ -231,6 +254,10 @@ To add a language, add its code in `src\language.pas`, add translations to the J
 | `src/oggwriter.pas` | Ogg Vorbis/Opus: comment packet, new paging, CRC |
 | `src/musicanalysis.pas` | Tempo (onset envelope, autocorrelation, beat folding) and key (pitch-class profile) detection |
 | `src/workbatch.pas` | Runs one job per file on several threads (ReplayGain, BPM/key) |
+| `src/phoneclient.pas` | TidyTag Companion protocol client: HTTP with the pairing token, UDP discovery, paired phones in the settings |
+| `src/filelayer.pas` | One way to open and change files for local paths and `\\TidyTag-Phone\<phone>\...` paths |
+| `src/phonetree.pas` | The folder tree with paired phones beside the drives |
+| `companion/` | TidyTag Companion: `core` (Kotlin server, protocol, storage rules) and `app` (Android) |
 | `src/phonesync.pas` | Phone folders (MTP): working copy, manifest, sending changes back with IFileOperation |
 | `src/shellintegration.pas` | Explorer context menu entries, hand-over of paths to a running TidyTag |
 | `src/batchwrite.pas` | Saves selected fields/cover in one file (tabs, paste tag, drag and drop) |
