@@ -12,4 +12,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "tidytag-companion"
-include(":core")
+include(":core", ":app")

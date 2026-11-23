@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_switch">Give TidyTag access</string>
+    <string name="status_off">Off. Switch on to use the phone from TidyTag on your PC.</string>
+    <string name="status_on">Ready. TidyTag on the PC can find the phone on Wi-Fi.</string>
+    <string name="status_no_access">The app has no access to the files yet. Tap the button below.</string>
+    <string name="address">Address: %1$s</string>
+    <string name="code">Pairing code: %1$s</string>
+    <string name="grant_access">Allow access to files and trash</string>
+    <string name="paired_pcs">Paired PCs</string>
+    <string name="remove">Remove</string>
+    <string name="channel">TidyTag server</string>
+    <string name="notification">TidyTag Companion is running</string>
+</resources>
