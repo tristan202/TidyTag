@@ -28,7 +28,7 @@ var
 implementation
 
 uses
-  TagUtils, Mp3Reader;
+  FileLayer, TagUtils, Mp3Reader;
 
 resourcestring
   rsIdVDUnderstoettesIkke = 'ID3v2.%d understøttes ikke';
@@ -411,12 +411,12 @@ end;
 
 procedure WriteID3v1(const FileName: string; Info: TAudioInfo; CreateIfMissing: Boolean);
 var
-  S: TFileStream;
+  S: TStream;
   B: TBytes;
   Track, Genre: Integer;
   Exists: Boolean;
 begin
-  S := TFileStream.Create(FileName, fmOpenReadWrite or fmShareDenyWrite);
+  S := OpenFileStream(FileName, fmOpenReadWrite or fmShareDenyWrite);
   try
     Exists := False;
     if S.Size >= 128 then
@@ -461,7 +461,7 @@ end;
 
 procedure WriteMp3Tags(const FileName: string; Info: TAudioInfo);
 var
-  Src, Dst: TFileStream;
+  Src, Dst: TStream;
   OldVersion, Version: Byte;
   Old: TID3Frames;
   OldTagSize: Int64;
@@ -469,7 +469,7 @@ var
   Padding: Int64;
   Temp: string;
 begin
-  Src := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  Src := OpenFileStream(FileName, fmOpenRead or fmShareDenyWrite);
   try
     if not ParseID3v2(Src, OldVersion, Old, OldTagSize) then
     begin
@@ -486,7 +486,7 @@ begin
       Src.Free;
       Src := nil;
       Padding := OldTagSize - 10 - Length(Body);
-      Dst := TFileStream.Create(FileName, fmOpenReadWrite or fmShareDenyWrite);
+      Dst := OpenFileStream(FileName, fmOpenReadWrite or fmShareDenyWrite);
       try
         WriteTagHeader(Dst, Version, Length(Body) + Padding);
         WriteBytes(Dst, Body);
@@ -499,7 +499,7 @@ begin
     begin
       // Too big: write tag + audio to a new file, then swap it in.
       Temp := TempFileFor(FileName);
-      Dst := TFileStream.Create(Temp, fmCreate);
+      Dst := OpenFileStream(Temp, fmCreate);
       try
         try
           WriteTagHeader(Dst, Version, Length(Body) + NewTagPadding);
@@ -512,7 +512,7 @@ begin
         FreeAndNil(Src);
         ReplaceFileWith(Temp, FileName);
       except
-        DeleteFile(Temp);
+        DeleteFileL(Temp);
         raise;
       end;
     end;

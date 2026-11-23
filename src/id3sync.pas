@@ -22,7 +22,7 @@ function SyncID3(const FileName: string; Direction: TSyncDirection; Existing: TS
 implementation
 
 uses
-  TagUtils, Mp3Reader, ID3Writer, AudioTags, TagWriter;
+  FileLayer, TagUtils, Mp3Reader, ID3Writer, AudioTags, TagWriter;
 
 const
   V1Fields: array[0..6] of TTagField = (tfTitle, tfArtist, tfAlbum, tfYear, tfComment,
@@ -30,10 +30,10 @@ const
 
 procedure ReadSeparately(const FileName: string; V1, V2: TAudioInfo; out HasV1: Boolean);
 var
-  S: TFileStream;
+  S: TStream;
   Size: Int64;
 begin
-  S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  S := OpenFileStream(FileName, fmOpenRead or fmShareDenyWrite);
   try
     S.Position := 0;
     ReadID3v2(S, V2, Size);
@@ -45,9 +45,9 @@ end;
 
 function LastBytes(const FileName: string; Count: Integer): TBytes;
 var
-  S: TFileStream;
+  S: TStream;
 begin
-  S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  S := OpenFileStream(FileName, fmOpenRead or fmShareDenyWrite);
   try
     S.Position := S.Size - Count;
     Result := ReadStreamBytes(S, Count);
@@ -58,9 +58,9 @@ end;
 
 procedure PutLastBytes(const FileName: string; const B: TBytes);
 var
-  S: TFileStream;
+  S: TStream;
 begin
-  S := TFileStream.Create(FileName, fmOpenReadWrite or fmShareExclusive);
+  S := OpenFileStream(FileName, fmOpenReadWrite or fmShareExclusive);
   try
     S.Position := S.Size - Length(B);
     S.WriteBuffer(B[0], Length(B));

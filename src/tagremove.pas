@@ -21,7 +21,7 @@ procedure RemoveAllTags(const FileName: string; KeepTimestamp: Boolean);
 implementation
 
 uses
-  TagUtils, Mp3Reader, ApeTag, WavReader, AudioTags, TagWriter;
+  FileLayer, TagUtils, Mp3Reader, ApeTag, WavReader, AudioTags, TagWriter;
 
 resourcestring
   rsUventetTagStruktur = 'Uventet tag-struktur';
@@ -39,13 +39,13 @@ end;
 { ID3v2 at the start, APE tag and ID3v1 at the end. }
 procedure StripEnds(const FileName: string);
 var
-  S, Dst: TFileStream;
+  S, Dst: TStream;
   Ver: Byte;
   Frames: TID3Frames;
   Start, Stop: Int64;
   Temp: string;
 begin
-  S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  S := OpenFileStream(FileName, fmOpenRead or fmShareDenyWrite);
   try
     S.Position := 0;
     ParseID3v2(S, Ver, Frames, Start);
@@ -55,7 +55,7 @@ begin
     if Stop <= Start then raise Exception.Create(rsUventetTagStruktur);
     Temp := TempFileFor(FileName);
     try
-      Dst := TFileStream.Create(Temp, fmCreate);
+      Dst := OpenFileStream(Temp, fmCreate);
       try
         CopyStreamRange(S, Dst, Start, Stop - Start);
       finally
@@ -64,7 +64,7 @@ begin
       FreeAndNil(S);
       ReplaceFileWith(Temp, FileName);
     except
-      DeleteFile(Temp);
+      DeleteFileL(Temp);
       raise;
     end;
   finally
@@ -81,13 +81,13 @@ end;
 
 procedure StripChunks(const FileName: string);
 var
-  S, Dst: TFileStream;
+  S, Dst: TStream;
   CF: TChunkFile;
   C: TChunk;
   Any: Boolean;
   Temp: string;
 begin
-  S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  S := OpenFileStream(FileName, fmOpenRead or fmShareDenyWrite);
   try
     CF := ReadChunkFile(S);
     Any := False;
@@ -96,7 +96,7 @@ begin
     if not Any then Exit;
     Temp := TempFileFor(FileName);
     try
-      Dst := TFileStream.Create(Temp, fmCreate);
+      Dst := OpenFileStream(Temp, fmCreate);
       try
         if CF.IsAiff then WriteAscii(Dst, 'FORM') else WriteAscii(Dst, 'RIFF');
         WriteLE32(Dst, 0);
@@ -117,7 +117,7 @@ begin
       FreeAndNil(S);
       ReplaceFileWith(Temp, FileName);
     except
-      DeleteFile(Temp);
+      DeleteFileL(Temp);
       raise;
     end;
   finally

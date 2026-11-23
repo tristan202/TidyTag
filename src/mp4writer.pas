@@ -19,7 +19,7 @@ procedure WriteMp4Tags(const FileName: string; Info: TAudioInfo);
 implementation
 
 uses
-  Contnrs, TagUtils;
+  FileLayer, Contnrs, TagUtils;
 
 resourcestring
   rsMetadataAtomErForStor = 'Metadata-atom er for stor';
@@ -466,7 +466,7 @@ type
 
 procedure WriteMp4Tags(const FileName: string; Info: TAudioInfo);
 var
-  Src, Dst: TFileStream;
+  Src, Dst: TStream;
   Top: array of TTopAtom;
   H, MoovBytes: TBytes;
   Pos, Size, Hdr, Delta, NewFree: Int64;
@@ -478,7 +478,7 @@ var
 begin
   Root := TAtom.Create(FourCC('moov'));
   NewMoov := TBytesStream.Create;
-  Src := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  Src := OpenFileStream(FileName, fmOpenRead or fmShareDenyWrite);
   try
     // Top-level atom list
     Top := nil;
@@ -540,7 +540,7 @@ begin
         WriteZeros(NewMoov, NewFree - 8);
       end;
       FreeAndNil(Src);
-      Dst := TFileStream.Create(FileName, fmOpenReadWrite or fmShareDenyWrite);
+      Dst := OpenFileStream(FileName, fmOpenReadWrite or fmShareDenyWrite);
       try
         Dst.Position := Top[MoovIdx].Pos;
         Dst.WriteBuffer(NewMoov.Bytes[0], NewMoov.Size);
@@ -564,7 +564,7 @@ begin
 
       Temp := TempFileFor(FileName);
       try
-        Dst := TFileStream.Create(Temp, fmCreate);
+        Dst := OpenFileStream(Temp, fmCreate);
         try
           for I := 0 to High(Top) do
             if I = MoovIdx then
@@ -579,7 +579,7 @@ begin
         FreeAndNil(Src);
         ReplaceFileWith(Temp, FileName);
       except
-        DeleteFile(Temp);
+        DeleteFileL(Temp);
         raise;
       end;
     end;

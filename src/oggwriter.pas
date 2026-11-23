@@ -20,7 +20,7 @@ function OggCrc(const B: TBytes; P, Len: SizeInt): Cardinal;
 implementation
 
 uses
-  TagUtils, FlacWriter;
+  FileLayer, TagUtils, FlacWriter;
 
 resourcestring
   rsUgyldigOggSideFilenEr = 'Ugyldig Ogg-side (filen er beskadiget eller ikke Ogg)';
@@ -190,7 +190,7 @@ end;
 
 procedure WriteOggTags(const FileName: string; Info: TAudioInfo);
 var
-  Src, Dst: TFileStream;
+  Src, Dst: TStream;
   Pg: TOggPage;
   Serial: Cardinal;
   Packets: array of TBytes;
@@ -203,7 +203,7 @@ var
   Temp: string;
   B: TBytesStream;
 begin
-  Src := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  Src := OpenFileStream(FileName, fmOpenRead or fmShareDenyWrite);
   try
     // ---- read the header packets
     if not ReadPage(Src, Pg) or (Pg.HeaderType and 2 = 0) then
@@ -296,7 +296,7 @@ begin
     // ---- write: first page, new header pages, then the rest renumbered
     Temp := TempFileFor(FileName);
     try
-      Dst := TFileStream.Create(Temp, fmCreate);
+      Dst := OpenFileStream(Temp, fmCreate);
       try
         WriteBytes(Dst, FirstPage);
         WritePackets(Dst, Packets, Serial, 1, NewPages);
@@ -314,7 +314,7 @@ begin
       FreeAndNil(Src);
       ReplaceFileWith(Temp, FileName);
     except
-      DeleteFile(Temp);
+      DeleteFileL(Temp);
       raise;
     end;
   finally

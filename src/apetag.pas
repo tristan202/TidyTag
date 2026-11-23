@@ -31,7 +31,7 @@ procedure WriteApeTags(const FileName: string; Info: TAudioInfo);
 implementation
 
 uses
-  StrUtils, TagUtils, ID3Writer;
+  FileLayer, StrUtils, TagUtils, ID3Writer;
 
 const
   FlagHasHeader = Cardinal(1) shl 31;
@@ -237,7 +237,7 @@ end;
 
 procedure WriteApeTags(const FileName: string; Info: TAudioInfo);
 var
-  S: TFileStream;
+  S: TStream;
   Loc: TApeLocation;
   Old: TApeItems;
   It: TApeItem;
@@ -248,7 +248,7 @@ var
   Used: array[0..20] of Boolean;
   Name: string;
 begin
-  S := TFileStream.Create(FileName, fmOpenReadWrite or fmShareExclusive);
+  S := OpenFileStream(FileName, fmOpenReadWrite or fmShareExclusive);
   try
     Loc := FindApeTag(S);
     if Loc.Found then Old := ParseItems(S, Loc) else Old := nil;

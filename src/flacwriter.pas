@@ -21,7 +21,7 @@ function BuildFlacPicture(const Pic: TTagPicture): TBytes;
 implementation
 
 uses
-  base64, TagUtils, Mp3Reader;
+  FileLayer, base64, TagUtils, Mp3Reader;
 
 resourcestring
   rsMetadataBlokkenErForStor = 'Metadata-blokken er for stor (billedet er over 16 MB)';
@@ -244,7 +244,7 @@ end;
 
 procedure WriteFlacTags(const FileName: string; Info: TAudioInfo);
 var
-  Src, Dst: TFileStream;
+  Src, Dst: TStream;
   Prefix: Int64;
   H, CommentBody: TBytes;
   Blocks: array of TBlock;
@@ -260,7 +260,7 @@ var
   DummyVer: Byte;
 begin
   Meta := TBytesStream.Create;
-  Src := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  Src := OpenFileStream(FileName, fmOpenRead or fmShareDenyWrite);
   try
     ParseID3v2(Src, DummyVer, Dummy, Prefix); // keep an ID3v2 prefix as it is
     Src.Position := Prefix;
@@ -329,7 +329,7 @@ begin
     if Meta.Size = OldMetaLen then
     begin
       FreeAndNil(Src);
-      Dst := TFileStream.Create(FileName, fmOpenReadWrite or fmShareDenyWrite);
+      Dst := OpenFileStream(FileName, fmOpenReadWrite or fmShareDenyWrite);
       try
         Dst.Position := Prefix + 4;
         Dst.WriteBuffer(Meta.Bytes[0], Meta.Size);
@@ -341,7 +341,7 @@ begin
     begin
       Temp := TempFileFor(FileName);
       try
-        Dst := TFileStream.Create(Temp, fmCreate);
+        Dst := OpenFileStream(Temp, fmCreate);
         try
           CopyStreamRange(Src, Dst, 0, Prefix + 4); // ID3v2 prefix + 'fLaC'
           Dst.WriteBuffer(Meta.Bytes[0], Meta.Size);
@@ -352,7 +352,7 @@ begin
         FreeAndNil(Src);
         ReplaceFileWith(Temp, FileName);
       except
-        DeleteFile(Temp);
+        DeleteFileL(Temp);
         raise;
       end;
     end;

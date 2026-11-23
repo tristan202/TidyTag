@@ -1,7 +1,10 @@
 program TagTest;
 
 { Write test for the tag writers. Works on COPIES in a test folder:
-    tagtest <test-folder> <file> [<file> ...]
+    tagtest <test-folder> <file> [<file> ...] [-phone <companion-desktop.jar> <java.exe>]
+  With -phone the copies are served by the companion's desktop jar and every check runs on
+  \\TidyTag-Phone\Test\... paths; for files over 1 MB it also checks that a scenario never
+  sends the whole file (rewrites copy the audio on the phone).
   For each file three scenarios are written and read back:
     A  change all fields + add a small PNG    (usually in place)
     B  add a 400 KB picture                   (forces a full rewrite)
@@ -12,7 +15,7 @@ program TagTest;
 
 uses
   {$IFDEF WINDOWS}Windows,{$ENDIF}
-  Classes, SysUtils, crc, AudioTypes, AudioTags, TagWriter, TagUtils, Mp3Reader, OggWriter, WavReader, ApeTag,
+  Classes, SysUtils, Process, crc, PhoneClient, FileLayer, AudioTypes, AudioTags, TagWriter, TagUtils, Mp3Reader, OggWriter, WavReader, ApeTag,
   BatchWrite, FieldTools, TagRemove;
 
 var
@@ -137,7 +140,7 @@ end;
 
 function AudioFingerprint(const FileName: string): Cardinal;
 var
-  S: TFileStream;
+  S: TStream;
   Ext: string;
   TagSize, P, Size, AudioEnd: Int64;
   Ver: Byte;
@@ -149,7 +152,7 @@ var
 begin
   Result := 0;
   Ext := LowerCase(ExtractFileExt(FileName));
-  S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyNone);
+  S := OpenFileStream(FileName, fmOpenRead or fmShareDenyNone);
   try
     if (Ext = '.ogg') or (Ext = '.oga') or (Ext = '.opus') then
       Result := OggFingerprint(S)
@@ -428,10 +431,27 @@ begin
   Check(AudioFingerprint(FileName) = AudioCrc, 'lyddata uændret');
 end;
 
+function GetFileSize(const F: string): Int64;
 var
-  I: Integer;
-  Dir, Src, Dst: string;
+  SR: TSearchRec;
+begin
+  Result := -1;
+  if FindFirst(F, faAnyFile, SR) = 0 then Result := SR.Size;
+  FindClose(SR);
+end;
+
+const
+  PhonePort = 47250;
+  PhoneDiscovery = 47251;
+
+var
+  I, Last: Integer;
+  Dir, Src, Dst, Name: string;
   AudioCrc: Cardinal;
+  Server: TProcess = nil;
+  T: QWord;
+  Phone: TPhone;
+  Sent: Int64;
 begin
   SetMultiByteConversionCodePage(CP_UTF8);
   SetMultiByteFileSystemCodePage(CP_UTF8);
@@ -445,23 +465,60 @@ begin
   end;
   Dir := IncludeTrailingPathDelimiter(UTF8Encode(UnicodeString(ParamStr(1))));
   ForceDirectories(Dir);
-  for I := 2 to ParamCount do
+  Last := ParamCount;
+  if (ParamCount >= 4) and (ParamStr(ParamCount - 2) = '-phone') then
   begin
-    Src := UTF8Encode(UnicodeString(ParamStr(I)));
-    Dst := Dir + ExtractFileName(Src);
-    if not CopyFileW(PWideChar(UTF8Decode(Src)), PWideChar(UTF8Decode(Dst)), False) then
+    Last := ParamCount - 3;
+    PhoneSettingsFile := Dir + 'phones.ini';
+    PhoneDiscoveryPort := PhoneDiscovery;
+    Server := TProcess.Create(nil);
+    Server.Executable := ParamStr(ParamCount);
+    Server.Parameters.AddStrings(['-jar', ParamStr(ParamCount - 1), '--root', Dir, '--port', IntToStr(PhonePort),
+      '--token', 'tok', '--discovery', IntToStr(PhoneDiscovery), '--name', 'Test', '--id', 'tagtest']);
+    Server.Options := [poNoConsole];
+    Server.Execute;
+    T := GetTickCount64;
+    while (Length(DiscoverPhones(300, PhoneDiscovery)) = 0) and (GetTickCount64 - T < 15000) do ;
+    SavePairedPhone(DiscoverPhones(1500, PhoneDiscovery)[0], 'tok');
+    WriteLn('(telefon-stier via ', PhonePrefix, 'Test\)');
+  end;
+  try
+    for I := 2 to Last do
     begin
-      WriteLn('Kunne ikke kopiere ', Src);
-      Inc(Failures);
-      Continue;
+      Src := UTF8Encode(UnicodeString(ParamStr(I)));
+      Name := ExtractFileName(Src);
+      if not CopyFileW(PWideChar(UTF8Decode(Src)), PWideChar(UTF8Decode(Dir + Name)), False) then
+      begin
+        WriteLn('Kunne ikke kopiere ', Src);
+        Inc(Failures);
+        Continue;
+      end;
+      if Server <> nil then Dst := PhonePrefix + 'Test\' + Name else Dst := Dir + Name;
+      WriteLn('== ', Name);
+      AudioCrc := AudioFingerprint(Dst);
+      Sent := 0;
+      if Server <> nil then
+      begin
+        Phone := PhoneForPath(Dst);
+        Sent := Phone.BytesSent;
+      end;
+      Scenario(Dst, 'A', 0, AudioCrc);
+      Scenario(Dst, 'B', 1, AudioCrc);
+      Scenario(Dst, 'C', 2, AudioCrc);
+      ToolScenario(Dst, AudioCrc);
+      RemoveScenario(Dst, AudioCrc);
+      if (Server <> nil) and (GetFileSize(Dir + Name) > 1000000) then
+      begin
+        WriteLn(Format('   sendt til telefonen: %d bytes (fil %d bytes)', [Phone.BytesSent - Sent, GetFileSize(Dir + Name)]));
+        Check(Phone.BytesSent - Sent < GetFileSize(Dir + Name), 'lyden blev ikke sendt over nettet');
+      end;
     end;
-    WriteLn('== ', ExtractFileName(Dst));
-    AudioCrc := AudioFingerprint(Dst);
-    Scenario(Dst, 'A', 0, AudioCrc);
-    Scenario(Dst, 'B', 1, AudioCrc);
-    Scenario(Dst, 'C', 2, AudioCrc);
-    ToolScenario(Dst, AudioCrc);
-    RemoveScenario(Dst, AudioCrc);
+  finally
+    if Server <> nil then
+    begin
+      Server.Terminate(0);
+      Server.Free;
+    end;
   end;
   WriteLn;
   if Failures = 0 then WriteLn('ALLE TESTS OK') else WriteLn(Failures, ' FEJL');

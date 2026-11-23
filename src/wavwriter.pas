@@ -18,7 +18,7 @@ procedure WriteWavAiffTags(const FileName: string; Info: TAudioInfo);
 implementation
 
 uses
-  TagUtils, WavReader, ID3Writer;
+  FileLayer, TagUtils, WavReader, ID3Writer;
 
 resourcestring
   rsFilenBliverStoerreEndGb = 'Filen bliver større end 4 GB, hvilket WAV/AIFF ikke tillader';
@@ -117,7 +117,7 @@ end;
 
 procedure WriteWavAiffTags(const FileName: string; Info: TAudioInfo);
 var
-  S, Dst: TFileStream;
+  S, Dst: TStream;
   CF: TChunkFile;
   I, LastAudio: Integer;
   OldID3, OldInfo, NewID3, NewInfo: TBytes;
@@ -130,7 +130,7 @@ var
 begin
   OldID3 := nil;
   OldInfo := nil;
-  S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  S := OpenFileStream(FileName, fmOpenRead or fmShareDenyWrite);
   try
     CF := ReadChunkFile(S);
     if CF.IsAiff then ID3ID := 'ID3 ' else ID3ID := 'id3 ';
@@ -177,7 +177,7 @@ begin
     begin
       Temp := TempFileFor(FileName);
       try
-        Dst := TFileStream.Create(Temp, fmCreate);
+        Dst := OpenFileStream(Temp, fmCreate);
         try
           if CF.IsAiff then WriteAscii(Dst, 'FORM') else WriteAscii(Dst, 'RIFF');
           WriteSize(Dst, 0, CF.IsAiff);
@@ -199,7 +199,7 @@ begin
         FreeAndNil(S);
         ReplaceFileWith(Temp, FileName);
       except
-        DeleteFile(Temp);
+        DeleteFileL(Temp);
         raise;
       end;
       Exit;
@@ -210,7 +210,7 @@ begin
 
   if KeepEnd + Length(TailBytes) - 8 > High(Cardinal) then
     raise Exception.Create(rsFilenBliverStoerreEndGb);
-  S := TFileStream.Create(FileName, fmOpenReadWrite or fmShareExclusive);
+  S := OpenFileStream(FileName, fmOpenReadWrite or fmShareExclusive);
   try
     S.Size := KeepEnd; // also restores a missing pad byte after the audio
     S.Position := KeepEnd;

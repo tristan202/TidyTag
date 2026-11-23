@@ -22,7 +22,7 @@ function ReadAudioInfo(const FileName: string; WantPictures: Boolean = False): T
 implementation
 
 uses
-  Mp3Reader, VorbisReader, Mp4Reader, WavReader, ApeReader, AsfReader;
+  FileLayer, Mp3Reader, VorbisReader, Mp4Reader, WavReader, ApeReader, AsfReader;
 
 const
   ReadableExts: array[0..17] of string = ('.mp3', '.flac', '.ogg', '.oga', '.opus', '.m4a', '.m4b', '.mp4',
@@ -60,13 +60,13 @@ end;
 
 function ReadAudioInfo(const FileName: string; WantPictures: Boolean): TAudioInfo;
 var
-  S: TFileStream;
+  S: TStream;
 begin
   Result := TAudioInfo.Create;
   Result.FileName := FileName;
   Result.WantPictures := WantPictures;
   try
-    S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyNone);
+    S := OpenFileStream(FileName, fmOpenRead or fmShareDenyNone);
     try
       Result.FileSize := S.Size;
       case LowerCase(ExtractFileExt(FileName)) of

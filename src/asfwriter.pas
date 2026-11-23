@@ -20,7 +20,7 @@ procedure WriteAsfTags(const FileName: string; Info: TAudioInfo);
 implementation
 
 uses
-  TagUtils, AsfReader;
+  FileLayer, TagUtils, AsfReader;
 
 resourcestring
   rsIkkeEnWmaAsfFil = 'Ikke en WMA/ASF-fil';
@@ -277,7 +277,7 @@ end;
 
 procedure WriteAsfTags(const FileName: string; Info: TAudioInfo);
 var
-  S, Dst: TFileStream;
+  S, Dst: TStream;
   B, Body, NewHeader: TBytes;
   HeaderSize, P, Q, Size, ExtEnd, FilePropsPos, NewFileSize, Pad: Int64;
   Kept, Small, Big, NoAttrs: TAttrList;
@@ -298,7 +298,7 @@ begin
   Small := nil;
   Big := nil;
   NoAttrs := nil;
-  S := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  S := OpenFileStream(FileName, fmOpenRead or fmShareDenyWrite);
   try
     B := ReadStreamBytes(S, 30);
     if (Length(B) < 30) or not IsGuid(B, 0, GuidHeader) then
@@ -447,7 +447,7 @@ begin
     begin
       Temp := TempFileFor(FileName);
       try
-        Dst := TFileStream.Create(Temp, fmCreate);
+        Dst := OpenFileStream(Temp, fmCreate);
         try
           WriteBytes(Dst, NewHeader);
           CopyStreamRange(S, Dst, HeaderSize, S.Size - HeaderSize);
@@ -457,7 +457,7 @@ begin
         FreeAndNil(S);
         ReplaceFileWith(Temp, FileName);
       except
-        DeleteFile(Temp);
+        DeleteFileL(Temp);
         raise;
       end;
       Exit;
@@ -466,7 +466,7 @@ begin
     S.Free;
   end;
 
-  S := TFileStream.Create(FileName, fmOpenReadWrite or fmShareExclusive);
+  S := OpenFileStream(FileName, fmOpenReadWrite or fmShareExclusive);
   try
     S.Position := 0;
     WriteBytes(S, NewHeader);
