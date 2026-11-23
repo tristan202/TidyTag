@@ -209,6 +209,7 @@ end;
 
 procedure TestRenamesAndList;
 var
+  Ansi: RawByteString;
   L: TPhoneEntries;
   E: TPhoneEntry;
   Found: Boolean;
@@ -224,6 +225,10 @@ begin
   for E in L do
     if E.Name = 'Æblegrød & co (100%).mp3' then Found := True;
   Check(Found, 'ListDirL on the phone');
+  // a path in another code page (as the RTL's file functions may return it) means the same file
+  Ansi := UTF8Encode(UnicodeString(P + 'Music\Ny\Under\Æblegrød & co (100%).mp3'));
+  SetCodePage(Ansi, 1252, True);
+  Check(FileExistsL(Ansi), 'a Windows-1252 path finds the same phone file');
   Check(DeleteFileL(TempFileFor(P + 'Music\x.mp3')), 'deleting a temporary file is accepted');
   Check(Length(TrashFiles([P + 'Music\w.bin'])) = 1, 'trash refused by the desktop storage: kept');
   Check(FileExists(Root + 'Music\w.bin'), 'still there');

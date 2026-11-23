@@ -110,6 +110,17 @@ class ServerTest {
     }
 
     @Test
+    fun rmdirOnlyEmpty() {
+        File(root, "Tom").mkdir()
+        File(root, "Fuld").mkdir()
+        File(root, "Fuld/a.mp3").writeText("x")
+        assertEquals(200, call("POST", "/v1/rmdir?path=Tom").statusCode())
+        assertFalse(File(root, "Tom").exists())
+        assertEquals(409, call("POST", "/v1/rmdir?path=Fuld").statusCode())
+        assertTrue(File(root, "Fuld/a.mp3").exists())
+    }
+
+    @Test
     fun staleTmpRemovedOnList() {
         File(root, "a.mp3.tidytag-tmp").writeText("half")
         call("GET", "/v1/list?path=")

@@ -77,6 +77,7 @@ class CompanionServer(
             "/v1/create" -> storage.create(arg("path"))
             "/v1/rename" -> { storage.rename(arg("from"), arg("to"), arg("replace") == "1"); changed(arg("from"), arg("to")) }
             "/v1/mkdir" -> storage.mkdir(arg("path"))
+            "/v1/rmdir" -> storage.rmdir(arg("path"))
             "/v1/copy" -> {
                 storage.copyRange(arg("src"), long("srcOffset"), long("len"), arg("dst"), long("dstOffset"))
                 changed(arg("dst"))

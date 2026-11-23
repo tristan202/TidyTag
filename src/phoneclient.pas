@@ -55,6 +55,7 @@ type
     procedure CreateFile(const Rel: string);
     procedure Rename(const FromRel, ToRel: string; Replace: Boolean);
     procedure MakeDir(const Rel: string);
+    procedure RemoveDir(const Rel: string); // empty folders only
     function Stat(const Rel: string; out E: TPhoneEntry): Boolean;
     procedure CopyRange(const Src: string; SrcOffset, Len: Int64; const Dst: string; DstOffset: Int64);
     function Trash(const Rels: TStringArray): TStringArray; // the files it refused
@@ -306,6 +307,11 @@ end;
 procedure TPhone.MakeDir(const Rel: string);
 begin
   Call('POST', '/v1/mkdir', ['path', Rel], nil);
+end;
+
+procedure TPhone.RemoveDir(const Rel: string);
+begin
+  Call('POST', '/v1/rmdir', ['path', Rel], nil);
 end;
 
 function TPhone.Stat(const Rel: string; out E: TPhoneEntry): Boolean;

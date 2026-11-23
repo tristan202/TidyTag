@@ -20,6 +20,7 @@ type
     FPending: TFPList;
     FTotal: Integer;
     FDone: Integer;
+    FError: string;
     procedure CollectFiles(const Dir: string; Files: TStrings);
   protected
     procedure Execute; override;
@@ -29,12 +30,18 @@ type
     { Moves finished TAudioInfo objects into Dest (Dest takes ownership). }
     procedure TakeResults(Dest: TFPList);
     function Progress(out Done, Total: Integer): Boolean;
+    { Why the scan stopped early ('' when it did not), e.g. a phone that went away;
+      the tracks read until then are kept. }
+    function ErrorText: string;
   end;
 
 implementation
 
 uses
-  AudioTags;
+  AudioTags, FileLayer, PhoneClient;
+
+const
+  PrefetchChunk = 50; // phone files whose tag parts are fetched in one request
 
 constructor TScanThread.Create(const AFolder: string; ARecursive: Boolean);
 begin
@@ -60,12 +67,23 @@ end;
 procedure TScanThread.CollectFiles(const Dir: string; Files: TStrings);
 var
   SR: TSearchRec;
+  E: TPhoneEntry;
   Subdirs: TStringList;
   I: Integer;
 begin
   Subdirs := TStringList.Create;
   try
-    if FindFirst(Dir + '*', faAnyFile, SR) = 0 then
+    if IsPhonePath(Dir) then
+    begin
+      for E in ListDirL(Dir) do
+        if E.IsDir then
+        begin
+          if FRecursive then Subdirs.Add(Dir + E.Name + PathDelim);
+        end
+        else if IsAudioFile(E.Name) then
+          Files.Add(Dir + E.Name);
+    end
+    else if FindFirst(Dir + '*', faAnyFile, SR) = 0 then
     try
       repeat
         if Terminated then Exit;
@@ -96,6 +114,7 @@ var
 begin
   Files := TStringList.Create;
   try
+    try
     CollectFiles(FFolder, Files);
     FLock.Enter;
     FTotal := Files.Count;
@@ -103,6 +122,8 @@ begin
     for I := 0 to Files.Count - 1 do
     begin
       if Terminated then Exit;
+      if IsPhonePath(Files[I]) and (I mod PrefetchChunk = 0) then
+        PrefetchTags(Copy(Files.ToStringArray, I, PrefetchChunk));
       Info := ReadAudioInfo(Files[I]);
       FLock.Enter;
       try
@@ -112,8 +133,26 @@ begin
         FLock.Leave;
       end;
     end;
+    except
+      on E: Exception do
+      begin
+        FLock.Enter;
+        FError := E.Message;
+        FLock.Leave;
+      end;
+    end;
   finally
     Files.Free;
+  end;
+end;
+
+function TScanThread.ErrorText: string;
+begin
+  FLock.Enter;
+  try
+    Result := FError;
+  finally
+    FLock.Leave;
   end;
 end;
 

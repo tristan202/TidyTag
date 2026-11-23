@@ -78,6 +78,12 @@ open class LocalStorage(root: File) : Storage {
         if (!d.isDirectory && !d.mkdirs()) throw ConflictException(rel)
     }
 
+    override fun rmdir(rel: String) {
+        val d = file(rel)
+        if (!d.isDirectory) throw NotFoundException(rel)
+        if (!(d.list()?.isEmpty() ?: false) || !d.delete()) throw ConflictException("not empty: $rel")
+    }
+
     override fun exists(rel: String): Entry? {
         val f = file(rel)
         return if (f.exists()) entry(f) else null

@@ -109,7 +109,7 @@ function CountStatus(const Plan: TRenamePlan; S: TRenameStatus): Integer;
 implementation
 
 uses
-  Math, TagUtils;
+  Math, TagUtils, FileLayer;
 
 function IsLetter(C: WideChar): Boolean;
 begin
@@ -199,7 +199,7 @@ end;
 
 function PathExists(const Path: string): Boolean;
 begin
-  Result := FileExists(Path) or DirectoryExists(Path);
+  Result := FileExistsL(Path) or DirectoryExistsL(Path);
 end;
 
 function IsAbsoluteMaskPath(const S: string): Boolean;
@@ -621,7 +621,7 @@ begin
   begin
     if Plan[I].Status <> rsOk then Continue;
     Dir := ExtractFileDir(Plan[I].NewName);
-    if not DirectoryExists(Dir) and not ForceDirectories(Dir) then
+    if not DirectoryExistsL(Dir) and not ForceDirectoriesL(Dir) then
     begin
       Plan[I].Status := rsFailed;
       Plan[I].Detail := rsKunneIkkeOpretteMappen + Dir;
@@ -633,7 +633,7 @@ begin
       Plan[I].Status := rsExists;
       Continue;
     end;
-    if RenameFile(Plan[I].OldName, Plan[I].NewName) then
+    if RenameFileL(Plan[I].OldName, Plan[I].NewName) then
     begin
       Plan[I].Status := rsDone;
       if Plan[I].Info <> nil then Plan[I].Info.FileName := Plan[I].NewName;
@@ -656,7 +656,7 @@ begin
   while (Dir <> '') and not SameFileName(Dir, StopAt) and
     (Length(Dir) > Length(ExtractFileDrive(Dir)) + 1) do
   begin
-    if not RemoveDir(Dir) then Exit; // not empty (or in use): leave it
+    if not RemoveDirL(Dir) then Exit; // not empty (or in use): leave it
     Dir := ExtractFileDir(Dir);
   end;
 end;
@@ -678,8 +678,8 @@ begin
       Errors.Add(Log[I].OldName + rsDerLiggerAlleredeEnFil);
       Continue;
     end;
-    ForceDirectories(ExtractFileDir(Log[I].OldName));
-    if RenameFile(Log[I].NewName, Log[I].OldName) then
+    ForceDirectoriesL(ExtractFileDir(Log[I].OldName));
+    if RenameFileL(Log[I].NewName, Log[I].OldName) then
     begin
       Inc(Result);
       RemoveEmptyDirs(ExtractFileDir(Log[I].NewName), ExtractFileDir(Log[I].OldName));

@@ -26,11 +26,30 @@ function CopyOrMoveFiles(const Files: array of string; const Dir: string; Move: 
 implementation
 
 uses
-  {$IFDEF WINDOWS}Windows, ShellApi,{$ENDIF} TagUtils;
+  {$IFDEF WINDOWS}Windows, ShellApi,{$ENDIF} TagUtils, FileLayer;
 
 resourcestring
   rsFindesAlleredeIMaalmappen = 'findes allerede i målmappen';
   rsKunneIkkeLaeggesIPapirkurven = 'kunne ikke lægges i papirkurven';
+  rsTelefonensPapirkurv = 'kan ikke lægges i telefonens papirkurv (kun musik, billeder og video); den er ikke slettet';
+  rsIkkeMellemPcOgTelefon = 'kan ikke kopieres eller flyttes mellem pc''en og telefonen';
+
+{ Phone files go to Android's trash; returns how many did. }
+function TrashPhoneFiles(const Files: array of string; Errors: TStrings): Integer;
+var
+  F, R: string;
+  Phone: TStringArray;
+  Refused: TStringArray;
+begin
+  Phone := nil;
+  for F in Files do
+    if IsPhonePath(F) then Insert(F, Phone, Length(Phone));
+  Result := Length(Phone);
+  if Phone = nil then Exit;
+  Refused := TrashFiles(Phone);
+  for R in Refused do Errors.Add(ExtractFileName(R) + ': ' + rsTelefonensPapirkurv);
+  Dec(Result, Length(Refused));
+end;
 
 function RecycleFiles(const Files: array of string; Errors: TStrings): Integer;
 {$IFDEF WINDOWS}
@@ -39,16 +58,18 @@ var
   Op: TSHFileOpStructW;
   From: UnicodeString;
 begin
-  Result := 0;
+  Result := TrashPhoneFiles(Files, Errors);
   if not UseRecycleBin then
   begin
     for I := 0 to High(Files) do
-      if SysUtils.DeleteFile(Files[I]) then Inc(Result)
+      if IsPhonePath(Files[I]) then Continue
+      else if SysUtils.DeleteFile(Files[I]) then Inc(Result)
       else Errors.Add(ExtractFileName(Files[I]) + ': ' + SysErrorMessage(GetLastOSError));
     Exit;
   end;
   for I := 0 to High(Files) do
   begin
+    if IsPhonePath(Files[I]) then Continue;
     // one file per call: a failure stays with its own file
     From := UTF8Decode(Files[I]) + #0#0;
     FillChar(Op, SizeOf(Op), 0);
@@ -72,6 +93,31 @@ begin
 end;
 {$ENDIF}
 
+{ Within one phone: a move is a rename, a copy is done by the phone itself. }
+function PhoneCopyOrMove(const Src, Target: string; Move: Boolean): Boolean;
+var
+  S, D: TStream;
+begin
+  if Move then Exit(RenameFileL(Src, Target));
+  Result := False;
+  try
+    S := OpenFileStream(Src, fmOpenRead);
+    try
+      D := OpenFileStream(Target, fmCreate);
+      try
+        CopyStreamRange(S, D, 0, S.Size);
+      finally
+        D.Free;
+      end;
+    finally
+      S.Free;
+    end;
+    Result := True;
+  except
+    on E: Exception do Result := False;
+  end;
+end;
+
 function CopyOrMoveFiles(const Files: array of string; const Dir: string; Move: Boolean;
   out Done: array of Boolean; out NewNames: array of string; Errors: TStrings): Integer;
 var
@@ -85,12 +131,20 @@ begin
     Done[I] := False;
     NewNames[I] := Files[I];
     Target := IncludeTrailingPathDelimiter(Dir) + ExtractFileName(Files[I]);
+    if IsPhonePath(Target) <> IsPhonePath(Files[I]) then
+    begin
+      Errors.Add(ExtractFileName(Files[I]) + ': ' + rsIkkeMellemPcOgTelefon);
+      Continue;
+    end;
     if SameFileName(ExpandFileName(Target), ExpandFileName(Files[I])) then Continue;
-    if FileExists(Target) then
+    if FileExistsL(Target) then
     begin
       Errors.Add(ExtractFileName(Files[I]) + ': ' + rsFindesAlleredeIMaalmappen);
       Continue;
     end;
+    if IsPhonePath(Target) then
+      Ok := ForceDirectoriesL(Dir) and PhoneCopyOrMove(Files[I], Target, Move)
+    else
     {$IFDEF WINDOWS}
     if Move then
       Ok := MoveFileExW(PWideChar(UTF8Decode(Files[I])), PWideChar(UTF8Decode(Target)),

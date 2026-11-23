@@ -20,6 +20,8 @@ interface Storage {
     fun create(rel: String)
     fun rename(from: String, to: String, replace: Boolean)
     fun mkdir(rel: String)
+    /** Removes an empty folder; a folder with anything in it is a ConflictException. */
+    fun rmdir(rel: String)
     fun exists(rel: String): Entry?
     fun copyRange(src: String, srcOffset: Long, len: Long, dst: String, dstOffset: Long)
     /** Moves files to the system trash; returns the ones it could not take. */

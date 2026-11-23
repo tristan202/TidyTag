@@ -34,6 +34,7 @@ Unless stated otherwise, a successful POST answers `{}`.
 | `POST /v1/create?path=` | Creates an empty file, or empties an existing one. |
 | `POST /v1/rename?from=&to=&replace=0\|1` | Renames or moves. Parent folders are created. `replace=1` atomically replaces an existing target; without it an existing target gives `409`. |
 | `POST /v1/mkdir?path=` | Creates the folder, including its parents. |
+| `POST /v1/rmdir?path=` | Removes an empty folder. A folder with anything in it gives `409`. |
 | `POST /v1/copy?src=&srcOffset=&len=&dst=&dstOffset=` | The phone copies a range of `src` into `dst` at `dstOffset`, so a rewrite never sends the audio over the network. |
 | `POST /v1/trash` | Body `{"paths":[...]}`. Moves the files to Android's trash. Answers `{"refused":[...]}` with the files that could not be moved, such as non-media files. |
 | `POST /v1/mtime?path=&ms=` | Sets the modified time. |

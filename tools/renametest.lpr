@@ -8,10 +8,12 @@ program RenameTest;
 
 uses
   {$IFDEF WINDOWS}Windows,{$ENDIF}
-  Classes, SysUtils, AudioTypes, RenameCore, FileNameTags, TrackCore;
+  Classes, SysUtils, Process, AudioTypes, RenameCore, FileNameTags, TrackCore, PhoneClient, FileLayer, FileOps;
 
 var
   Failures: Integer = 0;
+  Server: TProcess;
+  T: QWord;
 
 procedure Check(Cond: Boolean; const What: string);
 begin
@@ -247,12 +249,9 @@ begin
 end;
 
 procedure TouchFile(const Name: string);
-var
-  S: TFileStream;
 begin
-  ForceDirectories(ExtractFileDir(Name));
-  S := TFileStream.Create(Name, fmCreate);
-  S.Free;
+  ForceDirectoriesL(ExtractFileDir(Name));
+  OpenFileStream(Name, fmCreate).Free;
 end;
 
 procedure TestRenameAndUndo(const Base: string);
@@ -290,8 +289,8 @@ begin
   Check(CountStatus(Plan, rsOk) = 3, '3 klar til omdøbning i undermapper');
   Log := ExecuteRename(Plan);
   Check(Length(Log) = 3, '3 omdøbt');
-  Check(FileExists(Dir + 'Kunstner\Album\01 - Første.mp3'), 'ny fil findes');
-  Check(not FileExists(Dir + 'a.mp3'), 'gammel fil væk');
+  Check(FileExistsL(Dir + 'Kunstner\Album\01 - Første.mp3'), 'ny fil findes');
+  Check(not FileExistsL(Dir + 'a.mp3'), 'gammel fil væk');
   Check(Items[0].FileName = Dir + 'Kunstner\Album\01 - Første.mp3', 'Info.FileName opdateret');
 
   Errors := TStringList.Create;
@@ -302,8 +301,8 @@ begin
   finally
     Errors.Free;
   end;
-  Check(FileExists(Dir + 'a.mp3') and FileExists(Dir + 'b.mp3') and FileExists(Dir + 'c.mp3'), 'originaler tilbage');
-  Check(not DirectoryExists(Dir + 'Kunstner'), 'tomme mapper fjernet');
+  Check(FileExistsL(Dir + 'a.mp3') and FileExistsL(Dir + 'b.mp3') and FileExistsL(Dir + 'c.mp3'), 'originaler tilbage');
+  Check(not DirectoryExistsL(Dir + 'Kunstner'), 'tomme mapper fjernet');
 
   // Folder rename + undo on disk
   Items[0].FileName := Dir + 'a.mp3';
@@ -314,7 +313,7 @@ begin
   Plan := PlanFolderRename([Items[1]], '%1\%3', Opt);
   Check(Plan[0].Status = rsOk, 'mappe klar');
   Log := ExecuteRename(Plan);
-  Check((Length(Log) = 1) and FileExists(Dir + 'Mappekunstner\Mappealbum\x.mp3'), 'mappe omdøbt og flyttet');
+  Check((Length(Log) = 1) and FileExistsL(Dir + 'Mappekunstner\Mappealbum\x.mp3'), 'mappe omdøbt og flyttet');
   Eq(MapRenamedPath(Dir + 'album\x.mp3', Log, False), Dir + 'Mappekunstner\Mappealbum\x.mp3', 'sti følger mappen');
   Errors := TStringList.Create;
   try
@@ -322,7 +321,7 @@ begin
   finally
     Errors.Free;
   end;
-  Check(FileExists(Dir + 'album\x.mp3') and not DirectoryExists(Dir + 'Mappekunstner'), 'mappe tilbage, tom mappe fjernet');
+  Check(FileExistsL(Dir + 'album\x.mp3') and not DirectoryExistsL(Dir + 'Mappekunstner'), 'mappe tilbage, tom mappe fjernet');
   Eq(MapRenamedPath(Dir + 'Mappekunstner\Mappealbum\x.mp3', Log, True), Dir + 'album\x.mp3', 'sti tilbage');
 
   // Case-only rename must work on a case-insensitive file system.
@@ -338,7 +337,42 @@ begin
   for I := 0 to High(Items) do Items[I].Free;
 end;
 
+{ Phone folders: delete goes to the trash (the desktop jar has none: the file must stay),
+  and nothing is copied or moved between the phone and the PC. }
+procedure TestPhoneFileOps(const PhoneDir, LocalDir: string);
+var
+  Errors: TStringList;
+  Done: array[0..0] of Boolean;
+  NewNames: array[0..0] of string;
 begin
+  WriteLn('-- telefon: papirkurv og pc <-> telefon');
+  TouchFile(PhoneDir + 'slet.mp3');
+  Errors := TStringList.Create;
+  try
+    Check(RecycleFiles([PhoneDir + 'slet.mp3'], Errors) = 0, 'intet slettet, når papirkurven afviser');
+    Check((Errors.Count = 1) and FileExistsL(PhoneDir + 'slet.mp3'), 'filen er der stadig, og det siges');
+    Errors.Clear;
+    Check(CopyOrMoveFiles([PhoneDir + 'slet.mp3'], LocalDir, True, Done, NewNames, Errors) = 0,
+      'ikke flyttet fra telefonen til pc''en');
+    Check((Errors.Count = 1) and FileExistsL(PhoneDir + 'slet.mp3'), 'besked, filen bliver');
+    Errors.Clear;
+    TouchFile(LocalDir + 'lokal.mp3');
+    Check(CopyOrMoveFiles([LocalDir + 'lokal.mp3'], PhoneDir, False, Done, NewNames, Errors) = 0,
+      'ikke kopieret fra pc''en til telefonen');
+    Errors.Clear;
+    Check(CopyOrMoveFiles([PhoneDir + 'slet.mp3'], PhoneDir + 'Flyttet', True, Done, NewNames, Errors) = 1,
+      'flyt inden for telefonen');
+    Check(FileExistsL(PhoneDir + 'Flyttet\slet.mp3') and not FileExistsL(PhoneDir + 'slet.mp3'), 'flyttet');
+    Check(CopyOrMoveFiles([PhoneDir + 'Flyttet\slet.mp3'], PhoneDir, False, Done, NewNames, Errors) = 1,
+      'kopi inden for telefonen');
+    Check(FileExistsL(PhoneDir + 'slet.mp3') and FileExistsL(PhoneDir + 'Flyttet\slet.mp3'), 'kopieret');
+  finally
+    Errors.Free;
+  end;
+end;
+
+begin
+  DefaultSystemCodePage := CP_UTF8; // as in TidyTag (LCL)
   SetMultiByteConversionCodePage(CP_UTF8);
   SetMultiByteFileSystemCodePage(CP_UTF8);
   {$IFDEF WINDOWS}SetConsoleOutputCP(CP_UTF8);{$ENDIF}
@@ -349,7 +383,29 @@ begin
   TestMatch;
   TestTracks;
   TestFolderPlan;
-  if ParamCount >= 1 then
+  if (ParamCount >= 3) and (ParamStr(2) = '-phone') then
+  begin
+    // renametest <folder> -phone <companion-desktop.jar> <java.exe>: the folder served as a phone
+    PhoneSettingsFile := IncludeTrailingPathDelimiter(ParamStr(1)) + 'phones.ini';
+    PhoneDiscoveryPort := 47261;
+    Server := TProcess.Create(nil);
+    Server.Executable := ParamStr(4);
+    Server.Parameters.AddStrings(['-jar', ParamStr(3), '--root', ParamStr(1), '--port', '47260',
+      '--token', 'tok', '--discovery', '47261', '--name', 'Test', '--id', 'renametest']);
+    Server.Options := [poNoConsole];
+    Server.Execute;
+    T := GetTickCount64;
+    while (Length(DiscoverPhones(300, 47261)) = 0) and (GetTickCount64 - T < 15000) do ;
+    SavePairedPhone(DiscoverPhones(1500, 47261)[0], 'tok');
+    try
+      TestRenameAndUndo(PhonePrefix + 'Test');
+      TestPhoneFileOps(PhonePrefix + 'Test\ops\', IncludeTrailingPathDelimiter(ParamStr(1)) + 'local\');
+    finally
+      Server.Terminate(0);
+      Server.Free;
+    end;
+  end
+  else if ParamCount >= 1 then
     TestRenameAndUndo(UTF8Encode(UnicodeString(ParamStr(1))));
   WriteLn;
   if Failures = 0 then WriteLn('ALLE TESTS OK') else WriteLn(Failures, ' FEJL');

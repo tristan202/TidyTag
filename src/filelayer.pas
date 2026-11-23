@@ -40,6 +40,8 @@ function DeleteFileL(const FileName: string): Boolean;
   and every local path: those go to the Recycle Bin through FileOps). }
 function TrashFiles(const Files: array of string): TStringArray;
 function ForceDirectoriesL(const Dir: string): Boolean;
+{ Removes an empty folder (False when it is not empty or cannot be removed). }
+function RemoveDirL(const Dir: string): Boolean;
 function ListDirL(const Dir: string): TPhoneEntries;
 { Fetches the start and end of many phone files in one request, for reading their tags. }
 procedure PrefetchTags(const Files: array of string);
@@ -161,7 +163,9 @@ var
   Parts: TStringArray;
   I: Integer;
 begin
-  Rest := ExcludeTrailingPathDelimiter(Copy(Path, Length(PhonePrefix) + 1, MaxInt));
+  // paths from the RTL's file functions can carry another code page: work on UTF-8 bytes
+  Rest := UTF8Encode(UnicodeString(Path));
+  Rest := ExcludeTrailingPathDelimiter(Copy(Rest, Length(PhonePrefix) + 1, MaxInt));
   I := Pos('\', Rest);
   if I = 0 then
   begin
@@ -560,6 +564,25 @@ begin
     Lock.Enter;
     try
       P.MakeDir(RelOf(Dir));
+    finally
+      Lock.Leave;
+    end;
+    Result := True;
+  except
+    on EPhoneError do Result := False;
+  end;
+end;
+
+function RemoveDirL(const Dir: string): Boolean;
+var
+  P: TPhone;
+begin
+  if not IsPhonePath(Dir) then Exit(RemoveDir(Dir));
+  try
+    P := PhoneForPath(Dir);
+    Lock.Enter;
+    try
+      P.RemoveDir(RelOf(Dir));
     finally
       Lock.Leave;
     end;
