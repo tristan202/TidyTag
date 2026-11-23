@@ -9,3 +9,9 @@ backup/
 reference/
 release/
 !res/icons.res
+
+# companion app build output
+companion/.gradle/
+companion/.kotlin/
+companion/**/build/
+companion/local.properties

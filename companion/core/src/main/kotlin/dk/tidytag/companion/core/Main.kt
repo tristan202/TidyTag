@@ -1,0 +1,20 @@
+package dk.tidytag.companion.core
+
+import java.io.File
+
+/** Desktop runner for TidyTag's tests: --root <dir> --port <n> --token <t> [--code <6 digits>] [--name <n>] */
+fun main(args: Array<String>) {
+    val opt = args.toList().chunked(2).filter { it.size == 2 }.associate { it[0].removePrefix("--") to it[1] }
+    val root = File(opt["root"] ?: error("--root missing"))
+    val tokens = TokenStore(null)
+    opt["token"]?.let { tokens.add(it, "test") }
+    opt["code"]?.let { tokens.setCode(it) }
+    val server = CompanionServer(LocalStorage(root), object : MediaHooks {
+        override fun changed(rels: List<String>) = println("changed: $rels")
+    }, opt["port"]?.toInt() ?: 47100, tokens)
+    server.deviceName = opt["name"] ?: "Test"
+    server.deviceId = opt["id"] ?: "test-device"
+    server.start(fi.iki.elonen.NanoHTTPD.SOCKET_READ_TIMEOUT, false)
+    println("listening on ${server.listeningPort}")
+    Thread.currentThread().join()
+}
