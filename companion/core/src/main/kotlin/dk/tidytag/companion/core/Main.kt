@@ -15,6 +15,12 @@ fun main(args: Array<String>) {
     server.deviceName = opt["name"] ?: "Test"
     server.deviceId = opt["id"] ?: "test-device"
     server.start(fi.iki.elonen.NanoHTTPD.SOCKET_READ_TIMEOUT, false)
+    // tests run several jars at once: --discovery 0 turns the UDP answer off
+    val discoveryPort = opt["discovery"]?.toInt() ?: DISCOVERY_PORT
+    if (discoveryPort != 0)
+        Discovery(discoveryPort) {
+            Json.obj("name" to server.deviceName, "port" to server.listeningPort, "id" to server.deviceId)
+        }.start()
     println("listening on ${server.listeningPort}")
     Thread.currentThread().join()
 }
