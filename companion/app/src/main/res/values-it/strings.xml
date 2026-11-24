@@ -18,4 +18,6 @@
     <string name="remove">Rimuovi</string>
     <string name="channel">Server TidyTag</string>
     <string name="notification">TidyTag Companion è attivo</string>
+    <string name="language">Lingua</string>
+    <string name="phone_language">Lingua del telefono</string>
 </resources>

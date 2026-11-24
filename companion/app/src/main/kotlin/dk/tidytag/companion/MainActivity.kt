@@ -2,6 +2,10 @@ package dk.tidytag.companion
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.LocaleManager
+import android.os.Build
+import android.os.LocaleList
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Typeface
@@ -132,6 +136,17 @@ class MainActivity : Activity() {
         pcs = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         pcCard.addView(pcs)
 
+        // language: Android 13+ keeps a per-app language; older phones follow the phone's language
+        if (Build.VERSION.SDK_INT >= 33) {
+            val langCard = card(root)
+            heading(langCard, R.string.language)
+            val current = getSystemService(LocaleManager::class.java).applicationLocales
+            val tag = if (current.isEmpty) "" else current[0].language
+            val choice = LANGUAGES.indexOfFirst { it.first == tag }.coerceAtLeast(0)
+            langCard.addView(button(languageName(choice), false) { pickLanguage(choice) },
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp(44)))
+        }
+
         // Android 15 draws apps edge to edge: keep the content clear of the status and navigation bars
         val scroll = ScrollView(this).apply { addView(root) }
         scroll.setOnApplyWindowInsetsListener { v, insets ->
@@ -141,6 +156,27 @@ class MainActivity : Activity() {
         }
         setContentView(scroll)
         requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
+    }
+
+    private companion object {
+        // "" = the phone's language; the others are shown in their own language
+        val LANGUAGES = listOf("" to "", "en" to "English", "da" to "Dansk", "de" to "Deutsch",
+            "es" to "Español", "fr" to "Français", "it" to "Italiano", "sv" to "Svenska")
+    }
+
+    private fun languageName(i: Int) = if (i == 0) getString(R.string.phone_language) else LANGUAGES[i].second
+
+    private fun pickLanguage(current: Int) {
+        val names = Array(LANGUAGES.size) { languageName(it) }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.language)
+            .setSingleChoiceItems(names, current) { dialog, i ->
+                dialog.dismiss()
+                // Android recreates the screen in the new language
+                getSystemService(LocaleManager::class.java).applicationLocales =
+                    if (i == 0) LocaleList.getEmptyLocaleList() else LocaleList.forLanguageTags(LANGUAGES[i].first)
+            }
+            .show()
     }
 
     override fun onResume() {

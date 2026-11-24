@@ -19,4 +19,6 @@
     <string name="remove">Remove</string>
     <string name="channel">TidyTag server</string>
     <string name="notification">TidyTag Companion is running</string>
+    <string name="language">Language</string>
+    <string name="phone_language">Phone\'s language</string>
 </resources>
