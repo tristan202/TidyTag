@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_on">Prêt</string>
+    <string name="title_off">Éteint</string>
+    <string name="status_off">Active-le pour utiliser le téléphone depuis TidyTag sur ton PC.</string>
+    <string name="status_on">TidyTag sur le PC peut trouver le téléphone sur le Wi-Fi.</string>
+    <string name="status_no_access">L\'appli a besoin d\'un accès. Voir ci-dessous.</string>
+    <string name="address">Adresse : %1$s</string>
+    <string name="access_title">Donner l\'accès à l\'appli</string>
+    <string name="step_files">Fichiers du téléphone</string>
+    <string name="step_trash">Corbeille (la suppression peut être annulée)</string>
+    <string name="grant_files">Autoriser l\'accès aux fichiers</string>
+    <string name="grant_trash">Autoriser l\'accès à la corbeille</string>
+    <string name="code_title">Code d\'association</string>
+    <string name="code_hint">Dans TidyTag sur le PC, choisis Fichier > Ajouter un téléphone... et saisis le code. Garde l\'écran allumé pendant ce temps.</string>
+    <string name="paired_pcs">PC associés</string>
+    <string name="no_pcs">Aucun pour l\'instant</string>
+    <string name="remove">Retirer</string>
+    <string name="channel">Serveur TidyTag</string>
+    <string name="notification">TidyTag Companion est actif</string>
+</resources>

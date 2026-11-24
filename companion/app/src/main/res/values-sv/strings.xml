@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_on">Klar</string>
+    <string name="title_off">Av</string>
+    <string name="status_off">Slå på för att använda telefonen från TidyTag på datorn.</string>
+    <string name="status_on">TidyTag på datorn kan hitta telefonen via wifi.</string>
+    <string name="status_no_access">Appen behöver åtkomst. Se nedan.</string>
+    <string name="address">Adress: %1$s</string>
+    <string name="access_title">Ge appen åtkomst</string>
+    <string name="step_files">Filer på telefonen</string>
+    <string name="step_trash">Papperskorg (radering kan ångras)</string>
+    <string name="grant_files">Tillåt åtkomst till filer</string>
+    <string name="grant_trash">Tillåt åtkomst till papperskorgen</string>
+    <string name="code_title">Parkopplingskod</string>
+    <string name="code_hint">Välj Fil > Lägg till telefon... i TidyTag på datorn och skriv in koden. Håll skärmen tänd under tiden.</string>
+    <string name="paired_pcs">Parkopplade datorer</string>
+    <string name="no_pcs">Inga ännu</string>
+    <string name="remove">Ta bort</string>
+    <string name="channel">TidyTag-server</string>
+    <string name="notification">TidyTag Companion körs</string>
+</resources>

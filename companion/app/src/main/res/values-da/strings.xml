@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_on">Klar</string>
+    <string name="title_off">Slukket</string>
+    <string name="status_off">Tænd for at bruge telefonen fra TidyTag på din pc.</string>
+    <string name="status_on">TidyTag på pc\'en kan finde telefonen på Wi-Fi.</string>
+    <string name="status_no_access">Appen mangler adgang. Se nedenfor.</string>
+    <string name="address">Adresse: %1$s</string>
+    <string name="access_title">Giv appen adgang</string>
+    <string name="step_files">Filer på telefonen</string>
+    <string name="step_trash">Papirkurv (sletning kan fortrydes)</string>
+    <string name="grant_files">Giv adgang til filer</string>
+    <string name="grant_trash">Giv adgang til papirkurv</string>
+    <string name="code_title">Parringskode</string>
+    <string name="code_hint">Vælg Fil > Tilføj telefon... i TidyTag på pc\'en, og skriv koden. Hold skærmen tændt imens.</string>
+    <string name="paired_pcs">Parrede pc\'er</string>
+    <string name="no_pcs">Ingen endnu</string>
+    <string name="remove">Fjern</string>
+    <string name="channel">TidyTag-server</string>
+    <string name="notification">TidyTag Companion kører</string>
+</resources>

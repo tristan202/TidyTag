@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_on">Bereit</string>
+    <string name="title_off">Aus</string>
+    <string name="status_off">Einschalten, um das Telefon mit TidyTag auf dem PC zu nutzen.</string>
+    <string name="status_on">TidyTag auf dem PC kann das Telefon im WLAN finden.</string>
+    <string name="status_no_access">Die App braucht Zugriff. Siehe unten.</string>
+    <string name="address">Adresse: %1$s</string>
+    <string name="access_title">Der App Zugriff geben</string>
+    <string name="step_files">Dateien auf dem Telefon</string>
+    <string name="step_trash">Papierkorb (Löschen kann rückgängig gemacht werden)</string>
+    <string name="grant_files">Zugriff auf Dateien erlauben</string>
+    <string name="grant_trash">Zugriff auf den Papierkorb erlauben</string>
+    <string name="code_title">Kopplungscode</string>
+    <string name="code_hint">Wähle in TidyTag auf dem PC Datei > Telefon hinzufügen... und gib den Code ein. Lass den Bildschirm dabei an.</string>
+    <string name="paired_pcs">Gekoppelte PCs</string>
+    <string name="no_pcs">Noch keine</string>
+    <string name="remove">Entfernen</string>
+    <string name="channel">TidyTag-Server</string>
+    <string name="notification">TidyTag Companion läuft</string>
+</resources>

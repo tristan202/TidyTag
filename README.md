@@ -39,7 +39,7 @@ Windows SmartScreen may warn about an unknown publisher the first time.
   a quick save without a dialog.
 - Tag directly on an Android phone with the TidyTag Companion app (`TidyTag-Companion-<version>.apk`
   on the release page, Android 11 or newer). The app is one screen of cards:
-  - **Status**: a switch and a dot that turns green ("Klar", or "Ready" in English) when the app is on, with the phone's
+  - **Status**: a switch and a dot that turns green ("Ready") when the app is on, with the phone's
     address on the network.
   - **Access**: shown only while something is missing. Step 1 gives access to the files, step 2 to
     Android's trash, each with its own button.
@@ -47,8 +47,12 @@ Windows SmartScreen may warn about an unknown publisher the first time.
     File > Add phone... and type the code; keep the phone's screen on meanwhile.
   - **Paired PCs**: each PC with a Remove button.
 
-  The colours follow the phone's light or dark mode. Once paired, the phone appears in TidyTag's
-  folder tree beside the drives.
+  <img src="docs/images/companion-app.png" alt="TidyTag Companion: status, pairing code and paired PCs" width="420">
+
+  The colours follow the phone's light or dark mode. The app speaks English, Danish, German, Spanish,
+  French, Italian and Swedish: it follows the phone's language, or pick one under Settings > Apps >
+  TidyTag Companion > Language. Once paired, the phone appears in TidyTag's folder tree beside the
+  drives.
   - Tags, covers, renames and moves work directly on the phone's files over Wi-Fi. Only the bytes
     that are needed travel: listing a folder reads the tag parts, a save sends only the changed bytes,
     and when a tag has to grow the phone copies the audio itself.
@@ -183,7 +187,8 @@ the file rules. `companion\gradlew.bat -p companion :core:desktopJar` builds
 
 The app screen is built in code in `companion\app\...\MainActivity.kt`; colours are in
 `res\values\colors.xml` (light) and `res\values-night\colors.xml` (dark), texts in
-`res\values\strings.xml` (Danish) and `res\values-en\strings.xml` (English).
+`res\values\strings.xml` (English, the default) and `res\values-<language>\strings.xml` (da, de, es,
+fr, it, sv); `res\xml\locales_config.xml` lists them for Android's per-app language setting.
 
 ## Making a release
 1. Set the new version in Lazarus under *Project > Project Options > Version Info* (the numbers and

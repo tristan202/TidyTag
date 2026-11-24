@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_on">Listo</string>
+    <string name="title_off">Apagado</string>
+    <string name="status_off">Actívalo para usar el teléfono desde TidyTag en tu PC.</string>
+    <string name="status_on">TidyTag en el PC puede encontrar el teléfono en la red wifi.</string>
+    <string name="status_no_access">La app necesita acceso. Mira abajo.</string>
+    <string name="address">Dirección: %1$s</string>
+    <string name="access_title">Dar acceso a la app</string>
+    <string name="step_files">Archivos del teléfono</string>
+    <string name="step_trash">Papelera (el borrado se puede deshacer)</string>
+    <string name="grant_files">Permitir acceso a los archivos</string>
+    <string name="grant_trash">Permitir acceso a la papelera</string>
+    <string name="code_title">Código de emparejamiento</string>
+    <string name="code_hint">En TidyTag en el PC, elige Archivo > Añadir teléfono... y escribe el código. Mantén la pantalla encendida mientras tanto.</string>
+    <string name="paired_pcs">PC emparejados</string>
+    <string name="no_pcs">Ninguno todavía</string>
+    <string name="remove">Quitar</string>
+    <string name="channel">Servidor de TidyTag</string>
+    <string name="notification">TidyTag Companion está en marcha</string>
+</resources>
