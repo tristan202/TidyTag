@@ -10,8 +10,15 @@ $props = "$dir\release.properties"
 if ((Test-Path $jks) -or (Test-Path $props)) {
   throw "$jks or $props exists already. Nothing changed (an existing key is never replaced)."
 }
-$keytool = "$env:LOCALAPPDATA\TidyTagBuildTools\jdk17\bin\keytool.exe"
-if (-not (Test-Path $keytool)) { $keytool = 'keytool' }
+# any JDK's keytool will do: the build-tools JDK, JAVA_HOME, Android Studio's, or one on PATH
+$keytool = @("$env:LOCALAPPDATA\TidyTagBuildTools\jdk17\bin\keytool.exe",
+  "$env:USERPROFILE\AppData\Local\TidyTagBuildTools\jdk17\bin\keytool.exe",
+  "$env:JAVA_HOME\bin\keytool.exe",
+  "$env:ProgramFiles\Android\Android Studio\jbr\bin\keytool.exe") |
+  Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
+if (-not $keytool) { $keytool = (Get-Command keytool -ErrorAction SilentlyContinue).Source }
+if (-not $keytool) { throw 'keytool not found (it comes with Java). Nothing changed.' }
+Write-Host "Using $keytool"
 
 function Read-Plain([string]$prompt) {
   $s = Read-Host $prompt -AsSecureString
