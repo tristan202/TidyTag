@@ -50,8 +50,8 @@ Windows SmartScreen may warn about an unknown publisher the first time.
   <img src="docs/images/companion-app.png" alt="TidyTag Companion: status, pairing code and paired PCs" width="420">
 
   The colours follow the phone's light or dark mode. The app speaks English, Danish, German, Spanish,
-  French, Italian and Swedish: it follows the phone's language, or pick one under Settings > Apps >
-  TidyTag Companion > Language. Once paired, the phone appears in TidyTag's folder tree beside the
+  French, Italian and Swedish: it follows the phone's language, or pick one on the app's own
+  Language card (Android 13 or newer). Once paired, the phone appears in TidyTag's folder tree beside the
   drives.
   - Tags, covers, renames and moves work directly on the phone's files over Wi-Fi. Only the bytes
     that are needed travel: listing a folder reads the tag parts, a save sends only the changed bytes,
