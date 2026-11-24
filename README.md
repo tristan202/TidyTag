@@ -38,8 +38,17 @@ Windows SmartScreen may warn about an unknown publisher the first time.
 - Playlists (.m3u8/.m3u) with configurable #EXTINF text, relative or full paths, a playlist folder and
   a quick save without a dialog.
 - Tag directly on an Android phone with the TidyTag Companion app (`TidyTag-Companion-<version>.apk`
-  on the release page). Switch it on in the app, then use File > Add phone... in TidyTag and type the
-  pairing code the app shows. The phone appears in the folder tree beside the drives.
+  on the release page, Android 11 or newer). The app is one screen of cards:
+  - **Status**: a switch and a dot that turns green ("Klar", or "Ready" in English) when the app is on, with the phone's
+    address on the network.
+  - **Access**: shown only while something is missing. Step 1 gives access to the files, step 2 to
+    Android's trash, each with its own button.
+  - **Pairing code**: six large digits, shown only while TidyTag can pair. In TidyTag choose
+    File > Add phone... and type the code; keep the phone's screen on meanwhile.
+  - **Paired PCs**: each PC with a Remove button.
+
+  The colours follow the phone's light or dark mode. Once paired, the phone appears in TidyTag's
+  folder tree beside the drives.
   - Tags, covers, renames and moves work directly on the phone's files over Wi-Fi. Only the bytes
     that are needed travel: listing a folder reads the tag parts, a save sends only the changed bytes,
     and when a tag has to grow the phone copies the audio itself.
@@ -172,14 +181,24 @@ companion\gradlew.bat -p companion :core:test :app:assembleDebug
 the file rules. `companion\gradlew.bat -p companion :core:desktopJar` builds
 `companion-desktop.jar`, which serves any folder like a phone; TidyTag's phone tests use it.
 
+The app screen is built in code in `companion\app\...\MainActivity.kt`; colours are in
+`res\values\colors.xml` (light) and `res\values-night\colors.xml` (dark), texts in
+`res\values\strings.xml` (Danish) and `res\values-en\strings.xml` (English).
+
 ## Making a release
 1. Set the new version in Lazarus under *Project > Project Options > Version Info* (the numbers and
    the *Product version* string must match), or edit `VersionInfo` in `TidyTag.lpi`.
 2. Run `powershell -ExecutionPolicy Bypass -File tools\make-release.ps1`. It builds the optimized
    *Release* build mode, the installer with [Inno Setup 6](https://jrsoftware.org/isinfo.php)
-   (`installer	idytag.iss`) and a portable zip, and prints their SHA-256 checksums. The files end
-   up in `release\`.
-3. On GitHub: *Releases > Draft a new release*, create the tag (e.g. `v0.9.0`), attach the two files
+   (`installer/tidytag.iss`), a portable zip and the signed companion APK
+   (`TidyTag-Companion-<version>.apk`), and prints their SHA-256 checksums. The files end up in
+   `release\`.
+   - The APK is signed with the key in `%USERPROFILE%\.tidytag` (`release.jks` and
+     `release.properties`, never in the repository). Create it once with
+     `powershell -ExecutionPolicy Bypass -File tools\make-key.ps1`, which asks for the password.
+     Without it the script makes a debug-signed APK. Back up the key and its password: updates to
+     an installed app must be signed with the same key.
+3. On GitHub: *Releases > Draft a new release*, create the tag (e.g. `1.2.0`), attach the three files
    and publish.
 
 ## Development and test tools
