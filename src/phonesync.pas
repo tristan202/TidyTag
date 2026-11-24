@@ -76,7 +76,7 @@ function FileFingerprint(const FileName: string): QWord;
 implementation
 
 uses
-  Math, AudioTags, SettingsFile;
+  Math, AudioTags, SettingsFile, FileLayer;
 
 resourcestring
   rsMappenFindesIkkePaaTelefonen = 'mappen findes ikke længere på telefonen (er den tilsluttet og låst op?)';
@@ -470,6 +470,9 @@ function FindMirrorRoot(const Dir: string): string;
 var
   D, P: string;
 begin
+  Result := '';
+  // a companion phone folder is never a mirror; asking Windows would be a slow network lookup
+  if IsPhonePath(Dir) then Exit;
   D := ExcludeTrailingPathDelimiter(Dir);
   while D <> '' do
   begin

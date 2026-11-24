@@ -30,6 +30,9 @@ function MatchFileName(const Mask, FilePath: string; UnderscoresToSpaces: Boolea
 
 implementation
 
+uses
+  FileLayer;
+
 type
   TTokenKind = (tkLiteral, tkField, tkSkip);
   TToken = record
@@ -188,6 +191,11 @@ begin
   Result := False;
 end;
 
+function PhoneName(const Name, FilePath: string): string;
+begin
+  if IsPhonePath(FilePath) then Result := LocalToPhoneName(Name) else Result := Name;
+end;
+
 function MatchFileName(const Mask, FilePath: string; UnderscoresToSpaces: Boolean;
   CaseMode: TCaseMode): TFileNameMatch;
 var
@@ -211,13 +219,14 @@ begin
     if Tokens[I].Kind = tkLiteral then
       for K := 1 to Length(Tokens[I].Text) do
         if Tokens[I].Text[K] = '\' then Inc(Levels);
-  Subject := UTF8Decode(ChangeFileExt(ExtractFileName(FilePath), ''));
+  // phone names show '?', ':' and the like as stand-in characters: the tags get the real ones
+  Subject := UTF8Decode(PhoneName(ChangeFileExt(ExtractFileName(FilePath), ''), FilePath));
   Dir := ExtractFileDir(FilePath);
   for I := 2 to Levels do
   begin
     Path := ExtractFileName(Dir);
     if Path = '' then Exit; // not enough folders
-    Part := UTF8Decode(Path);
+    Part := UTF8Decode(PhoneName(Path, FilePath));
     Subject := Part + '\' + Subject;
     Dir := ExtractFileDir(Dir);
   end;

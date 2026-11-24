@@ -231,6 +231,17 @@ begin
   finally
     S.Free;
   end;
+  // changed on the phone itself (same size): the prefetched head must not be used
+  PrefetchTags([P + 'Music\c.mp3']);
+  SaveBytes(Root + 'Music\c.mp3', Pattern(3000, 9));
+  FileSetDate(Root + 'Music\c.mp3', DateTimeToFileDate(EncodeDate(2010, 1, 1)));
+  S := OpenFileStream(P + 'Music\c.mp3', fmOpenRead);
+  try
+    S.ReadBuffer(B[0], 1);
+    Check(B[0] = 9, 'a file changed on the phone is read anew');
+  finally
+    S.Free;
+  end;
 end;
 
 procedure TestRenamesAndList;

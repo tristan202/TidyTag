@@ -136,6 +136,11 @@ begin
   Eq(M.Values[tfArtist], 'Kim Larsen', 'kunstner');
   Eq(M.Values[tfTitle], 'Om lidt bli''r her stille', 'titel');
 
+  // a phone file name with '?' and ':' as shown on Windows: the tags get the real characters
+  M := MatchFileName('%1 - %2', PhonePrefix + 'Pixel\Music\' + PhoneToLocalName('AC:DC - Why?.mp3'), False, cmNone);
+  Eq(M.Values[tfArtist], 'AC:DC', 'kunstner med kolon fra telefonen');
+  Eq(M.Values[tfTitle], 'Why?', 'titel med spørgsmålstegn fra telefonen');
+
   M := MatchFileName('%1 - %2', 'C:\x\A - B - C.flac', False, cmNone);
   Eq(M.Values[tfArtist], 'A', 'doven kunstner');
   Eq(M.Values[tfTitle], 'B - C', 'resten til titel');

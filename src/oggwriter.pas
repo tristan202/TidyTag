@@ -301,6 +301,10 @@ begin
         WriteBytes(Dst, FirstPage);
         WritePackets(Dst, Packets, Serial, 1, NewPages);
         Delta := NewPages - (HeaderPages - 1);
+        // same page count: the audio pages stay byte for byte (copied on the phone itself)
+        if Delta = 0 then
+          CopyStreamRange(Src, Dst, Src.Position, Src.Size - Src.Position)
+        else
         while ReadPage(Src, Pg) do
         begin
           if Pg.Serial <> Serial then

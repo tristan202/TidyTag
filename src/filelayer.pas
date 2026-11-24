@@ -71,7 +71,7 @@ const
 
 type
   TPeekEntry = class
-    Size: Int64;
+    Size, MTime: Int64;
     Head, Tail: TBytes;
   end;
 
@@ -274,17 +274,20 @@ begin
       FOrigSize := E.Size;
       FInPlace := FWritable;
       FTarget := FRel;
-      // what PrefetchTags already fetched for a read
+      // what PrefetchTags already fetched for a read: used once, and only if the file
+      // has not changed on the phone since
       I := Peeks.IndexOf(Path);
-      if (I >= 0) and not FWritable then
+      if I >= 0 then
       begin
         P := TPeekEntry(Peeks.Objects[I]);
-        if P.Size = FSize then
+        if not FWritable and (P.Size = FSize) and (P.MTime = E.MTime) then
         begin
-          FHead := Copy(P.Head);
-          FTail := Copy(P.Tail);
+          FHead := P.Head;
+          FTail := P.Tail;
           FTailStart := FSize - Length(FTail);
         end;
+        P.Free;
+        Peeks.Delete(I);
       end;
     end;
   finally
@@ -688,6 +691,7 @@ var
           begin
             E := TPeekEntry.Create;
             E.Size := R[I].Size;
+            E.MTime := R[I].MTime;
             E.Head := R[I].Head;
             E.Tail := R[I].Tail;
             J := Peeks.IndexOf(Paths[K]);

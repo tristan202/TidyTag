@@ -249,6 +249,26 @@ begin
     ((Length(A.Data) = 0) or CompareMem(@A.Data[0], @B.Data[0], Length(A.Data)));
 end;
 
+{ A one-letter change to the title rewrites no audio over the network. }
+procedure SmallEditScenario(const FileName: string; Phone: TPhone);
+var
+  Info: TAudioInfo;
+  Sent: Int64;
+begin
+  WriteLn('  Scenarie F (lille rettelse på telefonen)');
+  Info := ReadAudioInfo(FileName, True);
+  try
+    Info.Fields[tfTitle] := Info.Fields[tfTitle] + 'x';
+    Sent := Phone.BytesSent;
+    WriteAudioTags(Info, True);
+    WriteLn(Format('   sendt: %d bytes', [Phone.BytesSent - Sent]));
+    // the whole tag area may go (FLAC writes its padding), never the audio
+    Check(Phone.BytesSent - Sent < Info.FileSize div 2, 'en lille rettelse sender ikke lyden');
+  finally
+    Info.Free;
+  end;
+end;
+
 procedure Scenario(const FileName, Name: string; Edit: Integer; AudioCrc: Cardinal);
 var
   Info, Back: TAudioInfo;
@@ -507,6 +527,7 @@ begin
       Scenario(Dst, 'C', 2, AudioCrc);
       ToolScenario(Dst, AudioCrc);
       RemoveScenario(Dst, AudioCrc);
+      if Server <> nil then SmallEditScenario(Dst, Phone);
       if (Server <> nil) and (GetFileSize(Dir + Name) > 1000000) then
       begin
         WriteLn(Format('   sendt til telefonen: %d bytes (fil %d bytes)', [Phone.BytesSent - Sent, GetFileSize(Dir + Name)]));

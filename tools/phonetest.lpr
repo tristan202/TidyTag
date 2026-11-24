@@ -75,6 +75,7 @@ var
   M: TPhoneMirror;
   Errors: TStringList;
   Names: TStringList;
+  T0: QWord;
 begin
   DefaultSystemCodePage := CP_UTF8;
   if ParamCount < 2 then
@@ -100,6 +101,9 @@ begin
     WriteLn('== download');
     Check(DownloadPhoneFolder(0, Phone, 'Test\Rock', Mirror) = '', 'download');
     Check(FindMirrorRoot(Mirror + PathDelim + 'Live') = Mirror, 'mirror root found from a subfolder');
+    T0 := GetTickCount64;
+    Check((FindMirrorRoot('\\TidyTag-Phone\Pixel\Music\Rock') = '') and (GetTickCount64 - T0 < 100),
+      Format('a companion phone folder is no mirror, without a network lookup (%d ms)', [GetTickCount64 - T0]));
     for Rel in Names do
       Check(SameContent(Phone + PathDelim + Rel, Mirror + PathDelim + Rel), 'copied ' + Rel);
     Check(SameContent(Phone + '\Live\live.mp3', Mirror + '\Live\live.mp3'), 'subfolder copied');

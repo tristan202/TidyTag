@@ -1945,6 +1945,7 @@ begin
     Inform(rsTilfoejTelefon, rsForkertKode, mtWarning);
   until False;
   SavePairedPhone(Found[I], Token);
+  StopScan; // the scan thread may be using a phone connection that ResetPhones frees
   ResetPhones;
   ShellTree.RefreshPhones;
   Navigate(PhonePrefix + Found[I].Name);
@@ -6874,7 +6875,9 @@ begin
     Start := S
   else if (ParamCount >= 2) and (ParamStr(1) = '--selftest') then
     Start := ParamStr(2);
-  if (Start = '') or not DirectoryExists(Start) then
+  // a phone folder is not reopened at start: the phone may be away, and Windows would look
+  // the path up on the network first
+  if (Start = '') or IsPhonePath(Start) or not DirectoryExists(Start) then
     Start := GetUserDir + 'Music';
   if not DirectoryExists(Start) then
     Start := GetUserDir;
