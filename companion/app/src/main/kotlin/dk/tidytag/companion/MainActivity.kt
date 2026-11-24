@@ -15,6 +15,7 @@ import android.provider.Settings
 import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import java.net.Inet4Address
@@ -35,7 +36,7 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val pad = (16 * resources.displayMetrics.density).toInt()
-        val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(pad, pad * 2, pad, pad) }
+        val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(pad, pad, pad, pad) }
         fun text(size: Float) = TextView(this).apply { textSize = size; setPadding(0, pad / 2, 0, pad / 2) }
         root.addView(text(22f).apply { text = getString(R.string.app_name) })
         onOff = Switch(this).apply {
@@ -56,7 +57,14 @@ class MainActivity : Activity() {
         root.addView(text(16f).apply { text = getString(R.string.paired_pcs) })
         pcs = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         root.addView(pcs)
-        setContentView(root)
+        // Android 15 draws apps edge to edge: keep the content clear of the status and navigation bars
+        val scroll = ScrollView(this).apply { addView(root) }
+        scroll.setOnApplyWindowInsetsListener { v, insets ->
+            val bars = insets.getInsets(android.view.WindowInsets.Type.systemBars())
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            insets
+        }
+        setContentView(scroll)
         requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
     }
 
