@@ -41,6 +41,11 @@ type
     FToken: string;
     FNet, FConn: Pointer;
     FBytesSent: Int64;
+    FDownUntil, FLastProbe: QWord;
+    function BackAgain: Boolean;
+    procedure Connect;
+    function Send(const Method, Path: string; const Query: array of string; const Body: TBytes;
+      out Status: Integer): TBytes;
     function Request(const Method, Path: string; const Query: array of string; const Body: TBytes;
       out Status: Integer): TBytes;
     function Call(const Method, Path: string; const Query: array of string; const Body: TBytes): TBytes;
@@ -129,6 +134,12 @@ begin
   InternetSetOptionW(FNet, INTERNET_OPTION_CONNECT_TIMEOUT, @Timeout, SizeOf(Timeout));
   InternetSetOptionW(FNet, INTERNET_OPTION_RECEIVE_TIMEOUT, @Timeout, SizeOf(Timeout));
   InternetSetOptionW(FNet, INTERNET_OPTION_SEND_TIMEOUT, @Timeout, SizeOf(Timeout));
+  Connect;
+end;
+
+procedure TPhone.Connect;
+begin
+  if FConn <> nil then InternetCloseHandle(FConn);
   FConn := InternetConnectW(FNet, PWideChar(UnicodeString(FInfo.Host)), FInfo.Port, nil, nil,
     INTERNET_SERVICE_HTTP, 0, 0);
 end;
@@ -141,6 +152,67 @@ begin
 end;
 
 function TPhone.Request(const Method, Path: string; const Query: array of string; const Body: TBytes;
+  out Status: Integer): TBytes;
+const
+  DownFor = 30000; // after a failure, fail at once instead of waiting 15 s for every file
+var
+  Found: TPhoneInfos;
+  I: Integer;
+begin
+  if (GetTickCount64 < FDownUntil) and not BackAgain then
+    raise EPhoneError.CreateFmt(rsTelefonSvarerIkke, ['-']);
+  try
+    Result := Send(Method, Path, Query, Body, Status);
+  except
+    on E: EPhoneError do
+    begin
+      // the app may be back on another address (DHCP, restarted): retry there once.
+      // The old address never got the request, so even a rename is safe to repeat.
+      Found := DiscoverPhones;
+      for I := 0 to High(Found) do
+        if (Found[I].Id = FInfo.Id) and ((Found[I].Host <> FInfo.Host) or (Found[I].Port <> FInfo.Port)) then
+        begin
+          FInfo := Found[I];
+          Connect;
+          if FToken <> '' then SavePairedPhone(FInfo, FToken);
+          try
+            Exit(Send(Method, Path, Query, Body, Status));
+          except
+            on EPhoneError do Break;
+          end;
+        end;
+      FDownUntil := GetTickCount64 + DownFor;
+      FLastProbe := GetTickCount64;
+      raise;
+    end;
+  end;
+end;
+
+{ While a phone is down, a short broadcast every 2 s tells whether its app is back. }
+function TPhone.BackAgain: Boolean;
+var
+  Found: TPhoneInfos;
+  I: Integer;
+begin
+  Result := False;
+  if GetTickCount64 - FLastProbe < 2000 then Exit;
+  FLastProbe := GetTickCount64;
+  Found := DiscoverPhones(300);
+  for I := 0 to High(Found) do
+    if Found[I].Id = FInfo.Id then
+    begin
+      if (Found[I].Host <> FInfo.Host) or (Found[I].Port <> FInfo.Port) then
+      begin
+        FInfo := Found[I];
+        Connect;
+        if FToken <> '' then SavePairedPhone(FInfo, FToken);
+      end;
+      FDownUntil := 0;
+      Exit(True);
+    end;
+end;
+
+function TPhone.Send(const Method, Path: string; const Query: array of string; const Body: TBytes;
   out Status: Integer): TBytes;
 var
   Url, Headers: UnicodeString;

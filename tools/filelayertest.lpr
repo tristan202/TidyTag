@@ -299,6 +299,7 @@ begin
   Check(Failed, 'the save reports an error');
   StartServer;
   Check(Same(LoadBytes(Root + 'Music\drop.mp3'), Orig), 'the original is untouched');
+  Sleep(2100); // a phone that failed is checked again at most every 2 s
   ListDirL(P + 'Music');
   Check(not FileExists(Root + 'Music\drop.mp3.tidytag-tmp'), 'the half temporary file is gone after a listing');
 end;

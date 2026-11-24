@@ -181,13 +181,20 @@ end;
 procedure TestRediscover;
 var
   I: TPhoneInfo;
-  P: TPhone;
+  P, Open: TPhone;
 begin
   WriteLn('== found again after a new address');
   I := Info;
   SavePairedPhone(I, 'tok');
+  Open := TPhone.Create(I, 'tok');
   StopServer;
   StartServer(Port2);
+  try
+    Check(Length(Open.List('Music')) >= 1, 'an open connection follows the phone to its new port');
+  except
+    on E: Exception do Check(False, 'an open connection follows the phone to its new port: ' + E.Message);
+  end;
+  Open.Free;
   P := PhoneByName('Testtelefon');
   try
     Check(P <> nil, 'paired phone by name');
@@ -198,6 +205,35 @@ begin
   P := PhoneByName('Testtelefon');
   try
     Check((P <> nil) and (P.Info.Port = Port2), 'new port saved');
+  finally
+    P.Free;
+  end;
+end;
+
+procedure TestFastFail;
+var
+  P: TPhone;
+  T: QWord;
+  Failed: Boolean;
+begin
+  WriteLn('== a phone that is gone fails fast');
+  P := TPhone.Create(Info, 'tok');
+  try
+    StopServer;
+    Failed := False;
+    try P.List(''); except on E: EPhoneError do Failed := True; end;
+    Check(Failed, 'the first call fails');
+    T := GetTickCount64;
+    Failed := False;
+    try P.List(''); except on E: EPhoneError do Failed := True; end;
+    Check(Failed and (GetTickCount64 - T < 300), Format('the next call fails at once (%d ms)', [GetTickCount64 - T]));
+    StartServer(Port2);
+    Sleep(2100);
+    try
+      Check(Length(P.List('Music')) >= 1, 'works again once the app is back');
+    except
+      on E: Exception do Check(False, 'works again once the app is back: ' + E.Message);
+    end;
   finally
     P.Free;
   end;
@@ -224,6 +260,7 @@ begin
     TestPeekBatch;
     TestErrorsRaise;
     TestRediscover;
+    TestFastFail;
   finally
     StopServer;
   end;
