@@ -55,7 +55,8 @@ Write-Host '== TidyTag Companion (Android)'
 # keyAlias, keyPassword (never in the repository); without it a debug-signed APK is made
 $props = "$env:USERPROFILE\.tidytag\release.properties"
 $java = "$env:LOCALAPPDATA\TidyTagBuildTools\jdk17"
-if (-not $env:JAVA_HOME -and (Test-Path $java)) { $env:JAVA_HOME = $java }
+# the companion builds with JDK 17 (Gradle toolchain); another JAVA_HOME, e.g. JDK 21, fails
+if (Test-Path $java) { $env:JAVA_HOME = $java }
 $apk = "$out\TidyTag-Companion-$version.apk"
 if (Test-Path $props) {
   $p = @{}
