@@ -46,7 +46,8 @@ class MainActivity : Activity() {
             setOnCheckedChangeListener { _, on ->
                 val i = Intent(this@MainActivity, CompanionService::class.java)
                 if (on) startForegroundService(i) else stopService(i)
-                handler.postDelayed({ update() }, 300)
+                // this@MainActivity: inside apply, a bare "handler" is the Switch's View.getHandler() (null)
+                this@MainActivity.handler.postDelayed({ update() }, 300)
             }
         }
         root.addView(onOff)
