@@ -148,6 +148,32 @@ begin
   Check(Same(LoadBytes(Root + 'Music\w.bin'), Want), 'the phone file has exactly the change');
 end;
 
+// a save that needs several requests must never leave a half-written original
+procedure TestInPlaceAtomic;
+var
+  S: TStream;
+  Big, Want: TBytes;
+begin
+  WriteLn('== in-place save in several requests');
+  SaveBytes(Root + 'Music\atomic.mp3', Pattern(3000000, 1));
+  Big := Pattern(1500000, 77);
+  S := OpenFileStream(P + 'Music\atomic.mp3', fmOpenReadWrite);
+  try
+    S.WriteBuffer(Big[0], Length(Big)); // more than one flush
+    S.Position := 2900000;
+    S.WriteBuffer(TBytes.Create(5, 5)[0], 2);
+    Check(Same(LoadBytes(Root + 'Music\atomic.mp3'), Pattern(3000000, 1)),
+      'the original is untouched while the save is under way');
+  finally
+    S.Free;
+  end;
+  Want := Pattern(3000000, 1);
+  Move(Big[0], Want[0], Length(Big));
+  Want[2900000] := 5; Want[2900001] := 5;
+  Check(Same(LoadBytes(Root + 'Music\atomic.mp3'), Want), 'the finished save has every change');
+  Check(not FileExists(Root + 'Music\atomic.mp3.tidytag-tmp'), 'no temporary file left');
+end;
+
 procedure TestServerSideCopy;
 var
   Src, Dst: TStream;
@@ -317,6 +343,7 @@ begin
     TestPaths;
     TestReadAcrossBlocks;
     TestInPlaceWrite;
+    TestInPlaceAtomic;
     TestServerSideCopy;
     TestCacheFresh;
     TestRenamesAndList;

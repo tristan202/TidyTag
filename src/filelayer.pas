@@ -90,7 +90,13 @@ type
     FTailStart, FWinStart: Int64;
     FPending: array of TPending;
     FPendingBytes: Int64;
+    // an in-place save that needs more than one request goes to a copy that replaces
+    // the original at the end, so a lost connection never leaves a half-written file
+    FInPlace, FShadow: Boolean;
+    FTarget: string;
+    FOrigSize: Int64;
     procedure DropCaches;
+    procedure Shadow;
   protected
     function GetSize: Int64; override;
     procedure SetSize(const NewSize: Int64); override;
@@ -100,7 +106,7 @@ type
     function Read(var Buffer; Count: Longint): Longint; override;
     function Write(const Buffer; Count: Longint): Longint; override;
     function Seek(const Offset: Int64; Origin: TSeekOrigin): Int64; override;
-    procedure Flush;
+    procedure Flush(Final: Boolean = False);
     procedure CopyRangeFrom(Src: TPhoneStream; From, Count: Int64);
   end;
 
@@ -265,6 +271,9 @@ begin
       if not FPhone.Stat(FRel, E) or E.IsDir then
         raise EFOpenError.CreateFmt('Unable to open file "%s"', [Path]);
       FSize := E.Size;
+      FOrigSize := E.Size;
+      FInPlace := FWritable;
+      FTarget := FRel;
       // what PrefetchTags already fetched for a read
       I := Peeks.IndexOf(Path);
       if (I >= 0) and not FWritable then
@@ -287,7 +296,16 @@ end;
 destructor TPhoneStream.Destroy;
 begin
   try
-    Flush; // a failed write must reach the caller as an error, not be lost
+    Flush(True); // a failed write must reach the caller as an error, not be lost
+    if FShadow then
+    begin
+      Lock.Enter;
+      try
+        FPhone.Rename(FRel, FTarget, True);
+      finally
+        Lock.Leave;
+      end;
+    end;
   finally
     if FWritable then ForgetPeek(FPath);
     inherited Destroy;
@@ -301,6 +319,23 @@ begin
   FWin := nil;
 end;
 
+procedure TPhoneStream.Shadow;
+var
+  Tmp: string;
+begin
+  if not FInPlace or FShadow then Exit;
+  Tmp := FTarget + '.tidytag-tmp';
+  Lock.Enter;
+  try
+    FPhone.CreateFile(Tmp);
+    if FOrigSize > 0 then FPhone.CopyRange(FTarget, 0, FOrigSize, Tmp, 0);
+  finally
+    Lock.Leave;
+  end;
+  FRel := Tmp;
+  FShadow := True;
+end;
+
 function TPhoneStream.GetSize: Int64;
 begin
   Result := FSize;
@@ -310,6 +345,7 @@ procedure TPhoneStream.SetSize(const NewSize: Int64);
 begin
   if not FWritable then raise EStreamError.Create(rsKunLaesning);
   Flush;
+  Shadow;
   Lock.Enter;
   try
     FPhone.Truncate(FRel, NewSize);
@@ -412,11 +448,13 @@ begin
   if FPendingBytes >= FlushAt then Flush;
 end;
 
-procedure TPhoneStream.Flush;
+procedure TPhoneStream.Flush(Final: Boolean);
 var
   I: Integer;
 begin
   if FPending = nil then Exit;
+  // only the last flush of a single range can safely go straight into the original
+  if not (Final and (Length(FPending) = 1)) then Shadow;
   Lock.Enter;
   try
     for I := 0 to High(FPending) do FPhone.Write(FRel, FPending[I].Offset, FPending[I].Data);
@@ -431,6 +469,7 @@ procedure TPhoneStream.CopyRangeFrom(Src: TPhoneStream; From, Count: Int64);
 begin
   Flush;
   Src.Flush;
+  Shadow;
   Lock.Enter;
   try
     FPhone.CopyRange(Src.FRel, From, Count, FRel, FPos);
