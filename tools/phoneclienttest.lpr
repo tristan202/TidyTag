@@ -81,15 +81,17 @@ end;
 
 procedure TestPairAndToken;
 var
-  Token: string;
+  Token, Tok: string;
   P: TPhone;
 begin
   WriteLn('== pairing');
   Check(Info.Name = 'Testtelefon', 'found by broadcast: ' + Info.Name);
   Check(Info.Port = Port1, 'port from the answer');
-  Check(not PairPhone(Info, '000000', Token), 'wrong code refused');
   Check(PairPhone(Info, '123456', Token) and (Token <> ''), 'right code gives a token');
-  P := TPhone.Create(Info, Token);
+  Tok := Token;
+  Check(not PairPhone(Info, '000000', Token), 'wrong code refused');
+  Check(not PairPhone(Info, '123456', Token), 'pairing closed after a pairing');
+  P := TPhone.Create(Info, Tok);
   try
     Check(Length(P.List('')) >= 1, 'token works');
   finally

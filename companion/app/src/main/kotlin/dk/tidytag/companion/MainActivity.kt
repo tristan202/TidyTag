@@ -29,6 +29,7 @@ class MainActivity : Activity() {
     private lateinit var pcs: LinearLayout
     private lateinit var permissions: Button
     private val handler = Handler(Looper.getMainLooper())
+    private var pairingOpenedFor: Any? = null
     private val refresh = object : Runnable {
         override fun run() { update(); handler.postDelayed(this, 1000) }
     }
@@ -70,12 +71,15 @@ class MainActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        pairingOpenedFor = null
         onOff.isChecked = CompanionService.server != null
         handler.post(refresh)
     }
 
     override fun onPause() {
         handler.removeCallbacks(refresh)
+        // pairing only while this screen is open: nobody on the network can try codes meanwhile
+        CompanionService.server?.tokens?.closePairing()
         super.onPause()
     }
 
@@ -104,7 +108,12 @@ class MainActivity : Activity() {
             else -> getString(R.string.status_on)
         }
         address.text = if (s != null) getString(R.string.address, "${ipAddress() ?: "?"}:${CompanionService.PORT}") else ""
-        code.text = s?.let { getString(R.string.code, it.tokens.pairingCode) } ?: ""
+        // pairing opens once per visit of this screen (closed in onPause; five wrong codes close it too)
+        if (s != null && s !== pairingOpenedFor) {
+            s.tokens.openPairing(10 * 60 * 1000L)
+            pairingOpenedFor = s
+        }
+        code.text = s?.takeIf { it.tokens.pairingOpen() }?.let { getString(R.string.code, it.tokens.pairingCode) } ?: ""
         val tokens = s?.tokens ?: CompanionService.tokens(this)
         pcs.removeAllViews()
         for ((token, name) in tokens.paired()) {

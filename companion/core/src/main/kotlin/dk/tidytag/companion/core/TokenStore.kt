@@ -33,6 +33,26 @@ class TokenStore(private val file: File?) {
 
     @Synchronized fun rotateCode() { pairingCode = newCode() }
 
+    // Pairing is only possible while the app's screen is open (and for a limit of wrong codes),
+    // so nobody on the network can guess the 6 digits by trying them all.
+    private var pairingUntil = 0L
+    private var wrongCodes = 0
+
+    @Synchronized fun openPairing(forMillis: Long) {
+        pairingUntil = System.currentTimeMillis() + forMillis
+        wrongCodes = 0
+    }
+
+    @Synchronized fun closePairing() { pairingUntil = 0 }
+
+    @Synchronized fun pairingOpen(): Boolean = System.currentTimeMillis() < pairingUntil
+
+    /** A wrong code: a new code, and pairing closes after five. */
+    @Synchronized fun wrongCode() {
+        rotateCode()
+        if (++wrongCodes >= 5) closePairing()
+    }
+
     /** For tests and the desktop runner. */
     @Synchronized fun setCode(code: String) { pairingCode = code }
 

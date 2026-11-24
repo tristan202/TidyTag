@@ -20,6 +20,8 @@ class CompanionServer(
 
     override fun serve(session: IHTTPSession): Response = try {
         handle(session)
+    } catch (e: TooLargeException) {
+        error(Response.Status.lookup(413) ?: Response.Status.BAD_REQUEST, e.message)
     } catch (e: BadPathException) {
         error(Response.Status.BAD_REQUEST, e.message)
     } catch (e: NotFoundException) {
@@ -37,8 +39,12 @@ class CompanionServer(
 
     private fun ok(json: String = "{}") = newFixedLengthResponse(Response.Status.OK, "application/json", json)
 
-    private fun body(s: IHTTPSession): ByteArray {
+    class TooLargeException : Exception("request too large")
+
+    /** The request body; refused before allocating when it is larger than max. */
+    private fun body(s: IHTTPSession, max: Int = 64 * 1024 * 1024): ByteArray {
         val len = s.headers["content-length"]?.toLongOrNull() ?: 0L
+        if (len < 0 || len > max) throw TooLargeException()
         val b = ByteArray(len.toInt())
         var n = 0
         while (n < b.size) {
@@ -56,7 +62,7 @@ class CompanionServer(
         fun long(name: String) = arg(name).toLongOrNull() ?: throw IllegalArgumentException("bad $name")
         val post = s.method == Method.POST
 
-        if (s.uri == "/v1/pair" && post) return pair(String(body(s), Charsets.UTF_8))
+        if (s.uri == "/v1/pair" && post) return pair(String(body(s, 4096), Charsets.UTF_8))
         if (!tokens.isValid(s.headers["x-tidytag-token"])) return error(Response.Status.UNAUTHORIZED, "not paired")
 
         when (s.uri) {
@@ -123,12 +129,17 @@ class CompanionServer(
     }
 
     private fun pair(text: String): Response {
+        if (!tokens.pairingOpen()) return error(Response.Status.FORBIDDEN, "pairing is closed: open the app on the phone")
         val m = Json.parse(text)
-        if (m["code"] != tokens.pairingCode) return error(Response.Status.UNAUTHORIZED, "wrong code")
+        if (m["code"] != tokens.pairingCode) {
+            tokens.wrongCode()
+            return error(Response.Status.UNAUTHORIZED, "wrong code")
+        }
         val token = tokens.newToken()
         val pc = m["pcName"] as? String ?: ""
         tokens.add(token, pc)
         tokens.rotateCode()
+        tokens.closePairing()
         onPaired?.invoke(pc)
         return ok(Json.obj("token" to token, "id" to deviceId, "name" to deviceName))
     }

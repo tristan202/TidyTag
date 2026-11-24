@@ -511,7 +511,7 @@ resourcestring
   rsTilfoejTelefon = 'Tilføj telefon...';
   rsTilfoejTelefonHint = 'Find og par en telefon med TidyTag Companion, så den vises i mappetræet';
   rsIngenTelefonFundet = 'Ingen telefon svarede. Start TidyTag Companion på telefonen, tænd den, og sørg for at telefonen og pc''en er på samme Wi-Fi.';
-  rsForkertKode = 'Koden passede ikke. Prøv igen med koden, som telefonen viser nu.';
+  rsForkertKode = 'Koden passede ikke, eller appen er ikke åben på telefonens skærm. Åbn TidyTag Companion, og prøv igen med koden, den viser nu.';
   rsAabnTelefonHint = 'Arbejd på en mappe på en telefon (Android via USB); ændringer sendes automatisk tilbage';
   rsVaelgTelefonmappe = 'Vælg en mappe på telefonen';
   rsTelefon = 'Telefon';

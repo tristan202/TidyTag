@@ -101,6 +101,8 @@ open class LocalStorage(root: File) : Storage {
                     if (n <= 0) break
                     done += n
                 }
+                // a source that changed in between must not leave a short file behind
+                if (done < len) throw ConflictException("copied $done of $len bytes from $src")
                 rd.fd.sync()
             }
         }

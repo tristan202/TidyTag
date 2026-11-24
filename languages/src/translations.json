@@ -6815,14 +6815,6 @@
   "sv": "Ingen telefon svarade. Starta TidyTag Companion på telefonen, slå på den och se till att telefonen och datorn är på samma wifi.",
   "es": "Ningún teléfono respondió. Inicie TidyTag Companion en el teléfono, actívelo y compruebe que el teléfono y el PC están en la misma red Wi-Fi."
  },
- "Koden passede ikke. Prøv igen med koden, som telefonen viser nu.": {
-  "en": "The code did not match. Try again with the code the phone shows now.",
-  "de": "Der Code stimmt nicht. Versuche es erneut mit dem Code, den das Telefon jetzt anzeigt.",
-  "fr": "Le code ne correspond pas. Réessayez avec le code que le téléphone affiche maintenant.",
-  "it": "Il codice non corrisponde. Riprova con il codice che il telefono mostra ora.",
-  "sv": "Koden stämde inte. Försök igen med koden som telefonen visar nu.",
-  "es": "El código no coincide. Inténtelo de nuevo con el código que muestra ahora el teléfono."
- },
  "Telefonen svarer ikke (%s). Er TidyTag Companion tændt, og er telefonen på samme Wi-Fi?": {
   "en": "The phone does not answer (%s). Is TidyTag Companion switched on, and is the phone on the same Wi-Fi?",
   "de": "Das Telefon antwortet nicht (%s). Ist TidyTag Companion eingeschaltet und ist das Telefon im selben WLAN?",
@@ -6870,5 +6862,13 @@
   "it": "Codice di associazione (mostrato nell'app sul telefono):",
   "sv": "Parkopplingskod (visas i appen på telefonen):",
   "es": "Código de emparejamiento (se muestra en la app del teléfono):"
+ },
+ "Koden passede ikke, eller appen er ikke åben på telefonens skærm. Åbn TidyTag Companion, og prøv igen med koden, den viser nu.": {
+  "en": "The code did not match, or the app is not open on the phone's screen. Open TidyTag Companion and try again with the code it shows now.",
+  "de": "Der Code stimmt nicht, oder die App ist auf dem Telefon nicht geöffnet. Öffne TidyTag Companion und versuche es erneut mit dem angezeigten Code.",
+  "fr": "Le code ne correspond pas, ou l'application n'est pas ouverte sur l'écran du téléphone. Ouvrez TidyTag Companion et réessayez avec le code affiché.",
+  "it": "Il codice non corrisponde, oppure l'app non è aperta sullo schermo del telefono. Apri TidyTag Companion e riprova con il codice mostrato ora.",
+  "sv": "Koden stämde inte, eller så är appen inte öppen på telefonens skärm. Öppna TidyTag Companion och försök igen med koden den visar nu.",
+  "es": "El código no coincide o la app no está abierta en la pantalla del teléfono. Abra TidyTag Companion e inténtelo de nuevo con el código que muestra ahora."
  }
 }

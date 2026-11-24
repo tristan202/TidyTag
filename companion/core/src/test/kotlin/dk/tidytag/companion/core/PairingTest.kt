@@ -27,6 +27,7 @@ class PairingTest {
     fun start() {
         tokens = TokenStore(null)
         tokens.setCode("123456")
+        tokens.openPairing(60_000)
         server = CompanionServer(LocalStorage(root), object : MediaHooks {
             override fun changed(rels: List<String>) {}
         }, 0, tokens)
@@ -70,7 +71,30 @@ class PairingTest {
     fun codeRotatesAfterPair() {
         post("/v1/pair", """{"code":"123456","pcName":"x"}""")
         assertNotEquals("123456", tokens.pairingCode)
-        assertEquals(401, post("/v1/pair", """{"code":"123456","pcName":"y"}""").statusCode())
+        // refused: the code changed and pairing closed after the successful pairing
+        assertTrue(post("/v1/pair", """{"code":"123456","pcName":"y"}""").statusCode() in listOf(401, 403))
+    }
+
+    @Test
+    fun pairingClosedRefused() {
+        tokens.closePairing()
+        assertEquals(403, post("/v1/pair", """{"code":"123456","pcName":"x"}""").statusCode())
+        assertTrue(tokens.paired().isEmpty())
+    }
+
+    @Test
+    fun wrongCodeRotatesCode() {
+        post("/v1/pair", """{"code":"000000","pcName":"x"}""")
+        assertNotEquals("123456", tokens.pairingCode)
+        assertEquals(401, post("/v1/pair", """{"code":"123456","pcName":"x"}""").statusCode())
+    }
+
+    @Test
+    fun closesAfterFiveWrongCodes() {
+        repeat(5) { post("/v1/pair", """{"code":"000000","pcName":"x"}""") }
+        val code = tokens.pairingCode
+        assertEquals(403, post("/v1/pair", """{"code":"$code","pcName":"x"}""").statusCode())
+        assertTrue(tokens.paired().isEmpty())
     }
 
     @Test

@@ -8,7 +8,7 @@ fun main(args: Array<String>) {
     val root = File(opt["root"] ?: error("--root missing"))
     val tokens = TokenStore(null)
     opt["token"]?.let { tokens.add(it, "test") }
-    opt["code"]?.let { tokens.setCode(it) }
+    opt["code"]?.let { tokens.setCode(it); tokens.openPairing(Long.MAX_VALUE / 2) }
     val server = CompanionServer(LocalStorage(root), object : MediaHooks {
         override fun changed(rels: List<String>) = println("changed: $rels")
     }, opt["port"]?.toInt() ?: 47100, tokens)

@@ -121,6 +121,24 @@ class ServerTest {
     }
 
     @Test
+    fun hugeBodyRefusedAndServerSurvives() {
+        java.net.Socket("127.0.0.1", server.listeningPort).use { s ->
+            s.getOutputStream().write("POST /v1/pair HTTP/1.1\r\nHost: x\r\nContent-Length: 2000000000\r\n\r\n".toByteArray())
+            s.getOutputStream().flush()
+            val head = s.getInputStream().bufferedReader().readLine()
+            assertTrue(head.contains("413"), head)
+        }
+        assertEquals(200, call("GET", "/v1/list?path=").statusCode())
+    }
+
+    @Test
+    fun shortCopyRefused() {
+        File(root, "src.bin").writeBytes(ByteArray(100))
+        File(root, "dst.bin").writeBytes(ByteArray(0))
+        assertTrue(call("POST", "/v1/copy?src=src.bin&srcOffset=0&len=500&dst=dst.bin&dstOffset=0").statusCode() >= 400)
+    }
+
+    @Test
     fun staleTmpRemovedOnList() {
         File(root, "a.mp3.tidytag-tmp").writeText("half")
         call("GET", "/v1/list?path=")
