@@ -21,7 +21,8 @@ macro_rules! writer_not_yet {
 
 // Replaced one by one by the real writers (phase 2, Tasks 2-8).
 pub mod id3_write;
-writer_not_yet!(flac_write, ogg_write, mp4_write, riff_write, ape_write, asf_write);
+pub mod flac_write;
+writer_not_yet!(ogg_write, mp4_write, riff_write, ape_write, asf_write);
 
 /// '.flac' uses the FLAC entry of the Vorbis-comment reader.
 pub mod flac {
