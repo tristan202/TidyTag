@@ -175,6 +175,50 @@ The toolbar icons are linked from the precompiled `res\icons.res`. After changin
 PNG files in `res\icons`, run `powershell -ExecutionPolicy Bypass -File tools\make-icons-res.ps1`
 (FPC 3.2.2 cannot compile `.rc` files when the project path contains spaces).
 
+### TidyTag 2 (in progress)
+TidyTag 2 is the same program rebuilt with Tauri 2, with the look of the owner's other apps. The
+design is `docs/superpowers/specs/2026-11-26-tidytag-tauri-design.md`. Phase 1 (the window, folders,
+file list and reading tags in every format) is done. Nothing is written to audio files yet.
+
+**Layout:**
+- `src-tauri/core/`: the engine, without UI. It holds the tag readers ported from the Pascal units,
+  the folder scan, and the settings file.
+- `src-tauri/src/`: the Tauri commands.
+- `renderer/`: plain JavaScript, no framework.
+
+**Running it.** It needs Node.js and Rust:
+```
+npm install
+npm start
+```
+For trying it out, point it at a copy of the settings file instead of the real one:
+```
+$env:TIDYTAG_INI = "$env:TEMP\tidytag-dev.ini"; npm start
+```
+
+**Tests:**
+```
+npm test
+cd src-tauri; cargo test --workspace
+```
+
+**Cross-check against 1.2.** This compares 2.0's reading with 1.2's:
+1. Build 1.2's `bin\tagdump.exe` and `bin\tagset.exe` (see *Development and test tools*).
+2. Make a test corpus of **copies**:
+   ```
+   powershell -File tools\make-corpus.ps1 -Source <folders with music>
+   ```
+3. Run the cross-check:
+   ```
+   $env:TIDYTAG_CORPUS = "$env:TEMP\tidytag-corpus"; cargo test -p tidytag-core --test golden
+   ```
+
+Every file must read the same as in 1.2's `tagdump --json`.
+
+**Generated files.** `renderer/strings.js` comes from `languages/src/translations.json`, and
+`renderer/menudata.js` comes from 1.2's menus and texts in `src/mainform.pas`. Regenerate them with
+`python tools\mkstrings.py` and `python tools\mkmenu.py`.
+
 ### TidyTag Companion (Android app)
 The app is in `companion\`. It needs JDK 17 and the Android SDK (platform 35, build-tools 35):
 ```
