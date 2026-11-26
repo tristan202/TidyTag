@@ -1,0 +1,25 @@
+[workspace]
+members = [".", "core"]
+
+[package]
+name = "tidytag"
+version = "2.0.0"
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tidytag-core = { path = "core" }
+tauri = { version = "2", features = [] }
+tauri-plugin-single-instance = "2"
+tauri-plugin-window-state = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+base64 = "0.22"
+
+[profile.release]
+strip = true
+lto = true
+opt-level = "s"
+codegen-units = 1

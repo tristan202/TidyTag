@@ -1,0 +1,15 @@
+{
+  "name": "tidytag",
+  "version": "2.0.0",
+  "private": true,
+  "description": "TidyTag - tag editor for music files",
+  "license": "GPL-3.0",
+  "scripts": {
+    "start": "tauri dev",
+    "dist": "tauri build",
+    "test": "node --test \"renderer/**/*.test.js\""
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.4"
+  }
+}
