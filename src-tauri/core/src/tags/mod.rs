@@ -23,7 +23,8 @@ macro_rules! writer_not_yet {
 pub mod id3_write;
 pub mod flac_write;
 pub mod ogg_write;
-writer_not_yet!(mp4_write, riff_write, ape_write, asf_write);
+pub mod mp4_write;
+writer_not_yet!(riff_write, ape_write, asf_write);
 
 /// '.flac' uses the FLAC entry of the Vorbis-comment reader.
 pub mod flac {
