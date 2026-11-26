@@ -6870,5 +6870,13 @@
   "it": "Il codice non corrisponde, oppure l'app non è aperta sullo schermo del telefono. Apri TidyTag Companion e riprova con il codice mostrato ora.",
   "sv": "Koden stämde inte, eller så är appen inte öppen på telefonens skärm. Öppna TidyTag Companion och försök igen med koden den visar nu.",
   "es": "El código no coincide o la app no está abierta en la pantalla del teléfono. Abra TidyTag Companion e inténtelo de nuevo con el código que muestra ahora."
+ },
+ "Kommer i en senere version": {
+  "en": "Coming in a later version",
+  "de": "Kommt in einer späteren Version",
+  "fr": "Disponible dans une version ultérieure",
+  "it": "Disponibile in una versione successiva",
+  "sv": "Kommer i en senare version",
+  "es": "Disponible en una versión posterior"
  }
 }

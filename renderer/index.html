@@ -3,8 +3,92 @@
 <head>
   <meta charset="utf-8" />
   <title>TidyTag</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="app"></div>
+  <div id="app">
+    <!-- 1.2's layout from top to bottom; texts are 1.2's Danish source strings (data-i18n) -->
+    <nav id="menubar" aria-label="Menu">
+      <span class="brand-mark">TT</span>
+      <div id="menus" role="menubar"></div>
+      <label class="lang-pick">
+        <span class="lang-icon" data-icon="globe"></span>
+        <select id="lang-select" aria-label="Sprog (Language)"></select>
+      </label>
+    </nav>
+
+    <section id="tools">
+      <div class="tools-main">
+        <div class="tabs" id="tool-tabs" role="tablist">
+          <button class="tab" role="tab" data-tab="0"><span data-i18n="Omdøb filer (F4)"></span></button>
+          <button class="tab" role="tab" data-tab="1"><span data-i18n="Multi-fil-tag-editor (Ctrl+F4)"></span></button>
+          <button class="tab" role="tab" data-tab="2"><span data-i18n="Tags fra filnavn (Shift+F4)"></span></button>
+        </div>
+        <div class="card" id="tool-body"></div>
+      </div>
+      <div class="covers">
+        <figure class="cover" id="folder-cover">
+          <figcaption data-i18n="Mappens cover"></figcaption>
+          <div class="cover-img"><span class="cover-empty" data-i18n="Træk et billede hertil"></span></div>
+        </figure>
+        <figure class="cover" id="file-cover">
+          <figcaption data-i18n="Filens cover"></figcaption>
+          <div class="cover-img"><span class="cover-empty" data-i18n="Træk et billede hertil"></span></div>
+        </figure>
+      </div>
+    </section>
+
+    <div id="toolbar" class="tb" role="toolbar"></div>
+
+    <div id="addressbar" class="rowbar">
+      <label class="lbl" for="address" data-i18n="Adresse:"></label>
+      <input id="address" list="address-history" spellcheck="false" autocomplete="off" />
+      <datalist id="address-history"></datalist>
+      <label class="lbl" for="tagtype" data-i18n="Tagtype:"></label>
+      <select id="tagtype" disabled></select>
+    </div>
+
+    <div id="filterbar" class="rowbar">
+      <label class="lbl" for="filter-field" data-i18n="Filtrer efter"></label>
+      <select id="filter-field" disabled></select>
+      <input id="filter-text" spellcheck="false" disabled />
+      <button class="btn" disabled data-i18n="Filtrer!"></button>
+      <button class="btn" disabled data-i18n="Skjul valgte filer"></button>
+      <button class="btn" disabled data-i18n="Vis alle"></button>
+      <label class="chk-label"><input type="checkbox" id="filter-whole" disabled /><span data-i18n="Hele ord"></span></label>
+      <label class="chk-label"><input type="checkbox" id="filter-case" disabled /><span data-i18n="Store/små bogstaver"></span></label>
+    </div>
+
+    <div id="body">
+      <aside id="folders">
+        <div class="folders-head">
+          <span class="lbl" data-i18n="Mapper:"></span>
+          <div id="folderbar"></div>
+        </div>
+        <div id="tree" role="tree" tabindex="0"></div>
+      </aside>
+      <div id="splitter" aria-hidden="true"></div>
+      <div id="list" tabindex="0" role="grid">
+        <div id="list-head"></div>
+        <div id="list-rows"></div>
+      </div>
+    </div>
+
+    <footer id="statusbar">
+      <span class="sb" id="sb-0"></span><span class="sb" id="sb-1"></span><span class="sb" id="sb-2"></span>
+      <span class="sb" id="sb-3"></span><span class="sb" id="sb-4"></span><span class="sb sb-msg" id="sb-5"></span>
+    </footer>
+  </div>
+  <div id="popups"></div>
+
+  <script src="strings.js"></script>
+  <script src="menudata.js"></script>
+  <script src="icons.js"></script>
+  <script src="list.js"></script>
+  <script src="api.js"></script>
+  <script src="menu.js"></script>
+  <script src="tree.js"></script>
+  <script src="panel.js"></script>
+  <script src="renderer.js"></script>
 </body>
 </html>
