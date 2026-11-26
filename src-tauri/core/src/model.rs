@@ -4,6 +4,8 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
+use crate::text::pascal_trim;
+
 /// The tag fields, in 1.2's `TTagField` order. The serde names are the shared keys used by
 /// both tagdumps and the renderer.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
@@ -91,7 +93,7 @@ impl AudioInfo {
 
     /// Empty values never erase an existing field.
     pub fn set_field(&mut self, f: TagField, v: &str, overwrite: bool) {
-        let t = v.trim();
+        let t = pascal_trim(v);
         if t.is_empty() {
             return;
         }
@@ -102,7 +104,7 @@ impl AudioInfo {
 
     /// Adds a further value ('A; B'), used for repeated Vorbis comments.
     pub fn append_field(&mut self, f: TagField, v: &str) {
-        let t = v.trim();
+        let t = pascal_trim(v);
         if t.is_empty() {
             return;
         }
@@ -142,7 +144,7 @@ impl AudioInfo {
 
 /// True for '1', 'true', 'yes' and other non-zero numbers: flag fields in files vary.
 pub fn is_true_flag(s: &str) -> bool {
-    let t = s.trim().to_lowercase();
+    let t = pascal_trim(s).to_lowercase();
     t == "true" || t == "yes" || t.parse::<i64>().map(|n| n != 0).unwrap_or(false)
 }
 
@@ -186,7 +188,7 @@ pub fn parse_rg_gain(s: &str) -> Option<f64> {
 
 /// Opus R128_*_GAIN (Q7.8 integer relative to -23 LUFS) -> ReplayGain text (-18 LUFS).
 pub fn r128_to_rg(s: &str) -> String {
-    match s.trim().parse::<i32>() {
+    match pascal_trim(s).parse::<i32>() {
         Ok(q) => rg_gain_text(q as f64 / 256.0 + 5.0),
         Err(_) => String::new(),
     }
@@ -194,7 +196,7 @@ pub fn r128_to_rg(s: &str) -> String {
 
 pub fn rg_to_r128(s: &str) -> String {
     match parse_rg_gain(s) {
-        Some(db) => (((db - 5.0) * 256.0).round() as i64).to_string(),
+        Some(db) => crate::text::pascal_round((db - 5.0) * 256.0).to_string(),
         None => String::new(),
     }
 }

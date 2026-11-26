@@ -100,7 +100,9 @@ mod tests {
                 let p = dir.join(format!("t{len}{ext}"));
                 std::fs::write(&p, &data).unwrap();
                 let info = read_audio_info(&p, true);
-                assert!(!info.error.is_empty() || !info.supported, "{}: no error reported", p.display());
+                // 1.2 lists such files (often without an error); what matters is that the
+                // reader returned on its own instead of panicking
+                assert!(!info.error.starts_with("internal error"), "{}: reader panicked", p.display());
             }
         }
         let _ = std::fs::remove_dir_all(&dir);

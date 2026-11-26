@@ -23,7 +23,7 @@ pub fn json_record(info: &AudioInfo) -> Value {
         "codec": info.codec,
         "tagTypes": info.tag_types_text(),
         "hasCover": info.has_cover,
-        "durationMs": (info.duration * 1000.0).round() as i64,
+        "durationMs": crate::text::pascal_round(info.duration * 1000.0),
         "bitrate": info.bitrate,
         "sampleRate": info.sample_rate,
         "channels": info.channels,

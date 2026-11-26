@@ -16,7 +16,10 @@ macro_rules! not_yet {
 }
 
 // Replaced one by one by the real readers (Tasks 3-7).
-not_yet!(mp3, ape, vorbis, mp4, riff, asf);
+pub mod id3;
+pub mod mp3;
+
+not_yet!(ape, vorbis, mp4, riff, asf);
 
 /// '.flac' and '.ogg' share the Vorbis reader but enter it differently.
 pub mod flac {
