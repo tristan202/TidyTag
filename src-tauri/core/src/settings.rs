@@ -141,6 +141,10 @@ impl Ini {
 /// %LOCALAPPDATA%\TidyTag\tidytag.ini. The program's former name was TagKlon: its settings are
 /// copied over the first time (the old file stays where it was), as in settingsfile.pas.
 pub fn settings_path() -> PathBuf {
+    // development and test runs can point at a copy instead of the real settings
+    if let Some(p) = std::env::var_os("TIDYTAG_INI") {
+        return PathBuf::from(p);
+    }
     let base = std::env::var_os("LOCALAPPDATA").map(PathBuf::from).unwrap_or_else(std::env::temp_dir);
     let file = base.join("TidyTag").join("tidytag.ini");
     if !file.exists() {

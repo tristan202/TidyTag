@@ -1,0 +1,410 @@
+// TidyTag 2, phase 1: wires the window together — settings, language, menus, the folder tree,
+// the virtual file list, covers and the status bar. Behaviour follows 1.2's mainform.pas.
+(function () {
+  'use strict';
+  const { t, label } = I18N;
+  const RS = MENUDATA.rs;
+  const COLS = LIST.COLUMNS;
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const norm = (p) => p.replace(/[\\/]+$/, '').toLowerCase();
+
+  // ---------- settings (same file and keys as 1.2) ----------
+  const SECTIONS = ['Main', 'View', 'Rename', 'FileToTag', 'RenameMasks', 'FileToTagMasks', 'AddressHistory', 'Favorites'];
+  const S = {};
+  async function loadSettings() {
+    await Promise.all(SECTIONS.map(async (sec) => {
+      const o = {};
+      for (const [k, v] of await API.settingsSection(sec)) o[k.toLowerCase()] = v;
+      S[sec.toLowerCase()] = o;
+    }));
+  }
+  const get = (sec, key, def = '') => S[sec.toLowerCase()]?.[key.toLowerCase()] ?? def;
+  const bool = (sec, key, def) => { const v = get(sec, key, null); return v === null ? def : !['0', 'false', ''].includes(String(v).toLowerCase()); };
+  function save(sec, key, value) {
+    (S[sec.toLowerCase()] ||= {})[key.toLowerCase()] = String(value);
+    API.settingsSet(sec, key, value);
+  }
+  const list = (sec, n) => Array.from({ length: n }, (_, i) => get(sec, 'Dir' + i)).filter(Boolean);
+  function saveList(sec, items) {
+    S[sec.toLowerCase()] = Object.fromEntries(items.map((p, i) => ['dir' + i, p]));
+    API.settingsWriteSection(sec, items.map((p, i) => ['Dir' + i, p]));
+  }
+
+  // ---------- state ----------
+  const state = {
+    folder: '', scanId: 0, scanning: false, message: '',
+    items: [], // TrackDto + checked
+    sort: { col: 1, desc: false, col2: -1, desc2: false }, // 1.2 starts sorted on the file name
+    sel: new Set(), focus: -1, anchor: -1,
+    view: { tools: true, folders: true, address: true, filter: true, subfolders: false },
+    history: [], favorites: [],
+  };
+  const widths = COLS.map((c) => c.width);
+  const ROW = 24;
+
+  // ---------- texts ----------
+  function applyTexts() {
+    document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = label(t(el.dataset.i18n)); });
+    document.querySelectorAll('[data-icon]').forEach((el) => { el.innerHTML = icon(el.dataset.icon); });
+    const sel = $('#lang-select');
+    sel.innerHTML = `<option value="">${esc(t(RS.rsAutomatiskWindowsSprog))}</option>` +
+      Object.entries(I18N.LANGS).map(([c, n]) => `<option value="${c}">${esc(n)}</option>`).join('');
+    sel.value = get('Main', 'Language', '');
+    sel.title = t(RS.rsSprogLanguage);
+    $('#tagtype').innerHTML = MENUDATA.tagTypes.map((s, i) =>
+      `<option>${esc(i === 0 ? t(RS.rsAlleTagtyper) : i === MENUDATA.tagTypes.length - 1 ? t(RS.rsIngenTagsFilter) : s)}</option>`).join('');
+    $('#filter-field').innerHTML = [t(RS.rsFilnavn2), ...Object.values(MENUDATA.fieldCaptions).map((c) => t(c)), t(RS.rsAlleFelter)]
+      .map((s) => `<option>${esc(s)}</option>`).join('');
+  }
+
+  function setLanguage(code) {
+    save('Main', 'Language', code);
+    I18N.setLang(I18N.effectiveLanguage(code, navigator.language));
+    document.documentElement.lang = I18N.lang;
+    applyTexts();
+    MENU.relabel();
+    PANEL.render();
+    renderHeader();
+    renderRows();
+    updateStatus();
+  }
+
+  // ---------- panels shown / hidden (Vis menu) ----------
+  function applyView() {
+    $('#tools').hidden = !state.view.tools;
+    $('#folders').hidden = !state.view.folders;
+    $('#splitter').hidden = !state.view.folders;
+    $('#addressbar').hidden = !state.view.address;
+    $('#filterbar').hidden = !state.view.filter;
+    MENU.refresh();
+  }
+  function toggleView(key, sec, iniKey) {
+    state.view[key] = !state.view[key];
+    save(sec, iniKey, state.view[key] ? 1 : 0);
+    applyView();
+  }
+
+  // ---------- navigation and scanning ----------
+  async function navigate(path, { fromTree = false } = {}) {
+    if (!path) return;
+    state.folder = path;
+    $('#address').value = path;
+    API.window().setTitle('TidyTag - ' + path);
+    save('Main', 'LastFolder', path);
+    // address history: newest first, at most 20 (1.2 reads Dir0..Dir19)
+    state.history = [path, ...state.history.filter((p) => norm(p) !== norm(path))].slice(0, 20);
+    saveList('AddressHistory', state.history);
+    $('#address-history').innerHTML = state.history.map((p) => `<option value="${esc(p)}"></option>`).join('');
+    if (!fromTree) TREE.reveal(path);
+    showFolderCover(path);
+    startScan();
+  }
+
+  function startScan() {
+    state.scanId += 1;
+    state.items = [];
+    state.sel.clear();
+    state.focus = state.anchor = -1;
+    state.scanning = true;
+    state.message = t('Søger efter filer...');
+    $('#list').scrollTop = 0;
+    renderRows();
+    updateStatus();
+    showFileCover();
+    API.scanStart(state.folder, state.view.subfolders, state.scanId);
+  }
+
+  function sortItems() {
+    if (state.sort.col < 0) return; // manual order
+    const focused = state.items[state.focus];
+    state.items.sort((a, b) => LIST.compareTracks(a, b, state.sort));
+    if (focused) state.focus = state.anchor = state.items.indexOf(focused);
+  }
+
+  API.on('scan-batch', (msg) => {
+    if (!LIST.applyBatch(state, msg)) return;
+    sortItems();
+    renderRows();
+    updateStatus();
+  });
+  API.on('scan-progress', (msg) => {
+    if (msg.scanId !== state.scanId) return;
+    state.message = t('Læser tags: %d af %d filer...', msg.done, msg.total);
+    updateStatus();
+  });
+  API.on('scan-done', (msg) => {
+    if (msg.scanId !== state.scanId) return;
+    state.scanning = false;
+    state.message = '';
+    updateStatus();
+  });
+
+  // ---------- the virtual file list ----------
+  const listEl = $('#list'), headEl = $('#list-head'), rowsEl = $('#list-rows');
+  const cellClass = (c) => (c.kind === 'check' ? 'cell chk' : c.numeric ? 'cell num' : 'cell');
+
+  function renderHeader() {
+    headEl.innerHTML = COLS.map((c, i) => {
+      const sorted = state.sort.col === i;
+      const arrow = sorted ? `<span class="arrow">${state.sort.desc ? '▼' : '▲'}</span>` : '';
+      return `<div class="hcell${c.numeric ? ' num' : ''}${sorted ? ' sorted' : ''}" data-c="${i}" style="width:${widths[i]}px">${esc(t(c.caption))}${arrow}<span class="grip" data-g="${i}"></span></div>`;
+    }).join('');
+  }
+
+  // from: FileListColumnClick — the old column becomes the second sort column
+  headEl.addEventListener('click', (ev) => {
+    if (ev.target.classList.contains('grip')) return;
+    const h = ev.target.closest('.hcell');
+    if (!h) return;
+    const i = Number(h.dataset.c);
+    const s = state.sort;
+    if (i === s.col) s.desc = !s.desc;
+    else { s.col2 = s.col; s.desc2 = s.desc; s.col = i; s.desc = false; }
+    sortItems();
+    renderHeader();
+    renderRows();
+  });
+
+  // column widths: drag the grip
+  headEl.addEventListener('mousedown', (ev) => {
+    const g = ev.target.closest('.grip');
+    if (!g) return;
+    ev.preventDefault();
+    const i = Number(g.dataset.g), x0 = ev.clientX, w0 = widths[i];
+    const move = (e) => { widths[i] = Math.max(24, w0 + e.clientX - x0); renderHeader(); renderRows(); };
+    const up = () => { removeEventListener('mousemove', move); removeEventListener('mouseup', up); };
+    addEventListener('mousemove', move);
+    addEventListener('mouseup', up);
+  });
+
+  function renderRows() {
+    const n = state.items.length;
+    rowsEl.style.height = n * ROW + 'px';
+    const viewport = listEl.clientHeight - headEl.offsetHeight;
+    const { first, last } = LIST.visibleWindow(Math.max(0, listEl.scrollTop), viewport, ROW, n);
+    let html = '';
+    for (let r = first; r <= last; r++) {
+      const tr = state.items[r];
+      const cls = 'row' + (r % 2 ? ' alt' : '') + (state.sel.has(tr) ? ' sel' : '') + (r === state.focus ? ' focus' : '') + (tr.checked ? ' checked' : '');
+      html += `<div class="${cls}" data-r="${r}" style="top:${r * ROW}px">` + COLS.map((c, i) => {
+        const text = LIST.cellText(tr, i);
+        const err = c.kind === 'tagtypes' && tr.error ? ' err' : '';
+        return `<div class="${cellClass(c)}${err}" style="width:${widths[i]}px" title="${esc(text)}">${esc(text)}</div>`;
+      }).join('') + '</div>';
+    }
+    rowsEl.innerHTML = html;
+  }
+  listEl.addEventListener('scroll', () => requestAnimationFrame(renderRows));
+  new ResizeObserver(() => renderRows()).observe(listEl);
+
+  function selectedTracks() { return state.items.filter((tr) => state.sel.has(tr)); }
+
+  function setFocus(r, { extend = false, toggle = false } = {}) {
+    const n = state.items.length;
+    if (!n) return;
+    r = Math.max(0, Math.min(n - 1, r));
+    if (extend && state.anchor >= 0) {
+      state.sel.clear();
+      const [a, b] = [Math.min(state.anchor, r), Math.max(state.anchor, r)];
+      for (let i = a; i <= b; i++) state.sel.add(state.items[i]);
+    } else if (toggle) {
+      const tr = state.items[r];
+      state.sel.has(tr) ? state.sel.delete(tr) : state.sel.add(tr);
+      state.anchor = r;
+    } else {
+      state.sel.clear();
+      state.sel.add(state.items[r]);
+      state.anchor = r;
+    }
+    state.focus = r;
+    // keep the focused row in view
+    const top = r * ROW, viewport = listEl.clientHeight - headEl.offsetHeight;
+    if (top < listEl.scrollTop) listEl.scrollTop = top;
+    else if (top + ROW > listEl.scrollTop + viewport) listEl.scrollTop = top + ROW - viewport;
+    renderRows();
+    selectionChanged();
+  }
+
+  let coverTimer = 0;
+  function selectionChanged() {
+    updateStatus();
+    MENU.refresh();
+    clearTimeout(coverTimer);
+    coverTimer = setTimeout(showFileCover, 120);
+  }
+
+  rowsEl.addEventListener('mousedown', (ev) => {
+    const row = ev.target.closest('.row');
+    if (!row) return;
+    const r = Number(row.dataset.r);
+    if (ev.target.closest('.chk')) { // the ☑ column toggles that file
+      const tr = state.items[r];
+      tr.checked = !tr.checked;
+      renderRows();
+      updateStatus();
+      return;
+    }
+    if (ev.button === 2 && state.sel.has(state.items[r])) return; // right click keeps the selection
+    setFocus(r, { extend: ev.shiftKey, toggle: ev.ctrlKey });
+  });
+  rowsEl.addEventListener('contextmenu', (ev) => {
+    ev.preventDefault();
+    if (!ev.target.closest('.row')) return;
+    MENU.popup(MENUDATA.popup, ev.clientX, ev.clientY);
+  });
+
+  listEl.addEventListener('keydown', (ev) => {
+    const page = Math.max(1, Math.floor((listEl.clientHeight - headEl.offsetHeight) / ROW) - 1);
+    const moves = { ArrowDown: 1, ArrowUp: -1, PageDown: page, PageUp: -page };
+    const opt = { extend: ev.shiftKey };
+    if (ev.key in moves) setFocus((state.focus < 0 ? 0 : state.focus + moves[ev.key]), opt);
+    else if (ev.key === 'Home') setFocus(0, opt);
+    else if (ev.key === 'End') setFocus(state.items.length - 1, opt);
+    else if (ev.key === ' ') { // Mellemrum: (un)check the selected files
+      const sel = selectedTracks();
+      const on = !sel.every((tr) => tr.checked);
+      sel.forEach((tr) => { tr.checked = on; });
+      renderRows();
+      updateStatus();
+    } else return;
+    ev.preventDefault();
+  });
+
+  // ---------- covers ----------
+  function showCover(box, cover) {
+    const img = box.querySelector('.cover-img');
+    img.innerHTML = cover ? `<img alt="" src="data:${cover.mime};base64,${cover.data}" />`
+      : `<span class="cover-empty" data-i18n="Træk et billede hertil">${esc(label(t('Træk et billede hertil')))}</span>`;
+  }
+  async function showFileCover() {
+    const tr = state.items[state.focus];
+    const cover = tr && tr.hasCover ? await API.readCover(tr.path) : null;
+    if (tr === state.items[state.focus]) showCover($('#file-cover'), cover);
+  }
+  async function showFolderCover(dir) {
+    const cover = await API.folderCover(dir);
+    if (dir === state.folder) showCover($('#folder-cover'), cover);
+  }
+
+  // ---------- status bar ----------
+  function updateStatus() {
+    const texts = LIST.statusTexts(state.items, selectedTracks(), 0);
+    texts.forEach((s, i) => { $('#sb-' + i).textContent = s; });
+    $('#sb-5').textContent = state.message;
+  }
+
+  // ---------- favourites (1.2's popup) ----------
+  function favoritesPopup() {
+    const btn = document.querySelector('[data-act="aFav"]').getBoundingClientRect();
+    const open = state.favorites.findIndex((p) => norm(p) === norm(state.folder));
+    const items = [
+      { text: t(RS.rsTilfoejDenAabneMappe), icon: 'star', enabled: !!state.folder && open < 0,
+        run: () => { state.favorites.push(state.folder); saveList('Favorites', state.favorites); } },
+      { text: t(RS.rsFjernDenAabneMappe), enabled: open >= 0,
+        run: () => { state.favorites.splice(open, 1); saveList('Favorites', state.favorites); } },
+    ];
+    if (state.favorites.length) items.push('-', ...state.favorites.map((p) => ({ text: p.replace(/&/g, '&&'), run: () => navigate(p) })));
+    MENU.popup(items, btn.left, btn.bottom + 2);
+  }
+
+  // ---------- actions that work in phase 1 ----------
+  const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
+  const ACTIONS = {
+    aRefresh: () => state.folder && startScan(),
+    aExit: () => API.window().close(),
+    aSelAll: () => { state.items.forEach((tr) => state.sel.add(tr)); renderRows(); selectionChanged(); },
+    aSelNone: () => { state.sel.clear(); renderRows(); selectionChanged(); },
+    aChkSel: () => checkAll((tr) => { if (state.sel.has(tr)) tr.checked = true; }),
+    aUnchkSel: () => checkAll((tr) => { if (state.sel.has(tr)) tr.checked = false; }),
+    aChkAll: () => checkAll((tr) => { tr.checked = true; }),
+    aUnchkAll: () => checkAll((tr) => { tr.checked = false; }),
+    aInvert: () => checkAll((tr) => { tr.checked = !tr.checked; }),
+    FActToolsPanel: () => toggleView('tools', 'View', 'ToolsPanel'),
+    FActFolders: () => toggleView('folders', 'View', 'Folders'),
+    aCloseFolders: () => toggleView('folders', 'View', 'Folders'),
+    FActAddress: () => toggleView('address', 'View', 'Address'),
+    FActFilter: () => toggleView('filter', 'View', 'Filter'),
+    FActSubfolders: () => { toggleView('subfolders', 'Main', 'Subfolders'); if (state.folder) startScan(); },
+    aTabRename: () => showTab(0),
+    aTabMulti: () => showTab(1),
+    aTabF2T: () => showTab(2),
+    aUp: () => { const p = state.folder.replace(/[\\/]+$/, ''); const i = p.lastIndexOf('\\'); if (i > 1) navigate(p.slice(0, i + (i === 2 ? 1 : 0))); },
+    aFav: favoritesPopup,
+    aTreeRefresh: () => TREE.reload(),
+  };
+  const CHECKED = {
+    FActToolsPanel: () => state.view.tools, FActFolders: () => state.view.folders,
+    FActAddress: () => state.view.address, FActFilter: () => state.view.filter, FActSubfolders: () => state.view.subfolders,
+  };
+  function showTab(i) {
+    if (!state.view.tools) toggleView('tools', 'View', 'ToolsPanel');
+    PANEL.show(i);
+  }
+
+  // menus filled at run time
+  function dynamic(item) {
+    if (item.special === 'language') {
+      const cur = get('Main', 'Language', '');
+      return {
+        text: t(RS.rsSprogLanguage), enabled: true,
+        items: [{ text: t(RS.rsAutomatiskWindowsSprog), checked: cur === '', radio: true, run: () => setLanguage('') },
+          ...Object.entries(I18N.LANGS).map(([c, n]) => ({ text: n, checked: cur === c, radio: true, run: () => setLanguage(c) }))],
+      };
+    }
+    if (item.special === 'albumArtist') return { text: t(RS.rsAlbumkunstnerVedGem), items: [], enabled: false, later: true };
+    return null; // play with, recent folders, rename actions: later phases
+  }
+
+  // ---------- splitter (tree width, [Main] TreeWidth) ----------
+  $('#splitter').addEventListener('mousedown', (ev) => {
+    ev.preventDefault();
+    const sp = $('#splitter'), x0 = ev.clientX, w0 = $('#folders').offsetWidth;
+    sp.classList.add('drag');
+    const move = (e) => { $('#folders').style.width = Math.max(140, Math.min(innerWidth - 300, w0 + e.clientX - x0)) + 'px'; };
+    const up = () => {
+      sp.classList.remove('drag');
+      removeEventListener('mousemove', move);
+      removeEventListener('mouseup', up);
+      save('Main', 'TreeWidth', $('#folders').offsetWidth);
+      renderRows();
+    };
+    addEventListener('mousemove', move);
+    addEventListener('mouseup', up);
+  });
+
+  // ---------- start ----------
+  async function start() {
+    await loadSettings();
+    I18N.setLang(I18N.effectiveLanguage(get('Main', 'Language', ''), navigator.language));
+    document.documentElement.lang = I18N.lang;
+    state.view = {
+      tools: bool('View', 'ToolsPanel', true), folders: bool('View', 'Folders', true),
+      address: bool('View', 'Address', true), filter: bool('View', 'Filter', true),
+      subfolders: bool('Main', 'Subfolders', false),
+    };
+    state.history = list('AddressHistory', 20);
+    state.favorites = list('Favorites', 50);
+    const tw = Number(get('Main', 'TreeWidth', 0));
+    if (tw > 0) $('#folders').style.width = tw + 'px';
+    applyTexts();
+    MENU.init({
+      run: (id) => ACTIONS[id]?.(),
+      enabled: (id) => !!ACTIONS[id] && (id !== 'aUp' || !!state.folder),
+      checked: (id) => !!CHECKED[id]?.(),
+      dynamic,
+    });
+    PANEL.init(S);
+    applyView();
+    renderHeader();
+    renderRows();
+    updateStatus();
+    $('#lang-select').addEventListener('change', (e) => setLanguage(e.target.value));
+    $('#address').addEventListener('keydown', (e) => { if (e.key === 'Enter') navigate(e.target.value.trim()); });
+    $('#address').addEventListener('change', (e) => { if (state.history.includes(e.target.value)) navigate(e.target.value); });
+    await TREE.init($('#tree'), (path) => navigate(path, { fromTree: true }));
+    const last = get('Main', 'FixedStartFolder', '0') === '1' && get('Main', 'StartFolder') ? get('Main', 'StartFolder') : get('Main', 'LastFolder');
+    if (last) navigate(last);
+  }
+  start();
+})();
