@@ -19,13 +19,14 @@ macro_rules! not_yet {
 pub mod id3;
 pub mod mp3;
 pub mod ape;
+pub mod vorbis;
 
-not_yet!(vorbis, mp4, riff, asf);
+not_yet!(mp4, riff, asf);
 
 /// '.flac' and '.ogg' share the Vorbis reader but enter it differently.
 pub mod flac {
     use super::*;
     pub fn read<R: Read + Seek>(s: &mut R, info: &mut AudioInfo) -> Result<(), String> {
-        super::vorbis::read(s, info)
+        super::vorbis::read_flac(s, info)
     }
 }
