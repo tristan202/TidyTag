@@ -21,8 +21,9 @@ pub mod mp3;
 pub mod ape;
 pub mod vorbis;
 pub mod mp4;
+pub mod riff;
 
-not_yet!(riff, asf);
+not_yet!(asf);
 
 /// '.flac' and '.ogg' share the Vorbis reader but enter it differently.
 pub mod flac {
