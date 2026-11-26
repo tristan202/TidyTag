@@ -170,6 +170,7 @@ pub struct Cover {
 }
 
 fn cover(mime: &str, data: &[u8]) -> Cover {
+    let mime = tidytag_core::model::safe_image_mime(mime, data);
     Cover { mime: mime.to_string(), data: base64::engine::general_purpose::STANDARD.encode(data) }
 }
 

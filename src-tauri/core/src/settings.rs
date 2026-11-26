@@ -11,7 +11,27 @@ pub struct Ini {
     bom: bool,
     newline: &'static str,
     trailing_newline: bool,
+    /// the file is not UTF-8 (an old ANSI file): it is read and written as Windows-1252
+    ansi: bool,
     lines: Vec<String>,
+}
+
+/// Windows-1252 bytes 0x80..0x9F; the five unused ones map to the same code point.
+const CP1252: [u32; 32] = [
+    0x20AC, 0x81, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021, 0x02C6, 0x2030, 0x0160, 0x2039, 0x0152, 0x8D, 0x017D, 0x8F,
+    0x90, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014, 0x02DC, 0x2122, 0x0161, 0x203A, 0x0153, 0x9D, 0x017E, 0x0178,
+];
+
+fn cp1252_char(b: u8) -> char {
+    if (0x80..0xA0).contains(&b) { char::from_u32(CP1252[b as usize - 0x80]).unwrap() } else { b as char }
+}
+
+fn cp1252_byte(c: char) -> u8 {
+    let u = c as u32;
+    if let Some(i) = CP1252.iter().position(|&x| x == u) {
+        return 0x80 + i as u8;
+    }
+    if u < 0x100 && !(0x80..0xA0).contains(&u) { u as u8 } else { b'?' }
 }
 
 fn section_name(line: &str) -> Option<&str> {
@@ -45,10 +65,9 @@ impl Ini {
             Some(rest) => (true, rest),
             None => (false, &bytes[..]),
         };
-        let text = match std::str::from_utf8(body) {
-            Ok(s) => s.to_string(),
-            // an old ANSI file: keep the characters, it is written back as UTF-8
-            Err(_) => body.iter().map(|&c| c as char).collect(),
+        let (text, ansi) = match std::str::from_utf8(body) {
+            Ok(s) => (s.to_string(), false),
+            Err(_) => (body.iter().map(|&c| cp1252_char(c)).collect(), true),
         };
         let newline = if text.contains("\r\n") || text.is_empty() { "\r\n" } else { "\n" };
         let trailing_newline = text.is_empty() || text.ends_with('\n');
@@ -56,7 +75,7 @@ impl Ini {
         if trailing_newline {
             lines.pop(); // the empty piece after the last newline
         }
-        Ok(Ini { path: path.to_path_buf(), bom, newline, trailing_newline, lines })
+        Ok(Ini { path: path.to_path_buf(), bom, newline, trailing_newline, ansi, lines })
     }
 
     /// Line range of a section's body: (header index, end index exclusive).
@@ -122,7 +141,11 @@ impl Ini {
             text.push_str(self.newline);
         }
         let mut out = if self.bom { b"\xEF\xBB\xBF".to_vec() } else { Vec::new() };
-        out.extend(text.into_bytes());
+        if self.ansi {
+            out.extend(text.chars().map(cp1252_byte));
+        } else {
+            out.extend(text.into_bytes());
+        }
         out
     }
 
@@ -208,6 +231,22 @@ mod tests {
         i.erase_section("Favorites");
         i.set("Favorites", "Dir0", "C");
         assert_eq!(saved(&i, &p), "[Favorites]\r\nDir0=C\r\n\r\n[View]\r\nFolders=1\r\n");
+    }
+
+    #[test]
+    fn ansi_file_keeps_its_other_bytes() {
+        // an ANSI (cp1252) file: 0xE6 = 'æ' and 0x96 = '–' are not valid UTF-8
+        let input: &[u8] = b"[Main]\r\nName=\xE6ble \x96 x\r\nLastFolder=C:\\x\r\n";
+        let dir = std::env::temp_dir().join(format!("tidytag-ini-ansi-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let p = dir.join("ansi.ini");
+        std::fs::write(&p, input).unwrap();
+        let mut i = Ini::load(&p).unwrap();
+        assert_eq!(i.get("Main", "Name"), Some("æble – x"));
+        i.set("Main", "LastFolder", "D:\\y");
+        i.save().unwrap();
+        assert_eq!(std::fs::read(&p).unwrap(), b"[Main]\r\nName=\xE6ble \x96 x\r\nLastFolder=D:\\y\r\n");
+        std::fs::remove_dir_all(dir).unwrap();
     }
 
     #[test]

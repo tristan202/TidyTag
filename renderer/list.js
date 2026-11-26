@@ -39,7 +39,8 @@
       case 'samplerate': return tr.sampleRate > 0 ? String(tr.sampleRate) : '';
       case 'codec': return tr.codec;
       case 'tagtypes':
-        if (tr.error) return t('Fejl: ') + tr.error;
+        // the readers' errors are 1.2's Danish texts, translated like the rest
+        if (tr.error) return t('Fejl: ') + t(tr.error);
         if (!tr.supported) return t('(ikke understøttet endnu)');
         return tr.tagTypes;
       case 'cover': return tr.hasCover ? t('Ja') : '';

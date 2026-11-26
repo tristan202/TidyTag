@@ -216,6 +216,15 @@ pub fn detect_image_mime<'a>(data: &[u8], fallback: &'a str) -> &'a str {
     }
 }
 
+/// A MIME type from a file is only passed on when it is a plain 'image/...' name; otherwise
+/// the type is taken from the picture's own bytes (the renderer puts it into a data: URL).
+pub fn safe_image_mime<'a>(mime: &'a str, data: &[u8]) -> &'a str {
+    let plain = mime.strip_prefix("image/").is_some_and(|sub| {
+        !sub.is_empty() && sub.bytes().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || b".+-".contains(&c))
+    });
+    if plain { mime } else { detect_image_mime(data, "image/jpeg") }
+}
+
 /// Pixel size from PNG/JPEG headers.
 pub fn image_dimensions(data: &[u8]) -> Option<(u32, u32)> {
     let be = |i: usize| ((data[i] as u32) << 8) | data[i + 1] as u32;
@@ -297,6 +306,13 @@ mod tests {
         assert_eq!(TagField::ALL.len(), 37);
         assert_eq!(TagField::RgAlbumPeak.key(), "rgAlbumPeak");
         assert_eq!(TagField::from_key("albumArtist"), Some(TagField::AlbumArtist));
+    }
+
+    #[test]
+    fn mime_from_a_file_is_only_used_when_safe() {
+        assert_eq!(safe_image_mime("image/png", &[1]), "image/png");
+        assert_eq!(safe_image_mime("image/x\"><a href=x>", &[0xFF, 0xD8, 0xFF]), "image/jpeg");
+        assert_eq!(safe_image_mime("text/html", &[0x89, b'P', b'N', b'G', 13, 10, 26, 10]), "image/png");
     }
 
     #[test]

@@ -192,7 +192,7 @@ fn set_length(info: &mut AudioInfo, samples: f64, audio_bytes: i64) {
     }
     info.duration = samples / info.sample_rate as f64;
     if info.duration > 0.0 {
-        info.bitrate = pascal_round(audio_bytes as f64 * 8.0 / info.duration / 1000.0) as u32;
+        info.bitrate = kbps(audio_bytes, info.duration);
     }
 }
 

@@ -274,7 +274,7 @@
   // ---------- covers ----------
   function showCover(box, cover) {
     const img = box.querySelector('.cover-img');
-    img.innerHTML = cover ? `<img alt="" src="data:${cover.mime};base64,${cover.data}" />`
+    img.innerHTML = cover ? `<img alt="" src="data:${esc(cover.mime)};base64,${esc(cover.data)}" />`
       : `<span class="cover-empty" data-i18n="Træk et billede hertil">${esc(label(t('Træk et billede hertil')))}</span>`;
   }
   async function showFileCover() {

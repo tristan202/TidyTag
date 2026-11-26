@@ -114,6 +114,12 @@ pub fn pascal_round(x: f64) -> i64 {
     x.round_ties_even() as i64
 }
 
+/// kbit/s from a byte count and a duration (1.2's Round(Bytes * 8 / Seconds / 1000)).
+/// Damaged files can give a negative byte count; 1.2 then shows no bitrate, so this gives 0.
+pub fn kbps(bytes: i64, seconds: f64) -> u32 {
+    pascal_round(bytes as f64 * 8.0 / seconds / 1000.0).max(0) as u32
+}
+
 pub fn stream_size<R: Seek>(s: &mut R) -> std::io::Result<u64> {
     s.seek(SeekFrom::End(0))
 }
@@ -194,5 +200,8 @@ mod tests {
         assert_eq!(pascal_trim("\u{A0}x "), "\u{A0}x");
         assert_eq!(pascal_round(2.5), 2);
         assert_eq!(pascal_round(3.5), 4);
+        // damaged files can give negative byte counts: 1.2 then shows no bitrate
+        assert_eq!(kbps(-1000, 1.0), 0);
+        assert_eq!(kbps(40_000, 1.0), 320);
     }
 }

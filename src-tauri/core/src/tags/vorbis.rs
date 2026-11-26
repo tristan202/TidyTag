@@ -217,7 +217,7 @@ pub fn read_flac<R: Read + Seek>(s: &mut R, info: &mut AudioInfo) -> Result<(), 
         }
     }
     if info.duration > 0.0 {
-        info.bitrate = pascal_round((c.size - c.pos) as f64 * 8.0 / info.duration / 1000.0).max(0) as u32;
+        info.bitrate = kbps(c.size - c.pos, info.duration);
     }
     Ok(())
 }
@@ -333,7 +333,7 @@ pub fn read<R: Read + Seek>(s: &mut R, info: &mut AudioInfo) -> Result<(), Strin
     }
     if info.duration > 0.0 {
         let size = stream_size(s).map_err(io)?;
-        info.bitrate = pascal_round(size as f64 * 8.0 / info.duration / 1000.0) as u32;
+        info.bitrate = kbps(size as i64, info.duration);
     }
     Ok(())
 }

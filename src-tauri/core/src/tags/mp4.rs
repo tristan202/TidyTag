@@ -246,7 +246,7 @@ pub fn read<R: Read + Seek>(s: &mut R, info: &mut AudioInfo) -> Result<(), Strin
         if mdat_size == 0 {
             mdat_size = fsize;
         }
-        info.bitrate = pascal_round(mdat_size as f64 * 8.0 / info.duration / 1000.0) as u32;
+        info.bitrate = kbps(mdat_size, info.duration);
     }
     Ok(())
 }

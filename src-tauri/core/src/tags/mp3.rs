@@ -110,7 +110,7 @@ fn read_mpeg_audio<R: Read + Seek>(s: &mut R, info: &mut AudioInfo, audio_start:
     if frames > 0 {
         info.duration = frames as f64 * h.samples_per_frame as f64 / h.sample_rate as f64;
         if info.duration > 0.0 {
-            info.bitrate = pascal_round(audio_bytes as f64 * 8.0 / info.duration / 1000.0) as u32;
+            info.bitrate = kbps(audio_bytes, info.duration);
         }
     } else {
         info.bitrate = h.bitrate as u32;

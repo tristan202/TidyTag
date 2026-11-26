@@ -45,6 +45,14 @@ test('cellText follows 1.2', () => {
   assert.strictEqual(L.cellText(tr({ supported: false }), col('Tag-typer')), '(ikke understøttet endnu)');
 });
 
+test('reader errors are translated like 1.2', () => {
+  const I18N = require('./strings.js');
+  I18N.setLang('en');
+  const text = L.cellText(tr({ error: 'Ukendt lydformat' }), col('Tag-typer'));
+  I18N.setLang('da');
+  assert.strictEqual(text, 'Error: Unknown audio format');
+});
+
 test('stale scan batches are ignored', () => {
   const state = { scanId: 2, items: [] };
   L.applyBatch(state, { scanId: 1, tracks: [tr({})] });
