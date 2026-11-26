@@ -1,6 +1,8 @@
 // No console window in release builds
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod commands;
+
 use tauri::Manager;
 
 fn main() {
@@ -14,6 +16,20 @@ fn main() {
             }
         }))
         .plugin(tauri_plugin_window_state::Builder::default().build())
+        .manage(commands::ScanState::default())
+        .invoke_handler(tauri::generate_handler![
+            commands::settings_get,
+            commands::settings_set,
+            commands::settings_section,
+            commands::settings_write_section,
+            commands::settings_erase_section,
+            commands::list_drives,
+            commands::list_dirs,
+            commands::scan_start,
+            commands::scan_cancel,
+            commands::read_cover,
+            commands::folder_cover,
+        ])
         .run(tauri::generate_context!())
         .expect("TidyTag could not start");
 }
