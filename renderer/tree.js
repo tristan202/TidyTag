@@ -60,7 +60,14 @@
   async function reveal(path) {
     let nodes = roots, node = null;
     for (;;) {
-      const next = nodes.find((n) => isUnder(path, n.path));
+      let next = nodes.find((n) => isUnder(path, n.path));
+      if (!next && node) {
+        // the folder may be newer than the cached listing: read the parent again once
+        node.children = null;
+        await load(node);
+        nodes = node.children;
+        next = nodes.find((n) => isUnder(path, n.path));
+      }
       if (!next) break;
       node = next;
       if (norm(node.path) === norm(path)) break;

@@ -23,3 +23,4 @@ companion/local.properties
 node_modules/
 src-tauri/target/
 src-tauri/gen/
+__pycache__/
