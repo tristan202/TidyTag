@@ -288,7 +288,7 @@ pub fn read<R: Read + Seek>(s: &mut R, info: &mut AudioInfo) -> Result<(), Strin
     }
     let p0 = &pk[0];
     let p1 = pk.get(1);
-    let mut rate_for_duration: u32 = 0;
+    let rate_for_duration: u32;
     let mut pre_skip: i64 = 0;
     if p0.len() >= 30 && p0[0] == 1 && bytes_are(p0, 1, "vorbis") {
         info.codec = "Vorbis".into();
