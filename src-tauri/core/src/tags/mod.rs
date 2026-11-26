@@ -25,7 +25,8 @@ pub mod flac_write;
 pub mod ogg_write;
 pub mod mp4_write;
 pub mod riff_write;
-writer_not_yet!(ape_write, asf_write);
+pub mod ape_write;
+writer_not_yet!(asf_write);
 
 /// '.flac' uses the FLAC entry of the Vorbis-comment reader.
 pub mod flac {

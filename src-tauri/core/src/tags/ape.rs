@@ -7,11 +7,11 @@ use crate::model::{flag_value, AudioInfo, TagField};
 use crate::text::*;
 use std::io::{Read, Seek};
 
-const FLAG_HAS_HEADER: u32 = 1 << 31;
-const FLAG_IS_HEADER: u32 = 1 << 29;
-const ITEM_BINARY: u32 = 1 << 1;
+pub(crate) const FLAG_HAS_HEADER: u32 = 1 << 31;
+pub(crate) const FLAG_IS_HEADER: u32 = 1 << 29;
+pub(crate) const ITEM_BINARY: u32 = 1 << 1;
 
-const FIELD_KEYS: [&str; 37] = [
+pub(crate) const FIELD_KEYS: [&str; 37] = [
     "Title", "Artist", "Album", "Year", "Track", "Disc", "Genre", "Comment", "Album Artist",
     "Composer", "BPM", "Lyrics", "Conductor", "Lyricist", "Original Artist", "MixArtist", "Label",
     "CatalogNumber", "ISRC", "Copyright", "EncodedBy", "Weblink", "Grouping", "Subtitle", "Mood",
@@ -20,7 +20,7 @@ const FIELD_KEYS: [&str; 37] = [
     "REPLAYGAIN_ALBUM_GAIN", "REPLAYGAIN_ALBUM_PEAK",
 ];
 
-const PIC_NAMES: [&str; 21] = [
+pub(crate) const PIC_NAMES: [&str; 21] = [
     "Other", "Png Icon", "Icon", "Front", "Back", "Leaflet", "Media", "Lead Artist", "Artist",
     "Conductor", "Band", "Composer", "Lyricist", "Recording Location", "During Recording",
     "During Performance", "Video Capture", "Fish", "Illustration", "Band Logotype",
@@ -28,7 +28,7 @@ const PIC_NAMES: [&str; 21] = [
 ];
 
 // from: KeyField — key -> field, case-insensitive, incl. common alternative spellings
-fn key_field(key: &str) -> Option<TagField> {
+pub(crate) fn key_field(key: &str) -> Option<TagField> {
     let k = key.to_lowercase();
     if let Some(i) = FIELD_KEYS.iter().position(|f| f.to_lowercase() == k) {
         return Some(TagField::ALL[i]);
@@ -56,7 +56,7 @@ fn starts_with_ci(s: &str, prefix: &str) -> bool {
 }
 
 // from: PicKeyType — 'Cover Art (Front)' -> 3; None if the key is no picture
-fn pic_key_type(key: &str) -> Option<u8> {
+pub(crate) fn pic_key_type(key: &str) -> Option<u8> {
     if !starts_with_ci(key, "Cover Art (") {
         return None;
     }
@@ -115,14 +115,14 @@ pub fn find_ape_tag<R: Read + Seek>(s: &mut R) -> std::io::Result<ApeLocation> {
     Ok(loc)
 }
 
-struct ApeItem {
-    key: String,
-    flags: u32,
-    value: Vec<u8>,
+pub(crate) struct ApeItem {
+    pub key: String,
+    pub flags: u32,
+    pub value: Vec<u8>,
 }
 
 // from: ParseItems
-fn parse_items<R: Read + Seek>(s: &mut R, loc: &ApeLocation) -> std::io::Result<Vec<ApeItem>> {
+pub(crate) fn parse_items<R: Read + Seek>(s: &mut R, loc: &ApeLocation) -> std::io::Result<Vec<ApeItem>> {
     let b = read_at(s, loc.start as u64, loc.size as u64)?;
     let mut items = Vec::new();
     let mut p: i64 = if bytes_are(&b, 0, "APETAGEX") { 32 } else { 0 }; // header
