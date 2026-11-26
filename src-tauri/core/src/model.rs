@@ -91,6 +91,16 @@ impl AudioInfo {
         self.fields.get(&f).map(String::as_str).unwrap_or("")
     }
 
+    /// Sets a field as the editors and writers do (Pascal `Info.Fields[F] := V`): an empty value
+    /// clears it.
+    pub fn put(&mut self, f: TagField, v: &str) {
+        if v.is_empty() {
+            self.fields.remove(&f);
+        } else {
+            self.fields.insert(f, v.to_string());
+        }
+    }
+
     /// Empty values never erase an existing field.
     pub fn set_field(&mut self, f: TagField, v: &str, overwrite: bool) {
         let t = pascal_trim(v);
