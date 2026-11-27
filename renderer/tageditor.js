@@ -85,10 +85,10 @@
               <datalist id="ed-genres"></datalist><span class="lbl">${esc(cap('bpm'))}</span>${input('bpm', 'w90')}</div>
             <span class="lbl top">${esc(cap('comment'))}</span><textarea class="input" data-f="comment" rows="5"></textarea></div>
           <div class="ed-cover"><div class="ed-cover-img" data-img></div><div class="lbl" data-picinfo></div>
-            <div class="frow"><button class="btn" data-act="add">${esc(label(t('Tilføj...')))}</button>
-              <button class="btn" data-act="remove">${esc(label(t('Fjern')))}</button>
-              <button class="btn" data-act="savepic">${esc(label(t('Gem som...')))}</button></div>
-            <div class="frow"><button class="btn" data-act="prevpic">&lt;</button><button class="btn" data-act="nextpic">&gt;</button></div></div></div></div>
+            <div class="frow"><button class="btn" data-ed="add">${esc(label(t('Tilføj...')))}</button>
+              <button class="btn" data-ed="remove">${esc(label(t('Fjern')))}</button>
+              <button class="btn" data-ed="savepic">${esc(label(t('Gem som...')))}</button></div>
+            <div class="frow"><button class="btn" data-ed="prevpic">&lt;</button><button class="btn" data-ed="nextpic">&gt;</button></div></div></div></div>
         <div class="tab-page" data-page="more" hidden><div class="ed-more">
           <div class="ed-grid">${MORE_LEFT.map((k) => row(k)).join('')}</div>
           <div class="ed-grid">${MORE_RIGHT.map((k) => row(k)).join('')}</div>
@@ -98,16 +98,16 @@
         <div class="tab-page" data-page="rg" hidden><div class="ed-grid narrow">${RG.map((k) => row(k)).join('')}</div>
           <p class="notes">${esc(t(RS.rsRGEditorHjaelp))}</p></div>
         <div class="tab-page" data-page="lyr" hidden><textarea class="input ed-lyrics" data-f="lyrics"></textarea>
-          <div class="frow"><button class="btn" data-act="loadlyr">${esc(label(t('Indlæs fra tekstfil...')))}</button>
-            <button class="btn" data-act="savelyr">${esc(label(t('Gem som tekstfil...')))}</button>
-            <button class="btn" data-act="clearlyr">${esc(label(t('Ryd')))}</button></div></div>
+          <div class="frow"><button class="btn" data-ed="loadlyr">${esc(label(t('Indlæs fra tekstfil...')))}</button>
+            <button class="btn" data-ed="savelyr">${esc(label(t('Gem som tekstfil...')))}</button>
+            <button class="btn" data-ed="clearlyr">${esc(label(t('Ryd')))}</button></div></div>
         <div class="lbl" data-info></div>
         <div class="ed-bottom"><label class="chk-label"><input type="checkbox" data-keep${host.keep ? ' checked' : ''}> ${esc(t('Bevar filens dato (tidsstempel) ved gem'))}</label>
           <span class="grow"></span>
-          <button class="btn" data-act="saveprev">${esc(label(t('Gem og forrige')))}</button>
-          <button class="btn primary" data-act="save"></button>
-          <button class="btn" data-act="savenext">${esc(label(t('Gem og næste')))}</button>
-          <button class="btn" data-act="close">${esc(label(t('Luk')))}</button></div>`,
+          <button class="btn" data-ed="saveprev">${esc(label(t('Gem og forrige')))}</button>
+          <button class="btn primary" data-ed="save"></button>
+          <button class="btn" data-ed="savenext">${esc(label(t('Gem og næste')))}</button>
+          <button class="btn" data-ed="close">${esc(label(t('Luk')))}</button></div>`,
       { cls: 'tag-editor', onEscape: () => close(), onEnter: () => act('save') });
       const q = (s) => m.el.querySelector(s);
       const fieldEls = () => [...m.el.querySelectorAll('[data-f]')];
@@ -115,7 +115,7 @@
 
       function setModified(on) {
         E.setModified(st, on);
-        q('[data-act="save"]').textContent = label(t(on ? RS.rsGem : RS.rsGem2));
+        q('[data-ed="save"]').textContent = label(t(on ? RS.rsGem : RS.rsGem2));
       }
       const writable = () => tag && !tag.track.error && TOOLS.canWriteTags(tag.track.path);
       // from: UpdateButtons
@@ -123,7 +123,7 @@
         const w = writable(), has = pictures.length > 0, mv = E.next(st.index, st.count);
         const en = { save: w, saveprev: w && mv.prev, savenext: w && mv.next, add: w, remove: w && has, savepic: has,
           prevpic: has && pic > 0, nextpic: has && pic < pictures.length - 1 };
-        for (const [k, on] of Object.entries(en)) q(`[data-act="${k}"]`).disabled = busy || !on;
+        for (const [k, on] of Object.entries(en)) q(`[data-ed="${k}"]`).disabled = busy || !on;
       }
 
       // from: LoadFile
@@ -238,7 +238,7 @@
 
       async function act(a) {
         if (busy) return;
-        const b = q(`[data-act="${a}"]`);
+        const b = q(`[data-ed="${a}"]`);
         if (b && b.disabled) return;
         if (a === 'save') { if (await saveCurrent()) load(st.index); }
         else if (a === 'saveprev') { if (await saveCurrent()) load(st.index - 1); }
@@ -274,8 +274,8 @@
           m.el.querySelectorAll('[data-page]').forEach((p) => { p.hidden = p.dataset.page !== tb.dataset.tab; });
           return;
         }
-        const b = e.target.closest('[data-act]');
-        if (b) act(b.dataset.act);
+        const b = e.target.closest('[data-ed]');
+        if (b) act(b.dataset.ed);
       });
       m.el.addEventListener('input', (e) => { if (!loading && e.target.matches('[data-f]')) setModified(true); });
       m.el.addEventListener('change', (e) => { if (!loading && e.target.matches('[data-f][type="checkbox"]')) setModified(true); });
