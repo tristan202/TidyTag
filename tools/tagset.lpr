@@ -3,6 +3,7 @@ program TagSet;
 { Developer tool: sets tag fields from the command line.
     tagset <file> artist="Kim Larsen" album="Midt om natten" track=1 ...
     tagset --scenario N <file>    (tagtest's edits 0, 1 and 2; TidyTag 2's write cross-check)
+    tagset --remove <file>        (Fjern alle tags)
   Field names: title artist album year track disc genre comment albumartist composer bpm
   lyrics conductor lyricist origartist remixer label catalog isrc copyright encodedby url
   grouping subtitle mood key sorttitle sortartist sortalbumartist sortalbum sortcomposer
@@ -12,7 +13,7 @@ program TagSet;
 
 uses
   {$IFDEF WINDOWS}Windows,{$ENDIF}
-  Classes, SysUtils, AudioTypes, AudioTags, TagWriter;
+  Classes, SysUtils, AudioTypes, AudioTags, TagWriter, TagRemove;
 
 const
   Names: array[TTagField] of string = ('title', 'artist', 'album', 'year', 'track', 'disc',
@@ -119,6 +120,20 @@ begin
   SetMultiByteFileSystemCodePage(CP_UTF8);
   {$IFDEF WINDOWS}SetConsoleOutputCP(CP_UTF8);{$ENDIF}
   SetTextCodePage(Output, CP_UTF8);
+  if (ParamCount = 2) and (ParamStr(1) = '--remove') then
+  begin
+    try
+      RemoveAllTags(UTF8Encode(UnicodeString(ParamStr(2))), False);
+    except
+      on E: Exception do
+      begin
+        WriteLn('FEJL: ', E.Message);
+        Halt(1);
+      end;
+    end;
+    WriteLn('ok');
+    Halt(0);
+  end;
   Scen := -1;
   First := 1;
   if (ParamCount >= 3) and (ParamStr(1) = '--scenario') then

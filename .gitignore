@@ -24,3 +24,4 @@ node_modules/
 src-tauri/target/
 src-tauri/gen/
 __pycache__/
+!src-tauri/core/src/bin/

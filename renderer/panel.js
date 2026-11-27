@@ -95,7 +95,7 @@
       <div class="tool-right"><div class="notes">${esc(t(RS.rsKunFelterMedFluebenBliver))}</div>
         <div class="btn-row"><button class="btn primary" id="multi-save">${esc(t('Gem tags'))}</button>
           <button class="btn" id="multi-copy" title="${esc(t('Udfyld felterne med værdierne fra den fokuserede fil'))}">${esc(t('Kopiér fra fil'))}</button>
-          ${later('Alle felter...')}</div></div></div>`;
+          <button class="btn" id="multi-all">${esc(t('Alle felter...'))}</button></div></div></div>`;
   }
 
   // from: MultiValueChange, ButtonMultiCopyClick, ButtonMultiSaveClick
@@ -114,6 +114,7 @@
       render();
     });
     body.querySelector('#multi-save').addEventListener('click', () => hooks.saveMulti?.(multi));
+    body.querySelector('#multi-all').addEventListener('click', () => hooks.openMulti?.());
   }
 
   function f2tTab() {

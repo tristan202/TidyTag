@@ -38,8 +38,10 @@
   // from: CanStartBatch (1.2 also refuses while tags are being read)
   const canStartBatch = (state) => !state.scanning && !state.writing;
 
-  // closing while a file is being written could stop an in-place write halfway
-  const canClose = (state) => !state.writing;
+  // closing while a file is being written could stop an in-place write halfway (a batch, or a
+  // single save: the tag editor, folder covers); an open tag editor asks about unsaved changes
+  const closeAction = (state, editorOpen) =>
+    (state.writing || state.busyWrites > 0 ? 'wait' : editorOpen ? 'ask' : 'close');
 
   /** The multi tab's Gem tags, as ButtonMultiSaveClick. `ui` = { info(text, title), confirm(title, text),
    *  write(items) }. Everything is checked again after the question: the window is not blocked
@@ -57,5 +59,5 @@
     return ui.write(now.map((tr) => ({ path: tr.path, values: fields, cover: null })));
   }
 
-  return { targets, multiValues, confirmText, doneText, canStartBatch, canClose, save };
+  return { targets, multiValues, confirmText, doneText, canStartBatch, closeAction, save };
 });

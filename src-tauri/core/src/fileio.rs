@@ -47,6 +47,17 @@ fn move_replace(temp: &Path, target: &Path) -> Result<(), u32> {
     std::fs::rename(temp, target).map_err(|e| e.raw_os_error().unwrap_or(0) as u32)
 }
 
+/// Writes `data` to a temporary file next to `target`, then replaces `target` with it, so a
+/// stop halfway never leaves a cut-off file (folder covers, "Gem som...").
+pub fn write_atomic(target: &Path, data: &[u8]) -> Result<(), String> {
+    let temp = temp_file_for(target);
+    if let Err(e) = std::fs::write(&temp, data) {
+        let _ = std::fs::remove_file(&temp);
+        return Err(e.to_string());
+    }
+    replace_file_with(&temp, target)
+}
+
 /// Copies `count` bytes from `src` at `from` to `dst`.
 // from: CopyStreamRange
 pub fn copy_range(src: &mut File, dst: &mut impl Write, from: u64, count: u64) -> Result<(), String> {
@@ -84,6 +95,18 @@ pub fn set_file_stamp(path: &Path, st: &FileStamp) {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn write_atomic_replaces_without_leftovers() {
+        let dir = std::env::temp_dir().join(format!("tidytag-atomic-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let p = dir.join("folder.jpg");
+        write_atomic(&p, b"one").unwrap();
+        write_atomic(&p, b"two").unwrap();
+        assert_eq!(std::fs::read(&p).unwrap(), b"two");
+        assert!(!temp_file_for(&p).exists());
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
     use super::*;
     use std::time::Duration;
 
@@ -130,4 +153,32 @@ mod tests {
         assert_eq!(got.created, old);
         std::fs::remove_dir_all(d).unwrap();
     }
+}
+
+/// Puts each file in the recycle bin, one call per file so a failure stays with its own file.
+/// Returns how many went; the others are in `errors` as "<name>: <text>".
+// from: RecycleFiles (fileops.pas; phone files come with the phone phase)
+#[cfg(windows)]
+pub fn recycle_files(files: &[PathBuf], errors: &mut Vec<String>) -> usize {
+    use std::os::windows::ffi::OsStrExt;
+    use windows_sys::Win32::UI::Shell::{
+        SHFileOperationW, FOF_ALLOWUNDO, FOF_NOCONFIRMATION, FOF_NOERRORUI, FOF_SILENT, FO_DELETE, SHFILEOPSTRUCTW,
+    };
+    let mut n = 0;
+    for f in files {
+        let mut from: Vec<u16> = f.as_os_str().encode_wide().collect();
+        from.extend([0, 0]);
+        let mut op: SHFILEOPSTRUCTW = unsafe { std::mem::zeroed() };
+        op.wFunc = FO_DELETE;
+        op.pFrom = from.as_ptr();
+        op.fFlags = (FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT | FOF_NOERRORUI) as u16;
+        let ok = unsafe { SHFileOperationW(&mut op) } == 0 && op.fAnyOperationsAborted == 0 && !f.exists();
+        if ok {
+            n += 1;
+        } else {
+            let name = f.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
+            errors.push(format!("{name}: kunne ikke lægges i papirkurven"));
+        }
+    }
+    n
 }

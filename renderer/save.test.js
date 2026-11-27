@@ -80,6 +80,13 @@ test('Enter answers with the focused button', () => {
 });
 
 test('the window cannot close while saving', () => {
-  assert.strictEqual(SAVE.canClose({ writing: true }), false);
-  assert.strictEqual(SAVE.canClose({ writing: false }), true);
+  assert.strictEqual(SAVE.closeAction({ writing: true, busyWrites: 0 }, false), 'wait');
+  assert.strictEqual(SAVE.closeAction({ writing: false, busyWrites: 0 }, false), 'close');
+});
+
+test('closing waits for writes and asks an open editor', () => {
+  assert.strictEqual(SAVE.closeAction({ writing: false, busyWrites: 1 }, false), 'wait'); // a single save or folder cover
+  assert.strictEqual(SAVE.closeAction({ writing: true, busyWrites: 0 }, true), 'wait');
+  assert.strictEqual(SAVE.closeAction({ writing: false, busyWrites: 0 }, true), 'ask');
+  assert.strictEqual(SAVE.closeAction({ writing: false, busyWrites: 0 }, false), 'close');
 });

@@ -434,7 +434,7 @@ mod tests {
         std::fs::write(&p, &h).unwrap();
         let mut values = std::collections::BTreeMap::new();
         values.insert(TagField::Title, "x".to_string());
-        let r = crate::batch::update_file_tags(&p, &values, None, &WriteOptions::default());
+        let r = crate::batch::update_file_tags(&p, &values, None, None, &WriteOptions::default());
         assert!(matches!(r, Err((_, false))));
         assert_eq!(std::fs::read(&p).unwrap(), h);
         std::fs::remove_dir_all(dir).unwrap();

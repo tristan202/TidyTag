@@ -10,7 +10,8 @@
   const norm = (p) => p.replace(/[\\/]+$/, '').toLowerCase();
 
   // ---------- settings (same file and keys as 1.2) ----------
-  const SECTIONS = ['Main', 'Editor', 'View', 'Rename', 'FileToTag', 'RenameMasks', 'FileToTagMasks', 'AddressHistory', 'Favorites'];
+  const SECTIONS = ['Main', 'Editor', 'View', 'Rename', 'FileToTag', 'RenameMasks', 'FileToTagMasks', 'AddressHistory', 'Favorites',
+    'Tracks', 'Cover'];
   const S = {};
   async function loadSettings() {
     await Promise.all(SECTIONS.map(async (sec) => {
@@ -33,7 +34,7 @@
 
   // ---------- state ----------
   const state = {
-    folder: '', scanId: 0, scanning: false, writing: false, batchId: 0, message: '',
+    folder: '', scanId: 0, scanning: false, writing: false, busyWrites: 0, batchId: 0, message: '',
     items: [], // TrackDto + checked
     sort: { col: 1, desc: false, col2: -1, desc2: false }, // 1.2 starts sorted on the file name
     sel: new Set(), focus: -1, anchor: -1,
@@ -134,37 +135,58 @@
     updateStatus();
   });
   // ---------- saving from the multi tab (1.2's ButtonMultiSaveClick / WriteFieldsBatch) ----------
-  let writeWhat = '';
+  let writeWhat = '', writeShowsSkipped = true, writeQuiet = false, writeWaiter = null, writeProgress = null;
+  /** Starts one batch command; `call(batchId)` invokes it. Resolves with the write-done message
+   *  (null when the batch could not start); onProgress gets each write-progress; quiet: the
+   *  caller shows the errors itself. */
+  async function startWrite(what, call, { showSkipped = true, onProgress = null, quiet = false } = {}) {
+    writeWhat = what;
+    writeShowsSkipped = showSkipped;
+    writeQuiet = quiet;
+    writeProgress = onProgress;
+    state.writing = true;
+    state.batchId += 1;
+    MENU.refresh();
+    const done = new Promise((resolve) => { writeWaiter = resolve; });
+    try {
+      await call(state.batchId);
+    } catch (e) {
+      state.writing = false;
+      writeWaiter = null;
+      MENU.refresh();
+      await DIALOG.info(String(e));
+      return null;
+    }
+    return done;
+  }
   function saveMulti(form) {
     return SAVE.save(state, form, {
       info: (text, title) => DIALOG.info(text, title),
       confirm: (title, text) => DIALOG.confirm(title, text),
-      write: async (items) => {
-        writeWhat = t(RS.rsMultiFilTagEditor);
-        state.writing = true;
-        state.batchId += 1;
-        MENU.refresh();
-        try {
-          await API.writeTagsBatch(items, state.batchId);
-        } catch (e) {
-          state.writing = false;
-          DIALOG.info(String(e));
-        }
-      },
+      write: (items) => startWrite(t(RS.rsMultiFilTagEditor), (id) => API.writeTagsBatch(items, id)),
     });
   }
 
   // closing while a file is being written could stop an in-place write halfway
-  API.window().onCloseRequested((ev) => {
-    if (SAVE.canClose(state)) return;
-    ev.preventDefault();
-    DIALOG.info(t('Vent, til gemningen er færdig.'));
+  // single writes outside a batch count too
+  const counted = (fn) => async (...args) => {
+    state.busyWrites += 1;
+    try { return await fn(...args); } finally { state.busyWrites -= 1; }
+  };
+  for (const k of ['saveTag', 'coverFromTags', 'coverAsFolder', 'resizeFolderCovers', 'writeFile']) API[k] = counted(API[k]);
+  API.window().onCloseRequested(async (ev) => { // Tauri waits for this before it closes
+    const action = SAVE.closeAction(state, TAGEDITOR.isOpen());
+    if (action === 'wait') {
+      ev.preventDefault();
+      DIALOG.info(t('Vent, til gemningen er færdig.'));
+    } else if (action === 'ask' && !(await TAGEDITOR.closeQuery())) ev.preventDefault();
   });
 
   API.on('write-progress', (msg) => {
     if (msg.batchId !== state.batchId) return;
     state.message = t(RS.rsSDAfD, writeWhat, msg.done, msg.total);
     updateStatus();
+    writeProgress?.(msg);
   });
   API.on('write-done', (msg) => {
     if (msg.batchId !== state.batchId) return;
@@ -180,11 +202,14 @@
     });
     sortItems();
     renderRows();
-    state.message = SAVE.doneText(writeWhat, msg.saved, msg.failed, msg.skipped);
+    state.message = SAVE.doneText(writeWhat, msg.saved, msg.failed, writeShowsSkipped ? msg.skipped : 0);
     updateStatus();
     MENU.refresh();
     showFileCover();
-    if (msg.errors.length) {
+    const waiter = writeWaiter;
+    writeWaiter = writeProgress = null;
+    waiter?.(msg);
+    if (msg.errors.length && !writeQuiet) {
       DIALOG.info(msg.errors.map((e) => `${e.file}: ${t(e.error)}`).join('\n'), t(RS.rsNogleFilerBlevIkkeGemt));
     }
   });
@@ -304,6 +329,7 @@
     if (ev.button === 2 && state.sel.has(state.items[r])) return; // right click keeps the selection
     setFocus(r, { extend: ev.shiftKey, toggle: ev.ctrlKey });
   });
+  rowsEl.addEventListener('dblclick', (ev) => { if (ev.target.closest('.row') && !ev.target.closest('.chk')) editTag(); });
   rowsEl.addEventListener('contextmenu', (ev) => {
     ev.preventDefault();
     if (!ev.target.closest('.row')) return;
@@ -317,6 +343,7 @@
     if (ev.key in moves) setFocus((state.focus < 0 ? 0 : state.focus + moves[ev.key]), opt);
     else if (ev.key === 'Home') setFocus(0, opt);
     else if (ev.key === 'End') setFocus(state.items.length - 1, opt);
+    else if (ev.key === 'Enter') editTag();
     else if (ev.key === ' ') { // Mellemrum: (un)check the selected files
       const sel = selectedTracks();
       const on = !sel.every((tr) => tr.checked);
@@ -364,6 +391,181 @@
     MENU.popup(items, btn.left, btn.bottom + 2);
   }
 
+  // ---------- tag tools (1.2's RunFieldPlans and friends) ----------
+  const FIELD_KEYS = Object.keys(MENUDATA.fieldCaptions);
+  const cap = (k) => t(MENUDATA.fieldCaptions[k]);
+  const tools = { swapA: 'artist', swapB: 'albumArtist', copySrc: 'artist', copyDst: 'albumArtist', copyOnlyEmpty: true,
+    syncDir: 'V1ToV2', syncExisting: 'BlankOnly', clip: null };
+
+  // from: RequireTargets — null when nothing can start (and 1.2's message was shown)
+  async function requireTargets() {
+    if (!SAVE.canStartBatch(state)) { await DIALOG.info(t(RS.rsVentVenligstTilAlleTags)); return null; }
+    const { items } = SAVE.targets(state);
+    if (!items.length) { await DIALOG.info(t(RS.rsAfkrydsEllerMarkerDeFiler)); return null; }
+    return items;
+  }
+  // after a question the window may have moved on (a scan, another batch): ask again
+  async function stillTargets(items) {
+    if (!SAVE.canStartBatch(state)) { await DIALOG.info(t(RS.rsVentVenligstTilAlleTags)); return null; }
+    const now = SAVE.targets(state).items.filter((tr) => items.includes(tr));
+    if (!now.length) { await DIALOG.info(t(RS.rsAfkrydsEllerMarkerDeFiler)); return null; }
+    return now;
+  }
+
+  // from: RunFieldPlans
+  async function runPlans(what, planFn) {
+    const items = await requireTargets();
+    if (!items) return;
+    const n = TOOLS.writeItems(items, planFn).length;
+    if (!n) return DIALOG.info(t(RS.rsIngenFilerAendres), what);
+    if (!(await DIALOG.confirm(what, t(RS.rsAendreDFiler, n)))) return;
+    const now = await stillTargets(items);
+    if (now) startWrite(what, (id) => API.writeTagsBatch(TOOLS.writeItems(now, planFn), id));
+  }
+  const swap = (a, b) => runPlans(t(RS.rsBytSS, cap(a), cap(b)), (tr) => TOOLS.planSwap(tr, a, b));
+
+  async function swapFields() {
+    const r = await FORMS.fieldPair(t(RS.rsBytFelter), t(RS.rsFelt1), t(RS.rsFelt2), '', tools.swapA, tools.swapB, false);
+    if (!r) return;
+    Object.assign(tools, { swapA: r.a, swapB: r.b });
+    swap(r.a, r.b);
+  }
+  async function copyField() {
+    const r = await FORMS.fieldPair(t(RS.rsKopierFelt), t(RS.rsFraFelt), t(RS.rsTilFelt), t(RS.rsKunHvisFeltetErTomt),
+      tools.copySrc, tools.copyDst, tools.copyOnlyEmpty);
+    if (!r) return;
+    Object.assign(tools, { copySrc: r.a, copyDst: r.b, copyOnlyEmpty: r.check });
+    runPlans(t(RS.rsKopierSTilS, cap(r.a), cap(r.b)), (tr) => TOOLS.planCopy(tr, r.a, r.b, r.check));
+  }
+  const nameTool = (tool) => runPlans(t(RS.rsKunstnerVaerktoejer), (tr) => TOOLS.planNameTool(tr, 'artist', tool));
+
+  // from: ActCopyTag / ActPasteTag. [Main] PasteFields holds TTagField ordinals.
+  function copyTag() {
+    const tr = state.items[state.focus];
+    if (!tr) return;
+    tools.clip = { ...tr.fields };
+    state.message = t(RS.rsTagKopieretFra) + tr.fileName;
+    updateStatus();
+    MENU.refresh();
+  }
+  function pasteFields() {
+    const s = get('Main', 'PasteFields', '');
+    if (!s) return FIELD_KEYS.filter((k) => !['title', 'track'].includes(k) && !k.startsWith('rg'));
+    return s.split(',').map((n) => FIELD_KEYS[parseInt(n, 10)]).filter(Boolean);
+  }
+  async function pasteTag() {
+    if (!tools.clip) return;
+    const items = await requireTargets();
+    if (!items) return;
+    const fields = await FORMS.fieldSet(t(RS.rsIndsaetTag), t(RS.rsVaelgFelterDerIndsaettesID, items.length), tools.clip, pasteFields());
+    if (!fields) return;
+    save('Main', 'PasteFields', fields.map((k) => FIELD_KEYS.indexOf(k)).join(','));
+    const values = TOOLS.pasteValues(tools.clip, fields);
+    if (!Object.keys(values).length) return;
+    const now = await stillTargets(items);
+    if (now) startWrite(t(RS.rsIndsaetTag), (id) => API.writeTagsBatch(now.map((tr) => ({ path: tr.path, values, cover: null })), id));
+  }
+
+  // from: ActID3Sync / RunID3Sync
+  async function id3Sync() {
+    const r = await FORMS.id3Sync(tools.syncDir, tools.syncExisting);
+    if (!r) return;
+    Object.assign(tools, { syncDir: r.direction, syncExisting: r.existing });
+    const what = t(RS.rsMpTagSynkronisering);
+    const items = await requireTargets();
+    if (!items) return;
+    const mp3 = items.filter((tr) => /\.mp3$/i.test(tr.path));
+    if (!mp3.length) return DIALOG.info(t(RS.rsIngenMpFiler), what);
+    if (!(await DIALOG.confirm(what, t(RS.rsSynkroniserTagsIDMpFiler, mp3.length)))) return;
+    const now = await stillTargets(mp3);
+    if (now) startWrite(what, (id) => API.id3SyncBatch(now.map((tr) => tr.path), r.direction, r.existing, id), { showSkipped: false });
+  }
+
+  // from: ActRemoveTags
+  async function removeTags() {
+    const items = await requireTargets();
+    if (!items) return;
+    const what = t(RS.rsFjernTags);
+    if (!(await DIALOG.confirm(what, t(RS.rsFjernAlleTagsIDFiler, items.length) + '\n\n' + t(RS.rsFjernTagsForklaring)))) return;
+    const now = await stillTargets(items);
+    if (now) startWrite(what, (id) => API.removeTagsBatch(now.map((tr) => tr.path), id), { showSkipped: false });
+  }
+
+  // from: ActTracks — the whole list, or the checked/selected files
+  async function trackTools() {
+    if (!SAVE.canStartBatch(state) || !state.items.length) return;
+    const { items, scope } = SAVE.targets(state);
+    const keep = await TRACKTOOLS.open({
+      all: state.items.slice(), subset: items, prefer: scope === 'checked' || items.length > 1,
+      subsetCaption: t(scope === 'checked' ? RS.rsAfkrydsedeFilerD : RS.rsMarkeredeFilerD, items.length),
+      keep: bool('Editor', 'KeepTimestamp', false), get, save,
+      write: async (writeItems, keepDate, onProgress) => {
+        if (!SAVE.canStartBatch(state)) { await DIALOG.info(t(RS.rsVentVenligstTilAlleTags)); return null; }
+        await setKeepDate(keepDate); // the batch reads it from the ini
+        return startWrite(t('Spornumre'), (id) => API.writeTagsBatch(writeItems, id), { onProgress, quiet: true });
+      },
+    });
+    setKeepDate(keep);
+  }
+  async function setKeepDate(on) {
+    (S.editor ||= {}).keeptimestamp = on ? '1' : '0';
+    await API.settingsSet('Editor', 'KeepTimestamp', on ? 1 : 0);
+    MENU.refresh();
+  }
+
+  // from: EditSelected — the focused file, otherwise the first; moves with Gem og forrige/næste
+  async function editTag() {
+    if (!SAVE.canStartBatch(state) || !state.items.length) return;
+    const start = state.focus >= 0 ? state.focus : 0;
+    const files = state.items.slice(); // the list cannot change while the editor is open
+    await TAGEDITOR.open({
+      index: start, count: files.length, fileAt: (i) => files[i]?.path || '',
+      keep: bool('Editor', 'KeepTimestamp', false), setKeep: setKeepDate, genres: () => API.genreList(),
+      saved: (i, track) => { // from: FileSaved
+        const old = files[i], at = state.items.indexOf(old);
+        if (at < 0) return;
+        track.checked = old.checked;
+        if (state.sel.has(old)) { state.sel.delete(old); state.sel.add(track); }
+        state.items[at] = files[i] = track;
+        renderRows();
+        updateStatus();
+      },
+    });
+    selectionChanged();
+  }
+
+  // from: ActMultiEdit — the checked (else selected) files
+  async function multiEdit() {
+    const items = await requireTargets();
+    if (!items) return;
+    const { scope } = SAVE.targets(state);
+    await MULTIEDITOR.open({
+      items, keep: bool('Editor', 'KeepTimestamp', false), setKeep: setKeepDate, genres: () => API.genreList(),
+      scopeCaption: t(scope === 'checked' ? RS.rsAfkrydsedeFilerD : RS.rsMarkeredeFilerD, items.length),
+      write: (writeItems, onProgress) => startWrite(t(RS.rsMultiFilTagEditor), (id) => API.writeTagsBatch(writeItems, id),
+        { onProgress, quiet: true }),
+      cancel: () => API.writeCancel(),
+    });
+    selectionChanged();
+  }
+
+  // ---------- cover tools and pictures dropped on the cover panels ----------
+  const covers = COVERS.actions({
+    state, requireTargets, startWrite, get, save, bool, navigate,
+    message: (text) => { state.message = text; updateStatus(); },
+    refreshCovers: () => { if (state.folder) showFolderCover(state.folder); showFileCover(); },
+  });
+  $('#file-cover').addEventListener('contextmenu', (ev) => { // 1.2's CoverPopup
+    ev.preventDefault();
+    MENU.popup([{ ref: 'aCoverAsFolder' }], ev.clientX, ev.clientY);
+  });
+  window.__TAURI__.webview.getCurrentWebview().onDragDropEvent((ev) => {
+    const p = ev.payload;
+    if (p.type !== 'drop' || document.querySelector('.modal-back')) return; // not behind a dialog
+    const el = document.elementFromPoint(p.position.x / devicePixelRatio, p.position.y / devicePixelRatio);
+    covers.drop(p.paths, el?.closest('#file-cover') ? 'file' : el?.closest('#folder-cover') ? 'folder' : 'list');
+  });
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -389,11 +591,44 @@
     aFav: favoritesPopup,
     aTreeRefresh: () => TREE.reload(),
     FActKeepDate: () => save('Editor', 'KeepTimestamp', bool('Editor', 'KeepTimestamp', false) ? 0 : 1),
+    // phase 3: tag tools
+    aSwapAT: () => swap('artist', 'title'),
+    aSwapAA: () => swap('artist', 'album'),
+    aSwapLT: () => swap('album', 'title'),
+    aSwap: swapFields,
+    aCopyField: copyField,
+    aClean: () => runPlans(t(RS.rsRydMellemrum), TOOLS.planCleanSpaces),
+    'NameTools[ntRemoveThe]': () => nameTool('removeThe'),
+    'NameTools[ntTheToEnd]': () => nameTool('theToEnd'),
+    'NameTools[ntTheToFront]': () => nameTool('theToFront'),
+    'NameTools[ntNameToSurnameFirst]': () => nameTool('nameToSurnameFirst'),
+    'NameTools[ntSurnameFirstToName]': () => nameTool('surnameFirstToName'),
+    aCopy: copyTag,
+    FActPaste: pasteTag,
+    aSync: id3Sync,
+    aRemoveTags: removeTags,
+    aTracks: trackTools,
+    aEdit: editTag,
+    aMulti: multiEdit,
+    aCoverIn: covers.coverIn,
+    aCoverOut: covers.coverOut,
+    aCoverAsFolder: covers.coverAsFolder,
+    aResizeFiles: covers.resizeFiles,
+    aResizeFolders: covers.resizeFolders,
+    FActAutoResize: covers.toggleAutoResize,
+  };
+  const ENABLED = {
+    aUp: () => !!state.folder,
+    aCopy: () => state.focus >= 0,
+    FActPaste: () => !!tools.clip,
+    aTracks: () => state.items.length > 0,
+    aEdit: () => state.items.length > 0,
   };
   const CHECKED = {
     FActToolsPanel: () => state.view.tools, FActFolders: () => state.view.folders,
     FActAddress: () => state.view.address, FActFilter: () => state.view.filter, FActSubfolders: () => state.view.subfolders,
     FActKeepDate: () => bool('Editor', 'KeepTimestamp', false),
+    FActAutoResize: () => bool('Cover', 'AutoResize', false),
   };
   function showTab(i) {
     if (!state.view.tools) toggleView('tools', 'View', 'ToolsPanel');
@@ -455,13 +690,15 @@
     applyTexts();
     MENU.init({
       run: (id) => ACTIONS[id]?.(),
-      enabled: (id) => !!ACTIONS[id] && (id !== 'aUp' || !!state.folder),
+      live: (id) => !!ACTIONS[id],
+      enabled: (id) => !!ACTIONS[id] && (!ENABLED[id] || ENABLED[id]()),
       checked: (id) => !!CHECKED[id]?.(),
       dynamic,
     });
     PANEL.init(S, {
       saveMulti,
       focusedFields: () => state.items[state.focus]?.fields,
+      openMulti: () => ACTIONS.aMulti(),
     });
     applyView();
     renderHeader();

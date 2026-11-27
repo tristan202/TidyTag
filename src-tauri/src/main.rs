@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod commands;
+mod edit;
 
 use tauri::Manager;
 
@@ -16,6 +17,7 @@ fn main() {
             }
         }))
         .plugin(tauri_plugin_window_state::Builder::default().build())
+        .plugin(tauri_plugin_dialog::init())
         .manage(commands::ScanState::default())
         .manage(commands::WriteState::default())
         .invoke_handler(tauri::generate_handler![
@@ -31,7 +33,22 @@ fn main() {
             commands::read_cover,
             commands::folder_cover,
             commands::write_tags_batch,
+            commands::write_cancel,
             commands::genre_list,
+            edit::read_tag,
+            edit::save_tag,
+            edit::remove_tags_batch,
+            edit::id3_sync_batch,
+            edit::folder_covers,
+            edit::cover_to_tags_batch,
+            edit::cover_from_tags,
+            edit::cover_as_folder,
+            edit::resize_file_covers_batch,
+            edit::resize_folder_covers,
+            edit::path_kind,
+            edit::read_image_file,
+            edit::read_text_file,
+            edit::write_file,
         ])
         .run(tauri::generate_context!())
         .expect("TidyTag could not start");
