@@ -206,4 +206,13 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); margi
 .ed-bottom { display: flex; align-items: center; gap: 8px; }
 .ed-bottom .grow { flex: 1; }
 textarea.input { padding: 4px 8px; }
+.modal.multi-editor { width: 760px; max-width: 96vw; display: flex; flex-direction: column; gap: 8px; }
+.me-body { display: flex; gap: 14px; min-height: 0; }
+.me-fields { flex: 1; max-height: 470px; overflow: auto; padding-right: 4px; }
+.me-grid { display: grid; grid-template-columns: 150px 1fr; gap: 7px 10px; align-items: center; }
+.input.w170 { width: 170px; }
+.me-cover { width: 220px; flex-shrink: 0; align-self: flex-start; gap: 8px; }
+.me-cover-img { width: 196px; height: 196px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); display: grid; place-items: center; overflow: hidden; }
+.me-cover-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.multi-editor progress { width: 100%; accent-color: var(--accent); }
 .modal-buttons { display: flex; justify-content: flex-end; gap: 8px; }

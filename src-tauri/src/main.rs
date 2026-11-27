@@ -33,6 +33,7 @@ fn main() {
             commands::read_cover,
             commands::folder_cover,
             commands::write_tags_batch,
+            commands::write_cancel,
             commands::genre_list,
             edit::read_tag,
             edit::save_tag,

@@ -526,6 +526,21 @@
     selectionChanged();
   }
 
+  // from: ActMultiEdit — the checked (else selected) files
+  async function multiEdit() {
+    const items = await requireTargets();
+    if (!items) return;
+    const { scope } = SAVE.targets(state);
+    await MULTIEDITOR.open({
+      items, keep: bool('Editor', 'KeepTimestamp', false), setKeep: setKeepDate, genres: () => API.genreList(),
+      scopeCaption: t(scope === 'checked' ? RS.rsAfkrydsedeFilerD : RS.rsMarkeredeFilerD, items.length),
+      write: (writeItems, onProgress) => startWrite(t(RS.rsMultiFilTagEditor), (id) => API.writeTagsBatch(writeItems, id),
+        { onProgress, quiet: true }),
+      cancel: () => API.writeCancel(),
+    });
+    selectionChanged();
+  }
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -569,6 +584,7 @@
     aRemoveTags: removeTags,
     aTracks: trackTools,
     aEdit: editTag,
+    aMulti: multiEdit,
   };
   const ENABLED = {
     aUp: () => !!state.folder,
@@ -650,6 +666,7 @@
     PANEL.init(S, {
       saveMulti,
       focusedFields: () => state.items[state.focus]?.fields,
+      openMulti: () => ACTIONS.aMulti(),
     });
     applyView();
     renderHeader();

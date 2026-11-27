@@ -260,11 +260,14 @@ struct WriteDone {
     skipped: usize,
     errors: Vec<WriteError>,
     tracks: Vec<TrackDto>,
+    /// stopped by write_cancel before the last file
+    cancelled: bool,
 }
 
-/// Set while a batch (or a single save) runs; a second one is refused.
+/// `.0` is set while a batch (or a single save) runs, and a second one is refused; `.1` asks
+/// the running batch to stop after the current file.
 #[derive(Default)]
-pub struct WriteState(Arc<AtomicBool>);
+pub struct WriteState(Arc<AtomicBool>, Arc<AtomicBool>);
 
 /// Clears "busy" however the work ends.
 pub(crate) struct Busy(Arc<AtomicBool>);
@@ -280,8 +283,15 @@ impl WriteState {
         if self.0.swap(true, Ordering::SeqCst) {
             return Err("busy".into());
         }
+        self.1.store(false, Ordering::SeqCst);
         Ok(Busy(self.0.clone()))
     }
+}
+
+/// Stops the running batch after the file it is writing (the multi editor's Annuller).
+#[tauri::command]
+pub fn write_cancel(state: State<WriteState>) {
+    state.1.store(true, Ordering::SeqCst);
 }
 
 /// What one file of a batch came to.
@@ -346,12 +356,18 @@ pub(crate) fn run_batch<T: Send + 'static>(
     work: impl Fn(&T, &WriteOptions) -> Outcome + Send + 'static,
 ) -> Result<(), String> {
     let busy = state.claim()?;
+    let cancel = state.1.clone();
     std::thread::spawn(move || {
         let _busy = busy;
         let opt = write_options();
         let total = items.len();
-        let mut done = WriteDone { batch_id, saved: 0, failed: 0, skipped: 0, errors: Vec::new(), tracks: Vec::new() };
+        let mut done =
+            WriteDone { batch_id, saved: 0, failed: 0, skipped: 0, errors: Vec::new(), tracks: Vec::new(), cancelled: false };
         for (i, it) in items.iter().enumerate() {
+            if cancel.load(Ordering::SeqCst) {
+                done.cancelled = true;
+                break;
+            }
             let _ = app.emit("write-progress", WriteProgress { batch_id, done: i + 1, total });
             // a bug in the work must not take the whole batch down: it becomes this file's error
             let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| work(it, &opt)))

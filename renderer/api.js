@@ -15,6 +15,7 @@
     readCover: (path) => invoke('read_cover', { path }),
     folderCover: (dir) => invoke('folder_cover', { dir }),
     writeTagsBatch: (items, batchId) => invoke('write_tags_batch', { items, batchId }),
+    writeCancel: () => invoke('write_cancel'),
     genreList: () => invoke('genre_list'),
     // phase 3 (src-tauri/src/edit.rs)
     readTag: (path) => invoke('read_tag', { path }),
