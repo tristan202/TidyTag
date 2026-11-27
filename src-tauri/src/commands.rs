@@ -282,3 +282,24 @@ pub fn write_tags_batch(app: AppHandle, state: State<WriteState>, items: Vec<Wri
     });
     Ok(())
 }
+
+/// 1.2's GenreList: the ID3 genres minus [HiddenGenres], plus [CustomGenres], sorted and
+/// without duplicates, both case-insensitively.
+#[tauri::command]
+pub fn genre_list() -> Vec<String> {
+    let ini = Ini::load(&settings_path()).ok();
+    let values = |sec: &str| -> Vec<String> {
+        ini.as_ref().map(|i| i.section(sec).into_iter().map(|(_, v)| v).collect()).unwrap_or_default()
+    };
+    let unquote = |s: &str| if s.len() >= 2 && s.starts_with('"') && s.ends_with('"') { s[1..s.len() - 1].to_string() } else { s.to_string() };
+    let hidden = values("HiddenGenres");
+    let mut list: Vec<String> = tidytag_core::text::id3_genres()
+        .iter()
+        .filter(|g| !hidden.iter().any(|h| h.eq_ignore_ascii_case(g)))
+        .map(|g| g.to_string())
+        .collect();
+    list.extend(values("CustomGenres").iter().map(|c| unquote(c).trim().to_string()).filter(|c| !c.is_empty()));
+    list.sort_by_key(|g| g.to_lowercase());
+    list.dedup_by(|a, b| a.eq_ignore_ascii_case(b));
+    list
+}

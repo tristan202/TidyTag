@@ -57,7 +57,7 @@
    "hint": "Ret felter og cover i alle afkrydsede (eller markerede) filer",
    "shortcut": "Ctrl+E",
    "icon": "tags",
-   "phase": 2,
+   "phase": 3,
    "check": false
   },
   "aRenameFolder": {
@@ -354,7 +354,7 @@
    "hint": "Bevar filernes dato ved gem",
    "shortcut": "",
    "icon": "",
-   "phase": 2,
+   "phase": 1,
    "check": true
   },
   "aToken": {

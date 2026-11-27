@@ -174,6 +174,11 @@ const ID3_GENRES: [&str; 192] = [
     "Indie Rock", "G-Funk", "Dubstep", "Garage Rock", "Psybient",
 ];
 
+/// The standard ID3v1 genre names (1.2's ID3Genres).
+pub fn id3_genres() -> &'static [&'static str] {
+    &ID3_GENRES
+}
+
 pub fn id3_genre_name(index: i64) -> &'static str {
     if (0..ID3_GENRES.len() as i64).contains(&index) { ID3_GENRES[index as usize] } else { "" }
 }

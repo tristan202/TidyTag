@@ -31,6 +31,7 @@ fn main() {
             commands::read_cover,
             commands::folder_cover,
             commands::write_tags_batch,
+            commands::genre_list,
         ])
         .run(tauri::generate_context!())
         .expect("TidyTag could not start");

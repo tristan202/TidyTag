@@ -79,9 +79,9 @@ def split_args(s):
 # Phase of the TidyTag 2 plan in which an action starts to work (1 = this skeleton).
 PHASE1 = {'aRefresh', 'aExit', 'aSelAll', 'aSelNone', 'aChkSel', 'aUnchkSel', 'aChkAll', 'aUnchkAll',
           'aInvert', 'FActToolsPanel', 'FActFolders', 'FActAddress', 'FActFilter', 'FActSubfolders',
-          'aTabRename', 'aTabMulti', 'aTabF2T', 'aUp', 'aFav',
+          'aTabRename', 'FActKeepDate', 'aTabMulti', 'aTabF2T', 'aUp', 'aFav',
           'aTreeRefresh', 'aCloseFolders'}
-PHASE = {'aEdit': 3, 'aMulti': 2, 'aCopy': 3, 'FActPaste': 3, 'aSwapAT': 3, 'aSwapAA': 3, 'aSwapLT': 3,
+PHASE = {'aEdit': 3, 'aMulti': 3, 'aCopy': 3, 'FActPaste': 3, 'aSwapAT': 3, 'aSwapAA': 3, 'aSwapLT': 3,
          'aSwap': 3, 'aCopyField': 3, 'aClean': 3, 'aRemoveTags': 3, 'aSync': 3, 'aTracks': 3,
          'aCoverIn': 3, 'aCoverOut': 3, 'aCoverAsFolder': 3, 'aResizeFiles': 3, 'aResizeFolders': 3,
          'aDelFolderCover': 3, 'FActAutoResize': 3, 'aRenameFolder': 4, 'aRenameDlg': 4, 'aF2TDlg': 4,

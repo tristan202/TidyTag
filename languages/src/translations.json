@@ -6878,5 +6878,13 @@
   "it": "Disponibile in una versione successiva",
   "sv": "Kommer i en senare version",
   "es": "Disponible en una versión posterior"
+ },
+ "OK": {
+  "en": "OK",
+  "de": "OK",
+  "fr": "OK",
+  "it": "OK",
+  "sv": "OK",
+  "es": "OK"
  }
 }

@@ -10,7 +10,7 @@
   const norm = (p) => p.replace(/[\\/]+$/, '').toLowerCase();
 
   // ---------- settings (same file and keys as 1.2) ----------
-  const SECTIONS = ['Main', 'View', 'Rename', 'FileToTag', 'RenameMasks', 'FileToTagMasks', 'AddressHistory', 'Favorites'];
+  const SECTIONS = ['Main', 'Editor', 'View', 'Rename', 'FileToTag', 'RenameMasks', 'FileToTagMasks', 'AddressHistory', 'Favorites'];
   const S = {};
   async function loadSettings() {
     await Promise.all(SECTIONS.map(async (sec) => {
@@ -33,7 +33,7 @@
 
   // ---------- state ----------
   const state = {
-    folder: '', scanId: 0, scanning: false, message: '',
+    folder: '', scanId: 0, scanning: false, writing: false, batchId: 0, message: '',
     items: [], // TrackDto + checked
     sort: { col: 1, desc: false, col2: -1, desc2: false }, // 1.2 starts sorted on the file name
     sel: new Set(), focus: -1, anchor: -1,
@@ -133,6 +133,54 @@
     state.message = t('Læser tags: %d af %d filer...', msg.done, msg.total);
     updateStatus();
   });
+  // ---------- saving from the multi tab (1.2's ButtonMultiSaveClick / WriteFieldsBatch) ----------
+  let writeWhat = '';
+  async function saveMulti(form) {
+    const { fields, cleared } = SAVE.multiValues(form);
+    if (!Object.keys(fields).length) return DIALOG.info(t(RS.rsSaetFluebenVedDeFelter));
+    if (!SAVE.canStartBatch(state)) return DIALOG.info(t(RS.rsVentVenligstTilAlleTags));
+    const { items } = SAVE.targets(state);
+    if (!items.length) return DIALOG.info(t(RS.rsAfkrydsEllerMarkerDeFiler));
+    if (!(await DIALOG.confirm(t(RS.rsGemTags), SAVE.confirmText(items.length, cleared)))) return;
+    writeWhat = t(RS.rsMultiFilTagEditor);
+    state.writing = true;
+    state.batchId += 1;
+    MENU.refresh();
+    try {
+      await API.writeTagsBatch(items.map((tr) => ({ path: tr.path, values: fields, cover: null })), state.batchId);
+    } catch (e) {
+      state.writing = false;
+      DIALOG.info(String(e));
+    }
+  }
+  API.on('write-progress', (msg) => {
+    if (msg.batchId !== state.batchId) return;
+    state.message = t(RS.rsSDAfD, writeWhat, msg.done, msg.total);
+    updateStatus();
+  });
+  API.on('write-done', (msg) => {
+    if (msg.batchId !== state.batchId) return;
+    state.writing = false;
+    // the files read again replace their rows; ticks and selection stay
+    const byPath = new Map(msg.tracks.map((tr) => [tr.path.toLowerCase(), tr]));
+    state.items = state.items.map((old) => {
+      const tr = byPath.get(old.path.toLowerCase());
+      if (!tr) return old;
+      tr.checked = old.checked;
+      if (state.sel.has(old)) { state.sel.delete(old); state.sel.add(tr); }
+      return tr;
+    });
+    sortItems();
+    renderRows();
+    state.message = SAVE.doneText(writeWhat, msg.saved, msg.failed, msg.skipped);
+    updateStatus();
+    MENU.refresh();
+    showFileCover();
+    if (msg.errors.length) {
+      DIALOG.info(msg.errors.map((e) => `${e.file}: ${t(e.error)}`).join('\n'), t(RS.rsNogleFilerBlevIkkeGemt));
+    }
+  });
+
   API.on('scan-done', (msg) => {
     if (msg.scanId !== state.scanId) return;
     state.scanning = false;
@@ -332,10 +380,12 @@
     aUp: () => { const p = state.folder.replace(/[\\/]+$/, ''); const i = p.lastIndexOf('\\'); if (i > 1) navigate(p.slice(0, i + (i === 2 ? 1 : 0))); },
     aFav: favoritesPopup,
     aTreeRefresh: () => TREE.reload(),
+    FActKeepDate: () => save('Editor', 'KeepTimestamp', bool('Editor', 'KeepTimestamp', false) ? 0 : 1),
   };
   const CHECKED = {
     FActToolsPanel: () => state.view.tools, FActFolders: () => state.view.folders,
     FActAddress: () => state.view.address, FActFilter: () => state.view.filter, FActSubfolders: () => state.view.subfolders,
+    FActKeepDate: () => bool('Editor', 'KeepTimestamp', false),
   };
   function showTab(i) {
     if (!state.view.tools) toggleView('tools', 'View', 'ToolsPanel');
@@ -352,7 +402,14 @@
           ...Object.entries(I18N.LANGS).map(([c, n]) => ({ text: n, checked: cur === c, radio: true, run: () => setLanguage(c) }))],
       };
     }
-    if (item.special === 'albumArtist') return { text: t(RS.rsAlbumkunstnerVedGem), items: [], enabled: false, later: true };
+    if (item.special === 'albumArtist') {
+      const cur = Number(get('Main', 'AlbumArtistRule', 0)) || 0;
+      return {
+        text: t(RS.rsAlbumkunstnerVedGem), enabled: true,
+        items: [RS.rsAlbumkunstnerIngen, RS.rsAlbumkunstnerHvisTom, RS.rsAlbumkunstnerAltid].map((text, i) =>
+          ({ text: t(text), checked: cur === i, radio: true, run: () => save('Main', 'AlbumArtistRule', i) })),
+      };
+    }
     return null; // play with, recent folders, rename actions: later phases
   }
 
@@ -394,7 +451,10 @@
       checked: (id) => !!CHECKED[id]?.(),
       dynamic,
     });
-    PANEL.init(S);
+    PANEL.init(S, {
+      saveMulti,
+      focusedFields: () => state.items[state.focus]?.fields,
+    });
     applyView();
     renderHeader();
     renderRows();

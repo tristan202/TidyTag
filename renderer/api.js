@@ -14,6 +14,8 @@
     scanCancel: () => invoke('scan_cancel'),
     readCover: (path) => invoke('read_cover', { path }),
     folderCover: (dir) => invoke('folder_cover', { dir }),
+    writeTagsBatch: (items, batchId) => invoke('write_tags_batch', { items, batchId }),
+    genreList: () => invoke('genre_list'),
     on: (event, fn) => listen(event, (e) => fn(e.payload)),
     window: () => window.__TAURI__.window.getCurrentWindow(),
   };

@@ -80,12 +80,40 @@
         <div class="btn-row">${later('Forhåndsvis...')}${later('Omdøb', true)}${later('Fortryd')}</div></div></div>`;
   }
 
+  // 1.2's six inline fields (lfm captions); the values stay while other tabs are shown
+  const MULTI = [['artist', 'Kunstner'], ['album', 'Album'], ['albumArtist', 'Albumkunstner'], ['year', 'År'],
+    ['genre', 'Genre'], ['comment', 'Kommentar']];
+  const multi = Object.fromEntries(MULTI.map(([k]) => [k, { on: false, value: '' }]));
+  let genres = [];
+  let hooks = {};
+
   function multiTab() {
-    const fields = ['Kunstner', 'Album', 'Albumkunstner', 'År', 'Genre', 'Kommentar'];
-    return `<div class="tool-grid"><div class="tool-left"><div class="multi-grid">${fields.map((f) =>
-        `${check('', f, false, true)}<input class="input" disabled />`).join('')}</div></div>
+    return `<div class="tool-grid"><div class="tool-left"><div class="multi-grid">${MULTI.map(([k, caption]) =>
+        `<label class="chk-label"><input type="checkbox" data-mk="${k}"${multi[k].on ? ' checked' : ''} /><span>${esc(t(caption))}</span></label>
+         <input class="input" data-mv="${k}" spellcheck="false" value="${esc(multi[k].value)}"${k === 'genre' ? ' list="genre-list"' : ''} />`).join('')}</div>
+        <datalist id="genre-list">${genres.map((g) => `<option value="${esc(g)}"></option>`).join('')}</datalist></div>
       <div class="tool-right"><div class="notes">${esc(t(RS.rsKunFelterMedFluebenBliver))}</div>
-        <div class="btn-row">${later('Gem tags', true)}${later('Kopiér fra fil')}${later('Alle felter...')}</div></div></div>`;
+        <div class="btn-row"><button class="btn primary" id="multi-save">${esc(t('Gem tags'))}</button>
+          <button class="btn" id="multi-copy" title="${esc(t('Udfyld felterne med værdierne fra den fokuserede fil'))}">${esc(t('Kopiér fra fil'))}</button>
+          ${later('Alle felter...')}</div></div></div>`;
+  }
+
+  // from: MultiValueChange, ButtonMultiCopyClick, ButtonMultiSaveClick
+  function wireMulti() {
+    body.querySelectorAll('[data-mk]').forEach((c) => c.addEventListener('change', () => { multi[c.dataset.mk].on = c.checked; }));
+    body.querySelectorAll('[data-mv]').forEach((i) => i.addEventListener('input', () => {
+      const k = i.dataset.mv;
+      multi[k].value = i.value;
+      multi[k].on = true; // typing ticks the field
+      body.querySelector(`[data-mk="${k}"]`).checked = true;
+    }));
+    body.querySelector('#multi-copy').addEventListener('click', () => {
+      const fields = hooks.focusedFields?.();
+      if (!fields) return;
+      for (const [k] of MULTI) multi[k].value = fields[k] || '';
+      render();
+    });
+    body.querySelector('#multi-save').addEventListener('click', () => hooks.saveMulti?.(multi));
   }
 
   function f2tTab() {
@@ -121,12 +149,15 @@
     document.querySelectorAll('#tool-tabs .tab').forEach((b) => b.classList.toggle('on', Number(b.dataset.tab) === tab));
     body.innerHTML = [renameTab, multiTab, f2tTab][tab]();
     if (tab === 0) wire('rn', 'Rename');
+    if (tab === 1) wireMulti();
     if (tab === 2) wire('ft', 'FileToTag');
   }
 
   window.PANEL = {
-    init(settings) {
+    init(settings, h = {}) {
       S = settings;
+      hooks = h;
+      API.genreList().then((g) => { genres = g; if (tab === 1) render(); });
       body = document.getElementById('tool-body');
       tab = Math.min(2, Math.max(0, Number(get('View', 'ToolTab', 0)) || 0));
       document.querySelectorAll('#tool-tabs .tab').forEach((b) => b.addEventListener('click', () => this.show(Number(b.dataset.tab))));
