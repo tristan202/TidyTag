@@ -176,11 +176,12 @@ def main():
         if m:
             (toolbar if m.group(1) == 'ToolBarMain' else folderbar).append(item(m.group(2))); continue
 
-    # unit-local texts: tooldialogs' (the small forms) and mainform's own resourcestrings, the
+    # unit-local texts: the dialogs' (small forms, track numbers, editors) and mainform's own, the
     # latter read last so its names win; audiotypes' field captions
     main_rs = {}
-    tool = open(os.path.join(SRC, 'tooldialogs.pas'), encoding='utf-8').read()
-    for unit in (tool, text):
+    forms = [open(os.path.join(SRC, u), encoding='utf-8').read()
+             for u in ('tooldialogs.pas', 'tracktoolsform.pas', 'tageditform.pas', 'multieditform.pas')]
+    for unit in (*forms, text):
         for block in re.findall(r'resourcestring(.*?)(?:\n(?:type|const|var|function|procedure|implementation|uses)\b)', unit, re.S | re.I):
             for m in re.finditer(r'^\s*(rs\w+)\s*=\s*(.*?);\s*$', block, re.M | re.S):
                 main_rs[m.group(1)] = pascal_string(m.group(2)).replace('\r\n', '\n')

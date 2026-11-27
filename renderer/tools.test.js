@@ -64,3 +64,11 @@ test('swap plans for a selection skip unchanged files', () => {
   assert.strictEqual(items.length, 2);
   assert.deepStrictEqual(items[0], { path: ts[0].path, values: { artist: 'B', title: 'A' }, cover: null });
 });
+
+test('track dialog statuses', () => {
+  const RS = require('./menudata.js').rs;
+  assert.strictEqual(RS[T.trackStatus(tr({ track: '01' }), '01')], 'Uændret');
+  assert.strictEqual(RS[T.trackStatus(tr({ track: '1' }, 'C:/a', 'x.dsf'), '01')], 'Filtypen kan ikke gemmes endnu');
+  assert.strictEqual(RS[T.trackStatus(tr({ track: '1' }), '01')], 'Ændres');
+  assert.ok(T.canWriteTags('C:/a/b.FLAC') && !T.canWriteTags('C:/a/b.dsf'));
+});

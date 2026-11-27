@@ -10,7 +10,8 @@
   const norm = (p) => p.replace(/[\\/]+$/, '').toLowerCase();
 
   // ---------- settings (same file and keys as 1.2) ----------
-  const SECTIONS = ['Main', 'Editor', 'View', 'Rename', 'FileToTag', 'RenameMasks', 'FileToTagMasks', 'AddressHistory', 'Favorites'];
+  const SECTIONS = ['Main', 'Editor', 'View', 'Rename', 'FileToTag', 'RenameMasks', 'FileToTagMasks', 'AddressHistory', 'Favorites',
+    'Tracks', 'Cover'];
   const S = {};
   async function loadSettings() {
     await Promise.all(SECTIONS.map(async (sec) => {
@@ -134,21 +135,29 @@
     updateStatus();
   });
   // ---------- saving from the multi tab (1.2's ButtonMultiSaveClick / WriteFieldsBatch) ----------
-  let writeWhat = '', writeShowsSkipped = true;
-  /** Starts one batch command; `call(batchId)` invokes it. The result comes as write-done. */
-  async function startWrite(what, call, { showSkipped = true } = {}) {
+  let writeWhat = '', writeShowsSkipped = true, writeQuiet = false, writeWaiter = null, writeProgress = null;
+  /** Starts one batch command; `call(batchId)` invokes it. Resolves with the write-done message
+   *  (null when the batch could not start); onProgress gets each write-progress; quiet: the
+   *  caller shows the errors itself. */
+  async function startWrite(what, call, { showSkipped = true, onProgress = null, quiet = false } = {}) {
     writeWhat = what;
     writeShowsSkipped = showSkipped;
+    writeQuiet = quiet;
+    writeProgress = onProgress;
     state.writing = true;
     state.batchId += 1;
     MENU.refresh();
+    const done = new Promise((resolve) => { writeWaiter = resolve; });
     try {
       await call(state.batchId);
     } catch (e) {
       state.writing = false;
+      writeWaiter = null;
       MENU.refresh();
-      DIALOG.info(String(e));
+      await DIALOG.info(String(e));
+      return null;
     }
+    return done;
   }
   function saveMulti(form) {
     return SAVE.save(state, form, {
@@ -169,6 +178,7 @@
     if (msg.batchId !== state.batchId) return;
     state.message = t(RS.rsSDAfD, writeWhat, msg.done, msg.total);
     updateStatus();
+    writeProgress?.(msg);
   });
   API.on('write-done', (msg) => {
     if (msg.batchId !== state.batchId) return;
@@ -188,7 +198,10 @@
     updateStatus();
     MENU.refresh();
     showFileCover();
-    if (msg.errors.length) {
+    const waiter = writeWaiter;
+    writeWaiter = writeProgress = null;
+    waiter?.(msg);
+    if (msg.errors.length && !writeQuiet) {
       DIALOG.info(msg.errors.map((e) => `${e.file}: ${t(e.error)}`).join('\n'), t(RS.rsNogleFilerBlevIkkeGemt));
     }
   });
@@ -468,6 +481,28 @@
     if (now) startWrite(what, (id) => API.removeTagsBatch(now.map((tr) => tr.path), id), { showSkipped: false });
   }
 
+  // from: ActTracks — the whole list, or the checked/selected files
+  async function trackTools() {
+    if (!SAVE.canStartBatch(state) || !state.items.length) return;
+    const { items, scope } = SAVE.targets(state);
+    const keep = await TRACKTOOLS.open({
+      all: state.items.slice(), subset: items, prefer: scope === 'checked' || items.length > 1,
+      subsetCaption: t(scope === 'checked' ? RS.rsAfkrydsedeFilerD : RS.rsMarkeredeFilerD, items.length),
+      keep: bool('Editor', 'KeepTimestamp', false), get, save,
+      write: async (writeItems, keepDate, onProgress) => {
+        if (!SAVE.canStartBatch(state)) { await DIALOG.info(t(RS.rsVentVenligstTilAlleTags)); return null; }
+        await setKeepDate(keepDate); // the batch reads it from the ini
+        return startWrite(t('Spornumre'), (id) => API.writeTagsBatch(writeItems, id), { onProgress, quiet: true });
+      },
+    });
+    setKeepDate(keep);
+  }
+  async function setKeepDate(on) {
+    (S.editor ||= {}).keeptimestamp = on ? '1' : '0';
+    await API.settingsSet('Editor', 'KeepTimestamp', on ? 1 : 0);
+    MENU.refresh();
+  }
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -509,11 +544,13 @@
     FActPaste: pasteTag,
     aSync: id3Sync,
     aRemoveTags: removeTags,
+    aTracks: trackTools,
   };
   const ENABLED = {
     aUp: () => !!state.folder,
     aCopy: () => state.focus >= 0,
     FActPaste: () => !!tools.clip,
+    aTracks: () => state.items.length > 0,
   };
   const CHECKED = {
     FActToolsPanel: () => state.view.tools, FActFolders: () => state.view.folders,

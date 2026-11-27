@@ -9,39 +9,49 @@
   const FIELDS = Object.keys(MENUDATA.fieldCaptions);
   const cap = (k) => t(MENUDATA.fieldCaptions[k]);
 
+  /** A modal window around `inner` (HTML). It takes every key while it is the top one: Tab stays
+   *  inside, Escape calls onEscape, Enter outside buttons and text areas calls onEnter.
+   *  Returns { el, close }. */
+  function modal(inner, { cls = '', onEscape = null, onEnter = null } = {}) {
+    const back = document.createElement('div');
+    back.className = 'modal-back';
+    back.innerHTML = `<div class="modal ${cls}" role="dialog" aria-modal="true">${inner}</div>`;
+    const el = back.firstElementChild;
+    const key = (e) => {
+      if (back !== [...document.querySelectorAll('.modal-back')].pop()) return; // a dialog on top has the keys
+      e.stopPropagation();
+      const tag = document.activeElement?.tagName;
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const f = [...el.querySelectorAll('input, select, textarea, button')].filter((x) => !x.disabled && x.offsetParent);
+        const i = f.indexOf(document.activeElement);
+        f[(i + (e.shiftKey ? f.length - 1 : 1) + f.length) % f.length]?.focus();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        onEscape?.();
+      } else if (e.key === 'Enter' && tag !== 'TEXTAREA') {
+        e.preventDefault();
+        if (tag === 'BUTTON') document.activeElement.click();
+        else onEnter?.();
+      }
+    };
+    addEventListener('keydown', key, true);
+    document.body.appendChild(back);
+    return { el, close: () => { back.remove(); removeEventListener('keydown', key, true); } };
+  }
+
   /** body: HTML; collect(modal) gives the answer (or undefined to keep the form open). */
   function form(title, body, collect, { wide = false } = {}) {
     return new Promise((resolve) => {
-      const back = document.createElement('div');
-      back.className = 'modal-back';
-      back.innerHTML = `<div class="modal form${wide ? ' wide' : ''}" role="dialog" aria-modal="true">
-        <h2>${esc(title)}</h2><div class="form-body">${body}</div>
-        <div class="modal-buttons"><button class="btn primary" data-ok>${esc(label(t('OK')))}</button>
-        <button class="btn" data-cancel>${esc(label(t('Annuller')))}</button></div></div>`;
-      const modal = back.firstElementChild;
-      const done = (v) => { back.remove(); removeEventListener('keydown', key, true); resolve(v); };
-      const ok = () => { const v = collect(modal); if (v !== undefined) done(v); };
-      const key = (e) => {
-        e.stopPropagation();
-        const focusables = [...modal.querySelectorAll('input, select, button')].filter((el) => !el.disabled);
-        if (e.key === 'Tab') { // keep the focus in the form
-          e.preventDefault();
-          const i = focusables.indexOf(document.activeElement);
-          focusables[(i + (e.shiftKey ? focusables.length - 1 : 1) + focusables.length) % focusables.length]?.focus();
-        } else if (e.key === 'Escape') {
-          e.preventDefault();
-          done(null);
-        } else if (e.key === 'Enter') {
-          e.preventDefault();
-          if (document.activeElement?.tagName === 'BUTTON') document.activeElement.click();
-          else ok();
-        }
-      };
-      modal.querySelector('[data-ok]').addEventListener('click', ok);
-      modal.querySelector('[data-cancel]').addEventListener('click', () => done(null));
-      addEventListener('keydown', key, true);
-      document.body.appendChild(back);
-      (modal.querySelector('.form-body input, .form-body select') || modal.querySelector('[data-ok]')).focus();
+      const buttons = `<div class="modal-buttons"><button class="btn primary" data-ok>${esc(label(t('OK')))}</button>
+        <button class="btn" data-cancel>${esc(label(t('Annuller')))}</button></div>`;
+      const done = (v) => { m.close(); resolve(v); };
+      const ok = () => { const v = collect(m.el); if (v !== undefined) done(v); };
+      const m = modal(`<h2>${esc(title)}</h2><div class="form-body">${body}</div>${buttons}`,
+        { cls: 'form' + (wide ? ' wide' : ''), onEscape: () => done(null), onEnter: ok });
+      m.el.querySelector('[data-ok]').addEventListener('click', ok);
+      m.el.querySelector('[data-cancel]').addEventListener('click', () => done(null));
+      (m.el.querySelector('.form-body input, .form-body select') || m.el.querySelector('[data-ok]')).focus();
     });
   }
 
@@ -113,5 +123,5 @@
     }));
   }
 
-  window.FORMS = { form, fieldPair, fieldSet, id3Sync, coverResize };
+  window.FORMS = { modal, form, esc, fieldPair, fieldSet, id3Sync, coverResize };
 })();

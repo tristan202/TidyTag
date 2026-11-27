@@ -176,4 +176,14 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); margi
 .check-list .chk-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
 .radio-group { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 10px 8px; margin: 0; display: flex; flex-direction: column; gap: 4px; }
 .radio-group legend { color: var(--muted); font-size: 12px; padding: 0 4px; }
+.modal.track-tools { width: 820px; max-width: 94vw; display: flex; flex-direction: column; gap: 10px; }
+.track-top { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.track-top .off { opacity: .5; }
+.track-list { height: 340px; overflow: auto; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.track-list table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.track-list th { position: sticky; top: 0; background: var(--raised); text-align: left; font-weight: 600; padding: 4px 8px; }
+.track-list td { padding: 2px 8px; white-space: nowrap; border-top: 1px solid var(--border); }
+.track-list td.bad { color: var(--danger); }
+.track-bottom { display: flex; align-items: center; gap: 10px; }
+.track-bottom [data-summary] { flex: 1; text-align: right; }
 .modal-buttons { display: flex; justify-content: flex-end; gap: 8px; }

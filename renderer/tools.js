@@ -131,10 +131,21 @@
     return v;
   }
 
+  // from: CanWriteTags (write.rs WRITABLE)
+  const WRITABLE = new Set(['mp3', 'flac', 'm4a', 'm4b', 'mp4', 'ogg', 'oga', 'opus', 'wav', 'aif', 'aiff', 'aifc',
+    'ape', 'wv', 'mpc', 'ofr', 'wma', 'asf']);
+  const canWriteTags = (path) => WRITABLE.has((/\.([^.\\/]+)$/.exec(path) || [])[1]?.toLowerCase());
+
+  // from: TFormTrackTools.UpdatePreview — the name of the row's status text (MENUDATA.rs)
+  function trackStatus(tr, newTrack) {
+    if (newTrack === get(tr, 'track')) return 'rsUaendret';
+    return canWriteTags(tr.path) ? 'rsAendres' : 'rsFiltypenKanIkkeGemmesEndnu';
+  }
+
   /** Write items for the files whose plan is not null. */
   const writeItems = (tracks, planFn) =>
     tracks.map((tr) => [tr, planFn(tr)]).filter(([, p]) => p).map(([tr, p]) => ({ path: tr.path, values: p.values, cover: null }));
 
   return { planSwap, planCopy, cleanSpaces, planCleanSpaces, applyNameTool, planNameTool, parseTrack, formatTrack,
-    planTrackNumbers, pasteValues, writeItems };
+    planTrackNumbers, pasteValues, writeItems, canWriteTags, trackStatus };
 });
