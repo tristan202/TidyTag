@@ -192,3 +192,93 @@ pub async fn folder_cover(dir: String) -> Option<Cover> {
         Some(cover(&mime, &data))
     })
 }
+
+// ---------- writing tags ----------
+
+#[derive(serde::Deserialize)]
+pub struct WriteItem {
+    path: String,
+    /// field key -> value ('' clears the field)
+    values: BTreeMap<String, String>,
+    /// a new front cover, base64
+    cover: Option<String>,
+}
+
+#[derive(Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+struct WriteProgress {
+    batch_id: u32,
+    done: usize,
+    total: usize,
+}
+
+#[derive(Serialize, Clone)]
+struct WriteError {
+    file: String,
+    error: String,
+}
+
+#[derive(Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+struct WriteDone {
+    batch_id: u32,
+    saved: usize,
+    failed: usize,
+    skipped: usize,
+    errors: Vec<WriteError>,
+    tracks: Vec<TrackDto>,
+}
+
+/// Set while a batch runs; a second batch is refused.
+#[derive(Default)]
+pub struct WriteState(Arc<AtomicBool>);
+
+/// The settings that change a write ([Tags] ID3Unicode, [Main] AlbumArtistRule,
+/// [Editor] KeepTimestamp), read fresh for every batch; defaults if the file cannot be read.
+fn write_options() -> tidytag_core::write::WriteOptions {
+    let ini = Ini::load(&settings_path()).ok();
+    let get = |s: &str, k: &str| ini.as_ref().and_then(|i| i.get(s, k).map(str::to_string));
+    let bool = |s: &str, k: &str| get(s, k).is_some_and(|v| !matches!(v.to_ascii_lowercase().as_str(), "" | "0" | "false"));
+    tidytag_core::write::WriteOptions {
+        id3_always_unicode: bool("Tags", "ID3Unicode"),
+        album_artist_rule: get("Main", "AlbumArtistRule").and_then(|v| v.trim().parse().ok()).unwrap_or(0).min(2),
+        keep_timestamp: bool("Editor", "KeepTimestamp"),
+    }
+}
+
+/// Writes each item's values (and cover) on its own thread, like 1.2's WriteFieldsBatch.
+/// Progress arrives as `write-progress`, the result as `write-done` with the files read again.
+#[tauri::command]
+pub fn write_tags_batch(app: AppHandle, state: State<WriteState>, items: Vec<WriteItem>, batch_id: u32) -> Result<(), String> {
+    if state.0.swap(true, Ordering::SeqCst) {
+        return Err("busy".into());
+    }
+    let busy = state.0.clone();
+    std::thread::spawn(move || {
+        let opt = write_options();
+        let total = items.len();
+        let mut done = WriteDone { batch_id, saved: 0, failed: 0, skipped: 0, errors: Vec::new(), tracks: Vec::new() };
+        for (i, it) in items.into_iter().enumerate() {
+            let _ = app.emit("write-progress", WriteProgress { batch_id, done: i + 1, total });
+            let values = it.values.iter().filter_map(|(k, v)| TagField::from_key(k).map(|f| (f, v.clone()))).collect();
+            let cover = it.cover.and_then(|c| base64::engine::general_purpose::STANDARD.decode(c).ok());
+            match tidytag_core::batch::update_file_tags(Path::new(&it.path), &values, cover, &opt) {
+                Ok(info) => {
+                    done.saved += 1;
+                    done.tracks.push(TrackDto::from(info));
+                }
+                Err((_, true)) => done.skipped += 1,
+                Err((e, false)) => {
+                    done.failed += 1;
+                    if done.errors.len() < 20 {
+                        let file = Path::new(&it.path).file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
+                        done.errors.push(WriteError { file, error: e });
+                    }
+                }
+            }
+        }
+        busy.store(false, Ordering::SeqCst);
+        let _ = app.emit("write-done", done);
+    });
+    Ok(())
+}

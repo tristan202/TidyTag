@@ -52,6 +52,23 @@ mod tests {
     use super::*;
 
     #[test]
+    fn damaged_file_is_not_written() {
+        let dir = std::env::temp_dir().join(format!("tidytag-batch-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let p = dir.join("broken.flac");
+        std::fs::write(&p, b"fLaC\x00\x00").unwrap(); // truncated metadata
+        let mut values = BTreeMap::new();
+        values.insert(TagField::Title, "x".to_string());
+        let r = update_file_tags(&p, &values, None, &WriteOptions::default());
+        assert!(matches!(&r, Err((_, false))), "{:?}", r.as_ref().err());
+        assert_eq!(std::fs::read(&p).unwrap(), b"fLaC\x00\x00");
+        let dsf = dir.join("a.dsf");
+        std::fs::write(&dsf, b"DSD ").unwrap();
+        assert!(matches!(update_file_tags(&dsf, &values, None, &WriteOptions::default()), Err((_, true))));
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
     fn front_cover_goes_first_and_keeps_the_back() {
         let mut i = AudioInfo::new(Default::default(), true);
         i.pictures = vec![

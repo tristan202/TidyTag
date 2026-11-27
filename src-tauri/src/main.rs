@@ -17,6 +17,7 @@ fn main() {
         }))
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .manage(commands::ScanState::default())
+        .manage(commands::WriteState::default())
         .invoke_handler(tauri::generate_handler![
             commands::settings_get,
             commands::settings_set,
@@ -29,6 +30,7 @@ fn main() {
             commands::scan_cancel,
             commands::read_cover,
             commands::folder_cover,
+            commands::write_tags_batch,
         ])
         .run(tauri::generate_context!())
         .expect("TidyTag could not start");
