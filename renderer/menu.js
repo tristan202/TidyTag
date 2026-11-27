@@ -5,7 +5,7 @@
   const { t, label, mnemonic } = I18N;
   const D = MENUDATA;
   const LATER = 'Kommer i en senere version';
-  let host = null; // { run(id), live(id), enabled(id), checked(id), dynamic(item) -> items }
+  let host = null; // { run(id), live(id), enabled(id), checked(id), hint(id) -> text | undefined, dynamic(item) -> items }
   let openStack = []; // open popups: { el, items, index }
   let barOpen = -1;
 
@@ -147,7 +147,7 @@
   function refreshButtons() {
     document.querySelectorAll('[data-act]').forEach((b) => {
       const a = D.actions[b.dataset.act];
-      const hint = label(t(a.hint).split('\t')[0]) + (a.shortcut ? ` (${a.shortcut})` : '');
+      const hint = label((host.hint?.(b.dataset.act) ?? t(a.hint)).split('\t')[0]) + (a.shortcut ? ` (${a.shortcut})` : '');
       b.title = host.live(b.dataset.act) ? hint : `${hint}\n${t(LATER)}`;
       b.setAttribute('aria-label', hint);
       b.disabled = !actionEnabled(b.dataset.act);

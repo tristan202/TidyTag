@@ -691,6 +691,105 @@
     selectionChanged();
   }
 
+  // the tree or the list: F6 renames what had the focus last (1.2: ShellTree.Focused)
+  let treeFocused = false;
+  document.addEventListener('focusin', (e) => {
+    if (e.target.closest('#tree')) treeFocused = true;
+    else if (e.target.closest('#list')) treeFocused = false;
+  });
+
+  // from: RenameFileDialog — one file at a time, < Forrige / Næste >, each change renamed at once
+  async function renameFileDialog() {
+    if (!state.items.length) return;
+    let idx = state.focus >= 0 ? state.focus : 0;
+    const log = [];
+    const files = state.items; // the same track objects follow the renames
+    await new Promise((resolve) => {
+      const m = FORMS.modal(`<h2 data-title></h2><div class="lbl ellipsis" data-dir></div>
+        <div class="frow"><span class="lbl">${esc(t(RS.rsNytNavn))}</span><input class="input grow" name="name" spellcheck="false"><span data-ext></span></div>
+        <div class="modal-buttons"><button class="btn" data-go="-1">${esc(label(t(RS.rsForrige)))}</button>
+          <button class="btn" data-go="1">${esc(label(t(RS.rsNaeste)))}</button><span class="grow"></span>
+          <button class="btn primary" data-go="0">${esc(label(t('OK')))}</button><button class="btn" data-cancel>${esc(label(t('Annuller')))}</button></div>`,
+      { cls: 'form wide', onEscape: () => { m.close(); resolve(); }, onEnter: () => go(0) });
+      const q = (s) => m.el.querySelector(s);
+      const parts = (tr) => { const i = tr.fileName.lastIndexOf('.'); return i > 0 ? [tr.fileName.slice(0, i), tr.fileName.slice(i)] : [tr.fileName, '']; };
+      function show() {
+        const tr = files[idx];
+        q('[data-title]').textContent = t(RS.rsOmdoebFilTitel, idx + 1, files.length);
+        q('[data-dir]').textContent = tr.folder;
+        const [stem, ext] = parts(tr);
+        q('[name="name"]').value = stem;
+        q('[data-ext]').textContent = ext;
+        q('[data-go="-1"]').disabled = idx === 0;
+        q('[data-go="1"]').disabled = idx === files.length - 1;
+        q('[name="name"]').select();
+        state.sel.clear(); state.sel.add(tr); state.focus = state.anchor = idx;
+        renderRows();
+      }
+      async function go(step) {
+        const tr = files[idx];
+        const [stem, ext] = parts(tr);
+        const name = q('[name="name"]').value.trim();
+        if (name !== stem) {
+          try {
+            const item = await API.renameOne(tr.path, name + ext);
+            log.push(item);
+            await applyRenameLog([item], false);
+          } catch (e) {
+            const text = e === 'invalid' ? t(RS.rsUgyldigtNavn) : e === 'exists' ? t(RS.rsFiltypeFindes, name + ext) : String(e);
+            await DIALOG.info(text, t(RS.rsKunneIkkeOmdoebe));
+            return; // stays on this file
+          }
+        }
+        if (step === 0) { m.close(); resolve(); return; }
+        idx = Math.max(0, Math.min(files.length - 1, idx + step));
+        show();
+      }
+      m.el.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-go]');
+        if (b) go(Number(b.dataset.go));
+        else if (e.target.closest('[data-cancel]')) { m.close(); resolve(); }
+      });
+      show();
+    });
+    if (log.length) setUndoLog(log, t(RS.rsManuelOmdoebning));
+    selectionChanged();
+  }
+
+  // from: RenameFolderManual — the tree's folder
+  async function renameFolderManual() {
+    const dir = TREE.selectedPath.replace(/[\\/]+$/, '');
+    const name = dir.slice(dir.lastIndexOf('\\') + 1);
+    if (!dir || /^[a-z]:$/i.test(dir) || !name) return;
+    const r = await FORMS.form(t(RS.rsOmdoebMappeTitel), `<div class="frow"><span class="lbl">${esc(t(RS.rsNytNavn))}</span>
+      <input class="input grow" name="name" spellcheck="false" value="${esc(name)}"></div>`, (m) => m.querySelector('[name="name"]').value.trim(), { wide: true });
+    if (r === null || r === name) return;
+    try {
+      const item = await API.renameOne(dir, r);
+      await applyRenameLog([item], false);
+      setUndoLog([item], t(RS.rsManuelOmdoebning));
+    } catch (e) {
+      DIALOG.info(e === 'invalid' ? t(RS.rsUgyldigtNavn) : e === 'exists' ? t(RS.rsFiltypeFindes, r) : String(e), t(RS.rsKunneIkkeOmdoebe));
+    }
+  }
+
+  // from: ActUndo
+  async function undoRename() {
+    if (!undoLog) return;
+    const log = undoLog;
+    if (!(await DIALOG.confirm(t(RS.rsFortrydOmdoebning), t(RS.rsGivDFilerMapperDeres, log.length)))) return;
+    if (!SAVE.canStartBatch(state)) return DIALOG.info(t(RS.rsVentVenligstTilAlleTags));
+    let r;
+    try { r = await API.undoRename(log); } catch (e) { return DIALOG.info(String(e)); }
+    await applyRenameLog(log, true);
+    setUndoLog(null, '');
+    state.message = t(RS.rsDFilerMapperFikDeres, r.restored);
+    updateStatus();
+    if (r.errors.length) {
+      DIALOG.info(t(RS.rsDFilerMapperFikDeres2, r.restored) + '\n' + r.errors.map((x) => t(x)).join('\n'), t(RS.rsFortrydOmdoebning));
+    }
+  }
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -738,6 +837,8 @@
     aRenameDlg: () => renameDialog(false),
     aRenameFolder: () => renameDialog(true),
     aF2TDlg: f2tDialog,
+    aRenameManual: () => (treeFocused ? renameFolderManual() : renameFileDialog()),
+    FActUndo: undoRename,
     aCoverIn: covers.coverIn,
     aCoverOut: covers.coverOut,
     aCoverAsFolder: covers.coverAsFolder,
@@ -754,6 +855,8 @@
     aRenameDlg: () => state.items.length > 0,
     aRenameFolder: () => state.items.length > 0,
     aF2TDlg: () => state.items.length > 0,
+    aRenameManual: () => treeFocused || state.items.length > 0,
+    FActUndo: () => !!undoLog,
   };
   const CHECKED = {
     FActToolsPanel: () => state.view.tools, FActFolders: () => state.view.folders,
@@ -822,6 +925,7 @@
     MENU.init({
       run: (id) => ACTIONS[id]?.(),
       live: (id) => !!ACTIONS[id],
+      hint: (id) => (id === 'FActUndo' && undoLog ? t(RS.rsFortrydOmdoebningAfDS, undoLog.length, undoWhat) : undefined),
       enabled: (id) => !!ACTIONS[id] && (!ENABLED[id] || ENABLED[id]()),
       checked: (id) => !!CHECKED[id]?.(),
       dynamic,
