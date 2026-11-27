@@ -7,7 +7,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::path::{Path, PathBuf};
 use tauri::{AppHandle, State};
 use tidytag_core::cover::{find_folder_cover, folder_cover_target, main_picture, resize_cover, CoverResize};
-use tidytag_core::fileio::recycle_files;
+use tidytag_core::fileio::{recycle_files, write_atomic};
 use tidytag_core::id3sync::{sync_id3, SyncDirection, SyncExisting};
 use tidytag_core::model::{detect_image_mime, TagField};
 use tidytag_core::read::read_audio_info;
@@ -99,7 +99,7 @@ pub fn cover_to_tags_batch(app: AppHandle, state: State<WriteState>, paths: Vec<
         let dir = Path::new(p).parent().map(Path::to_path_buf).unwrap_or_default();
         let data = cache
             .lock()
-            .unwrap()
+            .unwrap_or_else(|e| e.into_inner()) // a caught panic must not stop the other files
             .entry(dir.clone())
             .or_insert_with(|| {
                 find_folder_cover(&dir).and_then(|f| std::fs::read(f).ok()).filter(|d| !detect_image_mime(d, "").is_empty())
@@ -131,7 +131,7 @@ pub async fn cover_from_tags(paths: Vec<String>) -> FolderResult {
         let info = read_audio_info(Path::new(p), true);
         let Some(pic) = main_picture(&info) else { continue };
         let target = folder_cover_target(dir, &pic.mime);
-        match std::fs::write(&target, &pic.data) {
+        match write_atomic(&target, &pic.data) {
             Ok(()) => r.done += 1,
             Err(e) => r.errors.push(format!("{}: {e}", target.display())),
         }
@@ -156,7 +156,7 @@ pub async fn cover_as_folder(path: String, replace: bool) -> Result<AsFolder, St
     if target.exists() && !replace {
         return Ok(AsFolder { target: shown, written: false });
     }
-    std::fs::write(&target, &pic.data).map_err(|e| e.to_string())?;
+    write_atomic(&target, &pic.data)?;
     Ok(AsFolder { target: shown, written: true })
 }
 
@@ -209,7 +209,7 @@ pub async fn resize_folder_covers(dirs: Vec<String>, opt: CoverResize) -> Folder
             };
             let png = path.extension().is_some_and(|e| e.eq_ignore_ascii_case("png"));
             let target = if mime == "image/jpeg" && png { path.with_extension("jpg") } else { path.clone() };
-            std::fs::write(&target, &data).map_err(|e| e.to_string())?;
+            write_atomic(&target, &data)?;
             if target != path {
                 recycle_files(&[path.clone()], &mut r.errors);
             }
@@ -265,7 +265,7 @@ pub async fn read_text_file(path: String) -> Result<String, String> {
 #[tauri::command]
 pub async fn write_file(path: String, data: String) -> Result<(), String> {
     let bytes = base64::engine::general_purpose::STANDARD.decode(data).map_err(|e| e.to_string())?;
-    std::fs::write(&path, bytes).map_err(|e| format!("{}: {e}", file_name(Path::new(&path))))
+    write_atomic(Path::new(&path), &bytes).map_err(|e| format!("{}: {e}", file_name(Path::new(&path))))
 }
 
 #[cfg(test)]

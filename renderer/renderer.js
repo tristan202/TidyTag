@@ -34,7 +34,7 @@
 
   // ---------- state ----------
   const state = {
-    folder: '', scanId: 0, scanning: false, writing: false, batchId: 0, message: '',
+    folder: '', scanId: 0, scanning: false, writing: false, busyWrites: 0, batchId: 0, message: '',
     items: [], // TrackDto + checked
     sort: { col: 1, desc: false, col2: -1, desc2: false }, // 1.2 starts sorted on the file name
     sel: new Set(), focus: -1, anchor: -1,
@@ -168,10 +168,18 @@
   }
 
   // closing while a file is being written could stop an in-place write halfway
-  API.window().onCloseRequested((ev) => {
-    if (SAVE.canClose(state)) return;
-    ev.preventDefault();
-    DIALOG.info(t('Vent, til gemningen er færdig.'));
+  // single writes outside a batch count too
+  const counted = (fn) => async (...args) => {
+    state.busyWrites += 1;
+    try { return await fn(...args); } finally { state.busyWrites -= 1; }
+  };
+  for (const k of ['saveTag', 'coverFromTags', 'coverAsFolder', 'resizeFolderCovers', 'writeFile']) API[k] = counted(API[k]);
+  API.window().onCloseRequested(async (ev) => { // Tauri waits for this before it closes
+    const action = SAVE.closeAction(state, TAGEDITOR.isOpen());
+    if (action === 'wait') {
+      ev.preventDefault();
+      DIALOG.info(t('Vent, til gemningen er færdig.'));
+    } else if (action === 'ask' && !(await TAGEDITOR.closeQuery())) ev.preventDefault();
   });
 
   API.on('write-progress', (msg) => {

@@ -26,3 +26,8 @@ test('editor saves trimmed fields and 1/empty flags', () => {
   assert.strictEqual(E.isTrueFlag('0'), false);
   assert.strictEqual(E.isTrueFlag('2'), true);
 });
+
+test('comment and lyrics keep Windows line breaks, as 1.2\'s memo', () => {
+  const f = E.collectFields({ comment: 'a\nb', lyrics: 'x\r\ny\nz', title: 't' });
+  assert.deepStrictEqual(f, { comment: 'a\r\nb', lyrics: 'x\r\ny\r\nz', title: 't' });
+});

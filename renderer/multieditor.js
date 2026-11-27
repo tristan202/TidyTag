@@ -125,12 +125,18 @@
         if (!ok) return;
         setRunning(true);
         const status = q('[data-status]'), bar = q('progress');
-        await host.setKeep(q('[data-keep]').checked); // the batch reads it from the ini
-        const msg = await host.write(MULTI.buildItems(host.items, rs, coverMode), (p) => {
-          bar.value = p.done - 1;
-          status.textContent = t(RS.rsGemmerDAfDS, p.done, p.total, host.items[p.done - 1]?.fileName || '');
-        });
-        setRunning(false);
+        let msg = null;
+        try {
+          await host.setKeep(q('[data-keep]').checked); // the batch reads it from the ini
+          msg = await host.write(MULTI.buildItems(host.items, rs, coverMode), (p) => {
+            bar.value = p.done - 1;
+            status.textContent = t(RS.rsGemmerDAfDS, p.done, p.total, host.items[p.done - 1]?.fileName || '');
+          });
+        } catch (e) {
+          DIALOG.info(String(e));
+        } finally {
+          setRunning(false); // otherwise Luk stays Annuller and the dialog cannot close
+        }
         bar.value = n;
         if (!msg) return;
         status.textContent = (msg.cancelled ? t(RS.rsAfbrudt) : '') + t(RS.rsGemtIDFilerD, msg.saved, msg.skipped, msg.failed);

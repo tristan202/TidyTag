@@ -47,6 +47,17 @@ fn move_replace(temp: &Path, target: &Path) -> Result<(), u32> {
     std::fs::rename(temp, target).map_err(|e| e.raw_os_error().unwrap_or(0) as u32)
 }
 
+/// Writes `data` to a temporary file next to `target`, then replaces `target` with it, so a
+/// stop halfway never leaves a cut-off file (folder covers, "Gem som...").
+pub fn write_atomic(target: &Path, data: &[u8]) -> Result<(), String> {
+    let temp = temp_file_for(target);
+    if let Err(e) = std::fs::write(&temp, data) {
+        let _ = std::fs::remove_file(&temp);
+        return Err(e.to_string());
+    }
+    replace_file_with(&temp, target)
+}
+
 /// Copies `count` bytes from `src` at `from` to `dst`.
 // from: CopyStreamRange
 pub fn copy_range(src: &mut File, dst: &mut impl Write, from: u64, count: u64) -> Result<(), String> {
@@ -84,6 +95,18 @@ pub fn set_file_stamp(path: &Path, st: &FileStamp) {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn write_atomic_replaces_without_leftovers() {
+        let dir = std::env::temp_dir().join(format!("tidytag-atomic-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let p = dir.join("folder.jpg");
+        write_atomic(&p, b"one").unwrap();
+        write_atomic(&p, b"two").unwrap();
+        assert_eq!(std::fs::read(&p).unwrap(), b"two");
+        assert!(!temp_file_for(&p).exists());
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
     use super::*;
     use std::time::Duration;
 

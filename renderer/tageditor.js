@@ -8,6 +8,7 @@
   'use strict';
   const ptrim = (s) => String(s).replace(/^[\u0000- ]+|[\u0000- ]+$/g, '');
   const FLAGS = ['compilation', 'podcast'];
+  const MEMOS = ['comment', 'lyrics'];
 
   const create = (index, count) => ({ index, count, modified: false });
   const setModified = (st, on) => { st.modified = on; };
@@ -24,6 +25,8 @@
   function collectFields(raw) {
     const out = {};
     for (const [k, v] of Object.entries(raw)) out[k] = FLAGS.includes(k) ? (v ? '1' : '') : ptrim(v);
+    // a text area gives LF; 1.2's memo wrote Windows line breaks
+    for (const k of MEMOS) if (k in out) out[k] = out[k].replace(/\r?\n/g, '\r\n');
     return out;
   }
   return { create, setModified, needsQuestion, next, isTrueFlag, collectFields, FLAGS };
@@ -64,6 +67,8 @@
     for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
     return btoa(bin);
   }
+
+  let current = null; // the open editor: { close() -> Promise<bool> }
 
   const input = (k, cls = 'grow') => `<input class="input ${cls}" data-f="${k}" spellcheck="false">`;
   const row = (k, cls) => `<span class="lbl">${esc(cap(k))}</span>${input(k, cls)}`;
@@ -255,17 +260,21 @@
       }
 
       // from: FormCloseQuery
+      // true when the editor closed
       async function close() {
-        if (busy) return;
+        if (busy) return false;
         if (E.needsQuestion(st, 'close')) {
           const r = await DIALOG.yesNoCancel(t(RS.rsGemAendringer), t(RS.rsDerErAendringerSomIkke));
-          if (r === null || (r === 'yes' && !(await saveCurrent()))) return;
+          if (r === null || (r === 'yes' && !(await saveCurrent()))) return false;
         }
         const keep = q('[data-keep]').checked;
         m.close();
-        host.setKeep(keep);
+        current = null;
+        await host.setKeep(keep);
         resolve();
+        return true;
       }
+      current = { close };
 
       m.el.addEventListener('click', (e) => {
         const tb = e.target.closest('[data-tab]');
@@ -283,5 +292,6 @@
     });
   }
 
-  window.TAGEDITOR = { open };
+  // closing the main window asks the open editor first, as 1.2's modal form could not be passed by
+  window.TAGEDITOR = { open, isOpen: () => !!current, closeQuery: async () => (current ? current.close() : true) };
 })();
