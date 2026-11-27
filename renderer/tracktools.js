@@ -3,12 +3,11 @@
 (function () {
   'use strict';
   const { t, label } = I18N;
-  const RS = MENUDATA.rs;
+  const RS = { ...MENUDATA.rs, ...MENUDATA.unitRs.tracktoolsform }; // the form's own texts win
   const esc = FORMS.esc;
   const FORMATS = ['7', '07', '007', '7/12', '07/12']; // TrackFormatNames
   const base = (p) => p.replace(/^.*[\\/]/, '');
-  // mainform's rsFejl ('Fejl: ') has the same name as the track form's 'Fejl'
-  const statusText = (s) => (s === 'rsFejl' ? t('Fejl') : t(RS[s]));
+  const statusText = (s) => t(RS[s]);
 
   /** host: { all, subset, subsetCaption, prefer, keep, get(sec, key, def), save(sec, key, v),
    *  write(items, onProgress) -> Promise<write-done message | null> }. Resolves with the

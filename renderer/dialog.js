@@ -54,5 +54,8 @@
   window.DIALOG = {
     info: (text, title = '') => show(title, text, [{ text: 'OK', value: true }]),
     confirm: (title, text) => show(title, text, [{ text: 'Ja', value: true }, { text: 'Nej', value: false }]),
+    /** 'yes' | 'no' | null (Annuller, Escape) */
+    yesNoCancel: (title, text) => show(title, text,
+      [{ text: 'Ja', value: 'yes' }, { text: 'Nej', value: 'no' }, { text: 'Annuller', value: null }]),
   };
 })();

@@ -6894,5 +6894,13 @@
   "it": "Attendi il termine del salvataggio.",
   "sv": "Vänta tills sparandet är klart.",
   "es": "Espera a que termine el guardado."
+ },
+ "Billedet er for stort (højst 16 MB).": {
+  "en": "The picture is too large (at most 16 MB).",
+  "de": "Das Bild ist zu groß (höchstens 16 MB).",
+  "fr": "L'image est trop grande (16 Mo au maximum).",
+  "it": "L'immagine è troppo grande (al massimo 16 MB).",
+  "sv": "Bilden är för stor (högst 16 MB).",
+  "es": "La imagen es demasiado grande (16 MB como máximo)."
  }
 }

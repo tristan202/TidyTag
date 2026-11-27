@@ -321,6 +321,7 @@
     if (ev.button === 2 && state.sel.has(state.items[r])) return; // right click keeps the selection
     setFocus(r, { extend: ev.shiftKey, toggle: ev.ctrlKey });
   });
+  rowsEl.addEventListener('dblclick', (ev) => { if (ev.target.closest('.row') && !ev.target.closest('.chk')) editTag(); });
   rowsEl.addEventListener('contextmenu', (ev) => {
     ev.preventDefault();
     if (!ev.target.closest('.row')) return;
@@ -334,6 +335,7 @@
     if (ev.key in moves) setFocus((state.focus < 0 ? 0 : state.focus + moves[ev.key]), opt);
     else if (ev.key === 'Home') setFocus(0, opt);
     else if (ev.key === 'End') setFocus(state.items.length - 1, opt);
+    else if (ev.key === 'Enter') editTag();
     else if (ev.key === ' ') { // Mellemrum: (un)check the selected files
       const sel = selectedTracks();
       const on = !sel.every((tr) => tr.checked);
@@ -503,6 +505,27 @@
     MENU.refresh();
   }
 
+  // from: EditSelected — the focused file, otherwise the first; moves with Gem og forrige/næste
+  async function editTag() {
+    if (!SAVE.canStartBatch(state) || !state.items.length) return;
+    const start = state.focus >= 0 ? state.focus : 0;
+    const files = state.items.slice(); // the list cannot change while the editor is open
+    await TAGEDITOR.open({
+      index: start, count: files.length, fileAt: (i) => files[i]?.path || '',
+      keep: bool('Editor', 'KeepTimestamp', false), setKeep: setKeepDate, genres: () => API.genreList(),
+      saved: (i, track) => { // from: FileSaved
+        const old = files[i], at = state.items.indexOf(old);
+        if (at < 0) return;
+        track.checked = old.checked;
+        if (state.sel.has(old)) { state.sel.delete(old); state.sel.add(track); }
+        state.items[at] = files[i] = track;
+        renderRows();
+        updateStatus();
+      },
+    });
+    selectionChanged();
+  }
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -545,12 +568,14 @@
     aSync: id3Sync,
     aRemoveTags: removeTags,
     aTracks: trackTools,
+    aEdit: editTag,
   };
   const ENABLED = {
     aUp: () => !!state.folder,
     aCopy: () => state.focus >= 0,
     FActPaste: () => !!tools.clip,
     aTracks: () => state.items.length > 0,
+    aEdit: () => state.items.length > 0,
   };
   const CHECKED = {
     FActToolsPanel: () => state.view.tools, FActFolders: () => state.view.folders,
