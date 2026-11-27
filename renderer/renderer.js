@@ -11,7 +11,7 @@
 
   // ---------- settings (same file and keys as 1.2) ----------
   const SECTIONS = ['Main', 'Editor', 'View', 'Rename', 'FileToTag', 'RenameMasks', 'FileToTagMasks', 'AddressHistory', 'Favorites',
-    'Tracks', 'Cover'];
+    'Tracks', 'Cover', 'RenameFolder', 'FolderMasks'];
   const S = {};
   async function loadSettings() {
     await Promise.all(SECTIONS.map(async (sec) => {
@@ -311,6 +311,7 @@
   let coverTimer = 0;
   function selectionChanged() {
     updateStatus();
+    PANEL.updatePreview();
     MENU.refresh();
     clearTimeout(coverTimer);
     coverTimer = setTimeout(showFileCover, 120);
@@ -567,6 +568,91 @@
     covers.drop(p.paths, el?.closest('#file-cover') ? 'file' : el?.closest('#folder-cover') ? 'folder' : 'list');
   });
 
+  // ---------- renaming (phase 4) ----------
+  let undoLog = null, undoWhat = '';
+  // from: SetUndoLog
+  function setUndoLog(log, what) {
+    undoLog = log;
+    undoWhat = what;
+    MENU.refresh();
+    PANEL.reload();
+  }
+
+  // from: LoadMaskHistory / AddMaskToHistory ([RenameMasks] etc., Mask0.. newest first)
+  function maskHistory(section) {
+    const list = [];
+    for (let i = 0; i < 15; i++) { const m = get(section, 'Mask' + i); if (m) list.push(m); }
+    return list;
+  }
+  function addToHistory(section, mask) {
+    const list = RENAMETOOLS.addMaskToHistory(maskHistory(section), mask);
+    S[section.toLowerCase()] = Object.fromEntries(list.map((m, i) => ['mask' + i, m]));
+    API.settingsWriteSection(section, list.map((m, i) => ['Mask' + i, m]));
+  }
+
+  // from: ApplyRenameLog — the list, the open folder, the address bar and the tree follow
+  async function applyRenameLog(log, reverse) {
+    const mapped = await API.mapPaths([...state.items.map((tr) => tr.path), state.folder], log, reverse);
+    const before = state.folder;
+    RENAMETOOLS.applyLog(state, mapped.slice(0, -1), mapped[mapped.length - 1]);
+    if (state.folder !== before) {
+      $('#address').value = state.folder;
+      API.window().setTitle('TidyTag - ' + state.folder);
+      save('Main', 'LastFolder', state.folder);
+    }
+    await TREE.reload();
+    TREE.reveal(state.folder);
+    sortItems();
+    renderRows();
+    selectionChanged();
+  }
+
+  const statusTr = (s) => t(s);
+  // from: ButtonRenameDoClick
+  async function renameDo() {
+    const items = await requireTargets();
+    if (!items) return;
+    const o = PANEL.inline('rn');
+    const rows = await API.planRename(items, o.mask, o);
+    const c = RENAMETOOLS.renameConfirm(rows, statusTr);
+    if (!c.okCount) return DIALOG.info(c.problems || t(RS.rsAlleFilerHarAlleredeDet), t(RS.rsIntetAtOmdoebe));
+    const text = t(RS.rsOmdoebDFilerS, c.okCount, c.skipped > 0 ? t(RS.rsDSpringesOverBrugForhaandsvis, c.skipped) : '');
+    if (!(await DIALOG.confirm(t(RS.rsOmdoebFiler), text + '\n\n' + c.examples))) return;
+    if (!SAVE.canStartBatch(state)) return DIALOG.info(t(RS.rsVentVenligstTilAlleTags));
+    addToHistory('RenameMasks', o.mask);
+    PANEL.saveInline();
+    let r;
+    try { r = await API.executeRename(rows); } catch (e) { return DIALOG.info(String(e)); }
+    const failed = r.rows.filter((x) => x.status === 'Failed');
+    if (r.log.length) {
+      setUndoLog(r.log, t(RS.rsFilerFlertal));
+      await applyRenameLog(r.log, false);
+    }
+    state.message = t(RS.rsDFilerOmdoebtDFejl, r.log.length, failed.length);
+    updateStatus();
+    if (failed.length) {
+      DIALOG.info(failed.map((x) => `${x.oldName.replace(/^.*[\\/]/, '')}: ${t(x.detail)}`).join('\n'), t(RS.rsNogleFilerBlevIkkeOmdoebt));
+    }
+  }
+
+  // from: ButtonF2TWriteClick
+  async function f2tDo() {
+    const items = await requireTargets();
+    if (!items) return;
+    const o = PANEL.inline('ft');
+    const matches = await API.matchFileNames(items.map((tr) => tr.path), o.mask, o.underscores, o.caseMode);
+    const r = RENAMETOOLS.f2tItems(items, matches);
+    if (!r.ready) return DIALOG.info(t(RS.rsIngenFilerAendresDPasser, r.noMatch), t(RS.rsIntetAtSkrive));
+    const text = t(RS.rsSkrivTagsFraFilnavnetI, r.ready, r.noMatch > 0 ? t(RS.rsDPasserIkkeTilMasken, r.noMatch) : '');
+    if (!(await DIALOG.confirm(t(RS.rsSkrivTags), text))) return;
+    const now = await stillTargets(items);
+    if (!now) return;
+    addToHistory('FileToTagMasks', o.mask);
+    PANEL.saveInline();
+    const paths = new Set(now.map((tr) => tr.path));
+    startWrite(t(RS.rsTagsFraFilnavn), (id) => API.writeTagsBatch(r.items.filter((it) => paths.has(it.path)), id));
+  }
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -699,6 +785,12 @@
     PANEL.init(S, {
       saveMulti,
       focusedFields: () => state.items[state.focus]?.fields,
+      previewTrack: () => state.items[state.focus] || state.items[0],
+      renameDo, f2tDo,
+      renamePreview: () => ACTIONS.aRenameDlg?.(),
+      f2tPreview: () => ACTIONS.aF2TDlg?.(),
+      undo: () => ACTIONS.FActUndo?.(),
+      canUndo: () => !!undoLog,
       openMulti: () => ACTIONS.aMulti(),
     });
     applyView();

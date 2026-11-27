@@ -163,9 +163,16 @@ pub async fn undo_rename_cmd(state: State<'_, WriteState>, log: Vec<LogItem>) ->
     Ok(Undone { restored, errors })
 }
 
+/// ApplyRenameLog's mapping: a path moves only when its new place exists.
 #[tauri::command]
 pub fn map_paths(paths: Vec<String>, log: Vec<LogItem>, reverse: bool) -> Vec<String> {
-    paths.iter().map(|p| map_renamed_path(p, &log, reverse)).collect()
+    paths
+        .into_iter()
+        .map(|p| {
+            let m = map_renamed_path(&p, &log, reverse);
+            if m != p && std::path::Path::new(&m).exists() { m } else { p }
+        })
+        .collect()
 }
 
 #[tauri::command]

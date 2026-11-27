@@ -1,0 +1,104 @@
+// Renaming helpers without DOM (from mainform.pas: MaskTemplate, AddMaskToHistory,
+// ButtonRenameDoClick, ButtonF2TWriteClick, ApplyRenameLog), so node --test can run them.
+(function (root, factory) {
+  const m = factory();
+  if (typeof module === 'object' && module.exports) module.exports = m;
+  else root.RENAMETOOLS = m;
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+  const MAX_MASKS = 15;
+  const baseName = (p) => p.replace(/^.*[\\/]/, '');
+  const dirName = (p) => p.replace(/[\\/][^\\/]*$/, '');
+
+  // from: RenameStatusText (core rename.rs status_text); the caller translates them
+  const STATUS_TEXT = {
+    Ok: 'Omdøbes', Unchanged: 'Uændret', Missing: 'Mangler felt', Exists: 'Findes allerede',
+    Duplicate: 'Samme navn som en anden fil', Invalid: 'Ugyldigt navn', Done: 'Omdøbt', Failed: 'Fejl',
+  };
+
+  // from: MaskTemplate — '%1 - %2' -> '<Kunstner> - <Titel>.mp3'; vars are 'code|caption'
+  // entries (translated), the longest matching code wins (%aa before %a...)
+  function maskTemplate(mask, ext, vars, spacesTo) {
+    const codes = [];
+    for (const v of vars) {
+      const bar = v.indexOf('|');
+      const code = v.slice(0, bar);
+      // variables only: '%' plus letters/digits, not the examples such as '%6 - %1 - %2'
+      if (code.length < 2 || code[0] !== '%' || code.includes(' ') || code.indexOf('%', 1) >= 0) continue;
+      let cap = v.slice(bar + 1);
+      const p = cap.indexOf(' ('); // 'Udgivelsesdato (hele datoen)' -> 'Udgivelsesdato'
+      if (p > 0) cap = cap.slice(0, p);
+      codes.push([code, cap]);
+    }
+    let r = '';
+    for (let i = 0; i < mask.length;) {
+      let best = null;
+      if (mask[i] === '%') for (const c of codes) if (mask.startsWith(c[0], i) && (!best || c[0].length > best[0].length)) best = c;
+      if (best) {
+        r += '<' + best[1] + '>';
+        i += best[0].length;
+      } else {
+        r += mask[i] === ' ' && spacesTo !== ' ' ? spacesTo : mask[i];
+        i += 1;
+      }
+    }
+    return r ? r + ext : '';
+  }
+
+  // from: AddMaskToHistory — newest first, no duplicates, at most 15
+  function addMaskToHistory(list, mask) {
+    if (!mask.trim()) return list.slice();
+    return [mask, ...list.filter((m) => m !== mask)].slice(0, MAX_MASKS);
+  }
+
+  // from: ButtonRenameDoClick — the question's examples and the "nothing to rename" problems
+  function renameConfirm(rows, tr) {
+    const okCount = rows.filter((r) => r.status === 'Ok').length;
+    const skipped = rows.length - okCount - rows.filter((r) => r.status === 'Unchanged').length;
+    let examples = '', problems = '';
+    for (const r of rows) {
+      if (r.status === 'Ok' && examples.length < 400) examples += `${baseName(r.oldName)}  →  ${baseName(r.newName)}\n`;
+      if (r.status !== 'Unchanged' && r.status !== 'Ok' && problems.length < 600) {
+        problems += `${baseName(r.oldName)}: ${tr(STATUS_TEXT[r.status])}${r.detail ? ` (${tr(r.detail)})` : ''}\n`;
+      }
+    }
+    return { okCount, skipped, examples, problems };
+  }
+
+  // from: ButtonF2TWriteClick — a file is written only when one of the mask's fields changes,
+  // and then only the mask's fields
+  function f2tItems(tracks, matches) {
+    const items = [];
+    let noMatch = 0;
+    tracks.forEach((tr, i) => {
+      const m = matches[i];
+      if (!m || !m.ok) { noMatch += 1; return; }
+      if (!m.used.some((k) => (m.values[k] || '') !== (tr.fields[k] || ''))) return;
+      const values = {};
+      for (const k of m.used) values[k] = m.values[k] || '';
+      items.push({ path: tr.path, values, cover: null });
+    });
+    return { items, ready: items.length, noMatch };
+  }
+
+  /** ApplyRenameLog's list part: `mapped` are the tracks' paths after the log (map_paths),
+   *  `folder` the open folder's. The track objects stay (ticks, selection). True if anything moved. */
+  function applyLog(state, mapped, folder) {
+    let changed = false;
+    state.items.forEach((tr, i) => {
+      const p = mapped[i];
+      if (!p || p === tr.path) return;
+      tr.path = p;
+      tr.folder = dirName(p);
+      tr.fileName = baseName(p);
+      changed = true;
+    });
+    if (folder && folder !== state.folder) {
+      state.folder = folder;
+      changed = true;
+    }
+    return changed;
+  }
+
+  return { STATUS_TEXT, maskTemplate, addMaskToHistory, renameConfirm, f2tItems, applyLog };
+});
