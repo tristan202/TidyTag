@@ -5,7 +5,7 @@
   const { t, label, mnemonic } = I18N;
   const D = MENUDATA;
   const LATER = 'Kommer i en senere version';
-  let host = null; // { run(id), enabled(id), checked(id), dynamic(item) -> items }
+  let host = null; // { run(id), live(id), enabled(id), checked(id), dynamic(item) -> items }
   let openStack = []; // open popups: { el, items, index }
   let barOpen = -1;
 
@@ -15,7 +15,7 @@
 
   function actionEnabled(id) {
     const a = D.actions[id];
-    return a.phase === 1 && host.enabled(id);
+    return host.live(id) && host.enabled(id);
   }
 
   // Normalises MENUDATA entries and custom entries to one shape.
@@ -27,7 +27,7 @@
         const [text, keyText] = t(a.text).split('\t');
         return {
           text, key: keyText || a.shortcut, icon: a.icon, id: i.ref, enabled: actionEnabled(i.ref),
-          checked: a.check && host.checked(i.ref), later: a.phase > 1,
+          checked: a.check && host.checked(i.ref), later: !host.live(i.ref),
         };
       }
       if (i.special || i.dynamic) {
@@ -148,7 +148,7 @@
     document.querySelectorAll('[data-act]').forEach((b) => {
       const a = D.actions[b.dataset.act];
       const hint = label(t(a.hint).split('\t')[0]) + (a.shortcut ? ` (${a.shortcut})` : '');
-      b.title = a.phase > 1 ? `${hint}\n${t(LATER)}` : hint;
+      b.title = host.live(b.dataset.act) ? hint : `${hint}\n${t(LATER)}`;
       b.setAttribute('aria-label', hint);
       b.disabled = !actionEnabled(b.dataset.act);
       b.classList.toggle('pressed', a.check && host.checked(b.dataset.act));

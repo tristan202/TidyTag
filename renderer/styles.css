@@ -167,4 +167,13 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); margi
 .modal { min-width: 340px; max-width: 560px; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px 16px; box-shadow: 0 16px 40px #000a; }
 .modal h2 { margin: 0 0 8px; font-size: 15px; font-weight: 650; }
 .modal-text { margin: 0 0 16px; white-space: pre-line; max-height: 50vh; overflow: auto; }
+.modal.wide { max-width: 640px; width: 520px; }
+.form-body { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.form-grid { display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; align-items: center; }
+.form-grid select { min-width: 220px; }
+.input.num { width: 90px; }
+.check-list { display: flex; flex-direction: column; gap: 3px; max-height: 300px; overflow: auto; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 8px; }
+.check-list .chk-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.radio-group { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 10px 8px; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.radio-group legend { color: var(--muted); font-size: 12px; padding: 0 4px; }
 .modal-buttons { display: flex; justify-content: flex-end; gap: 8px; }

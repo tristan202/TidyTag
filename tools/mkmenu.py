@@ -176,11 +176,14 @@ def main():
         if m:
             (toolbar if m.group(1) == 'ToolBarMain' else folderbar).append(item(m.group(2))); continue
 
-    # unit-local texts: mainform's own resourcestrings, audiotypes' field captions
+    # unit-local texts: tooldialogs' (the small forms) and mainform's own resourcestrings, the
+    # latter read last so its names win; audiotypes' field captions
     main_rs = {}
-    for block in re.findall(r'resourcestring(.*?)(?:\n(?:type|const|var|function|procedure|implementation|uses)\b)', text, re.S | re.I):
-        for m in re.finditer(r'^\s*(rs\w+)\s*=\s*(.*?);\s*$', block, re.M):
-            main_rs[m.group(1)] = pascal_string(m.group(2)).replace('\r\n', '\n')
+    tool = open(os.path.join(SRC, 'tooldialogs.pas'), encoding='utf-8').read()
+    for unit in (tool, text):
+        for block in re.findall(r'resourcestring(.*?)(?:\n(?:type|const|var|function|procedure|implementation|uses)\b)', unit, re.S | re.I):
+            for m in re.finditer(r'^\s*(rs\w+)\s*=\s*(.*?);\s*$', block, re.M | re.S):
+                main_rs[m.group(1)] = pascal_string(m.group(2)).replace('\r\n', '\n')
     at = open(os.path.join(SRC, 'audiotypes.pas'), encoding='utf-8').read()
     at_rs = {m.group(1).lower(): pascal_string(m.group(2)) for m in re.finditer(r'^\s*(rs\w+)\s*=\s*(.*?);\s*$', at, re.M)}
     fields = re.search(r'TTagField = \((.*?)\);', at, re.S).group(1)

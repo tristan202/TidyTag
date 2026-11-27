@@ -134,23 +134,27 @@
     updateStatus();
   });
   // ---------- saving from the multi tab (1.2's ButtonMultiSaveClick / WriteFieldsBatch) ----------
-  let writeWhat = '';
+  let writeWhat = '', writeShowsSkipped = true;
+  /** Starts one batch command; `call(batchId)` invokes it. The result comes as write-done. */
+  async function startWrite(what, call, { showSkipped = true } = {}) {
+    writeWhat = what;
+    writeShowsSkipped = showSkipped;
+    state.writing = true;
+    state.batchId += 1;
+    MENU.refresh();
+    try {
+      await call(state.batchId);
+    } catch (e) {
+      state.writing = false;
+      MENU.refresh();
+      DIALOG.info(String(e));
+    }
+  }
   function saveMulti(form) {
     return SAVE.save(state, form, {
       info: (text, title) => DIALOG.info(text, title),
       confirm: (title, text) => DIALOG.confirm(title, text),
-      write: async (items) => {
-        writeWhat = t(RS.rsMultiFilTagEditor);
-        state.writing = true;
-        state.batchId += 1;
-        MENU.refresh();
-        try {
-          await API.writeTagsBatch(items, state.batchId);
-        } catch (e) {
-          state.writing = false;
-          DIALOG.info(String(e));
-        }
-      },
+      write: (items) => startWrite(t(RS.rsMultiFilTagEditor), (id) => API.writeTagsBatch(items, id)),
     });
   }
 
@@ -180,7 +184,7 @@
     });
     sortItems();
     renderRows();
-    state.message = SAVE.doneText(writeWhat, msg.saved, msg.failed, msg.skipped);
+    state.message = SAVE.doneText(writeWhat, msg.saved, msg.failed, writeShowsSkipped ? msg.skipped : 0);
     updateStatus();
     MENU.refresh();
     showFileCover();
@@ -364,6 +368,106 @@
     MENU.popup(items, btn.left, btn.bottom + 2);
   }
 
+  // ---------- tag tools (1.2's RunFieldPlans and friends) ----------
+  const FIELD_KEYS = Object.keys(MENUDATA.fieldCaptions);
+  const cap = (k) => t(MENUDATA.fieldCaptions[k]);
+  const tools = { swapA: 'artist', swapB: 'albumArtist', copySrc: 'artist', copyDst: 'albumArtist', copyOnlyEmpty: true,
+    syncDir: 'V1ToV2', syncExisting: 'BlankOnly', clip: null };
+
+  // from: RequireTargets — null when nothing can start (and 1.2's message was shown)
+  async function requireTargets() {
+    if (!SAVE.canStartBatch(state)) { await DIALOG.info(t(RS.rsVentVenligstTilAlleTags)); return null; }
+    const { items } = SAVE.targets(state);
+    if (!items.length) { await DIALOG.info(t(RS.rsAfkrydsEllerMarkerDeFiler)); return null; }
+    return items;
+  }
+  // after a question the window may have moved on (a scan, another batch): ask again
+  async function stillTargets(items) {
+    if (!SAVE.canStartBatch(state)) { await DIALOG.info(t(RS.rsVentVenligstTilAlleTags)); return null; }
+    const now = SAVE.targets(state).items.filter((tr) => items.includes(tr));
+    if (!now.length) { await DIALOG.info(t(RS.rsAfkrydsEllerMarkerDeFiler)); return null; }
+    return now;
+  }
+
+  // from: RunFieldPlans
+  async function runPlans(what, planFn) {
+    const items = await requireTargets();
+    if (!items) return;
+    const n = TOOLS.writeItems(items, planFn).length;
+    if (!n) return DIALOG.info(t(RS.rsIngenFilerAendres), what);
+    if (!(await DIALOG.confirm(what, t(RS.rsAendreDFiler, n)))) return;
+    const now = await stillTargets(items);
+    if (now) startWrite(what, (id) => API.writeTagsBatch(TOOLS.writeItems(now, planFn), id));
+  }
+  const swap = (a, b) => runPlans(t(RS.rsBytSS, cap(a), cap(b)), (tr) => TOOLS.planSwap(tr, a, b));
+
+  async function swapFields() {
+    const r = await FORMS.fieldPair(t(RS.rsBytFelter), t(RS.rsFelt1), t(RS.rsFelt2), '', tools.swapA, tools.swapB, false);
+    if (!r) return;
+    Object.assign(tools, { swapA: r.a, swapB: r.b });
+    swap(r.a, r.b);
+  }
+  async function copyField() {
+    const r = await FORMS.fieldPair(t(RS.rsKopierFelt), t(RS.rsFraFelt), t(RS.rsTilFelt), t(RS.rsKunHvisFeltetErTomt),
+      tools.copySrc, tools.copyDst, tools.copyOnlyEmpty);
+    if (!r) return;
+    Object.assign(tools, { copySrc: r.a, copyDst: r.b, copyOnlyEmpty: r.check });
+    runPlans(t(RS.rsKopierSTilS, cap(r.a), cap(r.b)), (tr) => TOOLS.planCopy(tr, r.a, r.b, r.check));
+  }
+  const nameTool = (tool) => runPlans(t(RS.rsKunstnerVaerktoejer), (tr) => TOOLS.planNameTool(tr, 'artist', tool));
+
+  // from: ActCopyTag / ActPasteTag. [Main] PasteFields holds TTagField ordinals.
+  function copyTag() {
+    const tr = state.items[state.focus];
+    if (!tr) return;
+    tools.clip = { ...tr.fields };
+    state.message = t(RS.rsTagKopieretFra) + tr.fileName;
+    updateStatus();
+    MENU.refresh();
+  }
+  function pasteFields() {
+    const s = get('Main', 'PasteFields', '');
+    if (!s) return FIELD_KEYS.filter((k) => !['title', 'track'].includes(k) && !k.startsWith('rg'));
+    return s.split(',').map((n) => FIELD_KEYS[parseInt(n, 10)]).filter(Boolean);
+  }
+  async function pasteTag() {
+    if (!tools.clip) return;
+    const items = await requireTargets();
+    if (!items) return;
+    const fields = await FORMS.fieldSet(t(RS.rsIndsaetTag), t(RS.rsVaelgFelterDerIndsaettesID, items.length), tools.clip, pasteFields());
+    if (!fields) return;
+    save('Main', 'PasteFields', fields.map((k) => FIELD_KEYS.indexOf(k)).join(','));
+    const values = TOOLS.pasteValues(tools.clip, fields);
+    if (!Object.keys(values).length) return;
+    const now = await stillTargets(items);
+    if (now) startWrite(t(RS.rsIndsaetTag), (id) => API.writeTagsBatch(now.map((tr) => ({ path: tr.path, values, cover: null })), id));
+  }
+
+  // from: ActID3Sync / RunID3Sync
+  async function id3Sync() {
+    const r = await FORMS.id3Sync(tools.syncDir, tools.syncExisting);
+    if (!r) return;
+    Object.assign(tools, { syncDir: r.direction, syncExisting: r.existing });
+    const what = t(RS.rsMpTagSynkronisering);
+    const items = await requireTargets();
+    if (!items) return;
+    const mp3 = items.filter((tr) => /\.mp3$/i.test(tr.path));
+    if (!mp3.length) return DIALOG.info(t(RS.rsIngenMpFiler), what);
+    if (!(await DIALOG.confirm(what, t(RS.rsSynkroniserTagsIDMpFiler, mp3.length)))) return;
+    const now = await stillTargets(mp3);
+    if (now) startWrite(what, (id) => API.id3SyncBatch(now.map((tr) => tr.path), r.direction, r.existing, id), { showSkipped: false });
+  }
+
+  // from: ActRemoveTags
+  async function removeTags() {
+    const items = await requireTargets();
+    if (!items) return;
+    const what = t(RS.rsFjernTags);
+    if (!(await DIALOG.confirm(what, t(RS.rsFjernAlleTagsIDFiler, items.length) + '\n\n' + t(RS.rsFjernTagsForklaring)))) return;
+    const now = await stillTargets(items);
+    if (now) startWrite(what, (id) => API.removeTagsBatch(now.map((tr) => tr.path), id), { showSkipped: false });
+  }
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -389,6 +493,27 @@
     aFav: favoritesPopup,
     aTreeRefresh: () => TREE.reload(),
     FActKeepDate: () => save('Editor', 'KeepTimestamp', bool('Editor', 'KeepTimestamp', false) ? 0 : 1),
+    // phase 3: tag tools
+    aSwapAT: () => swap('artist', 'title'),
+    aSwapAA: () => swap('artist', 'album'),
+    aSwapLT: () => swap('album', 'title'),
+    aSwap: swapFields,
+    aCopyField: copyField,
+    aClean: () => runPlans(t(RS.rsRydMellemrum), TOOLS.planCleanSpaces),
+    'NameTools[ntRemoveThe]': () => nameTool('removeThe'),
+    'NameTools[ntTheToEnd]': () => nameTool('theToEnd'),
+    'NameTools[ntTheToFront]': () => nameTool('theToFront'),
+    'NameTools[ntNameToSurnameFirst]': () => nameTool('nameToSurnameFirst'),
+    'NameTools[ntSurnameFirstToName]': () => nameTool('surnameFirstToName'),
+    aCopy: copyTag,
+    FActPaste: pasteTag,
+    aSync: id3Sync,
+    aRemoveTags: removeTags,
+  };
+  const ENABLED = {
+    aUp: () => !!state.folder,
+    aCopy: () => state.focus >= 0,
+    FActPaste: () => !!tools.clip,
   };
   const CHECKED = {
     FActToolsPanel: () => state.view.tools, FActFolders: () => state.view.folders,
@@ -455,7 +580,8 @@
     applyTexts();
     MENU.init({
       run: (id) => ACTIONS[id]?.(),
-      enabled: (id) => !!ACTIONS[id] && (id !== 'aUp' || !!state.folder),
+      live: (id) => !!ACTIONS[id],
+      enabled: (id) => !!ACTIONS[id] && (!ENABLED[id] || ENABLED[id]()),
       checked: (id) => !!CHECKED[id]?.(),
       dynamic,
     });
