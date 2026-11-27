@@ -56,6 +56,7 @@ fn main() {
             rename::map_paths,
             rename::rename_one,
             rename::match_file_names,
+            rename::mask_fields_cmd,
         ])
         .run(tauri::generate_context!())
         .expect("TidyTag could not start");

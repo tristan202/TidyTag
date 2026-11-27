@@ -182,12 +182,13 @@ def main():
     def unit_texts(unit):
         out = {}
         for block in re.findall(r'resourcestring(.*?)(?:\n(?:type|const|var|function|procedure|implementation|uses)\b)', unit, re.S | re.I):
-            for m in re.finditer(r'^\s*(rs\w+)\s*=\s*(.*?);\s*$', block, re.M | re.S):
+            for m in re.finditer(r'^\s*(rs\w+|\w+VariablesHelp)\s*=\s*(.*?);\s*$', block, re.M | re.S):
                 out[m.group(1)] = pascal_string(m.group(2)).replace('\r\n', '\n')
         return out
     # each dialog's own texts too: the same rs name can mean different texts in two units
     unit_rs = {u: unit_texts(open(os.path.join(SRC, u + '.pas'), encoding='utf-8').read())
-               for u in ('tooldialogs', 'tracktoolsform', 'tageditform', 'multieditform')}
+               for u in ('tooldialogs', 'tracktoolsform', 'tageditform', 'multieditform', 'renamecore',
+                         'filenametags', 'renameform', 'filetotagform')}
     for texts in (*unit_rs.values(), unit_texts(text)):
         main_rs.update(texts)
     at = open(os.path.join(SRC, 'audiotypes.pas'), encoding='utf-8').read()

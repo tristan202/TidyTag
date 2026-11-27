@@ -38,6 +38,7 @@
     undoRename: (log) => invoke('undo_rename_cmd', { log }),
     mapPaths: (paths, log, reverse) => invoke('map_paths', { paths, log, reverse }),
     renameOne: (oldPath, newName) => invoke('rename_one', { oldPath, newName }),
+    maskFields: (mask) => invoke('mask_fields_cmd', { mask }),
     matchFileNames: (paths, mask, underscores, caseMode) => invoke('match_file_names', { paths, mask, underscores, caseMode }),
     on: (event, fn) => listen(event, (e) => fn(e.payload)),
     window: () => window.__TAURI__.window.getCurrentWindow(),

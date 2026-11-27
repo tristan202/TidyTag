@@ -653,6 +653,44 @@
     startWrite(t(RS.rsTagsFraFilnavn), (id) => API.writeTagsBatch(r.items.filter((it) => paths.has(it.path)), id));
   }
 
+  const scopeCaption = (scope, n) => t(scope === 'checked' ? RS.rsAfkrydsedeFilerD : RS.rsMarkeredeFilerD, n);
+
+  // from: ActRenameDialog / ActRenameFolder
+  async function renameDialog(folderMode) {
+    if (!SAVE.canStartBatch(state) || !state.items.length) return;
+    if (!folderMode) PANEL.saveInline();
+    const { items, scope } = SAVE.targets(state);
+    const log = await RENAMEDIALOG.open({
+      all: state.items.slice(), subset: items, subsetCaption: scopeCaption(scope, items.length),
+      prefer: scope === 'checked' || items.length > 1, folderMode, get, save,
+      history: maskHistory, addToHistory, canStart: () => SAVE.canStartBatch(state),
+      applyLog: (l) => applyRenameLog(l, false),
+    });
+    if (log.length) setUndoLog(log, t(folderMode ? RS.rsMapperFlertal : RS.rsFilerFlertal));
+    PANEL.reload();
+    selectionChanged();
+  }
+
+  // from: ActFileToTagDialog
+  async function f2tDialog() {
+    if (!SAVE.canStartBatch(state) || !state.items.length) return;
+    PANEL.saveInline();
+    const { items, scope } = SAVE.targets(state);
+    const keep = await F2TDIALOG.open({
+      all: state.items.slice(), subset: items, subsetCaption: scopeCaption(scope, items.length),
+      prefer: scope === 'checked' || items.length > 1, keep: bool('Editor', 'KeepTimestamp', false), get, save,
+      history: maskHistory, addToHistory,
+      write: async (writeItems, keepDate, onProgress) => {
+        if (!SAVE.canStartBatch(state)) { await DIALOG.info(t(RS.rsVentVenligstTilAlleTags)); return null; }
+        await setKeepDate(keepDate);
+        return startWrite(t(RS.rsTagsFraFilnavn), (id) => API.writeTagsBatch(writeItems, id), { onProgress, quiet: true });
+      },
+    });
+    setKeepDate(keep);
+    PANEL.reload();
+    selectionChanged();
+  }
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -697,6 +735,9 @@
     aTracks: trackTools,
     aEdit: editTag,
     aMulti: multiEdit,
+    aRenameDlg: () => renameDialog(false),
+    aRenameFolder: () => renameDialog(true),
+    aF2TDlg: f2tDialog,
     aCoverIn: covers.coverIn,
     aCoverOut: covers.coverOut,
     aCoverAsFolder: covers.coverAsFolder,
@@ -710,6 +751,9 @@
     FActPaste: () => !!tools.clip,
     aTracks: () => state.items.length > 0,
     aEdit: () => state.items.length > 0,
+    aRenameDlg: () => state.items.length > 0,
+    aRenameFolder: () => state.items.length > 0,
+    aF2TDlg: () => state.items.length > 0,
   };
   const CHECKED = {
     FActToolsPanel: () => state.view.tools, FActFolders: () => state.view.folders,

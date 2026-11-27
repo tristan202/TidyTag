@@ -100,5 +100,18 @@
     return changed;
   }
 
-  return { STATUS_TEXT, maskTemplate, addMaskToHistory, renameConfirm, f2tItems, applyLog };
+  // from: TFormRename.ShowPlan — [rs name, ...arguments] of the summary line
+  function summary(rows) {
+    const n = (s) => rows.filter((r) => r.status === s).length;
+    if (n('Done') > 0) return ['rsDOmdoebtDFejlKan', n('Done'), n('Failed')];
+    return ['rsDOmdoebesDUaendretD', n('Ok'), n('Unchanged'), rows.length - n('Ok') - n('Unchanged') - n('Done')];
+  }
+
+  // from: DisplayName (renameform.pas) — the new name relative to the old folder when it stays below it
+  function displayName(oldName, newName) {
+    const dir = oldName.slice(0, oldName.lastIndexOf('\\') + 1);
+    return newName.toLowerCase().startsWith(dir.toLowerCase()) ? newName.slice(dir.length) : newName;
+  }
+
+  return { STATUS_TEXT, maskTemplate, addMaskToHistory, renameConfirm, f2tItems, applyLog, summary, displayName };
 });

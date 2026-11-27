@@ -57,3 +57,13 @@ test('rename log moves the open folder and its files', () => {
   assert.ok(state.items[0] === a && a.checked && state.sel.has(a));
   assert.strictEqual(R.applyLog(state, ['C:/m/b/1.mp3', 'C:/m/x.mp3'], 'C:/m/b'), false);
 });
+
+test('renamedialog state', () => {
+  const row = (status) => ({ oldName: 'C:\\a\\x.mp3', newName: '', status, detail: '' });
+  const before = [row('Ok'), row('Ok'), row('Unchanged'), row('Missing'), row('Exists')];
+  assert.deepStrictEqual(R.summary(before), ['rsDOmdoebesDUaendretD', 2, 1, 2]);
+  const after = [row('Done'), row('Failed'), row('Unchanged'), row('Missing')];
+  assert.deepStrictEqual(R.summary(after), ['rsDOmdoebtDFejlKan', 1, 1]);
+  assert.strictEqual(R.displayName('C:\\a\\x.mp3', 'C:\\A\\b\\y.mp3'), 'b\\y.mp3');
+  assert.strictEqual(R.displayName('C:\\a\\x.mp3', 'D:\\y.mp3'), 'D:\\y.mp3');
+});

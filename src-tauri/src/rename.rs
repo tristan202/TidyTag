@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 use tauri::State;
-use tidytag_core::filename_tags::{match_file_name, FileNameMatch};
+use tidytag_core::filename_tags::{mask_fields, match_file_name, FileNameMatch};
 use tidytag_core::model::{AudioInfo, TagField};
 use tidytag_core::rename::{
     execute_rename, map_renamed_path, plan_folder_rename, plan_rename, undo_rename, CaseMode, LogItem, PlanItem,
@@ -179,6 +179,12 @@ pub fn map_paths(paths: Vec<String>, log: Vec<LogItem>, reverse: bool) -> Vec<St
 pub async fn rename_one(state: State<'_, WriteState>, old_path: String, new_name: String) -> Result<LogItem, String> {
     let _busy = state.claim()?;
     rename_path(&old_path, &new_name)
+}
+
+/// MaskFields: the fields a tags-from-filename mask fills (the preview's columns).
+#[tauri::command]
+pub fn mask_fields_cmd(mask: String) -> Vec<TagField> {
+    mask_fields(&mask)
 }
 
 #[tauri::command]
