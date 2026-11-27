@@ -585,7 +585,7 @@
     return list;
   }
   function addToHistory(section, mask) {
-    const list = RENAMETOOLS.addMaskToHistory(maskHistory(section), mask);
+    const list = RENAMETOOLS.addMaskToHistory(RENAMETOOLS.historyFor(section, maskHistory(section)), mask);
     S[section.toLowerCase()] = Object.fromEntries(list.map((m, i) => ['mask' + i, m]));
     API.settingsWriteSection(section, list.map((m, i) => ['Mask' + i, m]));
   }
@@ -734,7 +734,8 @@
           try {
             const item = await API.renameOne(tr.path, name + ext);
             log.push(item);
-            await applyRenameLog([item], false);
+            await applyRenameLog([item], false); // this sorts the list again
+            idx = files.indexOf(tr);
           } catch (e) {
             const text = e === 'invalid' ? t(RS.rsUgyldigtNavn) : e === 'exists' ? t(RS.rsFiltypeFindes, name + ext) : String(e);
             await DIALOG.info(text, t(RS.rsKunneIkkeOmdoebe));
@@ -781,7 +782,7 @@
     if (!SAVE.canStartBatch(state)) return DIALOG.info(t(RS.rsVentVenligstTilAlleTags));
     let r;
     try { r = await API.undoRename(log); } catch (e) { return DIALOG.info(String(e)); }
-    await applyRenameLog(log, true);
+    await applyRenameLog(r.restoredLog, true); // only what really moved back
     setUndoLog(null, '');
     state.message = t(RS.rsDFilerMapperFikDeres, r.restored);
     updateStatus();

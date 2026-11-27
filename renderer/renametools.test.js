@@ -10,6 +10,12 @@ test('mask template shows field names', () => {
   assert.strictEqual(R.maskTemplate('', '.mp3', D.renameVars, ' '), '');
 });
 
+test('an empty history starts from 1.2\'s default masks', () => {
+  assert.deepStrictEqual(R.historyFor('RenameMasks', []).slice(0, 2), ['%1 - %2', '%6 - %2']);
+  assert.deepStrictEqual(R.addMaskToHistory(R.historyFor('FolderMasks', []), 'x').slice(0, 3), ['x', '%1 - %3', '%1 - %4 - %3']);
+  assert.deepStrictEqual(R.historyFor('FileToTagMasks', ['mine']), ['mine']);
+});
+
 test('history keeps 15 newest', () => {
   let h = Array.from({ length: 15 }, (_, i) => 'm' + i);
   h = R.addMaskToHistory(h, 'm3');

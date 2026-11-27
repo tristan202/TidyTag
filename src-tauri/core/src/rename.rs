@@ -492,8 +492,14 @@ fn expand_mask_path(mask: &str, v: &MaskValues, opt: &RenameOptions) -> (String,
             }
         };
         let mut value = value;
+        // a value of only dots ('..', '...') would climb a folder: it counts as empty (1.2 let it)
+        let clean = sanitize_name_part(&value);
+        let only_dots = !clean.is_empty() && clean.bytes().all(|b| b == b'.');
+        if need.is_none() && only_dots {
+            value.clear();
+        }
         if let Some(f) = need {
-            if sanitize_name_part(&value).is_empty() {
+            if clean.is_empty() || only_dots {
                 value.clear();
                 if !missing.is_empty() {
                     missing.push_str(", ");
@@ -793,9 +799,11 @@ fn remove_empty_dirs(mut dir: String, stop: &str) {
     }
 }
 
-// from: UndoRename — moves things back; returns how many, problems go to `errors`
-pub fn undo_rename(log: &[LogItem], errors: &mut Vec<String>) -> usize {
-    let mut n = 0;
+// from: UndoRename — moves things back; problems go to `errors`. Returns the entries that were
+// really moved back, in log order: only those may move the list's paths (1.2 mapped the whole
+// log, so a track could land on another file that had taken its old name).
+pub fn undo_rename(log: &[LogItem], errors: &mut Vec<String>) -> Vec<LogItem> {
+    let mut done = Vec::new();
     for it in log.iter().rev() {
         if !path_exists(&it.new_name) {
             errors.push(format!("{}{FINDES_IKKE}", it.new_name));
@@ -808,13 +816,14 @@ pub fn undo_rename(log: &[LogItem], errors: &mut Vec<String>) -> usize {
         let _ = std::fs::create_dir_all(extract_file_dir(&it.old_name));
         match move_no_replace(&it.new_name, &it.old_name) {
             Ok(()) => {
-                n += 1;
+                done.push(it.clone());
                 remove_empty_dirs(extract_file_dir(&it.new_name), &extract_file_dir(&it.old_name));
             }
             Err(e) => errors.push(format!("{}: {e}", it.new_name)),
         }
     }
-    n
+    done.reverse();
+    done
 }
 
 // from: CountStatus

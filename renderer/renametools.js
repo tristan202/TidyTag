@@ -45,6 +45,15 @@
     return r ? r + ext : '';
   }
 
+  // from: DefaultMasks (renameform.pas), DefaultFolderMasks, DefaultMasks (filetotagform.pas)
+  const DEFAULT_MASKS = {
+    RenameMasks: ['%1 - %2', '%6 - %2', '%6 - %1 - %2', '%1 - %3 - %6 - %2', '%1\\%3\\%6 - %2', '%aa\\%4 - %3\\%6 - %2'],
+    FolderMasks: ['%1 - %3', '%1 - %4 - %3', '%4 - %3', '%1\\%4 - %3', '%aa\\%3'],
+    FileToTagMasks: ['%1 - %2', '%6 - %2', '%6 - %1 - %2', '%6. %2', '%6 %1 - %2', '%1\\%3\\%6 - %2', '%1\\%4 - %3\\%6 - %2'],
+  };
+  // from: LoadMaskHistory — an empty history shows (and keeps) the defaults
+  const historyFor = (section, list) => (list.length ? list.slice() : DEFAULT_MASKS[section].slice());
+
   // from: AddMaskToHistory — newest first, no duplicates, at most 15
   function addMaskToHistory(list, mask) {
     if (!mask.trim()) return list.slice();
@@ -152,6 +161,6 @@
     return out;
   }
 
-  return { STATUS_TEXT, maskTemplate, addMaskToHistory, renameConfirm, f2tItems, applyLog, summary, displayName,
+  return { STATUS_TEXT, DEFAULT_MASKS, historyFor, maskTemplate, addMaskToHistory, renameConfirm, f2tItems, applyLog, summary, displayName,
     wordsToIni, wordsFromIni, actionsToIni, actionsFromIni };
 });

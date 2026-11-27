@@ -150,8 +150,11 @@ pub async fn execute_rename_cmd(state: State<'_, WriteState>, rows: Vec<PlanItem
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Undone {
     restored: usize,
+    /// the entries really moved back: only these move the list (ApplyRenameLog)
+    restored_log: Vec<LogItem>,
     errors: Vec<String>,
 }
 
@@ -159,8 +162,8 @@ pub struct Undone {
 pub async fn undo_rename_cmd(state: State<'_, WriteState>, log: Vec<LogItem>) -> Result<Undone, String> {
     let _busy = state.claim()?;
     let mut errors = Vec::new();
-    let restored = undo_rename(&log, &mut errors);
-    Ok(Undone { restored, errors })
+    let restored_log = undo_rename(&log, &mut errors);
+    Ok(Undone { restored: restored_log.len(), restored_log, errors })
 }
 
 /// ApplyRenameLog's mapping: a path moves only when its new place exists.
@@ -229,7 +232,7 @@ mod tests {
         assert!(rows.iter().all(|r| r.status == RenameStatus::Done));
         assert!(std::path::Path::new(&format!("{d}\\01 - Én.mp3")).exists());
         let mut errors = Vec::new();
-        assert_eq!(tidytag_core::rename::undo_rename(&log, &mut errors), 2);
+        assert_eq!(tidytag_core::rename::undo_rename(&log, &mut errors).len(), 2);
         assert!(std::path::Path::new(&format!("{d}\\a.mp3")).exists());
         std::fs::remove_dir_all(d).unwrap();
     }

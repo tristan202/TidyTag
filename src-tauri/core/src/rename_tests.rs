@@ -156,7 +156,7 @@ fn rename_and_undo_on_disk() {
     assert_eq!(log.len(), 3);
     assert!(exists(&format!("{dir}Kunstner\\Album\\01 - Første.mp3")) && !exists(&format!("{dir}a.mp3")));
     let mut errors = Vec::new();
-    assert_eq!(undo_rename(&log, &mut errors), 3);
+    assert_eq!(undo_rename(&log, &mut errors).len(), 3);
     assert!(errors.is_empty(), "{errors:?}");
     assert!(exists(&format!("{dir}a.mp3")) && exists(&format!("{dir}b.mp3")) && exists(&format!("{dir}c.mp3")));
     assert!(!exists(&format!("{dir}Kunstner")));
@@ -170,7 +170,7 @@ fn rename_and_undo_on_disk() {
     let log = execute_rename(&mut p);
     assert!(log.len() == 1 && exists(&format!("{dir}Mappekunstner\\Mappealbum\\x.mp3")));
     assert_eq!(map_renamed_path(&format!("{dir}album\\x.mp3"), &log, false), format!("{dir}Mappekunstner\\Mappealbum\\x.mp3"));
-    assert_eq!(undo_rename(&log, &mut errors), 1);
+    assert_eq!(undo_rename(&log, &mut errors).len(), 1);
     assert!(exists(&format!("{dir}album\\x.mp3")) && !exists(&format!("{dir}Mappekunstner")));
     assert_eq!(map_renamed_path(&format!("{dir}Mappekunstner\\Mappealbum\\x.mp3"), &log, true), format!("{dir}album\\x.mp3"));
     std::fs::remove_dir_all(dir).unwrap();
@@ -196,6 +196,20 @@ fn mask_values_are_sanitized() {
     let o = opt(CaseMode::None, false, true);
     let r = expand("%1 %2", &i, 1, &o);
     assert_eq!(r, "C:\\Musik\\AC-DC What - a.mp3");
+}
+
+/// A tag value of only dots ('...', '..') must not climb a folder: it counts as empty.
+#[test]
+fn dot_values_never_move_files_up() {
+    let o = opt(CaseMode::None, false, true);
+    let i = info("C:\\Musik\\x\\a.mp3", "K", "T", "...", "1");
+    let (r, missing) = expand_rename_mask("%1\\%3\\%6 - %2", &i, 1, 2, &o);
+    assert_eq!((r.as_str(), missing.as_str()), ("", "Album"));
+    let i = info("C:\\Musik\\x\\a.mp3", "..", "T", "A", "1");
+    assert_eq!(expand_rename_mask("%1\\%2", &i, 1, 2, &o).1, "Kunstner");
+    // '..' typed in the mask itself still works
+    let i = info("C:\\Musik\\x\\a.mp3", "K", "T", "A", "1");
+    assert_eq!(expand("..\\%2", &i, 1, &o), "C:\\Musik\\T.mp3");
 }
 
 #[test]
@@ -229,7 +243,9 @@ fn undo_reports_missing_and_taken() {
     std::fs::remove_file(&log[0].new_name).unwrap(); // renamed file 1 deleted
     touch(&format!("{dir}2.mp3")); // old name 2 taken again
     let mut errors = Vec::new();
-    assert_eq!(undo_rename(&log, &mut errors), 1);
+    // only what was really moved back is returned: the list must not move track 2 onto the
+    // other file that now has its old name
+    assert_eq!(undo_rename(&log, &mut errors), vec![log[2].clone()]);
     assert_eq!(errors.len(), 2);
     assert!(errors.iter().any(|e| e.ends_with(": der ligger allerede en fil med det navn")), "{errors:?}");
     assert!(errors.iter().any(|e| e.ends_with(": findes ikke længere")), "{errors:?}");
