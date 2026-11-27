@@ -3,6 +3,7 @@
 
 mod commands;
 mod edit;
+mod rename;
 
 use tauri::Manager;
 
@@ -49,6 +50,12 @@ fn main() {
             edit::read_image_file,
             edit::read_text_file,
             edit::write_file,
+            rename::plan_rename_cmd,
+            rename::execute_rename_cmd,
+            rename::undo_rename_cmd,
+            rename::map_paths,
+            rename::rename_one,
+            rename::match_file_names,
         ])
         .run(tauri::generate_context!())
         .expect("TidyTag could not start");

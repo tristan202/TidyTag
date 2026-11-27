@@ -32,6 +32,13 @@
     readImageFile: (path) => invoke('read_image_file', { path }),
     readTextFile: (path) => invoke('read_text_file', { path }),
     writeFile: (path, data) => invoke('write_file', { path, data }),
+    // phase 4 (src-tauri/src/rename.rs)
+    planRename: (tracks, mask, opt, folders = false) => invoke('plan_rename_cmd', { tracks, mask, opt, folders }),
+    executeRename: (rows) => invoke('execute_rename_cmd', { rows }),
+    undoRename: (log) => invoke('undo_rename_cmd', { log }),
+    mapPaths: (paths, log, reverse) => invoke('map_paths', { paths, log, reverse }),
+    renameOne: (oldPath, newName) => invoke('rename_one', { oldPath, newName }),
+    matchFileNames: (paths, mask, underscores, caseMode) => invoke('match_file_names', { paths, mask, underscores, caseMode }),
     on: (event, fn) => listen(event, (e) => fn(e.payload)),
     window: () => window.__TAURI__.window.getCurrentWindow(),
   };
