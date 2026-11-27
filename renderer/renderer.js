@@ -11,7 +11,7 @@
 
   // ---------- settings (same file and keys as 1.2) ----------
   const SECTIONS = ['Main', 'Editor', 'View', 'Rename', 'FileToTag', 'RenameMasks', 'FileToTagMasks', 'AddressHistory', 'Favorites',
-    'Tracks', 'Cover', 'RenameFolder', 'FolderMasks'];
+    'Tracks', 'Cover', 'RenameFolder', 'FolderMasks', 'RenameReplace', 'RenameKeepCase', 'RenameActions', 'SavedRenameMasks'];
   const S = {};
   async function loadSettings() {
     await Promise.all(SECTIONS.map(async (sec) => {
@@ -790,6 +790,89 @@
     }
   }
 
+  // a section as 1.2 writes it whole (EraseSection + WriteString), kept in the settings snapshot
+  function writeSection(sec, rows) {
+    S[sec.toLowerCase()] = Object.fromEntries(rows.map(([k, v]) => [k.toLowerCase(), v]));
+    return API.settingsWriteSection(sec, rows);
+  }
+
+  // from: ActRenameWords
+  async function editWords() {
+    const w = await RENAMEEDIT.words(RENAMETOOLS.wordsFromIni(S.renamereplace, S.renamekeepcase));
+    if (!w) return;
+    const ini = RENAMETOOLS.wordsToIni(w);
+    await writeSection('RenameReplace', ini.RenameReplace);
+    await writeSection('RenameKeepCase', ini.RenameKeepCase);
+    selectionChanged(); // the live rename result uses them
+  }
+
+  // from: MaskEditorClick / RenameMaskPreview
+  async function maskEditor() {
+    PANEL.saveInline();
+    const o = PANEL.inline('rn');
+    const saved = [];
+    for (let i = 1; i <= (parseInt(get('SavedRenameMasks', 'Count', 0), 10) || 0); i++) saved.push(get('SavedRenameMasks', 'Mask' + i));
+    const preview = async (mask) => {
+      const tr = state.items[state.focus] || state.items[0];
+      if (!tr) return '';
+      const [row] = await API.planRename([tr], mask, o);
+      if (row.status === 'Missing') return t(RS.rsMangler) + row.detail.split(', ').map((x) => t(x)).join(', ');
+      if (!row.newName) return t(RS.rsUgyldigMaske);
+      return RENAMETOOLS.displayName(tr.path, row.newName);
+    };
+    const r = await RENAMEEDIT.mask(t(RS.rsMaskeEditorTitel), o.mask, MENUDATA.renameVars.map((v) => t(v)), preview, saved);
+    await writeSection('SavedRenameMasks', [['Count', String(r.saved.length)], ...r.saved.map((m, i) => ['Mask' + (i + 1), m])]);
+    if (r.mask === null) return;
+    save('Rename', 'Mask', r.mask);
+    PANEL.reload();
+  }
+
+  const renameActions = () => RENAMETOOLS.actionsFromIni(S.renameactions);
+  // from: ActManageActions
+  async function manageActions() {
+    const a = await RENAMEEDIT.actions(renameActions(), PANEL.inline('rn').mask);
+    if (a) await writeSection('RenameActions', RENAMETOOLS.actionsToIni(a));
+  }
+
+  // from: RunRenameAction — files first, then the folders of the renamed files; one undo step
+  async function runRenameAction(act) {
+    const items = await requireTargets();
+    if (!items) return;
+    const opt = PANEL.inline('rn');
+    const filePlan = act.fileMask ? await API.planRename(items, act.fileMask, opt) : [];
+    const fileCount = filePlan.filter((r) => r.status === 'Ok').length;
+    let msg = t(RS.rsKoerHandlingenS, act.name) + '\n';
+    if (act.fileMask) msg += '\n' + t(RS.rsFilerDOmdoebesMedS, fileCount, act.fileMask);
+    if (act.folderMask) msg += '\n' + t(RS.rsMapperneOmdoebesMedS, act.folderMask);
+    if (!(await DIALOG.confirm(t(RS.rsOmdoebningshandling), msg))) return;
+    if (!SAVE.canStartBatch(state)) return DIALOG.info(t(RS.rsVentVenligstTilAlleTags));
+    let fileLog = [], folderLog = [], failedRows = [];
+    try {
+      if (fileCount > 0) {
+        const r = await API.executeRename(filePlan);
+        fileLog = r.log;
+        failedRows = r.rows.filter((x) => x.status === 'Failed').map((x) => `${x.oldName.replace(/^.*[\\/]/, '')}: ${t(x.detail)}`);
+        if (fileLog.length) await applyRenameLog(fileLog, false);
+      }
+      if (act.folderMask) {
+        const folderPlan = await API.planRename(items, act.folderMask, opt, true); // after the file renames
+        if (folderPlan.some((r) => r.status === 'Ok')) {
+          const r = await API.executeRename(folderPlan);
+          folderLog = r.log;
+          failedRows = failedRows.concat(r.rows.filter((x) => x.status === 'Failed').map((x) => `${x.oldName}: ${t(x.detail)}`));
+          if (folderLog.length) await applyRenameLog(folderLog, false);
+        }
+      }
+    } catch (e) {
+      DIALOG.info(String(e));
+    }
+    const log = fileLog.concat(folderLog);
+    if (log.length) setUndoLog(log, t(RS.rsFilerMapper));
+    state.message = t(RS.rsHandlingDFilerDMapperDFejl, act.name, fileLog.length, folderLog.length, failedRows.length);
+    updateStatus();
+    if (failedRows.length) DIALOG.info(failedRows.join('\n'), t(RS.rsNogleFilerBlevIkkeOmdoebt));
+  }
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -839,6 +922,8 @@
     aF2TDlg: f2tDialog,
     aRenameManual: () => (treeFocused ? renameFolderManual() : renameFileDialog()),
     FActUndo: undoRename,
+    aWords: editWords,
+    FActManageActions: manageActions,
     aCoverIn: covers.coverIn,
     aCoverOut: covers.coverOut,
     aCoverAsFolder: covers.coverAsFolder,
@@ -887,7 +972,13 @@
           ({ text: t(text), checked: cur === i, radio: true, run: () => save('Main', 'AlbumArtistRule', i) })),
       };
     }
-    return null; // play with, recent folders, rename actions: later phases
+    if (item.dynamic && item.text === MENUDATA.rs.rsOmdoebningshandlingerMenu) { // from: RebuildActionsMenu
+      const acts = renameActions();
+      return { text: t(item.text), enabled: true,
+        items: [...acts.map((a) => ({ text: a.name.replace(/&/g, '&&'), run: () => runRenameAction(a) })), ...(acts.length ? ['-'] : []),
+          { ref: 'FActManageActions' }] };
+    }
+    return null; // play with, recent folders: later phases
   }
 
   // ---------- splitter (tree width, [Main] TreeWidth) ----------
@@ -939,6 +1030,7 @@
       f2tPreview: () => ACTIONS.aF2TDlg?.(),
       undo: () => ACTIONS.FActUndo?.(),
       canUndo: () => !!undoLog,
+      maskEditor,
       openMulti: () => ACTIONS.aMulti(),
     });
     applyView();

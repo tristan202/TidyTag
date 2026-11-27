@@ -58,6 +58,23 @@ test('rename log moves the open folder and its files', () => {
   assert.strictEqual(R.applyLog(state, ['C:/m/b/1.mp3', 'C:/m/x.mp3'], 'C:/m/b'), false);
 });
 
+test('ini lists round-trip quoted', () => {
+  const words = { from: [' & ', 'Feat.'], to: [' and ', 'ft.'], keep: ['AC/DC', ' ABBA '] };
+  const ini = R.wordsToIni(words);
+  assert.deepStrictEqual(ini.RenameReplace[0], ['Count', '2']);
+  assert.deepStrictEqual(ini.RenameReplace[1], ['From1', '" & "']);
+  assert.deepStrictEqual(ini.RenameKeepCase, [['Count', '2'], ['Word1', '"AC/DC"'], ['Word2', '" ABBA "']]);
+  // the renderer's settings snapshot has lower-case keys
+  const lower = (rows) => Object.fromEntries(rows.map(([k, v]) => [k.toLowerCase(), v]));
+  assert.deepStrictEqual(R.wordsFromIni(lower(ini.RenameReplace), lower(ini.RenameKeepCase)), words);
+
+  const actions = [{ name: 'Album', fileMask: '%6 - %2', folderMask: '' }, { name: ' x ', fileMask: '', folderMask: '%1\\%3' }];
+  const rows = R.actionsToIni(actions);
+  assert.deepStrictEqual(rows.slice(0, 4), [['Count', '2'], ['Name1', '"Album"'], ['FileMask1', '"%6 - %2"'], ['FolderMask1', '""']]);
+  assert.deepStrictEqual(R.actionsFromIni(lower(rows)), actions);
+  assert.deepStrictEqual(R.actionsFromIni({}), []);
+});
+
 test('renamedialog state', () => {
   const row = (status) => ({ oldName: 'C:\\a\\x.mp3', newName: '', status, detail: '' });
   const before = [row('Ok'), row('Ok'), row('Unchanged'), row('Missing'), row('Exists')];

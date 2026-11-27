@@ -217,4 +217,19 @@ textarea.input { padding: 4px 8px; font: inherit; color: inherit; }
 .multi-editor progress { width: 100%; accent-color: var(--accent); }
 .rn-grid { flex: 1; min-width: 480px; }
 .rn-grid .input.grow { width: 100%; }
+.grid-box { max-height: 230px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.edit-grid { width: 100%; border-collapse: collapse; }
+.edit-grid th { position: sticky; top: 0; background: var(--raised); text-align: left; font-weight: 600; padding: 4px 6px; }
+.edit-grid td { padding: 2px; }
+.edit-grid .input { width: 100%; }
+.words-memo { width: 100%; height: 120px; resize: vertical; }
+.modal.mask-editor { width: 720px; }
+.var-buttons { display: flex; flex-wrap: wrap; gap: 4px; max-height: 190px; overflow: auto; }
+.btn.small { padding: 2px 8px; font-size: 12px; }
+.saved-masks { display: flex; gap: 8px; }
+.saved-masks select { flex: 1; }
+.btn-col { display: flex; flex-direction: column; gap: 6px; }
+.actions-edit { display: flex; gap: 14px; }
+.actions-left { display: flex; flex-direction: column; gap: 6px; width: 200px; }
+.actions-right { display: flex; flex-direction: column; gap: 6px; flex: 1; }
 .modal-buttons { display: flex; justify-content: flex-end; gap: 8px; }

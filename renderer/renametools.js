@@ -113,5 +113,45 @@
     return newName.toLowerCase().startsWith(dir.toLowerCase()) ? newName.slice(dir.length) : newName;
   }
 
-  return { STATUS_TEXT, maskTemplate, addMaskToHistory, renameConfirm, f2tItems, applyLog, summary, displayName };
+  // from: Quote / Unquote (appsettings.pas) — quotes keep leading/trailing spaces (' & ') in the ini
+  const quote = (s) => `"${s}"`;
+  const unquote = (s) => (s && s.length >= 2 && s[0] === '"' && s[s.length - 1] === '"' ? s.slice(1, -1) : s || '');
+  const count = (sec) => Math.max(0, parseInt(sec?.count, 10) || 0);
+
+  // from: SaveRenameWords — { from, to, keep } -> the rows of [RenameReplace] and [RenameKeepCase]
+  function wordsToIni(w) {
+    const replace = [['Count', String(w.from.length)]];
+    w.from.forEach((f, i) => replace.push([`From${i + 1}`, quote(f)], [`To${i + 1}`, quote(w.to[i] ?? '')]));
+    return { RenameReplace: replace, RenameKeepCase: [['Count', String(w.keep.length)], ...w.keep.map((k, i) => [`Word${i + 1}`, quote(k)])] };
+  }
+
+  // from: LoadRenameWords — the two sections as { lower-case key: value }
+  function wordsFromIni(replace, keep) {
+    const w = { from: [], to: [], keep: [] };
+    for (let i = 1; i <= count(replace); i++) {
+      w.from.push(unquote(replace[`from${i}`]));
+      w.to.push(unquote(replace[`to${i}`]));
+    }
+    for (let i = 1; i <= count(keep); i++) w.keep.push(unquote(keep[`word${i}`]));
+    return w;
+  }
+
+  // from: SaveRenameActions
+  function actionsToIni(actions) {
+    const rows = [['Count', String(actions.length)]];
+    actions.forEach((a, i) => rows.push([`Name${i + 1}`, quote(a.name)], [`FileMask${i + 1}`, quote(a.fileMask)], [`FolderMask${i + 1}`, quote(a.folderMask)]));
+    return rows;
+  }
+
+  // from: LoadRenameActions
+  function actionsFromIni(sec) {
+    const out = [];
+    for (let i = 1; i <= count(sec); i++) {
+      out.push({ name: unquote(sec[`name${i}`]), fileMask: unquote(sec[`filemask${i}`]), folderMask: unquote(sec[`foldermask${i}`]) });
+    }
+    return out;
+  }
+
+  return { STATUS_TEXT, maskTemplate, addMaskToHistory, renameConfirm, f2tItems, applyLog, summary, displayName,
+    wordsToIni, wordsFromIni, actionsToIni, actionsFromIni };
 });
