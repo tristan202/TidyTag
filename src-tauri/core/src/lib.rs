@@ -8,6 +8,7 @@ pub mod fileio;
 pub mod id3sync;
 pub mod model;
 pub mod read;
+pub mod rename;
 pub mod scan;
 pub mod scenario;
 pub mod settings;
