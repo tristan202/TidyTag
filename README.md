@@ -177,8 +177,13 @@ PNG files in `res\icons`, run `powershell -ExecutionPolicy Bypass -File tools\ma
 
 ### TidyTag 2 (in progress)
 TidyTag 2 is the same program rebuilt with Tauri 2, with the look of the owner's other apps. The
-design is `docs/superpowers/specs/2026-11-26-tidytag-tauri-design.md`. Phase 1 (the window, folders,
-file list and reading tags in every format) is done. Nothing is written to audio files yet.
+design is `docs/superpowers/specs/2026-11-26-tidytag-tauri-design.md`.
+
+**Done so far:**
+- **Phase 1:** the window, folders, file list and reading tags in every format.
+- **Phase 2:** writing tags in every format. The *Multi-fil-tag-editor* tab can now save. The
+  writers are ports of 1.2's, and every file they write is byte for byte what 1.2 writes for the
+  same edit.
 
 **Layout:**
 - `src-tauri/core/`: the engine, without UI. It holds the tag readers ported from the Pascal units,
@@ -214,6 +219,16 @@ cd src-tauri; cargo test --workspace
    ```
 
 Every file must read the same as in 1.2's `tagdump --json`.
+
+**Write cross-check.** After the corpus is made, let 1.2 run tagtest's three write scenarios on every
+file, then compare 2.0's result byte for byte after each step:
+```
+powershell -File tools\make-write-corpus.ps1
+$env:TIDYTAG_CORPUS = "$env:TEMP\tidytag-corpus"; cargo test -p tidytag-core --test golden_write
+```
+`TIDYTAG_ONLY=mp3,flac` limits the run to some extensions. Both `bin\tagset.exe` (1.2) and
+`cargo run -p tidytag-core --bin tagset` (2.0) take `--scenario N <file>` as well as `field=value`
+arguments.
 
 **Generated files.** `renderer/strings.js` comes from `languages/src/translations.json`, and
 `renderer/menudata.js` comes from 1.2's menus and texts in `src/mainform.pas`. Regenerate them with
