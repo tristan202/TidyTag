@@ -1,6 +1,7 @@
 //! TidyTag's engine without any UI: tag readers, folder scan and settings.
 
 pub mod batch;
+pub mod cover;
 pub mod dirs;
 pub mod dump;
 pub mod fileio;

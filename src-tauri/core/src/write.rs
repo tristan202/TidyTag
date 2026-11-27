@@ -14,6 +14,8 @@ pub struct WriteOptions {
     pub album_artist_rule: u8,
     /// [Editor] KeepTimestamp
     pub keep_timestamp: bool,
+    /// [Cover] AutoResize on: every picture is resized before it is written (1.2's PictureFilter)
+    pub cover_resize: Option<crate::cover::CoverResize>,
 }
 
 const WRITABLE: [&str; 18] = [
@@ -55,6 +57,9 @@ pub fn write_audio_tags(info: &mut AudioInfo, opt: &WriteOptions) -> Result<(), 
         return Err("Skrivning af denne filtype understøttes ikke endnu".into());
     }
     apply_album_artist_rule(info, opt.album_artist_rule);
+    if let Some(r) = &opt.cover_resize {
+        crate::cover::shrink_pictures(info, r);
+    }
     let stamp = if opt.keep_timestamp { get_file_stamp(&info.path) } else { None };
     let path = info.path.clone();
     let result = match ext(&path).as_str() {
@@ -76,6 +81,23 @@ pub fn write_audio_tags(info: &mut AudioInfo, opt: &WriteOptions) -> Result<(), 
 mod tests {
     use super::*;
     use std::path::PathBuf;
+
+    #[test]
+    fn auto_resize_on_save() {
+        let dir = std::env::temp_dir().join(format!("tidytag-autoresize-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let p = dir.join("a.mp3");
+        let mut frame = vec![0u8; 417];
+        frame[..4].copy_from_slice(&[0xFF, 0xFB, 0x90, 0x00]);
+        std::fs::write(&p, &frame).unwrap();
+        let mut i = crate::read::read_audio_info(&p, true);
+        crate::batch::set_front_cover(&mut i, crate::cover::tests::jpeg(2000, 1000));
+        let opt = WriteOptions { cover_resize: Some(Default::default()), ..Default::default() };
+        write_audio_tags(&mut i, &opt).unwrap();
+        let back = crate::read::read_audio_info(&p, true);
+        assert_eq!(crate::model::image_dimensions(&back.pictures[0].data), Some((600, 300)));
+        std::fs::remove_dir_all(dir).unwrap();
+    }
 
     #[test]
     fn refuses_unread_pictures() {

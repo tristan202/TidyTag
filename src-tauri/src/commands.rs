@@ -8,7 +8,9 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use tauri::{AppHandle, Emitter, State};
 use tidytag_core::dirs::{self, DirEntry};
-use tidytag_core::model::{AudioInfo, TagField, PIC_TYPE_FRONT_COVER};
+use tidytag_core::cover::CoverResize;
+use tidytag_core::model::{detect_image_mime, AudioInfo, Picture, TagField, PIC_TYPE_FRONT_COVER};
+use tidytag_core::write::WriteOptions;
 use tidytag_core::read::read_audio_info;
 use tidytag_core::scan;
 use tidytag_core::settings::{settings_path, Ini};
@@ -165,11 +167,11 @@ pub fn scan_cancel(state: State<ScanState>) {
 
 #[derive(Serialize)]
 pub struct Cover {
-    mime: String,
-    data: String,
+    pub mime: String,
+    pub data: String,
 }
 
-fn cover(mime: &str, data: &[u8]) -> Cover {
+pub(crate) fn cover(mime: &str, data: &[u8]) -> Cover {
     let mime = tidytag_core::model::safe_image_mime(mime, data);
     Cover { mime: mime.to_string(), data: base64::engine::general_purpose::STANDARD.encode(data) }
 }
@@ -195,13 +197,44 @@ pub async fn folder_cover(dir: String) -> Option<Cover> {
 
 // ---------- writing tags ----------
 
+#[derive(serde::Serialize, serde::Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct PictureDto {
+    pub pic_type: u8,
+    pub mime: String,
+    pub description: String,
+    /// base64
+    pub data: String,
+}
+
+impl PictureDto {
+    pub fn from_picture(p: &Picture) -> PictureDto {
+        let c = cover(&p.mime, &p.data);
+        PictureDto { pic_type: p.pic_type, mime: c.mime, description: p.description.clone(), data: c.data }
+    }
+
+    /// None when the data is not base64.
+    pub fn to_picture(&self) -> Option<Picture> {
+        let data = base64::engine::general_purpose::STANDARD.decode(&self.data).ok()?;
+        let mime = if self.mime.is_empty() { detect_image_mime(&data, "image/jpeg").to_string() } else { self.mime.clone() };
+        Some(Picture { pic_type: self.pic_type, mime, description: self.description.clone(), data })
+    }
+}
+
 #[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct WriteItem {
     path: String,
     /// field key -> value ('' clears the field)
     values: BTreeMap<String, String>,
     /// a new front cover, base64
     cover: Option<String>,
+    /// replaces all pictures
+    #[serde(default)]
+    pictures: Option<Vec<PictureDto>>,
+    /// the multi editor's "remove covers"
+    #[serde(default)]
+    remove_covers: bool,
 }
 
 #[derive(Serialize, Clone)]
@@ -229,58 +262,110 @@ struct WriteDone {
     tracks: Vec<TrackDto>,
 }
 
-/// Set while a batch runs; a second batch is refused.
+/// Set while a batch (or a single save) runs; a second one is refused.
 #[derive(Default)]
 pub struct WriteState(Arc<AtomicBool>);
 
-/// The settings that change a write ([Tags] ID3Unicode, [Main] AlbumArtistRule,
-/// [Editor] KeepTimestamp), read fresh for every batch; defaults if the file cannot be read.
-fn write_options() -> tidytag_core::write::WriteOptions {
-    let ini = Ini::load(&settings_path()).ok();
-    let get = |s: &str, k: &str| ini.as_ref().and_then(|i| i.get(s, k).map(str::to_string));
-    let bool = |s: &str, k: &str| get(s, k).is_some_and(|v| !matches!(v.to_ascii_lowercase().as_str(), "" | "0" | "false"));
-    tidytag_core::write::WriteOptions {
-        id3_always_unicode: bool("Tags", "ID3Unicode"),
-        album_artist_rule: get("Main", "AlbumArtistRule").and_then(|v| v.trim().parse().ok()).unwrap_or(0).min(2),
-        keep_timestamp: bool("Editor", "KeepTimestamp"),
+/// Clears "busy" however the work ends.
+pub(crate) struct Busy(Arc<AtomicBool>);
+
+impl Drop for Busy {
+    fn drop(&mut self) {
+        self.0.store(false, Ordering::SeqCst);
     }
 }
 
-/// Writes each item's values (and cover) on its own thread, like 1.2's WriteFieldsBatch.
-/// Progress arrives as `write-progress`, the result as `write-done` with the files read again.
-#[tauri::command]
-pub fn write_tags_batch(app: AppHandle, state: State<WriteState>, items: Vec<WriteItem>, batch_id: u32) -> Result<(), String> {
-    if state.0.swap(true, Ordering::SeqCst) {
-        return Err("busy".into());
-    }
-    let busy = state.0.clone();
-    std::thread::spawn(move || {
-        // "busy" is cleared however this thread ends
-        struct Release(Arc<AtomicBool>);
-        impl Drop for Release {
-            fn drop(&mut self) {
-                self.0.store(false, Ordering::SeqCst);
-            }
+impl WriteState {
+    pub(crate) fn claim(&self) -> Result<Busy, String> {
+        if self.0.swap(true, Ordering::SeqCst) {
+            return Err("busy".into());
         }
-        let _release = Release(busy);
+        Ok(Busy(self.0.clone()))
+    }
+}
+
+/// What one file of a batch came to.
+pub(crate) enum Outcome {
+    Saved(AudioInfo),
+    Skipped,
+    Failed(String),
+}
+
+impl From<Result<AudioInfo, (String, bool)>> for Outcome {
+    fn from(r: Result<AudioInfo, (String, bool)>) -> Outcome {
+        match r {
+            Ok(i) => Outcome::Saved(i),
+            Err((_, true)) => Outcome::Skipped,
+            Err((e, false)) => Outcome::Failed(e),
+        }
+    }
+}
+
+fn ini_true(v: &str) -> bool {
+    !matches!(v.trim().to_ascii_lowercase().as_str(), "" | "0" | "false")
+}
+
+/// [Cover] MaxSide/Quality/ToJpeg (1.2's GCoverOpt).
+pub(crate) fn cover_options(ini: Option<&Ini>) -> CoverResize {
+    let d = CoverResize::default();
+    let num = |k: &str| ini.and_then(|i| i.get("Cover", k)).and_then(|v| v.trim().parse::<i64>().ok());
+    CoverResize {
+        max_side: num("MaxSide").map_or(d.max_side, |v| v.clamp(1, 100_000) as u32),
+        quality: num("Quality").map_or(d.quality, |v| v.clamp(1, 100) as u8),
+        to_jpeg: ini.and_then(|i| i.get("Cover", "ToJpeg")).is_some_and(ini_true),
+    }
+}
+
+/// The settings that change a write ([Tags] ID3Unicode, [Main] AlbumArtistRule,
+/// [Editor] KeepTimestamp, [Cover] AutoResize), read fresh for every batch; defaults if the
+/// file cannot be read.
+pub(crate) fn write_options() -> WriteOptions {
+    let ini = Ini::load(&settings_path()).ok();
+    let get = |s: &str, k: &str| ini.as_ref().and_then(|i| i.get(s, k).map(str::to_string));
+    let bool = |s: &str, k: &str| get(s, k).is_some_and(|v| ini_true(&v));
+    WriteOptions {
+        id3_always_unicode: bool("Tags", "ID3Unicode"),
+        album_artist_rule: get("Main", "AlbumArtistRule").and_then(|v| v.trim().parse().ok()).unwrap_or(0).min(2),
+        keep_timestamp: bool("Editor", "KeepTimestamp"),
+        cover_resize: bool("Cover", "AutoResize").then(|| cover_options(ini.as_ref())),
+    }
+}
+
+pub(crate) fn file_name(path: &Path) -> String {
+    path.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default()
+}
+
+/// Runs `work` for each item on its own thread, like 1.2's WriteFieldsBatch. Progress arrives
+/// as `write-progress`, the result as `write-done` with the saved files read again.
+pub(crate) fn run_batch<T: Send + 'static>(
+    app: AppHandle,
+    state: &WriteState,
+    items: Vec<T>,
+    batch_id: u32,
+    path_of: fn(&T) -> &str,
+    work: impl Fn(&T, &WriteOptions) -> Outcome + Send + 'static,
+) -> Result<(), String> {
+    let busy = state.claim()?;
+    std::thread::spawn(move || {
+        let _busy = busy;
         let opt = write_options();
         let total = items.len();
         let mut done = WriteDone { batch_id, saved: 0, failed: 0, skipped: 0, errors: Vec::new(), tracks: Vec::new() };
-        for (i, it) in items.into_iter().enumerate() {
+        for (i, it) in items.iter().enumerate() {
             let _ = app.emit("write-progress", WriteProgress { batch_id, done: i + 1, total });
-            let values = it.values.iter().filter_map(|(k, v)| TagField::from_key(k).map(|f| (f, v.clone()))).collect();
-            let cover = it.cover.and_then(|c| base64::engine::general_purpose::STANDARD.decode(c).ok());
-            match tidytag_core::batch::update_file_tags(Path::new(&it.path), &values, cover, &opt) {
-                Ok(info) => {
+            // a bug in the work must not take the whole batch down: it becomes this file's error
+            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| work(it, &opt)))
+                .unwrap_or_else(|_| Outcome::Failed("internal error while writing the file".into()));
+            match r {
+                Outcome::Saved(info) => {
                     done.saved += 1;
                     done.tracks.push(TrackDto::from(info));
                 }
-                Err((_, true)) => done.skipped += 1,
-                Err((e, false)) => {
+                Outcome::Skipped => done.skipped += 1,
+                Outcome::Failed(e) => {
                     done.failed += 1;
                     if done.errors.len() < 20 {
-                        let file = Path::new(&it.path).file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
-                        done.errors.push(WriteError { file, error: e });
+                        done.errors.push(WriteError { file: file_name(Path::new(path_of(it))), error: e });
                     }
                 }
             }
@@ -288,6 +373,21 @@ pub fn write_tags_batch(app: AppHandle, state: State<WriteState>, items: Vec<Wri
         let _ = app.emit("write-done", done);
     });
     Ok(())
+}
+
+/// Writes each item's values, cover and pictures.
+#[tauri::command]
+pub fn write_tags_batch(app: AppHandle, state: State<WriteState>, items: Vec<WriteItem>, batch_id: u32) -> Result<(), String> {
+    run_batch(app, &state, items, batch_id, |it| &it.path, |it, opt| {
+        let values = it.values.iter().filter_map(|(k, v)| TagField::from_key(k).map(|f| (f, v.clone()))).collect();
+        let cover = it.cover.as_ref().and_then(|c| base64::engine::general_purpose::STANDARD.decode(c).ok());
+        let pictures = if it.remove_covers {
+            Some(Vec::new())
+        } else {
+            it.pictures.as_ref().map(|ps| ps.iter().filter_map(PictureDto::to_picture).collect())
+        };
+        tidytag_core::batch::update_file_tags(Path::new(&it.path), &values, cover, pictures, opt).into()
+    })
 }
 
 /// 1.2's GenreList: the ID3 genres minus [HiddenGenres], plus [CustomGenres], sorted and

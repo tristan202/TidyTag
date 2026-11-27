@@ -131,3 +131,31 @@ mod tests {
         std::fs::remove_dir_all(d).unwrap();
     }
 }
+
+/// Puts each file in the recycle bin, one call per file so a failure stays with its own file.
+/// Returns how many went; the others are in `errors` as "<name>: <text>".
+// from: RecycleFiles (fileops.pas; phone files come with the phone phase)
+#[cfg(windows)]
+pub fn recycle_files(files: &[PathBuf], errors: &mut Vec<String>) -> usize {
+    use std::os::windows::ffi::OsStrExt;
+    use windows_sys::Win32::UI::Shell::{
+        SHFileOperationW, FOF_ALLOWUNDO, FOF_NOCONFIRMATION, FOF_NOERRORUI, FOF_SILENT, FO_DELETE, SHFILEOPSTRUCTW,
+    };
+    let mut n = 0;
+    for f in files {
+        let mut from: Vec<u16> = f.as_os_str().encode_wide().collect();
+        from.extend([0, 0]);
+        let mut op: SHFILEOPSTRUCTW = unsafe { std::mem::zeroed() };
+        op.wFunc = FO_DELETE;
+        op.pFrom = from.as_ptr();
+        op.fFlags = (FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT | FOF_NOERRORUI) as u16;
+        let ok = unsafe { SHFileOperationW(&mut op) } == 0 && op.fAnyOperationsAborted == 0 && !f.exists();
+        if ok {
+            n += 1;
+        } else {
+            let name = f.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
+            errors.push(format!("{name}: kunne ikke lægges i papirkurven"));
+        }
+    }
+    n
+}
