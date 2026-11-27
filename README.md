@@ -184,6 +184,13 @@ design is `docs/superpowers/specs/2026-11-26-tidytag-tauri-design.md`.
 - **Phase 2:** writing tags in every format. The *Multi-fil-tag-editor* tab can now save. The
   writers are ports of 1.2's, and every file they write is byte for byte what 1.2 writes for the
   same edit.
+- **Phase 3:** the editing tools:
+  - the tag editor (*Rediger tag*, Enter or a double-click) and *Rediger flere filer*;
+  - copy and paste of tags, the field tools and the artist name tools;
+  - *Spornumre*, MP3 tag sync and *Fjern tags*;
+  - the cover tools, and pictures dragged onto the cover panels.
+
+  Removing tags is also byte for byte what 1.2 does.
 
 **Layout:**
 - `src-tauri/core/`: the engine, without UI. It holds the tag readers ported from the Pascal units,
@@ -221,17 +228,18 @@ cd src-tauri; cargo test --workspace
 Every file must read the same as in 1.2's `tagdump --json`.
 
 **Write cross-check.** After the corpus is made, let 1.2 run tagtest's three write scenarios on every
-file, then compare 2.0's result byte for byte after each step:
+file and then *Fjern tags* (step `s3`). Then compare 2.0's result byte for byte after each step:
 ```
 powershell -File tools\make-write-corpus.ps1
 $env:TIDYTAG_CORPUS = "$env:TEMP\tidytag-corpus"; cargo test -p tidytag-core --test golden_write
 ```
 `TIDYTAG_ONLY=mp3,flac` limits the run to some extensions. Both `bin\tagset.exe` (1.2) and
-`cargo run -p tidytag-core --bin tagset` (2.0) take `--scenario N <file>` as well as `field=value`
-arguments.
+`cargo run -p tidytag-core --bin tagset` (2.0) take `--scenario N <file>`, `--remove <file>` and
+`field=value` arguments.
 
 **Generated files.** `renderer/strings.js` comes from `languages/src/translations.json`, and
-`renderer/menudata.js` comes from 1.2's menus and texts in `src/mainform.pas`. Regenerate them with
+`renderer/menudata.js` comes from 1.2's menus and texts in `src/mainform.pas` and the dialog units.
+Regenerate them with
 `python tools\mkstrings.py` and `python tools\mkmenu.py`.
 
 ### TidyTag Companion (Android app)
