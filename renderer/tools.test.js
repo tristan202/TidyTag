@@ -72,3 +72,16 @@ test('track dialog statuses', () => {
   assert.strictEqual(RS[T.trackStatus(tr({ track: '1' }), '01')], 'Ændres');
   assert.ok(T.canWriteTags('C:/a/b.FLAC') && !T.canWriteTags('C:/a/b.dsf'));
 });
+
+test('drop targets follow 1.2', () => {
+  const C = require('./covers.js');
+  const a = tr({}, 'C:/m/a', '1.mp3'), b = tr({}, 'C:/m/b', '2.mp3');
+  const st = { items: [a, b], sel: new Set([a]), focus: 1, folder: 'C:/m' };
+  assert.deepStrictEqual(C.dropPlan('file', st), { kind: 'file', items: [a] }); // nothing checked: the selection
+  b.checked = true;
+  assert.deepStrictEqual(C.dropPlan('file', st), { kind: 'file', items: [b] }); // checked files win
+  assert.deepStrictEqual(C.dropPlan('folder', st), { kind: 'folder', dir: 'C:/m/b' }); // the focused file's folder
+  assert.deepStrictEqual(C.dropPlan('folder', { ...st, focus: -1 }), { kind: 'folder', dir: 'C:/m' });
+  assert.strictEqual(C.dropPlan('list', st), null);
+  assert.ok(C.isImageFile('x.JPEG') && !C.isImageFile('x.gif'));
+});

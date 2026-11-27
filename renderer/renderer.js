@@ -541,6 +541,23 @@
     selectionChanged();
   }
 
+  // ---------- cover tools and pictures dropped on the cover panels ----------
+  const covers = COVERS.actions({
+    state, requireTargets, startWrite, get, save, bool, navigate,
+    message: (text) => { state.message = text; updateStatus(); },
+    refreshCovers: () => { if (state.folder) showFolderCover(state.folder); showFileCover(); },
+  });
+  $('#file-cover').addEventListener('contextmenu', (ev) => { // 1.2's CoverPopup
+    ev.preventDefault();
+    MENU.popup([{ ref: 'aCoverAsFolder' }], ev.clientX, ev.clientY);
+  });
+  window.__TAURI__.webview.getCurrentWebview().onDragDropEvent((ev) => {
+    const p = ev.payload;
+    if (p.type !== 'drop' || document.querySelector('.modal-back')) return; // not behind a dialog
+    const el = document.elementFromPoint(p.position.x / devicePixelRatio, p.position.y / devicePixelRatio);
+    covers.drop(p.paths, el?.closest('#file-cover') ? 'file' : el?.closest('#folder-cover') ? 'folder' : 'list');
+  });
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -585,6 +602,12 @@
     aTracks: trackTools,
     aEdit: editTag,
     aMulti: multiEdit,
+    aCoverIn: covers.coverIn,
+    aCoverOut: covers.coverOut,
+    aCoverAsFolder: covers.coverAsFolder,
+    aResizeFiles: covers.resizeFiles,
+    aResizeFolders: covers.resizeFolders,
+    FActAutoResize: covers.toggleAutoResize,
   };
   const ENABLED = {
     aUp: () => !!state.folder,
@@ -597,6 +620,7 @@
     FActToolsPanel: () => state.view.tools, FActFolders: () => state.view.folders,
     FActAddress: () => state.view.address, FActFilter: () => state.view.filter, FActSubfolders: () => state.view.subfolders,
     FActKeepDate: () => bool('Editor', 'KeepTimestamp', false),
+    FActAutoResize: () => bool('Cover', 'AutoResize', false),
   };
   function showTab(i) {
     if (!state.view.tools) toggleView('tools', 'View', 'ToolsPanel');

@@ -45,6 +45,7 @@ fn main() {
             edit::cover_as_folder,
             edit::resize_file_covers_batch,
             edit::resize_folder_covers,
+            edit::path_kind,
             edit::read_image_file,
             edit::read_text_file,
             edit::write_file,

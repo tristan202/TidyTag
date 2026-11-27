@@ -28,6 +28,7 @@
     coverAsFolder: (path, replace) => invoke('cover_as_folder', { path, replace }),
     resizeFileCoversBatch: (paths, opt, batchId) => invoke('resize_file_covers_batch', { paths, opt, batchId }),
     resizeFolderCovers: (dirs, opt) => invoke('resize_folder_covers', { dirs, opt }),
+    pathKind: (path) => invoke('path_kind', { path }),
     readImageFile: (path) => invoke('read_image_file', { path }),
     readTextFile: (path) => invoke('read_text_file', { path }),
     writeFile: (path, data) => invoke('write_file', { path, data }),

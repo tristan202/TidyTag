@@ -224,6 +224,16 @@ pub async fn resize_folder_covers(dirs: Vec<String>, opt: CoverResize) -> Folder
     r
 }
 
+/// "dir", "file" or "none": a dropped folder opens it; an existing folder.jpg is asked about.
+#[tauri::command]
+pub async fn path_kind(path: String) -> &'static str {
+    match std::fs::metadata(&path) {
+        Ok(m) if m.is_dir() => "dir",
+        Ok(_) => "file",
+        Err(_) => "none",
+    }
+}
+
 /// A JPEG/PNG picture file of at most 16 MB. Errors: "notImage" or "tooLarge".
 fn read_image(path: &Path) -> Result<Cover, String> {
     let len = std::fs::metadata(path).map_err(|e| e.to_string())?.len();

@@ -84,7 +84,7 @@ PHASE1 = {'aRefresh', 'aExit', 'aSelAll', 'aSelNone', 'aChkSel', 'aUnchkSel', 'a
 PHASE = {'aEdit': 3, 'aMulti': 3, 'aCopy': 3, 'FActPaste': 3, 'aSwapAT': 3, 'aSwapAA': 3, 'aSwapLT': 3,
          'aSwap': 3, 'aCopyField': 3, 'aClean': 3, 'aRemoveTags': 3, 'aSync': 3, 'aTracks': 3,
          'aCoverIn': 3, 'aCoverOut': 3, 'aCoverAsFolder': 3, 'aResizeFiles': 3, 'aResizeFolders': 3,
-         'aDelFolderCover': 3, 'FActAutoResize': 3, 'aRenameFolder': 4, 'aRenameDlg': 4, 'aF2TDlg': 4,
+         'aDelFolderCover': 5, 'FActAutoResize': 3, 'aRenameFolder': 4, 'aRenameDlg': 4, 'aF2TDlg': 4,
          'FActUndo': 4, 'aRenameManual': 4, 'aWords': 4, 'FActManageActions': 4, 'aWeb': 6, 'aToken': 6,
          'aReplayGain': 7, 'aRemoveRG': 7, 'aAnalyze': 7, 'aConvertKeys': 7, 'aExport': 8,
          'aPhone': 9, 'aAddPhone': 9, 'aSettings': 10, 'aGenres': 10, 'FActKeepDate': 2}

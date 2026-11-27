@@ -714,7 +714,7 @@
    "hint": "Læg folder.jpg/cover.jpg/front.jpg (og .png) i papirkurven",
    "shortcut": "",
    "icon": "",
-   "phase": 3,
+   "phase": 5,
    "check": false
   },
   "aResizeFiles": {
