@@ -6886,5 +6886,13 @@
   "it": "OK",
   "sv": "OK",
   "es": "OK"
+ },
+ "Vent, til gemningen er færdig.": {
+  "en": "Please wait until saving has finished.",
+  "de": "Bitte warten, bis das Speichern abgeschlossen ist.",
+  "fr": "Veuillez patienter jusqu'à la fin de l'enregistrement.",
+  "it": "Attendi il termine del salvataggio.",
+  "sv": "Vänta tills sparandet är klart.",
+  "es": "Espera a que termine el guardado."
  }
 }

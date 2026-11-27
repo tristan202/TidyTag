@@ -43,7 +43,15 @@ pub fn update_file_tags(
     if let Some(c) = cover {
         set_front_cover(&mut full, c);
     }
-    write_audio_tags(&mut full, opt).map_err(|e| (e, false))?;
+    // a bug in a writer must not take the whole batch down: it becomes this file's error
+    let written = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| write_audio_tags(&mut full, opt)));
+    match written {
+        Ok(r) => r.map_err(|e| (e, false))?,
+        Err(_) => {
+            let _ = std::fs::remove_file(crate::fileio::temp_file_for(path));
+            return Err(("internal error while writing the file".into(), false));
+        }
+    }
     Ok(read_audio_info(path, false))
 }
 

@@ -135,24 +135,32 @@
   });
   // ---------- saving from the multi tab (1.2's ButtonMultiSaveClick / WriteFieldsBatch) ----------
   let writeWhat = '';
-  async function saveMulti(form) {
-    const { fields, cleared } = SAVE.multiValues(form);
-    if (!Object.keys(fields).length) return DIALOG.info(t(RS.rsSaetFluebenVedDeFelter));
-    if (!SAVE.canStartBatch(state)) return DIALOG.info(t(RS.rsVentVenligstTilAlleTags));
-    const { items } = SAVE.targets(state);
-    if (!items.length) return DIALOG.info(t(RS.rsAfkrydsEllerMarkerDeFiler));
-    if (!(await DIALOG.confirm(t(RS.rsGemTags), SAVE.confirmText(items.length, cleared)))) return;
-    writeWhat = t(RS.rsMultiFilTagEditor);
-    state.writing = true;
-    state.batchId += 1;
-    MENU.refresh();
-    try {
-      await API.writeTagsBatch(items.map((tr) => ({ path: tr.path, values: fields, cover: null })), state.batchId);
-    } catch (e) {
-      state.writing = false;
-      DIALOG.info(String(e));
-    }
+  function saveMulti(form) {
+    return SAVE.save(state, form, {
+      info: (text, title) => DIALOG.info(text, title),
+      confirm: (title, text) => DIALOG.confirm(title, text),
+      write: async (items) => {
+        writeWhat = t(RS.rsMultiFilTagEditor);
+        state.writing = true;
+        state.batchId += 1;
+        MENU.refresh();
+        try {
+          await API.writeTagsBatch(items, state.batchId);
+        } catch (e) {
+          state.writing = false;
+          DIALOG.info(String(e));
+        }
+      },
+    });
   }
+
+  // closing while a file is being written could stop an in-place write halfway
+  API.window().onCloseRequested((ev) => {
+    if (SAVE.canClose(state)) return;
+    ev.preventDefault();
+    DIALOG.info(t('Vent, til gemningen er færdig.'));
+  });
+
   API.on('write-progress', (msg) => {
     if (msg.batchId !== state.batchId) return;
     state.message = t(RS.rsSDAfD, writeWhat, msg.done, msg.total);

@@ -47,3 +47,39 @@ test('save is refused while scanning', () => {
   assert.strictEqual(SAVE.canStartBatch({ scanning: false, writing: true }), false);
   assert.strictEqual(SAVE.canStartBatch({ scanning: false, writing: false }), true);
 });
+
+test('a scan started while the confirm is open stops the save', async () => {
+  const a = tr({ name: 'a', checked: true });
+  const state = { items: [a], sel: new Set(), scanning: false, writing: false };
+  const calls = [];
+  const ui = {
+    info: async (text) => calls.push(['info', text]),
+    confirm: async () => { state.scanning = true; return true; }, // F5 pressed meanwhile
+    write: async () => calls.push(['write']),
+  };
+  await SAVE.save(state, { artist: { on: true, value: 'X' } }, ui);
+  assert.ok(!calls.some((c) => c[0] === 'write'), 'nothing may be written');
+});
+
+test('the save writes the targets after Ja', async () => {
+  const a = tr({ name: 'a', checked: true }), b = tr({ name: 'b' });
+  const state = { items: [a, b], sel: new Set(), scanning: false, writing: false };
+  let written = null;
+  await SAVE.save(state, { artist: { on: true, value: ' X ' } }, {
+    info: async () => {}, confirm: async () => true, write: async (items) => { written = items; },
+  });
+  assert.deepStrictEqual(written, [{ path: a.path, values: { artist: 'X' }, cover: null }]);
+});
+
+test('Enter answers with the focused button', () => {
+  const DIALOG_KEYS = require('./dialog.js');
+  assert.strictEqual(DIALOG_KEYS.keyAnswer('Enter', 1, 2), 1); // "Nej" has focus
+  assert.strictEqual(DIALOG_KEYS.keyAnswer('Enter', -1, 2), 0);
+  assert.strictEqual(DIALOG_KEYS.keyAnswer('Escape', 0, 2), 1);
+  assert.strictEqual(DIALOG_KEYS.keyAnswer('F5', 0, 2), null);
+});
+
+test('the window cannot close while saving', () => {
+  assert.strictEqual(SAVE.canClose({ writing: true }), false);
+  assert.strictEqual(SAVE.canClose({ writing: false }), true);
+});

@@ -292,6 +292,10 @@ pub fn write(path: &Path, info: &AudioInfo, _opt: &WriteOptions) -> Result<(), S
             size = ext_end - p;
         } else {
             if is_guid(&b, p, GUID_FILE_PROPS) {
+                // the reader needs 104 bytes too; a shorter one would put the file size elsewhere
+                if size < 24 + 80 {
+                    return Err("Ugyldigt ASF-objekt".into());
+                }
                 file_props_pos = 30 + objects.len() as i64;
             }
             objects.extend(&b[p as usize..(p + size) as usize]);
@@ -411,6 +415,29 @@ mod tests {
         let back = read_audio_info(&p, true);
         std::fs::remove_dir_all(dir).unwrap();
         (out, back)
+    }
+
+    #[test]
+    fn short_file_properties_is_an_error_not_a_panic() {
+        // a damaged header: File Properties is only 20 bytes
+        let mut objects = Vec::new();
+        object(&mut objects, GUID_FILE_PROPS, &[0u8; 20]);
+        let mut h = guid_bytes(GUID_HEADER).to_vec();
+        h.extend((30 + objects.len() as u64).to_le_bytes());
+        h.extend(1u32.to_le_bytes());
+        h.extend([1, 2]);
+        h.extend(objects);
+        h.extend(b"DATA");
+        let dir = std::env::temp_dir().join(format!("tidytag-asfw-short-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let p = dir.join("a.wma");
+        std::fs::write(&p, &h).unwrap();
+        let mut values = std::collections::BTreeMap::new();
+        values.insert(TagField::Title, "x".to_string());
+        let r = crate::batch::update_file_tags(&p, &values, None, &WriteOptions::default());
+        assert!(matches!(r, Err((_, false))));
+        assert_eq!(std::fs::read(&p).unwrap(), h);
+        std::fs::remove_dir_all(dir).unwrap();
     }
 
     #[test]

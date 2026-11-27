@@ -38,5 +38,24 @@
   // from: CanStartBatch (1.2 also refuses while tags are being read)
   const canStartBatch = (state) => !state.scanning && !state.writing;
 
-  return { targets, multiValues, confirmText, doneText, canStartBatch };
+  // closing while a file is being written could stop an in-place write halfway
+  const canClose = (state) => !state.writing;
+
+  /** The multi tab's Gem tags, as ButtonMultiSaveClick. `ui` = { info(text, title), confirm(title, text),
+   *  write(items) }. Everything is checked again after the question: the window is not blocked
+   *  while it is open (F5 can start reading the folder). */
+  async function save(state, form, ui) {
+    const { fields, cleared } = multiValues(form);
+    if (!Object.keys(fields).length) return ui.info(t(RS.rsSaetFluebenVedDeFelter));
+    if (!canStartBatch(state)) return ui.info(t(RS.rsVentVenligstTilAlleTags));
+    const { items } = targets(state);
+    if (!items.length) return ui.info(t(RS.rsAfkrydsEllerMarkerDeFiler));
+    if (!(await ui.confirm(t(RS.rsGemTags), confirmText(items.length, cleared)))) return;
+    if (!canStartBatch(state)) return ui.info(t(RS.rsVentVenligstTilAlleTags));
+    const now = targets(state).items.filter((tr) => items.includes(tr));
+    if (!now.length) return ui.info(t(RS.rsAfkrydsEllerMarkerDeFiler));
+    return ui.write(now.map((tr) => ({ path: tr.path, values: fields, cover: null })));
+  }
+
+  return { targets, multiValues, confirmText, doneText, canStartBatch, canClose, save };
 });

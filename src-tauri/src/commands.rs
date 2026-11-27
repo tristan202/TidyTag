@@ -255,6 +255,14 @@ pub fn write_tags_batch(app: AppHandle, state: State<WriteState>, items: Vec<Wri
     }
     let busy = state.0.clone();
     std::thread::spawn(move || {
+        // "busy" is cleared however this thread ends
+        struct Release(Arc<AtomicBool>);
+        impl Drop for Release {
+            fn drop(&mut self) {
+                self.0.store(false, Ordering::SeqCst);
+            }
+        }
+        let _release = Release(busy);
         let opt = write_options();
         let total = items.len();
         let mut done = WriteDone { batch_id, saved: 0, failed: 0, skipped: 0, errors: Vec::new(), tracks: Vec::new() };
@@ -277,7 +285,6 @@ pub fn write_tags_batch(app: AppHandle, state: State<WriteState>, items: Vec<Wri
                 }
             }
         }
-        busy.store(false, Ordering::SeqCst);
         let _ = app.emit("write-done", done);
     });
     Ok(())
