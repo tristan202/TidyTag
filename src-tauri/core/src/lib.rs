@@ -4,6 +4,7 @@ pub mod batch;
 pub mod cover;
 pub mod dirs;
 pub mod dump;
+pub mod filename_tags;
 pub mod fileio;
 pub mod id3sync;
 pub mod model;

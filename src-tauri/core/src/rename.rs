@@ -155,15 +155,15 @@ fn win_case(u: Vec<u16>, upper: bool) -> Vec<u16> {
         .collect()
 }
 
-fn utf16(s: &str) -> Vec<u16> {
+pub(crate) fn utf16(s: &str) -> Vec<u16> {
     s.encode_utf16().collect()
 }
 
-fn from16(u: &[u16]) -> String {
+pub(crate) fn from16(u: &[u16]) -> String {
     String::from_utf16_lossy(u)
 }
 
-fn lower16(u: &[u16]) -> Vec<u16> {
+pub(crate) fn lower16(u: &[u16]) -> Vec<u16> {
     win_case(u.to_vec(), false)
 }
 
@@ -190,7 +190,7 @@ fn is_delim(c: u8) -> bool {
 }
 
 // from: ExtractFileDir (FPC: keeps the delimiter right after a drive)
-fn extract_file_dir(p: &str) -> String {
+pub(crate) fn extract_file_dir(p: &str) -> String {
     let b = p.as_bytes();
     let mut i = b.iter().rposition(|&c| is_delim(c) || c == b':').map(|x| x + 1).unwrap_or(0);
     if i > 1 && is_delim(b[i - 1]) && !(is_delim(b[i - 2]) || b[i - 2] == b':') {
@@ -200,13 +200,13 @@ fn extract_file_dir(p: &str) -> String {
 }
 
 // from: ExtractFileName
-fn extract_file_name(p: &str) -> &str {
+pub(crate) fn extract_file_name(p: &str) -> &str {
     let i = p.as_bytes().iter().rposition(|&c| is_delim(c) || c == b':').map(|x| x + 1).unwrap_or(0);
     &p[i..]
 }
 
 // from: ExtractFileExt — '.mp3', or '' when the name has no dot
-fn extract_file_ext(p: &str) -> &str {
+pub(crate) fn extract_file_ext(p: &str) -> &str {
     let name = extract_file_name(p);
     match name.rfind('.') {
         Some(i) => &name[i..],
