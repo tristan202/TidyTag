@@ -191,6 +191,17 @@ design is `docs/superpowers/specs/2026-11-26-tidytag-tauri-design.md`.
   - the cover tools, and pictures dragged onto the cover panels.
 
   Removing tags is also byte for byte what 1.2 does.
+- **Phase 4:** renaming:
+  - files from tags (the *Omdøb filer* tab and its preview dialog);
+  - tags from the file name (the tab and its preview dialog);
+  - folders from tags;
+  - one file or folder by hand (F6);
+  - rename actions, word replacements and the mask editor;
+  - undo (Ctrl+Z).
+
+  The rename engine gives the same names as 1.2 for every case in the rename cross-check. One
+  difference is deliberate: 1.2 turns characters outside Windows-1252 (such as 漢字) into `?` and
+  then cannot rename the file, while 2.0 keeps them.
 
 **Layout:**
 - `src-tauri/core/`: the engine, without UI. It holds the tag readers ported from the Pascal units,
@@ -236,6 +247,14 @@ $env:TIDYTAG_CORPUS = "$env:TEMP\tidytag-corpus"; cargo test -p tidytag-core --t
 `TIDYTAG_ONLY=mp3,flac` limits the run to some extensions. Both `bin\tagset.exe` (1.2) and
 `cargo run -p tidytag-core --bin tagset` (2.0) take `--scenario N <file>`, `--remove <file>` and
 `field=value` arguments.
+
+**Rename cross-check.** 1.2's `bin\renamedump.exe` writes what its rename engine makes of every
+corpus file (file and folder masks in all case modes, and tags from file name). 2.0 must give the
+same:
+```
+powershell -File tools\make-rename-corpus.ps1
+$env:TIDYTAG_CORPUS = "$env:TEMP\tidytag-corpus"; cargo test -p tidytag-core --test golden_rename
+```
 
 **Generated files.** `renderer/strings.js` comes from `languages/src/translations.json`, and
 `renderer/menudata.js` comes from 1.2's menus and texts in `src/mainform.pas` and the dialog units.
