@@ -25,8 +25,9 @@ $n = 0
 foreach ($f in Get-ChildItem $files -File) {
   $copy = Join-Path $work $f.Name
   Copy-Item -LiteralPath $f.FullName $copy
-  foreach ($s in 0, 1, 2) {
-    $msg = & $tagset --scenario $s $copy 2>&1 | Out-String
+  foreach ($s in 0, 1, 2, 3) {
+    if ($s -eq 3) { $msg = & $tagset --remove $copy 2>&1 | Out-String }
+    else { $msg = & $tagset --scenario $s $copy 2>&1 | Out-String }
     $target = Join-Path $out ("{0}.s{1}" -f $f.Name, $s)
     if ($LASTEXITCODE -eq 0) { Copy-Item -LiteralPath $copy $target }
     else { [IO.File]::WriteAllText("$target.err", ($msg.Trim() -replace '^FEJL: ', ''), (New-Object Text.UTF8Encoding $false)) }

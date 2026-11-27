@@ -1,5 +1,5 @@
 //! Write cross-check against TidyTag 1.2: every corpus file goes through tagtest's scenarios
-//! 0, 1 and 2 with 2.0's writers, and after each step must be byte for byte what 1.2 wrote
+//! 0, 1 and 2 with 2.0's writers, then Remove all tags as step 3, and after each step must be byte for byte what 1.2 wrote
 //! ($TIDYTAG_CORPUS\written\<name>.s<N>, made by tools\make-write-corpus.ps1), or give the same
 //! error text (<name>.s<N>.err).
 
@@ -7,6 +7,7 @@ use std::path::Path;
 use tidytag_core::dump::json_record;
 use tidytag_core::read::read_audio_info;
 use tidytag_core::scenario;
+use tidytag_core::tagremove::remove_all_tags;
 use tidytag_core::write::{write_audio_tags, WriteOptions};
 
 #[test]
@@ -32,12 +33,14 @@ fn golden_write_matches_tidytag_1_2() {
         }
         let copy = work.join(&name);
         std::fs::copy(&src, &copy).unwrap();
-        for s in 0..3u8 {
+        for s in 0..4u8 {
             steps += 1;
             let expected = corpus.join("written").join(format!("{name}.s{s}"));
             let expected_err = corpus.join("written").join(format!("{name}.s{s}.err"));
             let mut info = read_audio_info(&copy, true);
-            let result = if info.error.is_empty() {
+            let result = if s == 3 {
+                remove_all_tags(&copy, &WriteOptions::default())
+            } else if info.error.is_empty() {
                 scenario::apply(&mut info, s);
                 write_audio_tags(&mut info, &WriteOptions::default())
             } else {
