@@ -159,6 +159,13 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); margi
 .list-msg { position: absolute; top: 60px; left: 0; right: 0; text-align: center; color: var(--muted); }
 
 /* ---------- status bar ---------- */
+/* ---------- genre list, keyboard shortcuts ---------- */
+.modal.genre-form { max-width: 600px; width: 560px; }
+.genres { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.genre-list { height: 320px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 8px; display: flex; flex-direction: column; }
+.genre-memo { width: 100%; height: 352px; resize: none; box-sizing: border-box; }
+.keys-text { font: inherit; white-space: pre; tab-size: 16; margin: 0 0 16px; max-height: 60vh; overflow: auto; }
+
 /* ---------- the player (1.2's PanelPlayer, above the status bar) ---------- */
 #playerbar { gap: 4px; padding: 3px 10px; border-top: 1px solid var(--border); background: var(--panel); }
 #playerbar[hidden] { display: none; }

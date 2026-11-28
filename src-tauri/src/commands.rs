@@ -408,6 +408,12 @@ pub fn write_tags_batch(app: AppHandle, state: State<WriteState>, items: Vec<Wri
 
 /// 1.2's GenreList: the ID3 genres minus [HiddenGenres], plus [CustomGenres], sorted and
 /// without duplicates, both case-insensitively.
+/// The standard ID3 genres, for the genre list dialog.
+#[tauri::command]
+pub fn standard_genres() -> Vec<String> {
+    tidytag_core::text::id3_genres().iter().map(|g| g.to_string()).collect()
+}
+
 #[tauri::command]
 pub fn genre_list() -> Vec<String> {
     let ini = Ini::load(&settings_path()).ok();

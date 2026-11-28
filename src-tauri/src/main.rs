@@ -74,6 +74,7 @@ fn main() {
             commands::write_tags_batch,
             commands::write_cancel,
             commands::genre_list,
+            commands::standard_genres,
             edit::read_tag,
             edit::save_tag,
             edit::remove_tags_batch,

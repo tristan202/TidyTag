@@ -262,5 +262,7 @@
     updatePreview: schedulePreview,
     /** after a dialog changed masks/options, or the undo log changed */
     reload: (settings) => { if (settings) S = settings; render(); },
+    // from: RefreshGenreCombos
+    refreshGenres() { API.genreList().then((g) => { genres = g; if (tab === 1) render(); }); },
   };
 })();

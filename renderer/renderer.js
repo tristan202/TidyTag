@@ -1210,6 +1210,33 @@
     ];
   }
 
+  // ---------- genre list, keyboard shortcuts, about ----------
+  // from: ActGenresExecute
+  async function editGenres() {
+    const [standard, hiddenRows, customRows] = await Promise.all([API.standardGenres(), API.settingsSection('HiddenGenres'), API.settingsSection('CustomGenres')]);
+    const cur = GENRES.fromIni(hiddenRows, customRows);
+    const r = await GENRES.open(standard, cur.hidden, cur.custom);
+    if (!r) return;
+    const ini = GENRES.toIni(r.hidden, r.custom);
+    await API.settingsWriteSection('HiddenGenres', ini.HiddenGenres);
+    await API.settingsWriteSection('CustomGenres', ini.CustomGenres);
+    PANEL.refreshGenres();
+  }
+  // from: ActShortcutsExecute — the text is laid out with tabs
+  function showShortcuts() {
+    const m = FORMS.modal(`<h2>${esc(t(RS.rsTastaturgenveje))}</h2><pre class="keys-text">${esc(t(RS.rsEnterDobbeltklikRedigerTagFor))}</pre>
+      <div class="modal-buttons"><span class="grow"></span><button class="btn primary" data-ok>${esc(label(t('OK')))}</button></div>`,
+    { cls: 'form wide', onEscape: () => m.close(), onEnter: () => m.close() });
+    m.el.querySelector('[data-ok]').addEventListener('click', () => m.close());
+    m.el.querySelector('[data-ok]').focus();
+  }
+  // from: ActAboutExecute
+  async function showAbout() {
+    const info = await API.appInfo();
+    DIALOG.info([t(RS.rsTidytagTagEditorOgMusikorganisator), t(RS.rsVersion, info.version), 'https://github.com/tristan202/TidyTag', '',
+      t(RS.rsWebDataMusicbrainzMusicbrainzOrg), '', t(RS.rsIndstillinger2) + info.settingsFile].join('\n'), t(RS.rsOmTidytag2));
+  }
+
   // from: SavePlaylistDialog — the playlist's folder from the settings when it exists
   async function playlistDir(items) {
     const pl = get('Playlist', 'Folder', '');
@@ -1325,6 +1352,9 @@
     aPlChecked: () => savePlaylistDialog(SAVE.targets(state).items),
     aPlAll: () => savePlaylistDialog(state.items),
     aQuickPlaylist: quickPlaylist,
+    aGenres: editGenres,
+    aKeys: showShortcuts,
+    aAbout: showAbout,
   };
   const ENABLED = {
     aUp: () => !!state.folder,

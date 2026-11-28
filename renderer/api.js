@@ -17,6 +17,7 @@
     writeTagsBatch: (items, batchId) => invoke('write_tags_batch', { items, batchId }),
     writeCancel: () => invoke('write_cancel'),
     genreList: () => invoke('genre_list'),
+    standardGenres: () => invoke('standard_genres'),
     // phase 3 (src-tauri/src/edit.rs)
     readTag: (path) => invoke('read_tag', { path }),
     saveTag: (path, fields, pictures) => invoke('save_tag', { path, fields, pictures }),
