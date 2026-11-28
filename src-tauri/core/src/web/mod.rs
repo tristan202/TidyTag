@@ -2,6 +2,7 @@
 // from: musicbrainz.pas (the records are shared by both sources, as in 1.2)
 
 pub mod discogs;
+pub mod http;
 pub mod musicbrainz;
 
 use serde::Serialize;
