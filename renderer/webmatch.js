@@ -142,6 +142,11 @@
     return { groups, albumMode: allTagged && groups.every((g) => g.length >= 2) };
   }
 
+  /** A batch lookup goes on to the next files when it wrote anything: tags/covers in the
+   *  files, or folder covers (only "Cover som folder.jpg" chosen writes no file). */
+  // from: ButtonWriteClick (FBatch and (Saved > 0))
+  const lookupWritten = (saved, folders) => saved > 0 || folders > 0;
+
   /** [files, folders, files with an album name, different album names] for rsWebBatchOversigt;
    *  folders and albums compare case-insensitively, as 1.2's sorted TStringLists. */
   // from: RunWebBatch
@@ -165,5 +170,5 @@
     return out;
   }
 
-  return { normTitle, matchFilesToTracks, moveFile, pairs, applyTrack, options, commonValue, batchGroups, batchSummary, folderCoverDirs };
+  return { normTitle, matchFilesToTracks, moveFile, pairs, applyTrack, options, commonValue, batchGroups, batchSummary, lookupWritten, folderCoverDirs };
 });

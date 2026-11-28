@@ -27,7 +27,7 @@
       const isBatch = !!batch && batch.count > 1;
       const web = host.web();
       const flag = (k) => { const v = web[k.toLowerCase()]; return v === undefined || v === '' ? !!DEFAULTS[k] : !['0', 'false'].includes(String(v).toLowerCase()); };
-      let releases = [], detail = null, rows = [], cover = null, busy = false, selRow = -1, relIndex = -1, changed = false;
+      let releases = [], relSource = 0, detail = null, rows = [], cover = null, busy = false, selRow = -1, relIndex = -1, changed = false;
       let token = host.token();
 
       // from: ExecuteBatch — the search fields from the files' common values
@@ -74,7 +74,7 @@
       // from: SetBusy
       function setBusy(v) {
         busy = v;
-        for (const s of ['[data-search]', '[data-up]', '[data-down]']) q(s).disabled = v;
+        for (const s of ['[data-search]', '[data-up]', '[data-down]', '[name="source"]']) q(s).disabled = v;
         q('[data-write]').disabled = v || !detail;
         m.el.querySelectorAll('.web-releases tbody tr').forEach((r) => r.classList.toggle('off', v));
         document.body.style.cursor = v ? 'progress' : '';
@@ -124,10 +124,12 @@
       async function search() {
         if (busy) return;
         const songTitle = q('[name="title"]').value.trim();
-        const r = await job(() => API.webSearch(source(), q('[name="artist"]').value.trim(), q('[name="album"]').value.trim(), songTitle),
+        const src = source();
+        const r = await job(() => API.webSearch(src, q('[name="artist"]').value.trim(), q('[name="album"]').value.trim(), songTitle),
           t(RS.rsSoegerPaa) + sourceName() + '...');
         if (!r.ok) return;
         releases = r.value;
+        relSource = src; // the releases belong to the service that found them
         relIndex = -1;
         detail = null;
         showReleases();
@@ -147,7 +149,7 @@
         detail = null;
         cover = null;
         showCover();
-        const r = await job(() => API.webRelease(source(), releases[i].id), t(RS.rsHenterSporliste));
+        const r = await job(() => API.webRelease(relSource, releases[i].id), t(RS.rsHenterSporliste));
         if (!r.ok || relIndex !== i) return;
         detail = r.value;
         const match = WEBMATCH.matchFilesToTracks(items, detail, releases[i].hitDisc, releases[i].hitPosition);
@@ -156,7 +158,7 @@
         showTracks();
         const text = t({ title: RS.rsFilerneErParretEfterTitler, hit: RS.rsFilenErParretMedSangen, number: RS.rsFilerneErParretEfterDeres }[match.method]
           || RS.rsFilerneErParretIListens);
-        const c = await job(() => API.webCover(source(), detail.release.id, detail.release.releaseGroupId, detail.coverUrl), text);
+        const c = await job(() => API.webCover(relSource, detail.release.id, detail.release.releaseGroupId, detail.coverUrl), text);
         if (relIndex !== i) return;
         cover = c.ok ? c.value : null;
         showCover();
@@ -237,7 +239,7 @@
         }
         status(t(RS.rsGemtIDFilerD, saved, failed, skipped) + (folders > 0 ? t(RS.rsCoverGemtIDMapper, folders) : ''));
         if (errors.length) await DIALOG.info(errors.slice(0, 20).join('\n'), t(RS.rsBemaerk));
-        if (isBatch && saved > 0) close('written'); // on to the next files
+        if (isBatch && WEBMATCH.lookupWritten(saved, folders)) close('written'); // on to the next files
       }
 
       // from: FormCloseQuery — a running web call finishes on its own; wait for it

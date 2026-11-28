@@ -25,3 +25,11 @@ test('dialogs never use the menu bar\'s data-act attribute', () => {
     assert.ok(!/data-act\b/.test(fs.readFileSync(require('node:path').join(__dirname, f), 'utf8')), f);
   }
 });
+
+test('the web lookup cannot switch source while a call runs, and loads releases from their own source', () => {
+  // switching mid-search sent MusicBrainz ids to Discogs
+  const src = require('node:fs').readFileSync(require('node:path').join(__dirname, 'weblookup.js'), 'utf8');
+  const setBusy = src.slice(src.indexOf('function setBusy'), src.indexOf('async function job'));
+  assert.match(setBusy, /\[name="source"\]/);
+  assert.match(src, /API\.webRelease\(relSource,/);
+});

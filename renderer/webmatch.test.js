@@ -119,3 +119,9 @@ test('folder cover once per folder, never over an existing one', () => {
   const rows = [{ trackIdx: 0, fileIdx: 0 }, { trackIdx: -1, fileIdx: 1 }, { trackIdx: 1, fileIdx: 2 }, { trackIdx: 2, fileIdx: -1 }];
   assert.deepStrictEqual(W.folderCoverDirs(rows, f), ['C:\\a', 'C:\\b']);
 });
+
+test('a batch lookup moves on when anything was written, folder covers too', () => {
+  assert.ok(W.lookupWritten(2, 0));
+  assert.ok(W.lookupWritten(0, 1)); // only "Cover som folder.jpg" chosen
+  assert.ok(!W.lookupWritten(0, 0));
+});
