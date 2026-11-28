@@ -16,6 +16,7 @@ pub mod scan;
 pub mod scenario;
 pub mod settings;
 pub mod tagremove;
+pub mod web;
 pub mod tags;
 pub mod text;
 pub mod write;
