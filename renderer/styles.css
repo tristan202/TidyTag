@@ -160,19 +160,21 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); margi
 
 /* ---------- status bar ---------- */
 /* ---------- web lookup (1.2's TFormWebLookup) ---------- */
-.modal.web-lookup { width: 1060px; max-width: 96vw; display: flex; flex-direction: column; gap: 8px; }
+.modal.web-lookup { width: 1060px; max-width: 96vw; height: min(760px, 94vh); overflow: hidden; display: flex; flex-direction: column; gap: 8px; }
+.modal.web-lookup > * { flex-shrink: 0; }
 .web-search { flex-wrap: wrap; gap: 6px; }
 .web-search .input { width: 190px; }
-.web-releases { height: 190px; }
+.track-list.web-releases { height: 170px; }
 .web-releases tr, .web-tracks tr { cursor: default; }
 .web-releases tr.sel td, .web-tracks tr.sel td { background: color-mix(in srgb, var(--accent) 28%, transparent); }
 .web-releases tr.off { opacity: .6; }
-.web-mid { display: flex; gap: 12px; align-items: flex-start; }
-.web-tracks-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
-.web-tracks { height: 300px; }
+.modal.web-lookup > .web-mid { flex: 1 1 auto; min-height: 0; }
+.web-mid { display: flex; gap: 12px; align-items: stretch; }
+.web-tracks-col { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 6px; }
+.track-list.web-tracks { flex: 1; min-height: 100px; height: auto; }
 .web-tracks td.muted { color: var(--muted); font-style: italic; }
-.web-side { width: 250px; display: flex; flex-direction: column; gap: 6px; }
-.web-cover { width: 180px; height: 180px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); display: grid; place-items: center; overflow: hidden; }
+.web-side { width: 250px; display: flex; flex-direction: column; gap: 6px; overflow: auto; }
+.web-cover { flex-shrink: 0; width: 180px; height: 180px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); display: grid; place-items: center; overflow: hidden; }
 .web-cover img { max-width: 100%; max-height: 100%; }
 .web-side .chk-label.sub { margin-left: 20px; }
 .web-status { flex: 1; text-align: left !important; }

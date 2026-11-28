@@ -63,7 +63,7 @@
           ${isBatch ? `<button class="btn" data-skip>${esc(label(t(RS.rsSpringOver)))}</button>` : ''}
           <button class="btn primary" data-write disabled>${esc(label(t(RS.rsSkrivTags)))}</button>
           <button class="btn" data-close>${esc(label(t(isBatch ? RS.rsStop : 'Luk')))}</button></div>`,
-      { cls: 'wide web-lookup', onEscape: () => close('stopped'), onEnter: () => search() });
+      { cls: 'web-lookup', onEscape: () => close('stopped'), onEnter: () => search() });
       const q = (s) => m.el.querySelector(s);
       const source = () => Number(q('[name="source"]').value);
       const sourceName = () => SOURCES[source()];
