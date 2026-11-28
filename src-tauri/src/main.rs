@@ -4,6 +4,7 @@
 mod commands;
 mod edit;
 mod rename;
+mod player;
 mod shell;
 
 use tauri::Manager;
