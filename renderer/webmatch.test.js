@@ -105,6 +105,14 @@ test('batch groups by folder and album', () => {
   assert.strictEqual(W.commonValue([t('C:\\a', 'X'), t('C:\\b', 'Y')], 'album'), '');
 });
 
+test('batch summary counts files, folders, tagged files and albums', () => {
+  const t = (folder, album) => ({ path: folder + '\\x.mp3', folder, fields: { album } });
+  const items = [t('C:\\a', 'X'), t('C:\\a', 'x'), t('C:\\a', 'Y'), t('C:\\B', 'Y'), t('C:\\B', '')];
+  assert.deepStrictEqual(W.batchSummary(items), [5, 2, 4, 2]);
+  // one album of a single file: not the album guess
+  assert.ok(!W.batchGroups([t('C:\\a', 'X'), t('C:\\a', 'X'), t('C:\\b', 'Z')]).albumMode);
+});
+
 test('folder cover once per folder, never over an existing one', () => {
   // every listed file's folder counts (1.2 walks the rows with a file), once, case-insensitive
   const f = [{ folder: 'C:\\a' }, { folder: 'C:\\b' }, { folder: 'c:\\A' }];

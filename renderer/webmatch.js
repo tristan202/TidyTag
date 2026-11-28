@@ -142,6 +142,15 @@
     return { groups, albumMode: allTagged && groups.every((g) => g.length >= 2) };
   }
 
+  /** [files, folders, files with an album name, different album names] for rsWebBatchOversigt;
+   *  folders and albums compare case-insensitively, as 1.2's sorted TStringLists. */
+  // from: RunWebBatch
+  function batchSummary(items) {
+    const folders = new Set(items.map((tr) => tr.folder.toLowerCase()));
+    const albums = items.map((tr) => (tr.fields.album || '').trim()).filter(Boolean);
+    return [items.length, folders.size, albums.length, new Set(albums.map((a) => a.toLowerCase())).size];
+  }
+
   /** The folders that get folder.jpg: every row with a file, once per folder (case-insensitive). */
   // from: ButtonWriteClick (DoneDirs)
   function folderCoverDirs(rows, files) {
@@ -156,5 +165,5 @@
     return out;
   }
 
-  return { normTitle, matchFilesToTracks, moveFile, pairs, applyTrack, options, commonValue, batchGroups, folderCoverDirs };
+  return { normTitle, matchFilesToTracks, moveFile, pairs, applyTrack, options, commonValue, batchGroups, batchSummary, folderCoverDirs };
 });

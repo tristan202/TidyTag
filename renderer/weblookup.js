@@ -215,7 +215,8 @@
           status(t(RS.rsSkriver) + '...');
           const batchItems = pairs.map((p) => ({ path: items[p.fileIdx].path, values: WEBMATCH.applyTrack(detail, p.trackIdx, opt),
             cover: opt.coverTags && cover ? cover.data : null }));
-          if (batchItems.length) {
+          // only folder.jpg chosen: nothing to change in the files themselves
+          if (batchItems.length && (opt.fields.size || (opt.coverTags && cover))) {
             const msg = await host.write(batchItems);
             if (msg) {
               ({ saved, failed, skipped } = msg);

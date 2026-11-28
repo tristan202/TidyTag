@@ -12,7 +12,7 @@
   // ---------- settings (same file and keys as 1.2) ----------
   const SECTIONS = ['Main', 'Editor', 'View', 'Rename', 'FileToTag', 'RenameMasks', 'FileToTagMasks', 'AddressHistory', 'Favorites',
     'Tracks', 'Cover', 'RenameFolder', 'FolderMasks', 'RenameReplace', 'RenameKeepCase', 'RenameActions', 'SavedRenameMasks',
-    'Player', 'Playlist', 'Players', 'ExtraPlayers'];
+    'Player', 'Playlist', 'Players', 'ExtraPlayers', 'Web'];
   const S = {};
   async function loadSettings() {
     await Promise.all(SECTIONS.map(async (sec) => {
@@ -1001,11 +1001,13 @@
   });
 
   // ---------- folders ----------
-  /** InputQuery: one text field; resolves to the text or null. */
-  function askText(title, prompt) {
+  /** InputQuery: one text field (password: masked, as InputQuery(..., True, ...)); resolves to
+   *  the text or null. */
+  function askText(title, prompt, { value = '', password = false } = {}) {
     return new Promise((resolve) => {
-      const m = FORMS.modal(`<h2>${esc(title)}</h2><div class="lbl">${esc(prompt)}</div>
-        <div class="frow"><input class="input grow" name="v" spellcheck="false"></div>
+      const m = FORMS.modal(`<h2>${esc(title)}</h2><div class="lbl modal-text">${esc(prompt)}</div>
+        <div class="frow"><input class="input grow" name="v" spellcheck="false" autocomplete="off"
+          type="${password ? 'password' : 'text'}" value="${esc(value)}"></div>
         <div class="modal-buttons"><span class="grow"></span><button class="btn primary" data-ok>${esc(label(t('OK')))}</button>
           <button class="btn" data-cancel>${esc(label(t('Annuller')))}</button></div>`,
       { cls: 'form wide', onEscape: () => done(null), onEnter: () => done(field.value) });
@@ -1016,8 +1018,99 @@
         else if (e.target.closest('[data-cancel]')) done(null);
       });
       field.focus();
+      field.select();
     });
   }
+
+  // ---------- web lookup (phase 6) ----------
+  // from: ActDiscogsTokenExecute — the token stays in the settings file; null = Annuller
+  async function editToken() {
+    const cur = (await API.settingsGet('Discogs', 'Token')) || '';
+    const v = await askText('Discogs-token', t(RS.rsLavEtPersonligtTokenPaa), { value: cur, password: true });
+    if (v === null) return null;
+    await API.settingsSet('Discogs', 'Token', v.trim());
+    return v.trim();
+  }
+  async function tokenAction() {
+    const v = await editToken();
+    if (v === null) return;
+    state.message = t(v ? RS.rsDiscogsTokenGemt : RS.rsDiscogsTokenFjernet);
+    updateStatus();
+  }
+  function webHost() {
+    return {
+      web: () => S.web || {},
+      saveWeb: (k, v) => save('Web', k, v),
+      token: () => '', // read again below; the dialog only needs to know whether one is set
+      editToken,
+      keepDate: () => bool('Editor', 'KeepTimestamp', false),
+      setKeepDate: (on) => { if (on !== bool('Editor', 'KeepTimestamp', false)) save('Editor', 'KeepTimestamp', on ? 1 : 0); MENU.refresh(); },
+      write: (items) => startWrite(t(RS.rsWebOpslagTitel), (id) => API.writeTagsBatch(items, id), { quiet: true }),
+      pathKind: (p) => API.pathKind(p),
+      writeFile: (p, data) => API.writeFile(p, data),
+    };
+  }
+  // from: ActWebExecute
+  async function webLookup() {
+    if (!SAVE.canStartBatch(state) || !state.items.length) return;
+    let { items } = SAVE.targets(state);
+    if (items.length > 1) return webBatch(items);
+    if (!items.length) {
+      // nothing ticked or selected: the whole list if it is one album folder
+      items = state.items.slice();
+      if (!items.every((tr) => samePath(tr.folder, items[0].folder))) return DIALOG.info(t(RS.rsAfkrydsEllerMarkerFilerneFra));
+    }
+    await openLookup(items, null);
+  }
+  async function openLookup(items, batch) {
+    const host = webHost();
+    const tok = (await API.settingsGet('Discogs', 'Token')) || '';
+    host.token = () => tok.trim();
+    const r = await WEBLOOKUP.open(items, { batch, host });
+    renderRows();
+    selectionChanged();
+    return r.result;
+  }
+  // from: RunWebBatch — one lookup per album (folder + album name) or per file, one after the other
+  async function webBatch(items) {
+    let { groups, albumMode } = WEBMATCH.batchGroups(items);
+    const mode = await askLookupMode(t(RS.rsWebBatchOversigt, ...WEBMATCH.batchSummary(items)), albumMode);
+    if (mode === null) return;
+    if (!mode) groups = items.map((tr) => [tr]);
+    let written = 0, skipped = 0;
+    for (let g = 0; g < groups.length; g++) {
+      const res = await openLookup(groups[g], groups.length > 1 ? { pos: g + 1, count: groups.length } : null);
+      if (groups.length === 1) { written += 1; break; }
+      if (res === 'written') written += 1;
+      else if (res === 'skipped') skipped += 1;
+      else break;
+    }
+    if (groups.length > 1) {
+      state.message = t(RS.rsWebBatchResultat, written, skipped, groups.length);
+      updateStatus();
+    }
+  }
+  // from: AskLookupMode — true: one lookup per album; false: per file; null: Annuller
+  function askLookupMode(summary, albumMode) {
+    const U = { ...RS, ...MENUDATA.unitRs.tooldialogs };
+    return new Promise((resolve) => {
+      const m = FORMS.modal(`<h2>${esc(t(U.rsWebOpslagTitel))}</h2><div class="lbl">${esc(summary)}</div>
+        <fieldset class="radio-group"><legend>${esc(t(U.rsAlbumEllerLoeseSange))}</legend>
+          <label class="chk-label"><input type="radio" name="mode" value="1"${albumMode ? ' checked' : ''}> ${esc(t(U.rsOpslagPrAlbum))}</label>
+          <label class="chk-label"><input type="radio" name="mode" value="0"${albumMode ? '' : ' checked'}> ${esc(t(U.rsOpslagPrFil))}</label></fieldset>
+        <p class="notes">${esc(t(U.rsOpslagHjaelp))}</p>
+        <div class="modal-buttons"><span class="grow"></span><button class="btn primary" data-ok>${esc(label(t('OK')))}</button>
+          <button class="btn" data-cancel>${esc(label(t('Annuller')))}</button></div>`,
+      { cls: 'form wide', onEscape: () => done(null), onEnter: () => ok() });
+      const done = (v) => { m.close(); resolve(v); };
+      const ok = () => done(m.el.querySelector('[name="mode"]:checked').value === '1');
+      m.el.addEventListener('click', (e) => {
+        if (e.target.closest('[data-ok]')) ok();
+        else if (e.target.closest('[data-cancel]')) done(null);
+      });
+    });
+  }
+
   // from: ActNewFolderExecute
   async function newFolder() {
     if (!state.folder) return;
@@ -1356,6 +1449,9 @@
     aGenres: editGenres,
     aKeys: showShortcuts,
     aAbout: showAbout,
+    // phase 6
+    aWeb: webLookup,
+    aToken: tokenAction,
   };
   const ENABLED = {
     aUp: () => !!state.folder,
@@ -1371,6 +1467,7 @@
     aMoveUp: () => state.sel.size > 0,
     aMoveDown: () => state.sel.size > 0,
     aNewFolder: () => !!state.folder,
+    aWeb: () => state.items.length > 0,
   };
   const CHECKED = {
     FActToolsPanel: () => state.view.tools, FActFolders: () => state.view.folders,
