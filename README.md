@@ -214,6 +214,11 @@ design is `docs/superpowers/specs/2026-11-26-tidytag-tauri-design.md`.
   `tidytag.exe --explorer-menu=on|off` sets up or removes the Explorer menu (the installer's
   switch). Only a release build refreshes the menu at start, so a dev build never takes over the
   menu of an installed TidyTag.
+- **Phase 6:** *Web-opslag* on MusicBrainz and Discogs (one album, one song, or several albums or
+  songs in a batch), pairing the files with the release's tracks, the front cover in the files
+  or as folder.jpg, and *Discogs-token...*. The parsers are tested offline on 1.2's own JSON from
+  `tools\webtest.lpr`. A live search can be tried by hand with
+  `cargo test -p tidytag-core --lib live_musicbrainz_search -- --ignored`.
 
 **Layout:**
 - `src-tauri/core/`: the engine, without UI. It holds the tag readers ported from the Pascal units,
