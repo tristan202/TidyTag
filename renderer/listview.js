@@ -125,5 +125,29 @@
     return items.map((tr, i) => (want.has(tr.path.toLowerCase()) ? i : -1)).filter((i) => i >= 0);
   }
 
-  return { matchesFilter, rebuildView, hideSelected, showAll, moveSelected, shuffle, prepareOpen, autoFitWidths, pendingIndexes };
+  // from: InScanScope — the open folder, or below it when subfolders are read
+  function inScanScope(path, folder, subfolders) {
+    const dir = dirOf(path).replace(/[\\/]+$/, '').toLowerCase();
+    const f = folder.replace(/[\\/]+$/, '').toLowerCase();
+    return dir === f || (subfolders && dir.startsWith(f + '\\'));
+  }
+
+  /** from: CopyOrMoveTo's move branch — `result` is copy_move's { done, newNames } for `items`. */
+  function afterMove(state, items, result, inScope, keys) {
+    items.forEach((tr, i) => {
+      if (!result.done[i]) return;
+      const p = result.newNames[i];
+      if (inScope(p)) {
+        tr.path = p;
+        tr.folder = dirOf(p);
+        tr.fileName = p.replace(/^.*[\\/]/, '');
+      } else {
+        state.all.splice(state.all.indexOf(tr), 1);
+      }
+    });
+    state.sel.clear();
+    rebuildView(state, keys);
+  }
+
+  return { inScanScope, afterMove, matchesFilter, rebuildView, hideSelected, showAll, moveSelected, shuffle, prepareOpen, autoFitWidths, pendingIndexes };
 });

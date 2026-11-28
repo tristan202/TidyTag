@@ -102,3 +102,29 @@ test('auto fit caps at 450 and reads at most 1000 rows', () => {
   assert.strictEqual(widths[2], 450);
   assert.ok(measured.length <= 2 * (1000 + 1));
 });
+
+test('moved files outside the scan scope leave the list', () => {
+  const mk = () => [tr('C:\\m\\a.mp3'), tr('C:\\m\\b.mp3'), tr('C:\\m\\c.mp3')];
+  const result = { done: [true, false, true], newNames: ['C:\\m\\sub\\a.mp3', 'C:\\m\\b.mp3', 'C:\\x\\c.mp3'] };
+  for (const subfolders of [false, true]) {
+    const xs = mk();
+    const state = { all: xs.slice(), items: xs.slice(), sel: new Set([xs[0]]), focus: 0, anchor: 0, filter: F(), folder: 'C:\\m' };
+    LISTVIEW.afterMove(state, xs, result, (p) => LISTVIEW.inScanScope(p, state.folder, subfolders), KEYS);
+    if (subfolders) {
+      assert.deepStrictEqual(state.all.map((x) => x.path), ['C:\\m\\sub\\a.mp3', 'C:\\m\\b.mp3']);
+      assert.strictEqual(xs[0].folder, 'C:\\m\\sub');
+      assert.strictEqual(xs[0].fileName, 'a.mp3');
+    } else {
+      assert.deepStrictEqual(state.all.map((x) => x.path), ['C:\\m\\b.mp3']); // the failed one stays
+    }
+    assert.strictEqual(state.sel.size, 0);
+  }
+});
+
+test('scan scope compares case-insensitively', () => {
+  assert.ok(LISTVIEW.inScanScope('c:\\M\\a.mp3', 'C:\\m', false));
+  assert.ok(LISTVIEW.inScanScope('C:\\m\\a.mp3', 'C:\\m\\', false));
+  assert.ok(!LISTVIEW.inScanScope('C:\\m\\sub\\a.mp3', 'C:\\m', false));
+  assert.ok(LISTVIEW.inScanScope('C:\\M\\Sub\\a.mp3', 'C:\\m', true));
+  assert.ok(!LISTVIEW.inScanScope('C:\\mm\\a.mp3', 'C:\\m', true));
+});

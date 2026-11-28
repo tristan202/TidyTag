@@ -1043,6 +1043,110 @@
     try { await TREE.expandSelected(); } finally { document.body.style.cursor = ''; }
   }
 
+  // ---------- file actions: Recycle Bin, copy/move, extensions, Explorer ----------
+  const dialogs = () => window.__TAURI__.dialog;
+  const baseOf = (p) => p.replace(/^.*[\\/]/, '');
+  const pickFolder = (title) => dialogs().open({ directory: true, title, defaultPath: state.folder || undefined });
+  // "<name>: <Danish text>" from Rust: the text part is translated (file names have no ':')
+  const tErr = (e) => { const i = e.lastIndexOf(': '); return i < 0 ? t(e) : e.slice(0, i + 2) + t(e.slice(i + 2)); };
+  const run = async (call) => { try { return await call(); } catch (e) { await DIALOG.info(String(e)); return null; } };
+
+  // from: ActDeleteFilesExecute
+  async function deleteFiles() {
+    const items = await requireTargets();
+    if (!items) return;
+    if (!(await DIALOG.confirm(t(RS.rsSletFiler), t(RS.rsLaegDFilerIPapirkurven, items.length)))) return;
+    const r = await run(() => API.recycle(items.map((tr) => tr.path)));
+    if (!r) return;
+    const gone = new Set(items.filter((_, i) => !r.exists[i]));
+    state.all = state.all.filter((tr) => !gone.has(tr));
+    state.sel.clear();
+    refreshView();
+    state.message = t(RS.rsDFilerLagtIPapirkurven, r.gone);
+    updateStatus();
+    if (r.errors.length) DIALOG.info(r.errors.map(tErr).join('\n'), t(RS.rsSletFiler));
+  }
+
+  // from: ActCopyToExecute / ActMoveToExecute / CopyOrMoveTo
+  async function copyOrMoveTo(move) {
+    const title = t(move ? RS.rsFlytTilMappe : RS.rsKopierTilMappe);
+    const dir = await pickFolder(title);
+    if (!dir) return;
+    const items = await requireTargets();
+    if (!items) return;
+    if (!(await DIALOG.confirm(title, t(move ? RS.rsFlytDFilerTilS : RS.rsKopierDFilerTilS, items.length, dir)))) return;
+    const r = await run(() => API.copyMove(items.map((tr) => tr.path), dir, move));
+    if (!r) return;
+    if (move) {
+      LISTVIEW.afterMove(state, items, r, (p) => LISTVIEW.inScanScope(p, state.folder, state.view.subfolders), FIELD_KEYS);
+      renderRows();
+      selectionChanged();
+    } else if (r.count > 0 && LISTVIEW.inScanScope(dir.replace(/\\$/, '') + '\\x', state.folder, state.view.subfolders)) {
+      startScan(); // the copies belong in the list
+    }
+    state.message = t(move ? RS.rsDFilerFlyttetTilS : RS.rsDFilerKopieretTilS, r.count, dir);
+    updateStatus();
+    if (r.errors.length) DIALOG.info(r.errors.map(tErr).join('\n'), title);
+  }
+
+  // from: ActDeleteFolderCoversExecute
+  async function deleteFolderCovers() {
+    const items = await requireTargets();
+    if (!items) return;
+    const dirs = [...new Map(items.map((tr) => [tr.folder.toLowerCase(), tr.folder])).entries()]
+      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([, d]) => d);
+    const title = t(RS.rsSletMappeCover);
+    const files = await API.folderCoverFiles(dirs);
+    if (!files.length) return DIALOG.info(t(RS.rsIngenAfMapperneHarEtCover), title);
+    if (!(await DIALOG.confirm(title, t(RS.rsLaegDMappeCoverIPapirkurven, files.length, dirs.length)))) return;
+    const r = await run(() => API.recycle(files));
+    if (!r) return;
+    state.message = t(RS.rsDFilerLagtIPapirkurven, r.gone);
+    updateStatus();
+    if (state.folder) showFolderCover(state.folder);
+    showFileCover();
+    if (r.errors.length) DIALOG.info(r.errors.map(tErr).join('\n'), title);
+  }
+
+  // from: ActChangeExtExecute — kind 0: .mp4 → .m4a, 1: → .m4b, 2: .m4b → .m4a
+  async function changeExt(kind) {
+    const items = await requireTargets();
+    if (!items) return;
+    const title = t(RS.rsSkiftFiltype);
+    const rows = await API.planExtChange(items.map((tr) => tr.path), kind);
+    if (!rows.length) return DIALOG.info(t(RS.rsIngenFilerMedFiltypen), title);
+    const errors = rows.filter((r) => r.status === 'Exists').map((r) => t(RS.rsFiltypeFindes, baseOf(r.newName)));
+    let res = { rows: [], log: [] };
+    if (rows.some((r) => r.status === 'Ok')) {
+      res = await run(() => API.executeRename(rows));
+      if (!res) return;
+    }
+    errors.push(...res.rows.filter((r) => r.status === 'Failed').map((r) => `${baseOf(r.oldName)}: ${t(r.detail)}`));
+    if (res.log.length) {
+      setUndoLog(res.log, t(RS.rsSkiftFiltype));
+      await applyRenameLog(res.log, false);
+    }
+    state.message = t(RS.rsFiltypeSkiftet, res.log.length);
+    updateStatus();
+    if (errors.length) DIALOG.info(errors.join('\n'), title);
+  }
+
+  // from: ActOpenFolderExecute
+  async function openFolder() {
+    const dir = await pickFolder(t(RS.rsVaelgMappe));
+    if (dir) navigate(dir);
+  }
+  // from: ActShowInExplorerExecute / ActPropertiesExecute — the focused file, else the folder
+  function showInExplorer() {
+    const tr = state.items[state.focus];
+    if (tr) run(() => API.showInExplorer(tr.path, true));
+    else if (state.folder) run(() => API.showInExplorer(state.folder, false));
+  }
+  function showProperties() {
+    const p = state.items[state.focus]?.path || state.folder;
+    if (p) run(() => API.showProperties(p));
+  }
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -1110,6 +1214,16 @@
     aExpandFolders: expandFolders,
     aCollapseFolders: () => { TREE.collapseAll(); TREE.reveal(state.folder); },
     aNewFolder: newFolder,
+    FActDeleteFiles: deleteFiles,
+    aCopyTo: () => copyOrMoveTo(false),
+    aMoveTo: () => copyOrMoveTo(true),
+    aDelFolderCover: deleteFolderCovers,
+    aExtM4A: () => changeExt(0),
+    aExtM4B: () => changeExt(1),
+    aExtM4BBack: () => changeExt(2),
+    aOpen: openFolder,
+    aExplorer: showInExplorer,
+    aProperties: showProperties,
   };
   const ENABLED = {
     aUp: () => !!state.folder,
