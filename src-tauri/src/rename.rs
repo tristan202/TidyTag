@@ -30,7 +30,7 @@ pub struct RenameTrack {
 }
 
 impl RenameTrack {
-    fn info(&self) -> AudioInfo {
+    pub(crate) fn info(&self) -> AudioInfo {
         let mut i = AudioInfo::new(PathBuf::from(&self.path), false);
         for (k, v) in &self.fields {
             if let Some(f) = TagField::from_key(k) {

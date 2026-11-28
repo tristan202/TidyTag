@@ -3,11 +3,12 @@
 
 mod commands;
 mod edit;
+mod files;
 mod rename;
 mod player;
 mod shell;
 
-use tauri::Manager;
+use tauri::{Emitter, Manager};
 
 /// `--explorer-menu=on|off` (the installer's switch): set up or remove the menu, then exit.
 // from: HandleExplorerMenuSwitch
@@ -39,8 +40,13 @@ fn main() {
         }
     }
     tauri::Builder::default()
-        // one instance: a second start brings the running window to the front
-        .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+        // one instance: a second start hands its paths over and brings the window to the front
+        .plugin(tauri_plugin_single_instance::init(|app, argv, _cwd| {
+            let args: Vec<std::ffi::OsString> = argv.into_iter().map(Into::into).collect();
+            let paths = shell::command_line_paths(&args);
+            if !paths.is_empty() {
+                let _ = app.emit("paths-received", paths);
+            }
             if let Some(w) = app.get_webview_window("main") {
                 let _ = w.unminimize();
                 let _ = w.show();
@@ -51,6 +57,8 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .manage(commands::ScanState::default())
         .manage(commands::WriteState::default())
+        .manage(files::PlayerHolder::default())
+        .manage(files::StartPaths(std::sync::Mutex::new(Some(shell::command_line_paths(&std::env::args_os().collect::<Vec<_>>())))))
         .invoke_handler(tauri::generate_handler![
             commands::settings_get,
             commands::settings_set,
@@ -86,6 +94,29 @@ fn main() {
             rename::map_paths,
             rename::rename_one,
             rename::match_file_names,
+            files::recycle_cmd,
+            files::copy_move_cmd,
+            files::folder_cover_files_cmd,
+            files::create_folder_cmd,
+            files::plan_ext_change_cmd,
+            files::save_playlist,
+            files::quick_playlist_name,
+            files::temp_playlist,
+            files::show_in_explorer,
+            files::show_properties,
+            files::open_default,
+            files::run_program,
+            files::play_with_list,
+            files::player_play,
+            files::player_pause,
+            files::player_resume,
+            files::player_stop,
+            files::player_seek,
+            files::player_volume,
+            files::player_status,
+            files::player_available_cmd,
+            files::app_info,
+            files::start_paths,
             rename::mask_fields_cmd,
         ])
         .run(tauri::generate_context!())

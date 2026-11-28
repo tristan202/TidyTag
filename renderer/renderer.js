@@ -174,7 +174,7 @@
     try { return await fn(...args); } finally { state.busyWrites -= 1; }
   };
   for (const k of ['saveTag', 'coverFromTags', 'coverAsFolder', 'resizeFolderCovers', 'writeFile', 'executeRename',
-    'undoRename', 'renameOne']) API[k] = counted(API[k]);
+    'undoRename', 'renameOne', 'recycle', 'copyMove', 'savePlaylist']) API[k] = counted(API[k]);
   API.window().onCloseRequested(async (ev) => { // Tauri waits for this before it closes
     const action = SAVE.closeAction(state, TAGEDITOR.isOpen());
     if (action === 'wait') {
