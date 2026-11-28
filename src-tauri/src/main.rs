@@ -4,10 +4,39 @@
 mod commands;
 mod edit;
 mod rename;
+mod shell;
 
 use tauri::Manager;
 
+/// `--explorer-menu=on|off` (the installer's switch): set up or remove the menu, then exit.
+// from: HandleExplorerMenuSwitch
+fn handle_explorer_menu_switch() -> Option<i32> {
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    let [arg] = args.as_slice() else { return None };
+    let on = match arg.as_str() {
+        "--explorer-menu=on" => true,
+        "--explorer-menu=off" => false,
+        _ => return None,
+    };
+    let exts = shell::menu_exts();
+    if on {
+        let exe = std::env::current_exe().ok()?.to_string_lossy().into_owned();
+        return Some(if shell::install_explorer_menu(shell::CLASSES, &shell::menu_caption(), &exe, &exts).is_ok() { 0 } else { 1 });
+    }
+    shell::remove_explorer_menu(shell::CLASSES, &exts);
+    Some(0)
+}
+
 fn main() {
+    if let Some(code) = handle_explorer_menu_switch() {
+        std::process::exit(code);
+    }
+    if shell::should_refresh_menu_at_start() {
+        // the exe moved or the language changed; only a convenience
+        if let Ok(exe) = std::env::current_exe() {
+            shell::refresh_explorer_menu(shell::CLASSES, &shell::menu_caption(), &exe.to_string_lossy(), &shell::menu_exts());
+        }
+    }
     tauri::Builder::default()
         // one instance: a second start brings the running window to the front
         .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {

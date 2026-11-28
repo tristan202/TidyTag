@@ -4022,6 +4022,7 @@ dependencies = [
  "tauri-plugin-single-instance",
  "tauri-plugin-window-state",
  "tidytag-core",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
