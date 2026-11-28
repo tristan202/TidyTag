@@ -1045,7 +1045,9 @@
   const pickFolder = (title) => dialogs().open({ directory: true, title, defaultPath: state.folder || undefined });
   // "<name>: <Danish text>" from Rust: the text part is translated (file names have no ':')
   const tErr = (e) => { const i = e.lastIndexOf(': '); return i < 0 ? t(e) : e.slice(0, i + 2) + t(e.slice(i + 2)); };
-  const run = async (call) => { try { return await call(); } catch (e) { await DIALOG.info(String(e)); return null; } };
+  // a command that returns nothing gives null, so a failure needs its own marker
+  const FAILED = Symbol('failed');
+  const run = async (call) => { try { return await call(); } catch (e) { await DIALOG.info(String(e)); return FAILED; } };
 
   // from: ActDeleteFilesExecute
   async function deleteFiles() {
@@ -1053,7 +1055,7 @@
     if (!items) return;
     if (!(await DIALOG.confirm(t(RS.rsSletFiler), t(RS.rsLaegDFilerIPapirkurven, items.length)))) return;
     const r = await run(() => API.recycle(items.map((tr) => tr.path)));
-    if (!r) return;
+    if (r === FAILED) return;
     const gone = new Set(items.filter((_, i) => !r.exists[i]));
     state.all = state.all.filter((tr) => !gone.has(tr));
     state.sel.clear();
@@ -1072,7 +1074,7 @@
     if (!items) return;
     if (!(await DIALOG.confirm(title, t(move ? RS.rsFlytDFilerTilS : RS.rsKopierDFilerTilS, items.length, dir)))) return;
     const r = await run(() => API.copyMove(items.map((tr) => tr.path), dir, move));
-    if (!r) return;
+    if (r === FAILED) return;
     if (move) {
       LISTVIEW.afterMove(state, items, r, (p) => LISTVIEW.inScanScope(p, state.folder, state.view.subfolders), FIELD_KEYS);
       renderRows();
@@ -1096,7 +1098,7 @@
     if (!files.length) return DIALOG.info(t(RS.rsIngenAfMapperneHarEtCover), title);
     if (!(await DIALOG.confirm(title, t(RS.rsLaegDMappeCoverIPapirkurven, files.length, dirs.length)))) return;
     const r = await run(() => API.recycle(files));
-    if (!r) return;
+    if (r === FAILED) return;
     state.message = t(RS.rsDFilerLagtIPapirkurven, r.gone);
     updateStatus();
     if (state.folder) showFolderCover(state.folder);
@@ -1115,7 +1117,7 @@
     let res = { rows: [], log: [] };
     if (rows.some((r) => r.status === 'Ok')) {
       res = await run(() => API.executeRename(rows));
-      if (!res) return;
+      if (res === FAILED) return;
     }
     errors.push(...res.rows.filter((r) => r.status === 'Failed').map((r) => `${baseOf(r.oldName)}: ${t(r.detail)}`));
     if (res.log.length) {
@@ -1218,9 +1220,12 @@
     await API.settingsWriteSection('CustomGenres', ini.CustomGenres);
     PANEL.refreshGenres();
   }
-  // from: ActShortcutsExecute — the text is laid out with tabs
+  // from: ActShortcutsExecute — 1.2 lines the text up with tabs; here each line's key and text
+  // (split at the tabs) go in two columns
   function showShortcuts() {
-    const m = FORMS.modal(`<h2>${esc(t(RS.rsTastaturgenveje))}</h2><pre class="keys-text">${esc(t(RS.rsEnterDobbeltklikRedigerTagFor))}</pre>
+    const rows = t(RS.rsEnterDobbeltklikRedigerTagFor).split(/\r?\n/).map((l) => l.split(/\t+/));
+    const table = rows.map(([k, ...v]) => `<tr><td>${esc(k)}</td><td>${esc(v.join(' '))}</td></tr>`).join('');
+    const m = FORMS.modal(`<h2>${esc(t(RS.rsTastaturgenveje))}</h2><table class="keys-text">${table}</table>
       <div class="modal-buttons"><span class="grow"></span><button class="btn primary" data-ok>${esc(label(t('OK')))}</button></div>`,
     { cls: 'form wide', onEscape: () => m.close(), onEnter: () => m.close() });
     m.el.querySelector('[data-ok]').addEventListener('click', () => m.close());
@@ -1249,7 +1254,7 @@
     });
     if (!target) return;
     if (!/\.[^\\.]+$/.test(baseOf(target))) target += '.m3u8'; // DefaultExt
-    if (await run(() => API.savePlaylist(target, items, bool('Playlist', 'FullPaths', false))) === null) return;
+    if (await run(() => API.savePlaylist(target, items, bool('Playlist', 'FullPaths', false))) === FAILED) return;
     state.message = t(RS.rsPlaylisteMedDFilerGemt, items.length, baseOf(target));
     updateStatus();
   }
@@ -1261,7 +1266,7 @@
     const name = (await API.quickPlaylistName(items[0], get('Playlist', 'NameMask', '%f'))) || baseOf(items[0].folder);
     const target = (await playlistDir(items)) + '\\' + name + '.m3u8';
     if ((await API.pathKind(target)) !== 'none' && !(await DIALOG.confirm(title, t(RS.rsPlaylisteFindesOverskriv, baseOf(target))))) return;
-    if (await run(() => API.savePlaylist(target, items, bool('Playlist', 'FullPaths', false))) === null) return;
+    if (await run(() => API.savePlaylist(target, items, bool('Playlist', 'FullPaths', false))) === FAILED) return;
     state.message = t(RS.rsPlaylisteMedDFilerGemt, items.length, target);
     updateStatus();
   }
