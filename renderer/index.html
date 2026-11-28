@@ -74,6 +74,17 @@
       </div>
     </div>
 
+    <div id="playerbar" class="rowbar" hidden>
+      <button class="ic" id="pl-prev"></button><button class="ic" id="pl-play"></button>
+      <button class="ic" id="pl-stop"></button><button class="ic" id="pl-next"></button>
+      <span id="pl-title"></span>
+      <input type="range" id="pl-pos" min="0" max="1000" value="0" />
+      <span id="pl-time">0:00 / 0:00</span>
+      <span class="pl-vol-icon" data-icon="volume"></span>
+      <input type="range" id="pl-vol" min="0" max="100" value="80" />
+      <button class="ic" id="pl-close"></button>
+    </div>
+
     <footer id="statusbar">
       <span class="sb" id="sb-0"></span><span class="sb" id="sb-1"></span><span class="sb" id="sb-2"></span>
       <span class="sb" id="sb-3"></span><span class="sb" id="sb-4"></span><span class="sb sb-msg" id="sb-5"></span>
@@ -98,6 +109,8 @@
   <script src="renamedialog.js"></script>
   <script src="f2tdialog.js"></script>
   <script src="renameedit.js"></script>
+  <script src="playtools.js"></script>
+  <script src="player.js"></script>
   <script src="api.js"></script>
   <script src="menu.js"></script>
   <script src="tree.js"></script>

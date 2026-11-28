@@ -18,7 +18,8 @@ use windows::Win32::System::Variant::{VT_I8, VT_UI8};
 use windows::Win32::UI::WindowsAndMessaging::{DispatchMessageW, PeekMessageW, TranslateMessage, MSG, PM_REMOVE};
 
 const PLAYER_MISSING: &str = "Windows Media Foundation findes ikke på denne computer";
-/// rsKanIkkeAfspilles; %s is the HRESULT in hex
+/// rsKanIkkeAfspilles; sent as "<text>|<HRESULT in hex>" so the renderer can translate the
+/// text and fill in %s
 const CANNOT_PLAY: &str = "filen kan ikke afspilles af Windows (codec mangler?) – fejl %s";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
@@ -105,7 +106,7 @@ impl Worker {
             unsafe {
                 let _ = p.Shutdown();
             }
-            CANNOT_PLAY.replace("%s", &format!("{:08X}", e.code().0 as u32))
+            format!("{CANNOT_PLAY}|{:08X}", e.code().0 as u32)
         };
         // synchronous, so a file Windows cannot play is reported here and not lost
         let mut item: Option<IMFPMediaItem> = None;

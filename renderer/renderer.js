@@ -1147,6 +1147,102 @@
     if (p) run(() => API.showProperties(p));
   }
 
+  // ---------- playing: the built-in player, "Afspil med" and playlists ----------
+  let playerAvailable = false, playWithCache = []; // RebuildPlayWith's list, read at start and after "Vælg program"
+  const playInternal = () => bool('Player', 'Internal', true) && playerAvailable;
+  const iniList = (sec) => PLAYTOOLS.listFromIni(Object.entries(S[sec.toLowerCase()] || {}));
+  const playTargets = () => { const { files, index } = PLAYTOOLS.playTargets(state); return PLAYER.start(files, index); };
+  const reportPlay = (e) => DIALOG.info(String(e), t(RS.rsAfspilFil));
+  async function refreshPlayWith() { playWithCache = await API.playWithList(); }
+
+  // from: PlayWith — the program set for the file's type in the settings, else Windows' own
+  async function playWith(path) {
+    const prog = PLAYTOOLS.playerFor(path, iniList('Players'));
+    try { await (prog ? API.runProgram(prog, path) : API.openDefault(path)); } catch (e) { reportPlay(e); }
+  }
+  // from: PlayExternal — several files go as a temporary playlist, which every player understands
+  async function playExternal(prog, files) {
+    try {
+      const target = files.length === 1 ? files[0]
+        : await API.tempPlaylist(files.map((f) => state.all.find((tr) => tr.path === f)).filter(Boolean));
+      await (prog ? API.runProgram(prog, target) : API.openDefault(target));
+    } catch (e) { reportPlay(e); }
+  }
+  // from: ActPlayExecute
+  async function playFile() {
+    if (playInternal()) return playTargets();
+    const tr = state.items[state.focus];
+    if (tr) playWith(tr.path);
+  }
+  // from: ActPlayFolderExecute
+  async function playFolder() {
+    if (!state.items.length) return;
+    if (playInternal()) return PLAYER.start(state.items.map((tr) => tr.path), 0);
+    try { playWith(await API.tempPlaylist(state.items)); } catch (e) { reportPlay(e); }
+  }
+  // from: PlayWithClick — -1 the built-in player, -2 Windows' own program, -3 choose a program
+  async function playWithClick(tag) {
+    if (tag === -1) return playTargets();
+    let sel = selectedTracks();
+    if (!sel.length && state.items[state.focus]) sel = [state.items[state.focus]];
+    if (!sel.length) return;
+    const files = sel.map((tr) => tr.path);
+    if (tag === -2) return playExternal('', files);
+    if (tag === -3) {
+      const exe = await dialogs().open({ filters: [{ name: t(RS.rsProgrammer) + ' (*.exe)', extensions: ['exe'] }] });
+      if (!exe) return;
+      const extra = [...iniList('ExtraPlayers'), exe];
+      const rows = PLAYTOOLS.listToIni(extra);
+      S.extraplayers = Object.fromEntries(rows.map(([k, v]) => [k.toLowerCase(), v]));
+      await API.settingsWriteSection('ExtraPlayers', rows);
+      await refreshPlayWith();
+      return playExternal(exe, files);
+    }
+    return playExternal(playWithCache[tag].path, files);
+  }
+  function playWithMenu() {
+    return [
+      ...(playerAvailable ? [{ text: t(RS.rsTidyTagAfspiller), run: () => playWithClick(-1) }] : []),
+      ...playWithCache.map((p, i) => ({ text: p.name.replace(/&/g, '&&'), run: () => playWithClick(i) })),
+      { text: t(RS.rsWindowsStandard), run: () => playWithClick(-2) },
+      '-',
+      { text: t(RS.rsVaelgProgram), run: () => playWithClick(-3) },
+    ];
+  }
+
+  // from: SavePlaylistDialog — the playlist's folder from the settings when it exists
+  async function playlistDir(items) {
+    const pl = get('Playlist', 'Folder', '');
+    return pl && (await API.pathKind(pl)) === 'dir' ? pl.replace(/\\$/, '') : items[0].folder;
+  }
+  async function savePlaylistDialog(items) {
+    if (!items.length) return DIALOG.info(t(RS.rsDerErIngenFilerAt));
+    const parts = t(RS.rsPlaylisteUtfMUM).split('|');
+    const filters = [];
+    for (let i = 0; i + 1 < parts.length; i += 2) filters.push({ name: parts[i], extensions: [parts[i + 1].replace(/^\*\./, '')] });
+    let target = await dialogs().save({
+      title: t(RS.rsGemPlayliste), filters,
+      defaultPath: (await playlistDir(items)) + '\\' + baseOf(items[0].folder) + '.m3u8',
+    });
+    if (!target) return;
+    if (!/\.[^\\.]+$/.test(baseOf(target))) target += '.m3u8'; // DefaultExt
+    if (await run(() => API.savePlaylist(target, items, bool('Playlist', 'FullPaths', false))) === null) return;
+    state.message = t(RS.rsPlaylisteMedDFilerGemt, items.length, baseOf(target));
+    updateStatus();
+  }
+  // from: ActQuickPlaylistExecute
+  async function quickPlaylist() {
+    const title = t(RS.rsGemPlaylisteHurtigt);
+    const { items } = SAVE.targets(state);
+    if (!items.length) return DIALOG.info(t(RS.rsDerErIngenFilerAt), title);
+    const name = (await API.quickPlaylistName(items[0], get('Playlist', 'NameMask', '%f'))) || baseOf(items[0].folder);
+    const target = (await playlistDir(items)) + '\\' + name + '.m3u8';
+    if ((await API.pathKind(target)) !== 'none' && !(await DIALOG.confirm(title, t(RS.rsPlaylisteFindesOverskriv, baseOf(target))))) return;
+    if (await run(() => API.savePlaylist(target, items, bool('Playlist', 'FullPaths', false))) === null) return;
+    state.message = t(RS.rsPlaylisteMedDFilerGemt, items.length, target);
+    updateStatus();
+  }
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -1224,6 +1320,11 @@
     aOpen: openFolder,
     aExplorer: showInExplorer,
     aProperties: showProperties,
+    aPlay: playFile,
+    aPlayFolder: playFolder,
+    aPlChecked: () => savePlaylistDialog(SAVE.targets(state).items),
+    aPlAll: () => savePlaylistDialog(state.items),
+    aQuickPlaylist: quickPlaylist,
   };
   const ENABLED = {
     aUp: () => !!state.folder,
@@ -1280,7 +1381,8 @@
       const recent = state.history.slice(0, 15);
       return { text: t(item.text), enabled: recent.length > 0, items: recent.map((p) => ({ text: p.replace(/&/g, '&&'), run: () => navigate(p) })) };
     }
-    return null; // play with: Task 7
+    if (item.dynamic && item.text === RS.rsAfspilMed) return { text: t(item.text), enabled: true, items: playWithMenu() }; // from: RebuildPlayWith
+    return null;
   }
 
   // ---------- splitter (tree width, [Main] TreeWidth) ----------
@@ -1339,6 +1441,9 @@
       maskEditor,
       openMulti: () => ACTIONS.aMulti(),
     });
+    PLAYER.init({ all: () => state.all, playTargets, saveVolume: (v) => save('Player', 'Volume', v) }, Number(get('Player', 'Volume', 80)));
+    API.playerAvailable().then((a) => { playerAvailable = a; });
+    refreshPlayWith();
     applyView();
     renderHeader();
     renderRows();

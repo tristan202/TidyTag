@@ -43,6 +43,9 @@
     exit: '<path d="M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5"/><path d="M15 8l4 4-4 4M19 12H9"/>',
     caret: '<path d="m9 6 6 6-6 6"/>',
     image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 17-5-5-9 8"/>',
+    prev: '<path d="M6 5v14"/><path d="M19 5 9 12l10 7z"/>',
+    next: '<path d="M18 5v14"/><path d="M5 5l10 7-10 7z"/>',
+    stop: '<rect x="6" y="6" width="12" height="12" rx="1.5"/>',
     volume: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a3 3 0 0 1 0 6M18.5 6.5a7 7 0 0 1 0 11"/>',
   };
   const icon = (name, cls = '') =>
