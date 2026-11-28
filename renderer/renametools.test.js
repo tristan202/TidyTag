@@ -55,12 +55,12 @@ test('rename confirmation like 1.2', () => {
 test('rename log moves the open folder and its files', () => {
   const a = { path: 'C:/m/a/1.mp3', folder: 'C:/m/a', fileName: '1.mp3', checked: true };
   const b = { path: 'C:/m/x.mp3', folder: 'C:/m', fileName: 'x.mp3' };
-  const state = { folder: 'C:/m/a', items: [a, b], sel: new Set([a]) };
+  const state = { folder: 'C:/m/a', all: [a, b], items: [a, b], sel: new Set([a]) };
   const changed = R.applyLog(state, ['C:/m/b/1.mp3', 'C:/m/x.mp3'], 'C:/m/b');
   assert.strictEqual(changed, true);
   assert.strictEqual(state.folder, 'C:/m/b');
   assert.deepStrictEqual([a.path, a.folder, a.fileName], ['C:/m/b/1.mp3', 'C:/m/b', '1.mp3']);
-  assert.ok(state.items[0] === a && a.checked && state.sel.has(a));
+  assert.ok(state.all[0] === a && a.checked && state.sel.has(a));
   assert.strictEqual(R.applyLog(state, ['C:/m/b/1.mp3', 'C:/m/x.mp3'], 'C:/m/b'), false);
 });
 

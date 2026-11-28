@@ -54,11 +54,11 @@ test('reader errors are translated like 1.2', () => {
 });
 
 test('stale scan batches are ignored', () => {
-  const state = { scanId: 2, items: [] };
+  const state = { scanId: 2, all: [] };
   L.applyBatch(state, { scanId: 1, tracks: [tr({})] });
-  assert.strictEqual(state.items.length, 0);
+  assert.strictEqual(state.all.length, 0);
   L.applyBatch(state, { scanId: 2, tracks: [tr({}), tr({})] });
-  assert.strictEqual(state.items.length, 2);
+  assert.strictEqual(state.all.length, 2);
 });
 
 test('statusTexts are 1.2s five panels', () => {

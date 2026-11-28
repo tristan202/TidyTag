@@ -90,11 +90,12 @@
     return { items, ready: items.length, noMatch };
   }
 
-  /** ApplyRenameLog's list part: `mapped` are the tracks' paths after the log (map_paths),
-   *  `folder` the open folder's. The track objects stay (ticks, selection). True if anything moved. */
+  /** ApplyRenameLog's list part: `mapped` are the paths of `state.all` (every file, the hidden
+   *  ones too) after the log (map_paths), `folder` the open folder's. The track objects stay
+   *  (ticks, selection). True if anything moved. */
   function applyLog(state, mapped, folder) {
     let changed = false;
-    state.items.forEach((tr, i) => {
+    state.all.forEach((tr, i) => {
       const p = mapped[i];
       if (!p || p === tr.path) return;
       tr.path = p;

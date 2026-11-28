@@ -104,7 +104,7 @@
     if (msg.scanId !== state.scanId) return false;
     for (const tr of msg.tracks) {
       tr.checked = false;
-      state.items.push(tr);
+      state.all.push(tr); // the caller builds the view
     }
     return true;
   }

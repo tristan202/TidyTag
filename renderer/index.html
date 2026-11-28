@@ -45,18 +45,18 @@
       <input id="address" list="address-history" spellcheck="false" autocomplete="off" />
       <datalist id="address-history"></datalist>
       <label class="lbl" for="tagtype" data-i18n="Tagtype:"></label>
-      <select id="tagtype" disabled></select>
+      <select id="tagtype"></select>
     </div>
 
     <div id="filterbar" class="rowbar">
       <label class="lbl" for="filter-field" data-i18n="Filtrer efter"></label>
-      <select id="filter-field" disabled></select>
-      <input id="filter-text" spellcheck="false" disabled />
-      <button class="btn" disabled data-i18n="Filtrer!"></button>
-      <button class="btn" disabled data-i18n="Skjul valgte filer"></button>
-      <button class="btn" disabled data-i18n="Vis alle"></button>
-      <label class="chk-label"><input type="checkbox" id="filter-whole" disabled /><span data-i18n="Hele ord"></span></label>
-      <label class="chk-label"><input type="checkbox" id="filter-case" disabled /><span data-i18n="Store/små bogstaver"></span></label>
+      <select id="filter-field"></select>
+      <input id="filter-text" spellcheck="false" />
+      <button class="btn" id="filter-apply" data-i18n="Filtrer!"></button>
+      <button class="btn" id="filter-hide" data-i18n="Skjul valgte filer"></button>
+      <button class="btn" id="filter-all" data-i18n="Vis alle"></button>
+      <label class="chk-label"><input type="checkbox" id="filter-whole" /><span data-i18n="Hele ord"></span></label>
+      <label class="chk-label"><input type="checkbox" id="filter-case" /><span data-i18n="Store/små bogstaver"></span></label>
     </div>
 
     <div id="body">
@@ -85,6 +85,7 @@
   <script src="menudata.js"></script>
   <script src="icons.js"></script>
   <script src="list.js"></script>
+  <script src="listview.js"></script>
   <script src="save.js"></script>
   <script src="dialog.js"></script>
   <script src="tools.js"></script>

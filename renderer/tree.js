@@ -113,6 +113,26 @@
     },
     reveal,
     collapseAll() { for (const n of walkAll()) n.open = false; render(); },
+    // from: ActExpandFoldersExecute (Selected.Expand(True)) — every subfolder, all the way down
+    async expandSelected() {
+      if (!selected) return;
+      const open = async (n) => {
+        await load(n);
+        n.open = n.hasChildren;
+        for (const c of n.children) await open(c);
+      };
+      await open(selected);
+      render();
+    },
+    // ShellTree.UpdateView: read a folder's subfolders again (after a new folder)
+    async refresh(path) {
+      const n = [...walkAll()].find((x) => norm(x.path) === norm(path));
+      if (!n) return reveal(path);
+      n.children = null;
+      await load(n);
+      n.open = n.hasChildren;
+      render();
+    },
     get selectedPath() { return selected?.path || ''; },
   };
 })();

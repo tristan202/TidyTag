@@ -11,7 +11,8 @@
 
   // ---------- settings (same file and keys as 1.2) ----------
   const SECTIONS = ['Main', 'Editor', 'View', 'Rename', 'FileToTag', 'RenameMasks', 'FileToTagMasks', 'AddressHistory', 'Favorites',
-    'Tracks', 'Cover', 'RenameFolder', 'FolderMasks', 'RenameReplace', 'RenameKeepCase', 'RenameActions', 'SavedRenameMasks'];
+    'Tracks', 'Cover', 'RenameFolder', 'FolderMasks', 'RenameReplace', 'RenameKeepCase', 'RenameActions', 'SavedRenameMasks',
+    'Player', 'Playlist', 'Players', 'ExtraPlayers'];
   const S = {};
   async function loadSettings() {
     await Promise.all(SECTIONS.map(async (sec) => {
@@ -35,7 +36,9 @@
   // ---------- state ----------
   const state = {
     folder: '', scanId: 0, scanning: false, writing: false, busyWrites: 0, batchId: 0, message: '',
-    items: [], // TrackDto + checked
+    all: [], // every file of the folder: TrackDto + checked (+ hidden); 1.2's FItems
+    items: [], // the files shown (FView): what the list, the actions and the status bar use
+    filter: { tagType: '', text: '', field: 0, whole: false, matchCase: false },
     sort: { col: 1, desc: false, col2: -1, desc2: false }, // 1.2 starts sorted on the file name
     sel: new Set(), focus: -1, anchor: -1,
     view: { tools: true, folders: true, address: true, filter: true, subfolders: false },
@@ -104,6 +107,7 @@
 
   function startScan() {
     state.scanId += 1;
+    state.all = [];
     state.items = [];
     state.sel.clear();
     state.focus = state.anchor = -1;
@@ -116,11 +120,10 @@
     API.scanStart(state.folder, state.view.subfolders, state.scanId);
   }
 
+  // the master list is sorted (none in manual order), then the view is built again
   function sortItems() {
-    if (state.sort.col < 0) return; // manual order
-    const focused = state.items[state.focus];
-    state.items.sort((a, b) => LIST.compareTracks(a, b, state.sort));
-    if (focused) state.focus = state.anchor = state.items.indexOf(focused);
+    if (state.sort.col >= 0) state.all.sort((a, b) => LIST.compareTracks(a, b, state.sort));
+    LISTVIEW.rebuildView(state, FIELD_KEYS);
   }
 
   API.on('scan-batch', (msg) => {
@@ -194,7 +197,7 @@
     state.writing = false;
     // the files read again replace their rows; ticks and selection stay
     const byPath = new Map(msg.tracks.map((tr) => [tr.path.toLowerCase(), tr]));
-    state.items = state.items.map((old) => {
+    state.all = state.all.map((old) => {
       const tr = byPath.get(old.path.toLowerCase());
       if (!tr) return old;
       tr.checked = old.checked;
@@ -219,7 +222,10 @@
     if (msg.scanId !== state.scanId) return;
     state.scanning = false;
     state.message = '';
-    updateStatus();
+    if (bool('View', 'AutoFitColumns', false)) autoFit();
+    applyPendingSelect(false);
+    renderRows();
+    selectionChanged();
   });
 
   // ---------- the virtual file list ----------
@@ -300,12 +306,15 @@
       state.anchor = r;
     }
     state.focus = r;
-    // keep the focused row in view
+    keepVisible(r);
+    renderRows();
+    selectionChanged();
+  }
+  function keepVisible(r) {
+    if (r < 0) return;
     const top = r * ROW, viewport = listEl.clientHeight - headEl.offsetHeight;
     if (top < listEl.scrollTop) listEl.scrollTop = top;
     else if (top + ROW > listEl.scrollTop + viewport) listEl.scrollTop = top + ROW - viewport;
-    renderRows();
-    selectionChanged();
   }
 
   let coverTimer = 0;
@@ -339,6 +348,7 @@
   });
 
   listEl.addEventListener('keydown', (ev) => {
+    if (ev.defaultPrevented) return; // a shortcut (Ctrl+Up: Flyt fil op) took the key
     const page = Math.max(1, Math.floor((listEl.clientHeight - headEl.offsetHeight) / ROW) - 1);
     const moves = { ArrowDown: 1, ArrowUp: -1, PageDown: page, PageUp: -page };
     const opt = { extend: ev.shiftKey };
@@ -374,7 +384,7 @@
 
   // ---------- status bar ----------
   function updateStatus() {
-    const texts = LIST.statusTexts(state.items, selectedTracks(), 0);
+    const texts = LIST.statusTexts(state.items, selectedTracks(), state.all.length - state.items.length);
     texts.forEach((s, i) => { $('#sb-' + i).textContent = s; });
     $('#sb-5').textContent = state.message;
   }
@@ -592,7 +602,7 @@
 
   // from: ApplyRenameLog — the list, the open folder, the address bar and the tree follow
   async function applyRenameLog(log, reverse) {
-    const mapped = await API.mapPaths([...state.items.map((tr) => tr.path), state.folder], log, reverse);
+    const mapped = await API.mapPaths([...state.all.map((tr) => tr.path), state.folder], log, reverse);
     const before = state.folder;
     RENAMETOOLS.applyLog(state, mapped.slice(0, -1), mapped[mapped.length - 1]);
     if (state.folder !== before) {
@@ -875,6 +885,164 @@
     if (failedRows.length) DIALOG.info(failedRows.join('\n'), t(RS.rsNogleFilerBlevIkkeOmdoebt));
   }
 
+  // ---------- phase 5: the filter row, manual order, columns ----------
+  function refreshView() {
+    LISTVIEW.rebuildView(state, FIELD_KEYS);
+    renderRows();
+    selectionChanged();
+  }
+  // from: ButtonFilterApplyClick
+  function applyFilter() {
+    state.filter.text = $('#filter-text').value.trim();
+    state.filter.field = $('#filter-field').selectedIndex;
+    refreshView();
+  }
+  // from: FilterOptionChange (and the two check boxes, which MatchesFilter reads live)
+  function filterOptions() {
+    const i = $('#tagtype').selectedIndex;
+    state.filter.tagType = i > 0 ? MENUDATA.tagTypes[i] : '';
+    state.filter.whole = $('#filter-whole').checked;
+    state.filter.matchCase = $('#filter-case').checked;
+    refreshView();
+  }
+  // from: ButtonShowAllClick
+  function showAll() {
+    $('#filter-text').value = '';
+    LISTVIEW.showAll(state, FIELD_KEYS);
+    renderRows();
+    selectionChanged();
+  }
+  $('#filter-apply').addEventListener('click', applyFilter);
+  $('#filter-text').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); applyFilter(); }
+    else if (e.key === 'Escape' && e.target.value) { e.preventDefault(); showAll(); } // FormKeyDown
+  });
+  $('#filter-hide').addEventListener('click', () => { LISTVIEW.hideSelected(state, FIELD_KEYS); renderRows(); selectionChanged(); });
+  $('#filter-all').addEventListener('click', showAll);
+  for (const id of ['#tagtype', '#filter-whole', '#filter-case']) $(id).addEventListener('change', filterOptions);
+
+  // from: ActFindExecute
+  function findFilter() {
+    if (!state.view.filter) toggleView('filter', 'View', 'Filter');
+    $('#filter-text').focus();
+    $('#filter-text').select();
+  }
+
+  function manualOrder() {
+    renderHeader();
+    renderRows();
+    state.message = t(RS.rsManuelRaekkefoelgeKlikPaaEn);
+    updateStatus();
+  }
+  function moveSelected(delta) {
+    if (!LISTVIEW.moveSelected(state, delta)) return;
+    keepVisible(state.focus);
+    manualOrder();
+  }
+
+  // from: AutoFitColumns — measured in the list's own font
+  function autoFit() {
+    const cs = getComputedStyle(rowsEl);
+    const ctx = document.createElement('canvas').getContext('2d');
+    ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    const cols = COLS.map((c) => ({ caption: t(c.caption) }));
+    LISTVIEW.autoFitWidths(state.items, cols, widths, (s) => ctx.measureText(s).width, (tr, c) => LIST.cellText(tr, c))
+      .forEach((w, i) => { widths[i] = Math.ceil(w); });
+    renderHeader();
+    renderRows();
+  }
+  function toggleAutoFitAfterScan() {
+    const on = !bool('View', 'AutoFitColumns', false);
+    save('View', 'AutoFitColumns', on ? 1 : 0);
+    if (on) autoFit();
+    MENU.refresh();
+  }
+
+  // ---------- paths from Explorer (a second start, or this start's command line) ----------
+  let pending = [], lastOpen = { dir: '', tick: 0 }, incoming = [], incomingTimer = 0;
+  const samePath = (a, b) => norm(a) === norm(b);
+  // from: ApplyPendingSelect — false when none of the waiting files is in the list
+  function applyPendingSelect(extend) {
+    const found = LISTVIEW.pendingIndexes(state.items, pending);
+    if (!found.length) return false;
+    pending = [];
+    if (!extend) state.sel.clear();
+    for (const i of found) state.sel.add(state.items[i]);
+    state.focus = state.anchor = found[0];
+    keepVisible(found[0]);
+    renderRows();
+    return true;
+  }
+  // from: OpenPaths / PrepareOpen
+  async function openPaths(paths) {
+    const kinds = await Promise.all(paths.map((p) => API.pathKind(p)));
+    const old = state.scanning ? pending.slice() : [];
+    const { dir, select } = LISTVIEW.prepareOpen(paths, (p) => kinds[paths.indexOf(p)] === 'dir');
+    pending = select;
+    if (select.length) lastOpen = { dir, tick: Date.now() };
+    // still reading the folder of this start's own file: add to its selection
+    if (dir && state.scanning && pending.length && samePath(dir, state.folder)) {
+      for (const p of old) if (!pending.some((q) => samePath(q, p))) pending.push(p);
+      return;
+    }
+    if (!dir) return;
+    // files already in the list are just selected
+    if (pending.length && !state.scanning && applyPendingSelect(samePath(dir, lastOpen.dir) && Date.now() - lastOpen.tick < 5000)) {
+      selectionChanged();
+      return;
+    }
+    navigate(dir);
+  }
+  // from: PathsReceived / TimerIncomingTimer — Explorer starts one process per selected file;
+  // wait until the last one has called, and while a dialog is open
+  API.on('paths-received', (paths) => {
+    incoming.push(...paths);
+    clearTimeout(incomingTimer);
+    incomingTimer = setTimeout(function tick() {
+      if (document.querySelector('.modal-back')) { incomingTimer = setTimeout(tick, 400); return; }
+      openPaths(incoming.splice(0));
+    }, 400);
+  });
+
+  // ---------- folders ----------
+  /** InputQuery: one text field; resolves to the text or null. */
+  function askText(title, prompt) {
+    return new Promise((resolve) => {
+      const m = FORMS.modal(`<h2>${esc(title)}</h2><div class="lbl">${esc(prompt)}</div>
+        <div class="frow"><input class="input grow" name="v" spellcheck="false"></div>
+        <div class="modal-buttons"><span class="grow"></span><button class="btn primary" data-ok>${esc(label(t('OK')))}</button>
+          <button class="btn" data-cancel>${esc(label(t('Annuller')))}</button></div>`,
+      { cls: 'form wide', onEscape: () => done(null), onEnter: () => done(field.value) });
+      const field = m.el.querySelector('[name="v"]');
+      const done = (v) => { m.close(); resolve(v); };
+      m.el.addEventListener('click', (e) => {
+        if (e.target.closest('[data-ok]')) done(field.value);
+        else if (e.target.closest('[data-cancel]')) done(null);
+      });
+      field.focus();
+    });
+  }
+  // from: ActNewFolderExecute
+  async function newFolder() {
+    if (!state.folder) return;
+    const name = await askText(t(RS.rsNyMappe3), t(RS.rsNavnPaaDenNyeMappe) + state.folder + ':');
+    if (name === null) return;
+    let dir;
+    try {
+      dir = await API.createFolder(state.folder, name);
+    } catch (e) {
+      if (e) await DIALOG.info(t(e) + '\n' + state.folder.replace(/\\$/, '') + '\\' + name.trim());
+      return;
+    }
+    await TREE.refresh(state.folder);
+    state.message = t(RS.rsMappeOprettet) + dir.replace(/^.*\\/, '');
+    updateStatus();
+  }
+  async function expandFolders() {
+    document.body.style.cursor = 'wait';
+    try { await TREE.expandSelected(); } finally { document.body.style.cursor = ''; }
+  }
+
   // ---------- actions that work in phase 1 ----------
   const checkAll = (fn) => { state.items.forEach(fn); renderRows(); updateStatus(); };
   const ACTIONS = {
@@ -932,6 +1100,16 @@
     aResizeFiles: covers.resizeFiles,
     aResizeFolders: covers.resizeFolders,
     FActAutoResize: covers.toggleAutoResize,
+    // phase 5
+    aFind: findFilter,
+    aMoveUp: () => moveSelected(-1),
+    aMoveDown: () => moveSelected(1),
+    aRandom: () => { LISTVIEW.shuffle(state, FIELD_KEYS); manualOrder(); },
+    aAutoFit: autoFit,
+    FActAutoFitAfterScan: toggleAutoFitAfterScan,
+    aExpandFolders: expandFolders,
+    aCollapseFolders: () => { TREE.collapseAll(); TREE.reveal(state.folder); },
+    aNewFolder: newFolder,
   };
   const ENABLED = {
     aUp: () => !!state.folder,
@@ -944,12 +1122,16 @@
     aF2TDlg: () => state.items.length > 0,
     aRenameManual: () => treeFocused || state.items.length > 0,
     FActUndo: () => !!undoLog,
+    aMoveUp: () => state.sel.size > 0,
+    aMoveDown: () => state.sel.size > 0,
+    aNewFolder: () => !!state.folder,
   };
   const CHECKED = {
     FActToolsPanel: () => state.view.tools, FActFolders: () => state.view.folders,
     FActAddress: () => state.view.address, FActFilter: () => state.view.filter, FActSubfolders: () => state.view.subfolders,
     FActKeepDate: () => bool('Editor', 'KeepTimestamp', false),
     FActAutoResize: () => bool('Cover', 'AutoResize', false),
+    FActAutoFitAfterScan: () => bool('View', 'AutoFitColumns', false),
   };
   function showTab(i) {
     if (!state.view.tools) toggleView('tools', 'View', 'ToolsPanel');
@@ -980,7 +1162,11 @@
         items: [...acts.map((a) => ({ text: a.name.replace(/&/g, '&&'), run: () => runRenameAction(a) })), ...(acts.length ? ['-'] : []),
           { ref: 'FActManageActions' }] };
     }
-    return null; // play with, recent folders: later phases
+    if (item.dynamic && item.text === RS.rsSenesteMapper) { // from: RebuildRecentMenu
+      const recent = state.history.slice(0, 15);
+      return { text: t(item.text), enabled: recent.length > 0, items: recent.map((p) => ({ text: p.replace(/&/g, '&&'), run: () => navigate(p) })) };
+    }
+    return null; // play with: Task 7
   }
 
   // ---------- splitter (tree width, [Main] TreeWidth) ----------
@@ -1048,7 +1234,9 @@
     $('#address').addEventListener('change', (e) => { if (state.history.includes(e.target.value)) navigate(e.target.value); });
     await TREE.init($('#tree'), (path) => navigate(path, { fromTree: true }));
     const last = get('Main', 'FixedStartFolder', '0') === '1' && get('Main', 'StartFolder') ? get('Main', 'StartFolder') : get('Main', 'LastFolder');
-    if (last) navigate(last);
+    const given = await API.startPaths(); // from Explorer's "Åbn i TidyTag"
+    if (given.length) openPaths(given);
+    else if (last) navigate(last);
   }
   start();
 })();
