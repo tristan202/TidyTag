@@ -104,3 +104,10 @@ test('batch groups by folder and album', () => {
   assert.strictEqual(W.commonValue([t('C:\\a', 'X'), t('C:\\b', 'X')], 'album'), 'X');
   assert.strictEqual(W.commonValue([t('C:\\a', 'X'), t('C:\\b', 'Y')], 'album'), '');
 });
+
+test('folder cover once per folder, never over an existing one', () => {
+  // every listed file's folder counts (1.2 walks the rows with a file), once, case-insensitive
+  const f = [{ folder: 'C:\\a' }, { folder: 'C:\\b' }, { folder: 'c:\\A' }];
+  const rows = [{ trackIdx: 0, fileIdx: 0 }, { trackIdx: -1, fileIdx: 1 }, { trackIdx: 1, fileIdx: 2 }, { trackIdx: 2, fileIdx: -1 }];
+  assert.deepStrictEqual(W.folderCoverDirs(rows, f), ['C:\\a', 'C:\\b']);
+});

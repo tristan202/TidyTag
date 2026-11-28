@@ -21,7 +21,7 @@ test('index.html has the app root', () => {
 test('dialogs never use the menu bar\'s data-act attribute', () => {
   // menu.js refreshes every [data-act] in the page as a menu action; a dialog button with it broke saving
   const fs = require('node:fs');
-  for (const f of ['tageditor.js', 'multieditor.js', 'tracktools.js', 'forms.js', 'covers.js', 'dialog.js', 'genres.js', 'player.js']) {
+  for (const f of ['tageditor.js', 'multieditor.js', 'tracktools.js', 'forms.js', 'covers.js', 'dialog.js', 'genres.js', 'player.js', 'weblookup.js']) {
     assert.ok(!/data-act\b/.test(fs.readFileSync(require('node:path').join(__dirname, f), 'utf8')), f);
   }
 });

@@ -185,9 +185,10 @@ def main():
             for m in re.finditer(r'^\s*(rs\w+|\w+VariablesHelp)\s*=\s*(.*?);\s*$', block, re.M | re.S):
                 out[m.group(1)] = pascal_string(m.group(2)).replace('\r\n', '\n')
         return out
-    # each dialog's own texts too: the same rs name can mean different texts in two units
+    # each dialog's own texts too: the same rs name can mean different texts in two units;
+    # for the shared rs list a later unit wins, so units added later go first
     unit_rs = {u: unit_texts(open(os.path.join(SRC, u + '.pas'), encoding='utf-8').read())
-               for u in ('tooldialogs', 'tracktoolsform', 'tageditform', 'multieditform', 'renamecore',
+               for u in ('weblookupform', 'musicbrainz', 'discogs', 'tooldialogs', 'tracktoolsform', 'tageditform', 'multieditform', 'renamecore',
                          'filenametags', 'renameform', 'filetotagform')}
     for texts in (*unit_rs.values(), unit_texts(text)):
         main_rs.update(texts)

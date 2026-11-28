@@ -142,5 +142,19 @@
     return { groups, albumMode: allTagged && groups.every((g) => g.length >= 2) };
   }
 
-  return { normTitle, matchFilesToTracks, moveFile, pairs, applyTrack, options, commonValue, batchGroups };
+  /** The folders that get folder.jpg: every row with a file, once per folder (case-insensitive). */
+  // from: ButtonWriteClick (DoneDirs)
+  function folderCoverDirs(rows, files) {
+    const seen = new Set(), out = [];
+    for (const r of rows) {
+      if (r.fileIdx < 0) continue;
+      const d = files[r.fileIdx].folder;
+      if (seen.has(d.toLowerCase())) continue;
+      seen.add(d.toLowerCase());
+      out.push(d);
+    }
+    return out;
+  }
+
+  return { normTitle, matchFilesToTracks, moveFile, pairs, applyTrack, options, commonValue, batchGroups, folderCoverDirs };
 });
