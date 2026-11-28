@@ -65,6 +65,10 @@
     playerAvailable: () => invoke('player_available_cmd'),
     appInfo: () => invoke('app_info'),
     startPaths: () => invoke('start_paths'),
+    // phase 6 (src-tauri/src/web.rs); source: 0 MusicBrainz, 1 Discogs
+    webSearch: (source, artist, album, title) => invoke('web_search', { source, artist, album, title }),
+    webRelease: (source, id) => invoke('web_release', { source, id }),
+    webCover: (source, id, groupId, coverUrl) => invoke('web_cover', { source, id, groupId, coverUrl }),
     on: (event, fn) => listen(event, (e) => fn(e.payload)),
     window: () => window.__TAURI__.window.getCurrentWindow(),
   };

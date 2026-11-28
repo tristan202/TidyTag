@@ -113,6 +113,20 @@ pub fn auth_header(url: &str, token: &str) -> Option<(&'static str, String)> {
     Some(("Authorization", format!("Discogs token={token}")))
 }
 
+/// [Web] Source: 0 MusicBrainz, 1 Discogs.
+// from: TWebSource
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Source {
+    MusicBrainz,
+    Discogs,
+}
+
+impl Source {
+    pub fn from_index(i: usize) -> Source {
+        if i == 1 { Source::Discogs } else { Source::MusicBrainz }
+    }
+}
+
 /// The web calls, with one rate limiter per service.
 pub struct Web<F: Fetch> {
     pub fetch: F,
@@ -233,6 +247,48 @@ impl<F: Fetch> Web<F> {
     // from: DiscogsRelease
     pub fn discogs_release(&self, id: &str, token: &str) -> Result<ReleaseDetail, String> {
         parse_discogs_release_json(&self.discogs_get(&format!("releases/{id}"), token)?)
+    }
+
+    // ---------- the dialog's three jobs ----------
+
+    /// With a title: a song search (which finds the album it is on), retried without the album,
+    /// since a wrong album tag should not hide the song. Otherwise a release search.
+    // from: TWebJob.Execute (wjSearch)
+    pub fn search(&self, source: Source, artist: &str, album: &str, title: &str, token: &str) -> Result<Vec<Release>, String> {
+        if title.trim().is_empty() {
+            return match source {
+                Source::Discogs => self.discogs_search(artist, album, token, ""),
+                Source::MusicBrainz => self.search_releases(artist, album),
+            };
+        }
+        let song = |album: &str| match source {
+            Source::Discogs => self.discogs_search(artist, album, token, title),
+            Source::MusicBrainz => self.search_recordings(artist, title, album),
+        };
+        let mut r = song(album)?;
+        if r.is_empty() && !album.trim().is_empty() {
+            r = song("")?;
+        }
+        if source == Source::Discogs {
+            sort_song_releases(&mut r); // one row per master release, the original album first
+        }
+        Ok(r)
+    }
+
+    // from: TWebJob.Execute (wjDetail)
+    pub fn detail(&self, source: Source, id: &str, token: &str) -> Result<ReleaseDetail, String> {
+        match source {
+            Source::Discogs => self.discogs_release(id, token),
+            Source::MusicBrainz => self.get_release_detail(id),
+        }
+    }
+
+    // from: TWebJob.Execute (wjCover)
+    pub fn cover(&self, source: Source, id: &str, group_id: &str, cover_url: &str, token: &str) -> Option<Vec<u8>> {
+        match source {
+            Source::Discogs => self.discogs_cover(cover_url, token),
+            Source::MusicBrainz => self.get_front_cover(id, group_id),
+        }
     }
 
     /// The release's primary image (ReleaseDetail::cover_url); None if there is none.
@@ -387,6 +443,28 @@ mod tests {
         assert!(urls[0].ends_with("&fmt=json&limit=100"));
         assert!(urls[1].contains(&url_encode(" AND firstreleasedate:[* TO 1975-09-01]")) && urls[1].ends_with("&limit=25"), "{}", urls[1]);
         assert_eq!(w.search_recordings("Bandet", " ", "").unwrap_err(), "Skriv sangens titel");
+    }
+
+    #[test]
+    fn song_search_retries_without_album() {
+        let w = Web::new(FakeFetch::with(&[(200, "{\"recordings\":[]}"), (200, include_str!("testdata/recording.json"))]));
+        let r = w.search(Source::MusicBrainz, "Bandet", "Forkert", "Sangen", "").unwrap();
+        assert_eq!(r[0].id, "alb");
+        let urls = w.fetch.urls();
+        assert_eq!(urls.len(), 2);
+        assert!(urls[0].contains(&url_encode("release:\"Forkert\"")));
+        assert!(!urls[1].contains("release%3A"), "{}", urls[1]);
+    }
+
+    #[test]
+    fn jobs_pick_the_source() {
+        let w = Web::new(FakeFetch::with(&[(200, include_str!("testdata/discogs_release.json")), (200, "img")]));
+        let d = w.detail(Source::Discogs, "1234", "").unwrap();
+        assert_eq!(d.release.title, "Gas 5");
+        assert_eq!(w.cover(Source::Discogs, "1234", "99", &d.cover_url, ""), Some(b"img".to_vec()));
+        assert_eq!(w.fetch.urls(), ["https://api.discogs.com/releases/1234", "https://i.discogs.com/front.jpg"]);
+        assert_eq!(Source::from_index(1), Source::Discogs);
+        assert_eq!(Source::from_index(7), Source::MusicBrainz);
     }
 
     #[test]

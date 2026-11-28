@@ -7,6 +7,7 @@ mod files;
 mod rename;
 mod player;
 mod shell;
+mod web;
 
 use tauri::{Emitter, Manager};
 
@@ -118,6 +119,9 @@ fn main() {
             files::player_available_cmd,
             files::app_info,
             files::start_paths,
+            web::web_search,
+            web::web_release,
+            web::web_cover,
             rename::mask_fields_cmd,
         ])
         .run(tauri::generate_context!())
