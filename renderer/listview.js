@@ -149,5 +149,16 @@
     rebuildView(state, keys);
   }
 
-  return { inScanScope, afterMove, matchesFilter, rebuildView, hideSelected, showAll, moveSelected, shuffle, prepareOpen, autoFitWidths, pendingIndexes };
+  /** A file read again (a save, a batch write): the new object takes the old one's place in
+   *  both lists and in the selection, with its tick and hidden flag. */
+  function replaceTrack(state, old, tr) {
+    tr.checked = old.checked;
+    if (old.hidden) tr.hidden = true;
+    const ai = state.all.indexOf(old), vi = state.items.indexOf(old);
+    if (ai >= 0) state.all[ai] = tr;
+    if (vi >= 0) state.items[vi] = tr;
+    if (state.sel.delete(old)) state.sel.add(tr);
+  }
+
+  return { replaceTrack, inScanScope, afterMove, matchesFilter, rebuildView, hideSelected, showAll, moveSelected, shuffle, prepareOpen, autoFitWidths, pendingIndexes };
 });

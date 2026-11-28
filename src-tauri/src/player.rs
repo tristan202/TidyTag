@@ -48,6 +48,8 @@ enum Cmd {
     Status(Sender<PlayerStatus>),
 }
 
+/// A handle to the player thread; clones talk to the same thread.
+#[derive(Clone)]
 pub struct Player {
     tx: Sender<Cmd>,
 }

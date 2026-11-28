@@ -185,38 +185,41 @@ pub async fn play_with_list() -> Vec<PlayWithEntry> {
 #[derive(Default)]
 pub struct PlayerHolder(Mutex<Option<Player>>);
 
-fn with_player<T>(h: &PlayerHolder, f: impl FnOnce(&Player) -> T) -> T {
+/// The player, created on first use; the lock is released at once, so a play waiting for a
+/// slow file does not hold up the status calls.
+fn player(h: &PlayerHolder) -> Player {
     let mut g = h.0.lock().unwrap_or_else(|e| e.into_inner());
-    f(g.get_or_insert_with(Player::new))
+    g.get_or_insert_with(Player::new).clone()
 }
 
+// async: Tauri runs these off the window's thread, which must not wait for a track to load
 #[tauri::command]
 pub async fn player_play(h: State<'_, PlayerHolder>, path: String, volume: f32) -> Result<(), String> {
-    with_player(&h, |p| p.play(&path, volume))
+    player(&h).play(&path, volume)
 }
-#[tauri::command]
+#[tauri::command(async)]
 pub fn player_pause(h: State<'_, PlayerHolder>) {
-    with_player(&h, |p| p.pause())
+    player(&h).pause()
 }
-#[tauri::command]
+#[tauri::command(async)]
 pub fn player_resume(h: State<'_, PlayerHolder>) {
-    with_player(&h, |p| p.resume())
+    player(&h).resume()
 }
-#[tauri::command]
+#[tauri::command(async)]
 pub fn player_stop(h: State<'_, PlayerHolder>) {
-    with_player(&h, |p| p.stop())
+    player(&h).stop()
 }
-#[tauri::command]
+#[tauri::command(async)]
 pub fn player_seek(h: State<'_, PlayerHolder>, seconds: f64) {
-    with_player(&h, |p| p.seek(seconds))
+    player(&h).seek(seconds)
 }
-#[tauri::command]
+#[tauri::command(async)]
 pub fn player_volume(h: State<'_, PlayerHolder>, v: f32) {
-    with_player(&h, |p| p.set_volume(v))
+    player(&h).set_volume(v)
 }
-#[tauri::command]
+#[tauri::command(async)]
 pub fn player_status(h: State<'_, PlayerHolder>) -> PlayerStatus {
-    with_player(&h, |p| p.status())
+    player(&h).status()
 }
 #[tauri::command]
 pub async fn player_available_cmd() -> bool {
@@ -252,6 +255,14 @@ mod tests {
 
     fn track_of(path: &str) -> RenameTrack {
         serde_json::from_value(serde_json::json!({ "path": path, "fields": {} })).unwrap()
+    }
+
+    #[test]
+    fn player_handle_does_not_hold_the_lock() {
+        // a play that waits for a slow file must not block the status the window polls
+        let h = PlayerHolder::default();
+        let _p = player(&h);
+        assert!(h.0.try_lock().is_ok());
     }
 
     #[test]

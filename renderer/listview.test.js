@@ -128,3 +128,21 @@ test('scan scope compares case-insensitively', () => {
   assert.ok(LISTVIEW.inScanScope('C:\\M\\Sub\\a.mp3', 'C:\\m', true));
   assert.ok(!LISTVIEW.inScanScope('C:\\mm\\a.mp3', 'C:\\m', true));
 });
+
+test('a saved track replaces its old object in both lists and keeps focus, selection and ticks', () => {
+  const a = tr('C:\\m\\a.mp3', { title: 'Old' }), b = tr('C:\\m\\b.mp3'), h = tr('C:\\m\\h.mp3', {}, { hidden: true });
+  a.checked = true;
+  const state = { all: [a, h, b], items: [a, b], sel: new Set([a]), focus: 0, anchor: 0, filter: F() };
+  const a2 = tr('C:\\m\\a.mp3', { title: 'New' });
+  LISTVIEW.replaceTrack(state, a, a2);
+  assert.ok(state.all[0] === a2 && state.items[0] === a2);
+  assert.ok(a2.checked && state.sel.has(a2) && !state.sel.has(a));
+  LISTVIEW.rebuildView(state, KEYS); // a column click, a filter, a rename ...
+  assert.strictEqual(state.items[0].fields.title, 'New');
+  assert.deepStrictEqual([state.focus, state.anchor], [0, 0]);
+  assert.ok(state.sel.has(a2));
+  // a hidden file read again stays hidden
+  const h2 = tr('C:\\m\\h.mp3');
+  LISTVIEW.replaceTrack(state, h, h2);
+  assert.ok(h2.hidden && state.all[1] === h2);
+});

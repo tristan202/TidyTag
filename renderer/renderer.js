@@ -197,13 +197,10 @@
     state.writing = false;
     // the files read again replace their rows; ticks and selection stay
     const byPath = new Map(msg.tracks.map((tr) => [tr.path.toLowerCase(), tr]));
-    state.all = state.all.map((old) => {
+    for (const old of state.all.slice()) {
       const tr = byPath.get(old.path.toLowerCase());
-      if (!tr) return old;
-      tr.checked = old.checked;
-      if (state.sel.has(old)) { state.sel.delete(old); state.sel.add(tr); }
-      return tr;
-    });
+      if (tr) LISTVIEW.replaceTrack(state, old, tr); // the view too, so the focus stays on its file
+    }
     sortItems();
     renderRows();
     state.message = SAVE.doneText(writeWhat, msg.saved, msg.failed, writeShowsSkipped ? msg.skipped : 0);
@@ -534,11 +531,10 @@
       index: start, count: files.length, fileAt: (i) => files[i]?.path || '',
       keep: bool('Editor', 'KeepTimestamp', false), setKeep: setKeepDate, genres: () => API.genreList(),
       saved: (i, track) => { // from: FileSaved
-        const old = files[i], at = state.items.indexOf(old);
-        if (at < 0) return;
-        track.checked = old.checked;
-        if (state.sel.has(old)) { state.sel.delete(old); state.sel.add(track); }
-        state.items[at] = files[i] = track;
+        const old = files[i];
+        if (!state.all.includes(old)) return;
+        LISTVIEW.replaceTrack(state, old, track); // both lists: a later rebuild must not bring the old tags back
+        files[i] = track;
         renderRows();
         updateStatus();
       },
