@@ -65,6 +65,7 @@
 
   function openSub(level, index) {
     const p = openStack[level];
+    if (!p) return; // a hover timer can fire after a click has closed the menu
     const e = p.list[index];
     closeFrom(level + 1);
     if (!e || !e.items || e.enabled === false) return;

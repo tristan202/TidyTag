@@ -76,7 +76,7 @@
           ${check('rn-pad', 'Spornummer med 2 cifre (%6)', bool('Rename', 'PadTrack', true))}</div>
         ${caseBlock('rn', mode)}
       </div><div class="tool-right">${varsTable(RENAME_CODES)}<div class="notes">${esc(t(RS.rsRenameNoter))}</div>
-        <div class="btn-row"><button class="btn" id="rn-preview">${esc(t('Forhåndsvis...'))}</button>
+        <div class="btn-row"><button class="btn" id="rn-show">${esc(t('Forhåndsvis...'))}</button>
           <button class="btn primary" id="rn-do">${esc(t('Omdøb'))}</button>
           <button class="btn" id="rn-undo"${hooks.canUndo?.() ? '' : ' disabled'}>${esc(t('Fortryd'))}</button></div></div></div>`;
   }
@@ -125,7 +125,7 @@
         <div class="chk-row">${check('ft-us', 'Erstat _ med mellemrum', bool('FileToTag', 'Underscores', true))}</div>
         ${caseBlock('ft', mode)}
       </div><div class="tool-right">${varsTable(F2T_CODES)}<div class="notes" title="${esc(t(RS.rsF2TFiltypeHint))}">${esc(t(RS.rsF2TNoter))}</div>
-        <div class="btn-row"><button class="btn" id="ft-preview">${esc(t('Forhåndsvis...'))}</button>
+        <div class="btn-row"><button class="btn" id="ft-show">${esc(t('Forhåndsvis...'))}</button>
           <button class="btn primary" id="ft-do">${esc(t('Skriv tags'))}</button></div></div></div>`;
   }
 
@@ -214,7 +214,7 @@
     body.querySelector('.tool-left')?.addEventListener('change', schedulePreview);
     $(prefix + '-vars')?.addEventListener('click', (e) => varsMenu(prefix, e.currentTarget));
     const act = (id, hook) => $(id)?.addEventListener('click', () => { saveInline(); hooks[hook]?.(); });
-    act(prefix + '-preview', prefix === 'rn' ? 'renamePreview' : 'f2tPreview');
+    act(prefix + '-show', prefix === 'rn' ? 'renamePreview' : 'f2tPreview');
     act(prefix + '-do', prefix === 'rn' ? 'renameDo' : 'f2tDo');
     act('rn-undo', 'undo');
     $(prefix + '-us')?.addEventListener('change', (e) => save(section, 'Underscores', e.target.checked ? 1 : 0));

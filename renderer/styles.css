@@ -215,7 +215,9 @@ textarea.input { padding: 4px 8px; font: inherit; color: inherit; }
 .me-cover-img { width: 196px; height: 196px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); display: grid; place-items: center; overflow: hidden; }
 .me-cover-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .multi-editor progress { width: 100%; accent-color: var(--accent); }
-.rn-grid { flex: 1; min-width: 480px; }
+.rn-grid { flex: 1; min-width: 0; }
+.rn-grid .frow { flex-wrap: wrap; row-gap: 4px; }
+.track-top .radio-group { flex-shrink: 0; }
 .rn-grid .input.grow { width: 100%; }
 .grid-box { max-height: 230px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
 .edit-grid { width: 100%; border-collapse: collapse; }

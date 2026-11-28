@@ -703,7 +703,9 @@
     if (!state.items.length) return;
     let idx = state.focus >= 0 ? state.focus : 0;
     const log = [];
-    const files = state.items; // the same track objects follow the renames
+    // the order when the dialog opened, as 1.2 (a rename re-sorts the list, but Næste goes on to
+    // the next file in this order); the track objects themselves follow the renames
+    const files = state.items.slice();
     await new Promise((resolve) => {
       const m = FORMS.modal(`<h2 data-title></h2><div class="lbl ellipsis" data-dir></div>
         <div class="frow"><span class="lbl">${esc(t(RS.rsNytNavn))}</span><input class="input grow" name="name" spellcheck="false"><span data-ext></span></div>
@@ -723,7 +725,7 @@
         q('[data-go="-1"]').disabled = idx === 0;
         q('[data-go="1"]').disabled = idx === files.length - 1;
         q('[name="name"]').select();
-        state.sel.clear(); state.sel.add(tr); state.focus = state.anchor = idx;
+        state.sel.clear(); state.sel.add(tr); state.focus = state.anchor = state.items.indexOf(tr);
         renderRows();
       }
       async function go(step) {
@@ -734,8 +736,7 @@
           try {
             const item = await API.renameOne(tr.path, name + ext);
             log.push(item);
-            await applyRenameLog([item], false); // this sorts the list again
-            idx = files.indexOf(tr);
+            await applyRenameLog([item], false);
           } catch (e) {
             const text = e === 'invalid' ? t(RS.rsUgyldigtNavn) : e === 'exists' ? t(RS.rsFiltypeFindes, name + ext) : String(e);
             await DIALOG.info(text, t(RS.rsKunneIkkeOmdoebe));
@@ -998,6 +999,10 @@
     addEventListener('mousemove', move);
     addEventListener('mouseup', up);
   });
+
+  // an action that fails must say so, not just do nothing
+  addEventListener('error', (e) => DIALOG.info(String(e.error || e.message)));
+  addEventListener('unhandledrejection', (e) => DIALOG.info(String(e.reason)));
 
   // ---------- start ----------
   async function start() {

@@ -4,6 +4,15 @@ const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
 
+test('the tool tabs never give two elements the same id', () => {
+  // the preview line was ${prefix}-preview and the button 'ft-preview': the click went to the line
+  const src = fs.readFileSync(path.join(__dirname, 'panel.js'), 'utf8');
+  const templated = [...src.matchAll(/id="\$\{prefix\}-([\w-]+)"/g)].flatMap((m) => ['rn-' + m[1], 'ft-' + m[1]]);
+  const literal = [...src.matchAll(/id="((?:rn|ft)-[\w-]+)"/g)].map((m) => m[1]);
+  const all = [...templated, ...literal];
+  assert.deepStrictEqual(all.filter((id, i) => all.indexOf(id) !== i), []);
+});
+
 test('index.html has the app root', () => {
   const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
   assert.match(html, /<div id="app">/);
