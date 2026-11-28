@@ -202,6 +202,18 @@ design is `docs/superpowers/specs/2026-11-26-tidytag-tauri-design.md`.
   The rename engine gives the same names as 1.2 for every case in the rename cross-check. One
   difference is deliberate: 1.2 turns characters outside Windows-1252 (such as 漢字) into `?` and
   then cannot rename the file, while 2.0 keeps them.
+- **Phase 5:** file operations:
+  - the Recycle Bin, copy/move to a folder, new folder, deleting folder covers;
+  - *Skift filtype* (`.mp4 → .m4a` and so on), which Ctrl+Z undoes;
+  - the filter row, *Find / filtrér*, hiding files, manual and random order, fitting the columns;
+  - playlists, the built-in player (Media Foundation) and *Afspil med*;
+  - *Vis i Stifinder*, *Egenskaber*, *Seneste mapper*, and expanding and collapsing the tree;
+  - *Åbn i TidyTag* from Explorer (single instance), the genre list, *Tastaturgenveje* and *Om
+    TidyTag*.
+
+  `tidytag.exe --explorer-menu=on|off` sets up or removes the Explorer menu (the installer's
+  switch). Only a release build refreshes the menu at start, so a dev build never takes over the
+  menu of an installed TidyTag.
 
 **Layout:**
 - `src-tauri/core/`: the engine, without UI. It holds the tag readers ported from the Pascal units,
