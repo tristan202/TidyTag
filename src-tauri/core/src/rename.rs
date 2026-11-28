@@ -181,7 +181,7 @@ fn is_digit16(c: u16) -> bool {
 }
 
 /// SameFileName: equal without regard to case.
-fn same_file_name(a: &str, b: &str) -> bool {
+pub(crate) fn same_file_name(a: &str, b: &str) -> bool {
     lower16(&utf16(a)) == lower16(&utf16(b))
 }
 
@@ -286,7 +286,7 @@ fn move_no_replace(from: &str, to: &str) -> Result<(), String> {
 }
 
 /// SysErrorMessage(GetLastOSError) without Rust's " (os error N)" suffix.
-fn os_error_text() -> String {
+pub(crate) fn os_error_text() -> String {
     let e = std::io::Error::last_os_error().to_string();
     match e.rfind(" (os error") {
         Some(i) => e[..i].trim_end().to_string(),
